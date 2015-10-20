@@ -1,0 +1,62 @@
+new Pride.FieldBooleanNode(
+  'OR',
+  new Pride.FieldBooleanNode(
+    'AND',
+    new Pride.FieldNode(
+      'title',
+      new Pride.ValueBooleanNode(
+        'OR',
+        new Pride.LiteralNode('one'),
+        new Pride.LiteralNode('another number'),
+        new Pride.ValueBooleanNode(
+          'AND',
+          new Pride.LiteralNode('two'),
+          new Pride.LiteralNode('three')
+        ),
+        new Pride.LiteralNode('blah')
+      )
+    ),
+    new Pride.FieldNode(
+      'author',
+      new Pride.ValueBooleanNode(
+        'OR',
+        new Pride.LiteralNode('four'),
+        new Pride.ValueBooleanNode(
+          'AND',
+          new Pride.LiteralNode('five'),
+          new Pride.LiteralNode('six')
+        ),
+        new Pride.LiteralNode('blah')
+      )
+    )
+  ),
+  new Pride.FieldBooleanNode(
+    'AND',
+    new Pride.FieldNode(
+      'title',
+      new Pride.ValueBooleanNode(
+        'OR',
+        new Pride.LiteralNode('seven'),
+        new Pride.ValueBooleanNode(
+          'AND',
+          new Pride.LiteralNode('eight'),
+          new Pride.LiteralNode('nine')
+        ),
+        new Pride.LiteralNode('blah')
+      )
+    ),
+    new Pride.FieldNode(
+      'author',
+      new Pride.ValueBooleanNode(
+        'OR',
+        new Pride.LiteralNode('ten'),
+        new Pride.ValueBooleanNode(
+          'AND',
+          new Pride.LiteralNode('eleven'),
+          new Pride.LiteralNode('twelve')
+        ),
+        new Pride.LiteralNode('blah')
+      )
+    )
+  )
+)
