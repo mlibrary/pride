@@ -6,44 +6,70 @@ Pride.Search = function(datastore, given_query) {
   // Observers //
   ///////////////
 
-  var records_observers = new Pride.Observable();
-  var search_observers  = new Pride.Observable();
+  var records_observers    = new Pride.Observable();
+  var set_search_observers = new Pride.Observable();
+  var run_search_observers = new Pride.Observable();
 
   this.addRecordsObserver = function(func) {
     records_observers.addObserver(func);
+    recordsChanged(func);
 
     return this_search;
   };
 
-  this.addSearchObserver = function(func) {
-    search_observers.addObserver(func);
-    func(query);
+  this.addSetSearchObserver = function(func) {
+    set_search_observers.addObserver(func);
+    setSearchChanged(func);
 
     return this_search;
   };
 
-  var recordsChanged = function() {
+  this.addRunSearchObserver = function(func) {
+    run_search_observers.addObserver(func);
+    runSearchChanged(func);
+
+    return this_search;
+  };
+
+  var recordsChanged = function(single_func) {
     console.log('UPDATED RECORDS:', getRecordsInQuery())
-    records_observers.notifyObservers(getRecordsInQuery());
+    notify(records_observers, getRecordsInQuery(), single_func);
   };
 
-  var searchChanged = function() {
-    var data = {
-                 uid:             datastore.get('uid'),
-                 metadata:        Pride.deepClone(datastore.get('metadata')),
-                 sorts:           Pride.deepClone(datastore.get('sorts')),
-                 current_sort:    query.get('sort'),
-                 fields:          Pride.deepClone(datastore.get('fields')),
-                 field_tree:      Pride.deepClone(query.get('field_tree')),
-                 start:           query.get('start'),
-                 end:             query.get('end'),
-                 count:           query.get('count'),
-                 total_available: query.get('total_available'),
-                 settings:        Pride.deepClone(query.get('settings'))
-               };
+  var setSearchChanged = function(single_func) {
+    console.log('UPDATED SEARCH (SET):', buildSearchData())
+    notify(set_search_observers, buildSearchData(), single_func);
+  };
 
-    console.log('UPDATED SEARCH:', data)
-    search_observers.notifyObservers(data);
+  var runSearchChanged = function(single_func) {
+    console.log('UPDATED SEARCH (RUN):', buildSearchData())
+    notify(run_search_observers, buildSearchData(), single_func);
+  };
+
+  var notify = function(observers, data, single_func) {
+    if (single_func) {
+      single_func(data);
+    } else {
+      observers.notifyObservers(data);
+    }
+  };
+
+  var buildSearchData = function() {
+    return {
+             uid:             datastore.get('uid'),
+             metadata:        Pride.deepClone(datastore.get('metadata')),
+             sorts:           Pride.deepClone(datastore.get('sorts')),
+             current_sort:    query.get('sort'),
+             fields:          Pride.deepClone(datastore.get('fields')),
+             field_tree:      Pride.deepClone(query.get('field_tree')),
+             settings:        Pride.deepClone(query.get('settings')),
+             start:           query.get('start'),
+             end:             query.get('end'),
+             count:           query.get('count'),
+             total_available: query.get('total_available'),
+             total_pages:     query.get('total_pages'),
+             current_page:    query.get('current_page')
+           };
   };
 
   /////////////////////////
@@ -57,11 +83,12 @@ Pride.Search = function(datastore, given_query) {
   var defaultCacheSize = Pride.settings.cache_size[datastore.uid] ||
                          Pride.settings.default_cache_size;
 
-  this.set = function(key, value) {
-    query.set(key, value);
-    searchChanged();
+  this.set = function(set_hash) {
+    _.each(set_hash, function(value, key) { query.set(key, value); });
 
-    if (key != 'count' && key != 'start') records = [];
+    setSearchChanged();
+
+    if (!_.isEmpty(_.omit(set_hash, 'count', 'start', 'end'))) records = [];
 
     return this_search;
   };
@@ -139,7 +166,7 @@ Pride.Search = function(datastore, given_query) {
     var new_total_available = result.total_available;
     var new_end             = query.get('end');
 
-    if (new_total_available == 0) {
+    if (new_total_available === 0) {
       new_end = undefined;
     } else if (new_end >= new_total_available) {
       new_end = new_total_available - 1;
@@ -149,7 +176,7 @@ Pride.Search = function(datastore, given_query) {
          .set('total_available', new_total_available)
          .set('end', new_end);
 
-    searchChanged();
+    runSearchChanged();
   };
 
   var getMissingSection = function(section) {
