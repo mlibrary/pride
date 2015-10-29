@@ -6,5 +6,6 @@ Pride.settings = {
 
   },
 
-  connection_attempts: 5
+  connection_attempts: 5,
+  ms_between_attempts: 1500
 };
