@@ -1,69 +1,52 @@
 var Pride = Pride || {};
 
 Pride.Query = function(query_info) {
-  query_info = Pride.deepClone(query_info);
+  // Setup the paginater to do all pagination calculations.
+  var paginater = new Pride.Paginater({
+                    start: query_info.start,
+                    count: query_info.count
+                  });
 
-  // Set the default request_id if it isn't already set
+  // Memoize the paginater keys for future use.
+  var paginater_keys = paginater.possibleKeys();
+
+  // Remove the pagination info from query_info.
+  query_info = _.omit(Pride.deepClone(query_info), 'start', 'count');
+
+  // Set the default request_id if it isn't already set.
   query_info.request_id = query_info.request_id || 0;
 
-  var mutable_keys = [
-                       'start',
-                       'count',
-                       'total_available',
-                       'request_id',
-                       'end',
-                       'index_limit'
-                     ];
-
   this.get = function(key) {
-    switch (key) {
-      case 'end':
-        var last_key = query_info.start + query_info.count - 1;
-        return (last_key < query_info.start) ? undefined : last_key;
-
-      case 'index_limit':
-        var total_available = query_info.total_available;
-
-        if (_.isNumber(total_available)) {
-          return total_available - 1;
-        } else {
-          return Infinity;
-        }
-
-      default:
-        return query_info[key];
+    if (paginater.isPaginationKey(key)) {
+      return paginater.get(key);
+    } else {
+      return query_info[key];
     }
   };
 
-  this.set = function(key, value) {
-    switch (key) {
-      case 'end':
-        this.set('count', value - query_info.start + 1);
-        break;
-      default:
-        query_info[key] = value;
-    }
+  this.set = function(new_values) {
+    var new_pagination_values = _.pick(new_values, paginater_keys);
+    var new_query_values      = _.omit(new_values, paginater_keys);
 
-    if (!_.contains(mutable_keys, key)) {
-      query_info.request_id++;
+    paginater.set(new_pagination_values);
+    _.extend(query_info, new_query_values);
+
+    // Increment the request_id if the set of things being searched was altered
+    // and the request_id isn't being set manually.
+    if (!_.isEmpty(new_query_values) &&
+        !_.isNumber(new_query_values.request_id)) {
+      query_info.request_id += 1;
     }
 
     return this;
   };
 
   this.clone = function() {
-    return new Pride.Query(Pride.deepClone(query_info));
-  };
+    var full_info   = Pride.deepClone(query_info);
+    full_info.start = paginater.get('start');
+    full_info.count = paginater.get('count');
 
-  // Update the data in this query sans a few items without triggering the
-  // additional operations that set() does.
-  this.update = function(new_data) {
-    _.extend(
-      query_info,
-      _.omit(new_data.new_request, 'start', 'count', 'request_id')
-    );
-
-    return this;
+    return new Pride.Query(full_info);
   };
 
   this.toSection = function() {
@@ -75,16 +58,15 @@ Pride.Query = function(query_info) {
   };
 
   this.toJSON = function() {
-    return _.pick(
-             query_info,
-             'uid',
-             'request_id',
-             'start',
-             'count',
-             'field_tree',
-             'facets',
-             'sort',
-             'settings'
-           );
+    return {
+             uid:        this.get('uid'),
+             request_id: this.get('request_id'),
+             start:      this.get('start'),
+             count:      this.get('count'),
+             field_tree: this.get('field_tree'),
+             facets:     this.get('facets'),
+             sort:       this.get('sort'),
+             settings:   this.get('settings')
+           };
   };
 };
