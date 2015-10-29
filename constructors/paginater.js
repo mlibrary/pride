@@ -1,6 +1,6 @@
 var Pride = Pride || {};
 
-Pride.Paginator = function(initial_values) {
+Pride.Paginater = function(initial_values) {
   this.possibleKeys = function() {
     return [
              'start',
@@ -18,6 +18,7 @@ Pride.Paginator = function(initial_values) {
   };
 
   this.set = function(new_values) {
+
     ////////////////////////
     // Basic error checks //
     ////////////////////////
@@ -54,7 +55,6 @@ Pride.Paginator = function(initial_values) {
         throw 'Can not set page if count is zero or undefined';
       }
     }
-    console.log(values)
 
     // If the end is being set, we calculate what start or count should now be.
     if (_.has(new_values, 'end')) {
@@ -87,7 +87,7 @@ Pride.Paginator = function(initial_values) {
     if (!_.isNumber(values.total_available)) {
       values.index_limit = Infinity;
     } else if (values.total_available > 0) {
-      values.index_limit = total_available - 1;
+      values.index_limit = values.total_available - 1;
     } else {
       values.index_limit = undefined;
     }
@@ -100,7 +100,7 @@ Pride.Paginator = function(initial_values) {
       values.page = Math.floor(values.start / values.count) + 1;
 
       if (_.isNumber(values.total_available)) {
-        values.total_pages = Math.ceil(value.total_available / value.count);
+        values.total_pages = Math.ceil(values.total_available / values.count);
       } else {
         values.total_pages = undefined;
       }
@@ -114,7 +114,7 @@ Pride.Paginator = function(initial_values) {
     //////////////////////////////////////
 
     if (!_.has(values, 'start') || !_.has(values, 'count')) {
-      throw 'Not enough information given to create Paginator';
+      throw 'Not enough information given to create Paginater';
     }
 
     return this;

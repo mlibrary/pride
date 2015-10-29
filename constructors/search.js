@@ -63,12 +63,10 @@ Pride.Search = function(datastore, given_query) {
              fields:          Pride.deepClone(datastore.get('fields')),
              field_tree:      Pride.deepClone(query.get('field_tree')),
              settings:        Pride.deepClone(query.get('settings')),
-             start:           query.get('start'),
-             end:             query.get('end'),
+             page:            query.get('page'),
              count:           query.get('count'),
              total_available: query.get('total_available'),
-             total_pages:     query.get('total_pages'),
-             current_page:    query.get('current_page')
+             total_pages:     query.get('total_pages')
            };
   };
 
@@ -84,8 +82,7 @@ Pride.Search = function(datastore, given_query) {
                          Pride.settings.default_cache_size;
 
   this.set = function(set_hash) {
-    _.each(set_hash, function(value, key) { query.set(key, value); });
-
+    query.set(set_hash);
     setSearchChanged();
 
     if (!_.isEmpty(_.omit(set_hash, 'count', 'start', 'end'))) records = [];
@@ -113,8 +110,10 @@ Pride.Search = function(datastore, given_query) {
     if (requested_section &&
         query.toLimitSection().overlaps(requested_section)) {
       var new_query = query.clone()
-                           .set('start', requested_section.start)
-                           .set('count', requested_section.calcLength());
+                           .set({
+                             start: requested_section.start,
+                             count: requested_section.calcLength()
+                           });
 
       datastore.runQuery({
         query: new_query,
@@ -163,18 +162,9 @@ Pride.Search = function(datastore, given_query) {
   var updateQueryAndDatastore = function(result) {
     datastore.update(result.datastore);
 
-    var new_total_available = result.total_available;
-    var new_end             = query.get('end');
-
-    if (new_total_available === 0) {
-      new_end = undefined;
-    } else if (new_end >= new_total_available) {
-      new_end = new_total_available - 1;
-    }
-
-    query.update(result.new_request)
-         .set('total_available', new_total_available)
-         .set('end', new_end);
+    var query_data             = _.omit(result.new_request, 'start', 'count');
+    query_data.total_available = result.total_available;
+    query.set(query_data);
 
     runSearchChanged();
   };
