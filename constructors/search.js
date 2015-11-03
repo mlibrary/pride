@@ -117,7 +117,10 @@ Pride.Search = function(datastore, given_query) {
 
       datastore.runQuery({
         query: new_query,
-        failure_message: 'Search Request Failed',
+        failure_message: Pride.Messenger.preset(
+                           'failed_search_run',
+                           datastore.get('metadata').name
+                         ),
         success: function(result) {
           // Update things if the response matches the current query.
           if (result.request.request_id == query.get('request_id')) {

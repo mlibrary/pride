@@ -3,14 +3,14 @@ var Pride = Pride || {};
 Pride.request = function(request_info) {
   var request_method = 'get';
 
-  if (request_info.query) {
-    request_method = 'post';
-  }
+  if (request_info.query) request_method = 'post';
 
   console.log('*** HTTP REQUEST ***********************');
   console.log('  URL:    ', request_info.url);
   console.log('  CONTENT:', JSON.stringify(request_info.query));
   console.log('****************************************');
+  request_info.failure = request_info.failure || function() {};
+  request_info.success = request_info.success || function() {};
 
   reqwest({
     url:          request_info.url,
@@ -24,15 +24,13 @@ Pride.request = function(request_info) {
 
 
       if (request_info.failure_message) {
-        Pride.Messenger.sendMessage(
-          request_info.failure_message,
-          'error'
-        );
+        Pride.Messenger.sendMessage({
+          summary: request_info.failure_message,
+          class:   'error'
+        });
       }
 
-      if (_.isFunction(request_info.failure)) {
-        request_info.failure(error);
-      }
+      request_info.failure(error);
     },
 
     success: function (response) {
@@ -41,15 +39,13 @@ Pride.request = function(request_info) {
       Pride.Messenger.sendMessageArray(response.messages);
 
       if (request_info.success_message) {
-        Pride.Messenger.sendMessage(
-          request_info.success_message,
-          'success'
-        );
+        Pride.Messenger.sendMessage({
+          summary: request_info.success_message,
+          class:   'success'
+        });
       }
 
-      if (_.isFunction(request_info.success)) {
-        request_info.success(response);
-      }
+      request_info.success(response);
     }
   });
 };

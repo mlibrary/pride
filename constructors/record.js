@@ -26,7 +26,10 @@ Pride.Record = function(data) {
 
           func();
         },
-        failure_message: 'Failed to load ' + data.name[0]
+        failure_message: Pride.Messenger.preset(
+                           'failed_record_load',
+                           data.name[0]
+                         )
       });
     }
   };
