@@ -147,7 +147,7 @@ Pride.Search = function(datastore, given_query) {
 
       // Update the records that are not already filled.
       if (_.isUndefined(records[record_index])) {
-        records[record_index] = new_record;
+        records[record_index] = new Pride.Record(new_record);
         if (query.toSection().inSection(record_index)) {
           query_results_added = true;
         }
