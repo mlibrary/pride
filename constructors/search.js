@@ -139,6 +139,10 @@ Pride.Search = function(datastore, given_query) {
           }
         }
       });
+    } else {
+      // We don't need to run a search, but should update run observers in case
+      // set() was called since the last run().
+      runSearchChanged();
     }
   };
 
