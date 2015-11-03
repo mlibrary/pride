@@ -19,23 +19,20 @@ Pride.AllDatastores = {
   },
 
   update: function(args) {
-    this.array       = [];
-    pride_datastores = this.array;
+    self = this;
 
     Pride.request({
       url: Pride.settings.datastores_url,
       failure: args.failure,
       success: function(response) {
-        _.each(
-          response['response'],
-          function(datastore_data) {
-            pride_datastores.push(new Pride.Datastore(datastore_data));
-          }
-        );
+        self.array = _.map(
+                       response['response'],
+                       function(datastore_data) {
+                         return new Pride.Datastore(datastore_data);
+                       }
+                     );
 
-        if (_.isFunction(args.success)) {
-          args.success();
-        }
+        if (_.isFunction(args.success)) args.success();
       }
     });
   }
