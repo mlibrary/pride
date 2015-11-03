@@ -32,17 +32,17 @@ Pride.Search = function(datastore, given_query) {
   };
 
   var recordsChanged = function(single_func) {
-    console.log('UPDATED RECORDS:', getRecordsInQuery())
+    console.log('[' + datastore.get('uid') + '] UPDATED RECORDS:', getRecordsInQuery())
     notify(records_observers, getRecordsInQuery(), single_func);
   };
 
   var setSearchChanged = function(single_func) {
-    console.log('UPDATED SEARCH (SET):', buildSearchData())
+    console.log('[' + datastore.get('uid') + '] UPDATED SEARCH (SET):', buildSearchData())
     notify(set_search_observers, buildSearchData(), single_func);
   };
 
   var runSearchChanged = function(single_func) {
-    console.log('UPDATED SEARCH (RUN):', buildSearchData())
+    console.log('[' + datastore.get('uid') + '] UPDATED SEARCH (RUN):', buildSearchData())
     notify(run_search_observers, buildSearchData(), single_func);
   };
 
@@ -109,6 +109,7 @@ Pride.Search = function(datastore, given_query) {
   var requestRecords = function(requested_section) {
     if (requested_section &&
         query.toLimitSection().overlaps(requested_section)) {
+
       var new_query = query.clone()
                            .set({
                              start: requested_section.start,
@@ -122,6 +123,7 @@ Pride.Search = function(datastore, given_query) {
                            datastore.get('metadata').name
                          ),
         success: function(result) {
+          console.log('[' + datastore.get('uid') + '] RAW RESULT', result)
           // Update things if the response matches the current query.
           if (result.request.request_id == query.get('request_id')) {
             updateQueryAndDatastore(result);
@@ -143,7 +145,7 @@ Pride.Search = function(datastore, given_query) {
   var addRecords = function(new_record_array, offset) {
     var query_results_added = false;
 
-    console.log('NEW RECORDS', new_record_array)
+    console.log('[' + datastore.get('uid') + '] NEW RECORDS', new_record_array)
 
     _.each(new_record_array, function(new_record, array_index) {
       var record_index = array_index + offset;
@@ -157,7 +159,7 @@ Pride.Search = function(datastore, given_query) {
       }
     });
 
-    console.log('CACHE SIZE:', records.length);
+    console.log('[' + datastore.get('uid') + '] CACHE SIZE:', records.length);
 
     if (query_results_added || _.isEmpty(new_record_array)) recordsChanged();
   };

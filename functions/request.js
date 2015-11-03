@@ -5,12 +5,11 @@ Pride.request = function(request_info) {
 
   if (request_info.query) request_method = 'post';
 
-  console.log('*** HTTP REQUEST ***********************');
-  console.log('  URL:    ', request_info.url);
-  console.log('  CONTENT:', JSON.stringify(request_info.query));
-  console.log('****************************************');
   request_info.failure = request_info.failure || function() {};
   request_info.success = request_info.success || function() {};
+
+  console.log('[http request] URL: ', request_info.url);
+  console.log('[http request] CONTENT:', JSON.stringify(request_info.query));
 
   reqwest({
     url:          request_info.url,
