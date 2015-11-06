@@ -25,7 +25,7 @@ Pride.Datastore = function(datastore_info) {
            });
   };
 
-  this.baseSearch = function() { return new Pride.Search(this); };
+  this.baseSearch = function() { return new Pride.Search({datastore: this}); };
 
   this.runQuery = function(request_arguments) {
     request_arguments.url = datastore_info.url;
