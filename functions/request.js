@@ -26,14 +26,14 @@ Pride.request = function(request_info) {
       if (request_info.attempts <= 0) {
         console.log('[http request] Error!');
 
+        request_info.failure(error);
+
         if (request_info.failure_message) {
           Pride.Messenger.sendMessage({
             summary: request_info.failure_message,
             class:   'error'
           });
         }
-
-        request_info.failure(error);
       } else {
         console.log('[http request] Trying request again...');
         window.setTimeout(
@@ -46,7 +46,7 @@ Pride.request = function(request_info) {
     success: function (response) {
       console.log('[http request] Success!');
 
-      Pride.Messenger.sendMessageArray(response.messages);
+      request_info.success(response);
 
       if (request_info.success_message) {
         Pride.Messenger.sendMessage({
@@ -55,7 +55,7 @@ Pride.request = function(request_info) {
         });
       }
 
-      request_info.success(response);
+      Pride.Messenger.sendMessageArray(response.messages);
     }
   });
 };
