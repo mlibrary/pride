@@ -1,3 +1,8 @@
+// Copyright (c) 2015, Regents of the University of Michigan.
+// All rights reserved. See LICENSE.txt for details.
+
+// Authored by Colin Fulton (fultonis@umich.edu)
+
 var Pride = Pride || {};
 
 // Factory for creating functions to create various field tree node types.
