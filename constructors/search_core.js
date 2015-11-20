@@ -9,13 +9,6 @@ Pride.SearchCore = function(setup) {
   this.datastore = setup.datastore;
   this.query     = setup.query || this.datastore.baseQuery();
 
-  this.results = function() {
-    return resultsPiece(new Pride.Section(
-             self.query.get('start'),
-             Math.min(self.query.get('end'), self.query.get('index_limit'))
-           ));
-  };
-
   var self             = this;
   var request_func     = setup.request_func || this.datastore.runQuery;
   var results          = setup.starting_results || [];
@@ -58,6 +51,13 @@ Pride.SearchCore = function(setup) {
     );
 
     return self;
+  };
+
+  this.results = function() {
+    return resultsPiece(new Pride.Section(
+             self.query.get('start'),
+             Math.min(self.query.get('end'), self.query.get('index_limit'))
+           ));
   };
 
   var requestResults = function(requested_section) {
