@@ -14,7 +14,8 @@ Pride.Paginater = function(initial_values) {
              'page',
              'index_limit',
              'total_pages',
-             'total_available'
+             'total_available',
+             'page_limit'
            ];
   };
 
@@ -106,12 +107,15 @@ Pride.Paginater = function(initial_values) {
 
       if (_.isNumber(values.total_available)) {
         values.total_pages = Math.ceil(values.total_available / values.count);
+        values.page_limit  = values.total_pages;
       } else {
         values.total_pages = undefined;
+        values.page_limit  = Infinity;
       }
     } else {
       values.page        = undefined;
       values.total_pages = undefined;
+      values.page_limit  = undefined;
     }
 
     //////////////////////////////////////

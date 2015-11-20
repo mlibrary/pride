@@ -91,7 +91,8 @@ Pride.Search = function(setup) {
              page:            core.query.get('page'),
              count:           core.query.get('count'),
              total_available: core.query.get('total_available'),
-             total_pages:     core.query.get('total_pages')
+             total_pages:     core.query.get('total_pages'),
+             page_limit:      core.query.get('page_limit')
            };
   };
 
@@ -107,6 +108,27 @@ Pride.Search = function(setup) {
 
   this.run = function(cache_size) {
     core.run(cache_size);
+
+    return self;
+  };
+
+  this.nextPage = function() {
+    var current_page = core.query.get('page');
+    console.log(current_page, core.query.get('page_limit'))
+    if (current_page && current_page < core.query.get('page_limit')) {
+      self.set({page: current_page + 1});
+      self.run();
+    }
+
+    return self;
+  };
+
+  this.prevPage = function() {
+    var current_page = core.query.get('page');
+    if (current_page && current_page > 1) {
+      self.set({page: current_page - 1});
+      self.run();
+    }
 
     return self;
   };
