@@ -26,7 +26,7 @@ Pride.Observable = function(extention) {
     var func_args = arguments;
 
     _.each(observer_array, function(func) {
-      func.call(func, Array.prototype.slice.call(func_args));
+      func.apply(func, Array.prototype.slice.call(func_args));
     });
 
     return this;
