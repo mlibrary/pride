@@ -23,6 +23,7 @@ Pride.settings = {
   // ms_between_attempts: How long Pride will wait to try another HTTP request
   //                      after one fails.
   connection_attempts: 5,
+  init_attempts:       5,
   ms_between_attempts: 1500,
 
   // message_formats: Key-value pairs where each key is the ID of a message type

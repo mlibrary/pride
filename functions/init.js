@@ -23,7 +23,7 @@ Pride.init = function(options) {
 
       Pride.request({
         url:             Pride.settings.datastores_url,
-        attempts:        options.attempts,
+        attempts:        Pride.settings.init_attempts,
         failure_message: 'Failed to load datastores',
 
         failure: function() {
