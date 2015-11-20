@@ -13,16 +13,16 @@ Pride.Query = function(query_info) {
                   });
 
   // Memoize the paginater keys for future use.
-  var paginater_keys = paginater.possibleKeys();
+  var paginater_keys = Pride.Paginater.getPossibleKeys();
 
   // Remove the pagination info from query_info.
-  query_info = _.omit(Pride.deepClone(query_info), 'start', 'count');
+  query_info = _.omit(Pride.deepClone(query_info), paginater_keys);
 
   // Set the default request_id if it isn't already set.
   query_info.request_id = query_info.request_id || 0;
 
   this.get = function(key) {
-    if (paginater.isPaginationKey(key)) {
+    if (Pride.Paginater.hasKey(key)) {
       return paginater.get(key);
     } else {
       return query_info[key];

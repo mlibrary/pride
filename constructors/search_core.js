@@ -32,7 +32,9 @@ Pride.SearchCore = function(setup) {
     self.query.set(set_hash);
     self.setDataChanged();
 
-    if (!_.isEmpty(_.omit(set_hash, 'count', 'start', 'end'))) results = [];
+    if (!_.isEmpty(_.omit(set_hash, Pride.Paginater.getPossibleKeys()))) {
+      results = [];
+    }
 
     return self;
   };

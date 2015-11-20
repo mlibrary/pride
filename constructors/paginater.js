@@ -6,23 +6,6 @@
 var Pride = Pride || {};
 
 Pride.Paginater = function(initial_values) {
-  this.possibleKeys = function() {
-    return [
-             'start',
-             'count',
-             'end',
-             'page',
-             'index_limit',
-             'total_pages',
-             'total_available',
-             'page_limit'
-           ];
-  };
-
-  this.isPaginationKey = function(key) {
-    return this.possibleKeys().indexOf(key) > -1;
-  };
-
   this.set = function(new_values) {
 
     ////////////////////////
@@ -136,4 +119,21 @@ Pride.Paginater = function(initial_values) {
   // Set the initial values.
   var values = {};
   this.set(initial_values);
+};
+
+Pride.Paginater.getPossibleKeys = function() {
+  return [
+           'start',
+           'count',
+           'end',
+           'page',
+           'index_limit',
+           'total_pages',
+           'total_available',
+           'page_limit'
+         ];
+};
+
+Pride.Paginater.hasKey = function(key) {
+  return Pride.Paginater.getPossibleKeys().indexOf(key) > -1;
 };
