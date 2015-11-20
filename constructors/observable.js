@@ -22,9 +22,9 @@ Pride.Observable = function(extention) {
     return this;
   };
 
-  this.notifyObservers = function(message) {
+  this.notifyObservers = function() {
     _.each(observer_array, function (func) {
-      func(message);
+      func.call(func, Array.prototype.slice(arguments));
     });
 
     return this;
