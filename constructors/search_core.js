@@ -15,22 +15,13 @@ Pride.SearchCore = function(setup) {
   var defaultCacheSize = Pride.settings.cache_size[this.datastore.uid] ||
                          Pride.settings.default_cache_size;
 
-  //////////////////////////////////////////
-  // Functions outside objects can define //
-  //////////////////////////////////////////
-
-  this.resultsChanged = function() {};
-  this.setDataChanged = function() {};
-  this.runDataChanged = function() {};
-  this.createItem     = function() {};
-
   /////////////////////////
   // Performing Searches //
   /////////////////////////
 
   this.set = function(set_hash) {
     self.query.set(set_hash);
-    self.setDataChanged();
+    Pride.safeCall(self.setDataChanged);
 
     if (!_.isEmpty(_.omit(set_hash, Pride.Paginater.getPossibleKeys()))) {
       results = [];
@@ -40,7 +31,7 @@ Pride.SearchCore = function(setup) {
   };
 
   this.run = function(cache_size) {
-    self.resultsChanged();
+    Pride.safeCall(self.resultsChanged);
 
     if (_.isUndefined(cache_size)) {
       cache_size = defaultCacheSize;
@@ -100,7 +91,7 @@ Pride.SearchCore = function(setup) {
     } else {
       // We don't need to run a search, but should update run observers in case
       // set() was called since the last run().
-      self.runDataChanged();
+      Pride.safeCall(self.runDataChanged);
     }
   };
 
@@ -114,7 +105,7 @@ Pride.SearchCore = function(setup) {
 
       // Update the results that are not already filled.
       if (_.isUndefined(results[item_index])) {
-        results[item_index] = self.createItem(item_data);
+        results[item_index] = Pride.safeCall(self.createItem, item_data);
 
         if (self.query.toSection().inSection(item_index)) {
           query_results_added = true;
@@ -124,7 +115,9 @@ Pride.SearchCore = function(setup) {
 
     console.log('[' + self.datastore.get('uid') + '] CACHE SIZE:', results.length);
 
-    if (query_results_added || _.isEmpty(new_items_array)) self.resultsChanged();
+    if (query_results_added || _.isEmpty(new_items_array)) {
+      Pride.safeCall(self.resultsChanged);
+    }
   };
 
   var updateData = function(response_data) {
@@ -134,7 +127,7 @@ Pride.SearchCore = function(setup) {
     new_query_data.total_available = response_data.total_available;
     self.query.set(new_query_data);
 
-    self.runDataChanged();
+    Pride.safeCall(self.runDataChanged);
   };
 
   var getMissingSection = function(section) {
