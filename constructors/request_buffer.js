@@ -6,6 +6,8 @@
 var Pride = Pride || {};
 
 Pride.RequestBuffer = function(request_options) {
+  request_options = request_options || {};
+
   var success_functions = [];
   var failure_functions = [];
 
@@ -27,7 +29,7 @@ Pride.RequestBuffer = function(request_options) {
   };
 
   var callWithResponse = function(data) {
-    response_data = cached_response_data || data;
+    cached_response_data = cached_response_data || data;
 
     if (request_successful) {
       callAll(success_functions);
