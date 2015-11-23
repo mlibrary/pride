@@ -12,33 +12,29 @@ Pride.request = function(request_info) {
   var request_method = 'get';
   if (request_info.query) request_method = 'post';
 
-  request_info.failure = request_info.failure || function() {};
-  request_info.success = request_info.success || function() {};
-
   if (!_.isNumber(request_info.attempts)) {
     request_info.attempts = Pride.settings.connection_attempts;
   }
+
   request_info.attempts -= 1;
 
   reqwest({
-    url:          request_info.url,
-    data:         JSON.stringify(request_info.query),
-    type:         'json',
-    method:       request_method,
+    url:         request_info.url,
+    data:        JSON.stringify(request_info.query),
+    type:        'json',
+    method:      request_method,
     contentType: 'application/json',
 
     error: function (error) {
       if (request_info.attempts <= 0) {
-        console.log('[http request] Error!');
+        console.log('[http request] ERROR:', error);
 
-        request_info.failure(error);
+        Pride.safeCall(request_info.failure, error);
 
-        if (request_info.failure_message) {
-          Pride.Messenger.sendMessage({
-            summary: request_info.failure_message,
-            class:   'error'
-          });
-        }
+        Pride.Messenger.sendMessage({
+          summary: request_info.failure_message,
+          class:   'error'
+        });
       } else {
         console.log('[http request] Trying request again...');
         window.setTimeout(
@@ -49,16 +45,14 @@ Pride.request = function(request_info) {
     },
 
     success: function (response) {
-      console.log('[http request] Success!');
+      console.log('[http request] SUCCESS:', response);
 
-      request_info.success(response);
+      Pride.safeCall(request_info.success, response);
 
-      if (request_info.success_message) {
-        Pride.Messenger.sendMessage({
-          summary: request_info.success_message,
-          class:   'success'
-        });
-      }
+      Pride.Messenger.sendMessage({
+        summary: request_info.success_message,
+        class:   'success'
+      });
 
       Pride.Messenger.sendMessageArray(response.messages);
     }
