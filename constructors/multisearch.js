@@ -16,7 +16,7 @@ Pride.MultiSearch = function(datastores) {
       this.datastores,
       function(datastore) {
         datastore.set(
-          translate_values(
+          translateValues(
             values,
             datastore.get('uid')
           )
@@ -36,7 +36,7 @@ Pride.MultiSearch = function(datastores) {
     return this;
   };
 
-  var translate_values = function(values, datastore_uid) {
+  var translateValues = function(values, datastore_uid) {
     // FIRST:  Convert or remove fields in the field_tree if nessesary
     // SECOND: Convert or remove facets if nessesary
     // THIRD:  Convert or remove settings if nessesary

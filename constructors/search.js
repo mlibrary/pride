@@ -26,12 +26,12 @@ Pride.Search = function(setup) {
 
   core.setDataChanged = function(single_func) {
     console.log('[' + core.datastore.get('uid') + '] UPDATED SEARCH (SET)')
-    set_data_observers.notifyObservers(search_data());
+    set_data_observers.notifyObservers(searchData());
   };
 
   core.runDataChanged = function(single_func) {
     console.log('[' + core.datastore.get('uid') + '] UPDATED SEARCH (RUN)')
-    run_data_observers.notifyObservers(search_data());
+    run_data_observers.notifyObservers(searchData());
 
     var new_facet_data =  core.datastore.get('facets');
 
@@ -66,19 +66,19 @@ Pride.Search = function(setup) {
 
   this.addSetDataObserver = function(func) {
     set_data_observers.addObserver(func);
-    func(search_data());
+    func(searchData());
 
     return self;
   };
 
   this.addRunDataObserver = function(func) {
     run_data_observers.addObserver(func);
-    func(search_data());
+    func(searchData());
 
     return self;
   };
 
-  var search_data = function() {
+  var searchData = function() {
     return {
              uid:             core.datastore.get('uid'),
              metadata:        Pride.deepClone(core.datastore.get('metadata')),
