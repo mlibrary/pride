@@ -4,5 +4,6 @@
 // Authored by Colin Fulton (fultonis@umich.edu)
 
 Pride.init({success: function() {
-  x = Pride.AllDatastores.newSearch('mirlyn');
+  mirlyn    = Pride.AllDatastores.newSearch('mirlyn');
+  databases = Pride.AllDatastores.newSearch('databases');
 }});
