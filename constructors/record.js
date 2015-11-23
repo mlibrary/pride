@@ -6,42 +6,41 @@
 var Pride = Pride || {};
 
 Pride.Record = function(data) {
+  var request_buffer = new Pride.RequestBuffer({
+                         url: data.source,
+                         failure_message: Pride.Messenger.preset(
+                                            'failed_record_load',
+                                            data.names[0]
+                                          ),
+                         edit_response: function(response) {
+                           data = translateData(response.results[0]);
+
+                           return data;
+                         }
+                       });
+
   this.renderPart = function(func) {
     callWithData(func);
-    updateThen();
+  };
+
+  this.renderPartThenCache = function(func) {
+    callWithData(func);
+    request_buffer.request();
   };
 
   this.renderFull = function(func) {
     callWithData(func);
-    updateThen(function() { callWithData(func); });
-  };
-
-  var callWithData = function(func) {
-    func(_.omit(Pride.deepClone(data), 'complete', 'source'));
-  };
-
-  var updateThen = function(func) {
-    func = func || function() {};
 
     if (!data.complete) {
-      Pride.request({
-        url: data.source,
-        success: function(response) {
-          data = translateData(response.results[0]);
-
-          func();
-        },
-        failure_message: Pride.Messenger.preset(
-                           'failed_record_load',
-                           data.name[0]
-                         )
-      });
+      request_buffer.request({ success: func });
     }
   };
 
-  var translateData = function(new_data) {
-    new_data = Pride.deepClone(new_data);
+  var callWithData = function(func) {
+    func(Pride.deepClone(_.omit(data, 'complete', 'source')), data.complete);
+  };
 
+  var translateData = function(new_data) {
     new_data.fields = _.map(
                         new_data.fields,
                         function(field) {
