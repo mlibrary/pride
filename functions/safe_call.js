@@ -3,9 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
-Pride.safeCall = function(func) {
+Pride.utils.safeCall = function(func) {
   if (_.isFunction(func)) {
     return func.apply(this, Array.prototype.slice.call(arguments, 1));
   }

@@ -3,8 +3,6 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
 Pride.AllDatastores = {
   array: [],
 

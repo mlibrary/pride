@@ -3,9 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
-Pride.MultiSearch = function(datastores) {
+Pride.core.MultiSearch = function(datastores) {
   this.datastores = datastores;
   var query_data  = {};
 

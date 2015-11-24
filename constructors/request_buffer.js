@@ -3,9 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
-Pride.RequestBuffer = function(request_options) {
+Pride.utils.RequestBuffer = function(request_options) {
   request_options = request_options || {};
 
   var success_functions = [];
@@ -41,24 +39,24 @@ Pride.RequestBuffer = function(request_options) {
   var sendRequest = function() {
     request_issued = true;
 
-    Pride.request({
+    Pride.utils.request({
       url:             request_options.url,
-      attempts:        request_options.attempts || Pride.settings.connection_attempts,
+      attempts:        request_options.attempts || Pride.Settings.connection_attempts,
       failure_message: request_options.failure_message,
 
       failure: function(error) {
         request_failed = true;
 
-        Pride.safeCall(request_options.before_failure, response);
+        Pride.utils.safeCall(request_options.before_failure, response);
 
         callWithResponse(error);
 
-        Pride.safeCall(request_options.after_failure, response);
+        Pride.utils.safeCall(request_options.after_failure, response);
       },
       success: function(response) {
         request_successful = true;
 
-        Pride.safeCall(request_options.before_success, response);
+        Pride.utils.safeCall(request_options.before_success, response);
 
         if (_.isFunction(request_options.edit_response)) {
           response = request_options.edit_response(response);
@@ -66,14 +64,14 @@ Pride.RequestBuffer = function(request_options) {
 
         callWithResponse(response);
 
-        Pride.safeCall(request_options.after_success, response);
+        Pride.utils.safeCall(request_options.after_success, response);
       }
     });
   };
 
   var callAll = function(func_array) {
     _.each(func_array, function(func) {
-      Pride.safeCall(func, cached_response_data);
+      Pride.utils.safeCall(func, cached_response_data);
     });
 
     success_functions.length = 0;

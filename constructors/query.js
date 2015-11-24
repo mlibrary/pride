@@ -3,26 +3,24 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
-Pride.Query = function(query_info) {
+Pride.core.Query = function(query_info) {
   // Setup the paginater to do all pagination calculations.
-  var paginater = new Pride.Paginater({
+  var paginater = new Pride.utils.Paginater({
                     start: query_info.start,
                     count: query_info.count
                   });
 
   // Memoize the paginater keys for future use.
-  var paginater_keys = Pride.Paginater.getPossibleKeys();
+  var paginater_keys = Pride.utils.Paginater.getPossibleKeys();
 
   // Remove the pagination info from query_info.
-  query_info = _.omit(Pride.deepClone(query_info), paginater_keys);
+  query_info = _.omit(Pride.utils.deepClone(query_info), paginater_keys);
 
   // Set the default request_id if it isn't already set.
   query_info.request_id = query_info.request_id || 0;
 
   this.get = function(key) {
-    if (Pride.Paginater.hasKey(key)) {
+    if (Pride.utils.Paginater.hasKey(key)) {
       return paginater.get(key);
     } else {
       return query_info[key];
@@ -47,19 +45,19 @@ Pride.Query = function(query_info) {
   };
 
   this.clone = function() {
-    var full_info   = Pride.deepClone(query_info);
+    var full_info   = Pride.utils.deepClone(query_info);
     full_info.start = paginater.get('start');
     full_info.count = paginater.get('count');
 
-    return new Pride.Query(full_info);
+    return new Pride.core.Query(full_info);
   };
 
   this.toSection = function() {
-    return new Pride.Section(this.get('start'), this.get('end'));
+    return new Pride.utils.Section(this.get('start'), this.get('end'));
   };
 
   this.toLimitSection = function() {
-    return new Pride.Section(this.get('start'), this.get('index_limit'));
+    return new Pride.utils.Section(this.get('start'), this.get('index_limit'));
   };
 
   this.toJSON = function() {

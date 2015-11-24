@@ -3,10 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
-Pride.Record = function(data) {
-  var request_buffer = new Pride.RequestBuffer({
+Pride.core.Record = function(data) {
+  var request_buffer = new Pride.utils.RequestBuffer({
                          url: data.source,
                          failure_message: Pride.Messenger.preset(
                                             'failed_record_load',
@@ -32,12 +30,12 @@ Pride.Record = function(data) {
     callWithData(func);
 
     if (!data.complete) {
-      request_buffer.request({ success: func });
+      request_buffer.request({success: func});
     }
   };
 
   var callWithData = function(func) {
-    func(Pride.deepClone(_.omit(data, 'complete', 'source')), data.complete);
+    func(_.omit(data, 'complete', 'source'), data.complete);
   };
 
   var translateData = function(new_data) {
@@ -45,7 +43,7 @@ Pride.Record = function(data) {
                         new_data.fields,
                         function(field) {
                           if (!field.value_has_html) {
-                            field.value = Pride.escape(field.value);
+                            field.value = Pride.utils.escape(field.value);
                           }
 
                           return _.omit(field, 'value_has_html');
@@ -56,7 +54,7 @@ Pride.Record = function(data) {
       new_data.names = _.map(
                          new_data.names,
                          function(name) {
-                           return Pride.escape(name);
+                           return Pride.utils.escape(name);
                          }
                        );
     }

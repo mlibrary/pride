@@ -3,9 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
-Pride.Paginater = function(initial_values) {
+Pride.utils.Paginater = function(initial_values) {
   this.set = function(new_values) {
 
     ////////////////////////
@@ -121,7 +119,7 @@ Pride.Paginater = function(initial_values) {
   this.set(initial_values);
 };
 
-Pride.Paginater.getPossibleKeys = function() {
+Pride.utils.Paginater.getPossibleKeys = function() {
   return [
            'start',
            'count',
@@ -134,6 +132,6 @@ Pride.Paginater.getPossibleKeys = function() {
          ];
 };
 
-Pride.Paginater.hasKey = function(key) {
-  return Pride.Paginater.getPossibleKeys().indexOf(key) > -1;
+Pride.utils.Paginater.hasKey = function(key) {
+  return Pride.utils.Paginater.getPossibleKeys().indexOf(key) > -1;
 };

@@ -3,13 +3,11 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
-Pride.Datastore = function(datastore_info) {
-  datastore_info = Pride.deepClone(datastore_info);
+Pride.core.Datastore = function(datastore_info) {
+  datastore_info = Pride.utils.deepClone(datastore_info);
 
   this.baseQuery = function() {
-    return new Pride.Query({
+    return new Pride.core.Query({
              uid:        datastore_info.uid,
              sort:       datastore_info.default_sort,
              start:      0,
@@ -30,11 +28,13 @@ Pride.Datastore = function(datastore_info) {
            });
   };
 
-  this.baseSearch = function() { return new Pride.Search({datastore: this}); };
+  this.baseSearch = function() {
+    return new Pride.core.Search({datastore: this});
+  };
 
   this.runQuery = function(request_arguments) {
     request_arguments.url = datastore_info.url;
-    Pride.request(request_arguments);
+    Pride.utils.request(request_arguments);
 
     return this;
   };
@@ -65,7 +65,7 @@ Pride.Datastore = function(datastore_info) {
   };
 
   var fillFieldTree = function(given_tree) {
-    given_tree = given_tree || new Pride.FieldBooleanNode('AND');
+    given_tree = given_tree || new Pride.FieldTree.FieldBoolean('AND');
 
     output = _.reduce(
                datastore_info.fields,
@@ -73,15 +73,15 @@ Pride.Datastore = function(datastore_info) {
                  if ((field.required || field.fixed) &&
                      !tree.contains({ type: 'field', value: field.uid })) {
 
-                   missing_field = new Pride.FieldNode(
+                   missing_field = new Pride.FieldTree.Field(
                                      field.uid,
-                                     new Pride.LiteralNode(field.default_value)
+                                     new Pride.FieldTree.Literal(field.default_value)
                                    );
 
                    if (_.isMatch(tree, { type: 'field_boolean', value: 'AND' })) {
                     return tree.addChild(missing_field);
                    } else {
-                    return new Pride.FieldBooleanNode('AND', tree, missing_field);
+                    return new Pride.FieldTree.FieldBoolean('AND', tree, missing_field);
                    }
                  }
 

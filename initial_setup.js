@@ -3,7 +3,6 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.init({success: function() {
-  mirlyn    = Pride.AllDatastores.newSearch('mirlyn');
-  databases = Pride.AllDatastores.newSearch('databases');
-}});
+var Pride       = {};
+Pride.utils     = {};
+Pride.core      = {};

@@ -3,9 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
-Pride.settings = {
+Pride.Settings = {
   // default_cache_size: If a cache size isn't set for a datastore, this value
   //                     is used instead.
   // cache_size:         Key-value pairs where each key is the UID of a

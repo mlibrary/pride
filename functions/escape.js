@@ -3,9 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
-Pride.escape = function(string) {
+Pride.utils.escape = function(string) {
   var temp_element = document.createElement('div');
   temp_element.appendChild(document.createTextNode(string));
 

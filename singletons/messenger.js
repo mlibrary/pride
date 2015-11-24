@@ -3,9 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
-Pride.Messenger = new Pride.Observable(function() {
+Pride.Messenger = new Pride.utils.Observable(function() {
   this.sendMessage = function(message) {
     if (message['summary']) {
       message['class']   = message['class']   || 'info';
@@ -30,10 +28,12 @@ Pride.Messenger = new Pride.Observable(function() {
     return this;
   };
 
+  // Given a type of preset message and some optional arguments, generate a
+  // message string.
   this.preset = function(type) {
     var variables = Array.prototype.slice.call(arguments);
 
-    return Pride.settings
+    return Pride.Settings
                 .message_formats[type]
                 .replace(
                   /(^|[^\\])\$(\d+)/,

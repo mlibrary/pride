@@ -3,9 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride = Pride || {};
-
-Pride.Observable = function(extention) {
+Pride.utils.Observable = function(extention) {
   var observer_array = [];
 
   this.addObserver = function (func) {
