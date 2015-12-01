@@ -3,8 +3,10 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.utils.safeCall = function(func) {
-  if (_.isFunction(func)) {
-    return func.apply(this, Array.prototype.slice.call(arguments, 1));
+Pride.utils.safeCall = function(maybe_func) {
+  if (_.isFunction(maybe_func)) {
+    return maybe_func.apply(this, Array.prototype.slice.call(arguments, 1));
+  } else {
+    return maybe_func;
   }
 };
