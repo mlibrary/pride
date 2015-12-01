@@ -6,13 +6,13 @@
 Pride.utils.Observable = function(extention) {
   var observer_array = [];
 
-  this.addObserver = function (func) {
-    observer_array.push(func);
+  this.add = function (func) {
+    if (_.isFunction(func)) observer_array.push(func);
 
     return this;
   };
 
-  this.removeObserver = function (removed_func) {
+  this.remove = function (removed_func) {
     observer_array = _.reject(observer_array, function(func) {
       return func == removed_func;
     });
@@ -20,12 +20,18 @@ Pride.utils.Observable = function(extention) {
     return this;
   };
 
-  this.notifyObservers = function(message) {
+  this.notify = function(message) {
     var func_args = arguments;
 
     _.each(observer_array, function(func) {
       func.apply(func, Array.prototype.slice.call(func_args));
     });
+
+    return this;
+  };
+
+  this.clear = function() {
+    observer_array.length = 0;
 
     return this;
   };

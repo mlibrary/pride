@@ -4,12 +4,23 @@
 // Authored by Colin Fulton (fultonis@umich.edu)
 
 Pride.Messenger = new Pride.utils.Observable(function() {
+  var notifyObservers = this.notify;
+
+  this.addObserver    = this.add;
+  this.removeObserver = this.remove;
+  this.clearObservers = this.clear;
+
+  this.notify  = undefined;
+  this.add     = undefined;
+  this.remove  = undefined;
+  this.clear   = undefined;
+
   this.sendMessage = function(message) {
     if (message['summary']) {
       message['class']   = message['class']   || 'info';
       message['details'] = message['details'] || '';
 
-      this.notifyObservers(message);
+      notifyObservers(message);
 
       console.log('[messenger] MESSAGE SENT:', message)
     }

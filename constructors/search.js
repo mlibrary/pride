@@ -4,79 +4,18 @@
 // Authored by Colin Fulton (fultonis@umich.edu)
 
 Pride.core.Search = function(setup) {
-  var self       = this;
-  var core       = new Pride.core.SearchCore(setup);
-  var facets     = Pride.utils.deepClone(core.datastore.get('facets'));
-  var facet_data = Pride.utils.deepClone(core.datastore.get('facets'));
-
-  //////////////////////
-  // Setup Seach Core //
-  //////////////////////
+  var self  = this;
+  var core  = new Pride.core.SearchCore(setup);
 
   core.createItem = function(item_data) {
     return new Pride.core.Record(item_data);
   };
 
-  core.resultsChanged = function(single_func) {
-    console.log('[' + core.datastore.get('uid') + '] UPDATED RESULTS')
-    results_observers.notifyObservers(core.results());
-  };
+  //////////////////
+  // Data Getters //
+  //////////////////
 
-  core.setDataChanged = function(single_func) {
-    console.log('[' + core.datastore.get('uid') + '] UPDATED SEARCH (SET)')
-    set_data_observers.notifyObservers(searchData());
-  };
-
-  core.runDataChanged = function(single_func) {
-    console.log('[' + core.datastore.get('uid') + '] UPDATED SEARCH (RUN)')
-    run_data_observers.notifyObservers(searchData());
-
-    var new_facet_data =  core.datastore.get('facets');
-
-    if (!_.isMatch(facet_data, new_facet_data)) {
-      facet_data = Pride.utils.deepClone(new_facet_data);
-      facets     = Pride.utils.deepClone(new_facet_data);
-    }
-  };
-
-  ///////////////
-  // Observers //
-  ///////////////
-
-  var results_observers  = new Pride.utils.Observable();
-  var set_data_observers = new Pride.utils.Observable();
-  var run_data_observers = new Pride.utils.Observable();
-  var facet_observers    = new Pride.utils.Observable();
-
-  this.addResultsObserver = function(func) {
-    results_observers.addObserver(func);
-    func(core.results());
-
-    return self;
-  };
-
-  this.addFacetsObserver = function(func) {
-    facet_observers.addObserver(func);
-    func(facets);
-
-    return self;
-  };
-
-  this.addSetDataObserver = function(func) {
-    set_data_observers.addObserver(func);
-    func(searchData());
-
-    return self;
-  };
-
-  this.addRunDataObserver = function(func) {
-    run_data_observers.addObserver(func);
-    func(searchData());
-
-    return self;
-  };
-
-  var searchData = function() {
+  this.getData = function() {
     return {
              uid:             core.datastore.get('uid'),
              metadata:        Pride.utils.deepClone(core.datastore.get('metadata')),
@@ -93,6 +32,80 @@ Pride.core.Search = function(setup) {
              page_limit:      core.query.get('page_limit')
            };
   };
+
+  this.getResults = function() {
+    return core.results;
+  };
+
+  ////////////
+  // Muting //
+  ////////////
+
+  var muted = false;
+
+  this.setMute = function(state) {
+    muted = state;
+    self.muteObservers.notify();
+
+    if (!muted) {
+      this.resultsObservers.notify();
+      this.setDataObservers.notify();
+      this.runDataObservers.notify();
+    }
+
+    return self;
+  };
+
+  this.getMute = function() {
+    return muted;
+  };
+
+  ///////////////////
+  // Observerables //
+  ///////////////////
+
+  var createObservable = function(name, data, never_mute) {
+    var object = new Pride.utils.Observable(function() {
+                   var addObserver     = this.add;
+                   var notifyObservers = this.notify;
+
+                   this.add = function(func) {
+                     if (!self.muted || never_mute) {
+                       func(Pride.utils.safeCall(data));
+                     }
+
+                     addObserver(func);
+
+                     return this;
+                   };
+
+                   this.notify = function() {
+                     if (!self.muted || never_mute) {
+                       console.log('[' + core.datastore.get('uid') + '] NOTIFY (' + name + ')')
+                       notifyObservers(Pride.utils.safeCall(data));
+                     }
+
+                     return this;
+                   };
+                 });
+
+    core[name + 'Changed'] = object.notify;
+
+    return object;
+  };
+
+  this.clearAllObservers = function() {
+    this.resultsObservers.clear();
+    this.setDataObservers.clear();
+    this.runDataObservers.clear();
+
+    return self;
+  };
+
+  this.resultsObservers = createObservable('results', this.getData);
+  this.setDataObservers = createObservable('setData', this.getResults);
+  this.runDataObservers = createObservable('runData', this.getResults);
+  this.muteObservers    = createObservable('runData', this.muted, true);
 
   /////////////////////////
   // Performing Searches //
