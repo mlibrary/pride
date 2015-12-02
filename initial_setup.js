@@ -3,6 +3,6 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-var Pride       = {};
-Pride.utils     = {};
-Pride.core      = {};
+var Pride   = {};
+Pride.utils = {};
+Pride.core  = {};

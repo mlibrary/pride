@@ -53,6 +53,7 @@ Pride.utils.RequestBuffer = function(request_options) {
 
         Pride.utils.safeCall(request_options.after_failure, response);
       },
+
       success: function(response) {
         request_successful = true;
 

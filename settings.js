@@ -15,13 +15,14 @@ Pride.Settings = {
   },
 
   // datastore_url: URL from which Pride can get all the possible datastores.
+  datastores_url: '',
 
   // connection_attempts: How many times Pride will attempt an HTTP request
   //                      before giving up.
   // ms_between_attempts: How long Pride will wait to try another HTTP request
   //                      after one fails.
   connection_attempts: 5,
-  init_attempts:       5,
+  init_attempts:       3,
   ms_between_attempts: 1500,
 
   // message_formats: Key-value pairs where each key is the ID of a message type

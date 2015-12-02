@@ -4,8 +4,8 @@
 // Authored by Colin Fulton (fultonis@umich.edu)
 
 Pride.core.Search = function(setup) {
-  var self  = this;
-  var core  = new Pride.core.SearchCore(setup);
+  var self = this;
+  var core = new Pride.core.SearchCore(setup);
 
   core.createItem = function(item_data) {
     return new Pride.core.Record(item_data);
