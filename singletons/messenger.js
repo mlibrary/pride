@@ -42,7 +42,7 @@ Pride.Messenger = new Pride.utils.Observable(function() {
   // Given a type of preset message and some optional arguments, generate a
   // message string.
   this.preset = function(type) {
-    var variables = Array.prototype.slice.call(arguments);
+    var variables = Pride.utils.slice(arguments);
 
     return Pride.Settings
                 .message_formats[type]

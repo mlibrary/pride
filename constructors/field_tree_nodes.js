@@ -8,7 +8,7 @@ Pride.FieldTree = {};
 // Factory for creating functions to create various field tree node types.
 Pride.core.nodeFactory = function(type, child_types, extention) {
   return function(value) {
-           this.children     = Array.prototype.slice.call(arguments, 1);
+           this.children     = Pride.utils.slice(arguments, 1);
            this.type         = type;
            this.value        = value.trim();
            this.child_types  = child_types || [];

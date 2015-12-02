@@ -5,7 +5,7 @@
 
 Pride.utils.safeCall = function(maybe_func) {
   if (_.isFunction(maybe_func)) {
-    return maybe_func.apply(this, Array.prototype.slice.call(arguments, 1));
+    return maybe_func.apply(this, Pride.utils.slice(arguments, 1));
   } else {
     return maybe_func;
   }
