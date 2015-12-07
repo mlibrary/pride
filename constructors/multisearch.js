@@ -3,38 +3,49 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.core.MultiSearch = function(datastores) {
-  this.datastores = datastores;
-  var query_data  = {};
+Pride.core.MultiSearch = function(uid, muted, searches) {
+  var query_data = {};
+  var self       = this;
+
+  this.searches = searches;
+  this.uid      = uid;
 
   this.set = function(values) {
     _.extend(query_data, values);
 
     _.each(
-      this.datastores,
-      function(datastore) {
-        datastore.set(
+      self.searches,
+      function(search) {
+        search.set(
           translateValues(
             values,
-            datastore.get('uid')
+            search.get('uid')
           )
         );
       }
     );
 
-    return this;
+    return self;
   };
 
-  this.run = function() {
-    _.each(
-      this.datastores,
-      function(datastore) { datastore.run(); }
-    );
+  this.run = function(cache_size) {
+    _.each(self.searches, function(search) { search.run(cache_size); });
 
-    return this;
+    return self;
   };
 
-  var translateValues = function(values, datastore_uid) {
+  this.setMute = function(state) {
+    muted = state;
+    _.each(self.searches, function(search) { search.setMute(state); });
+
+    return self;
+  };
+
+  this.getMute = function() {
+    return muted;
+  };
+
+  var translateValues = function(values, search_uid) {
     // FIRST:  Convert or remove fields in the field_tree if nessesary
     // SECOND: Convert or remove facets if nessesary
     // THIRD:  Convert or remove settings if nessesary
@@ -42,4 +53,6 @@ Pride.core.MultiSearch = function(datastores) {
 
     return values;
   };
+
+  this.setMute(muted);
 };

@@ -15,9 +15,11 @@ Pride.core.Search = function(setup) {
   // Data Getters //
   //////////////////
 
+  this.uid = core.datastore.get('uid');
+
   this.getData = function() {
     return {
-             uid:             core.datastore.get('uid'),
+             uid:             self.uid,
              metadata:        Pride.utils.deepClone(core.datastore.get('metadata')),
              sorts:           Pride.utils.deepClone(core.datastore.get('sorts')),
              current_sort:    core.query.get('sort'),
@@ -37,20 +39,33 @@ Pride.core.Search = function(setup) {
     return core.results;
   };
 
-  ////////////
-  // Muting //
-  ////////////
+  ///////////////////
+  // Observerables //
+  ///////////////////
 
-  var muted = false;
+  var muted               = false;
+  var observables         = [];
+  var mutable_observables = [];
+
+  this.clearAllObservers = function() {
+    _.each(observables, function(observable) {
+      observable.clear();
+    });
+
+    return self;
+  };
 
   this.setMute = function(state) {
-    muted = state;
-    self.muteObservers.notify();
+    if (state != muted) {
+      muted = state;
+      self.muteObservers.notify();
 
-    if (!muted) {
-      this.resultsObservers.notify();
-      this.setDataObservers.notify();
-      this.runDataObservers.notify();
+      if (!muted) {
+        _.each(mutable_observables, function(observable) {
+          console.log(observable)
+          observable.notify();
+        });
+      }
     }
 
     return self;
@@ -60,18 +75,17 @@ Pride.core.Search = function(setup) {
     return muted;
   };
 
-  ///////////////////
-  // Observerables //
-  ///////////////////
-
-  var createObservable = function(name, data, never_mute) {
+  var createObservable = function(name, data_func, never_mute) {
     var object = new Pride.utils.Observable(function() {
                    var addObserver     = this.add;
                    var notifyObservers = this.notify;
 
+                   observables.push(this);
+                   if (!never_mute) mutable_observables.push(this);
+
                    this.add = function(func) {
                      if (!self.muted || never_mute) {
-                       func(Pride.utils.safeCall(data));
+                       func(data_func());
                      }
 
                      addObserver(func);
@@ -82,7 +96,7 @@ Pride.core.Search = function(setup) {
                    this.notify = function() {
                      if (!self.muted || never_mute) {
                        console.log('[' + core.datastore.get('uid') + '] NOTIFY (' + name + ')')
-                       notifyObservers(Pride.utils.safeCall(data));
+                       notifyObservers(data_func());
                      }
 
                      return this;
@@ -94,18 +108,10 @@ Pride.core.Search = function(setup) {
     return object;
   };
 
-  this.clearAllObservers = function() {
-    this.resultsObservers.clear();
-    this.setDataObservers.clear();
-    this.runDataObservers.clear();
-
-    return self;
-  };
-
   this.resultsObservers = createObservable('results', this.getData);
   this.setDataObservers = createObservable('setData', this.getResults);
   this.runDataObservers = createObservable('runData', this.getResults);
-  this.muteObservers    = createObservable('runData', this.muted, true);
+  this.muteObservers    = createObservable('mute',    this.getMute, true);
 
   /////////////////////////
   // Performing Searches //
