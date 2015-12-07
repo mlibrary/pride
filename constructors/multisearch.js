@@ -3,43 +3,46 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.Util.MultiSearch = function(uid, muted, searches) {
+Pride.Util.MultiSearch = function(uid, muted, search_array) {
   var query_data = {};
   var self       = this;
 
-  this.searches = searches;
+  this.searches = search_array;
   this.uid      = uid;
 
   this.set = function(values) {
     _.extend(query_data, values);
 
+    var translated_values = translateValues(values, search.uid);
+
     _.each(
-      self.searches,
+      search_array,
       function(search) {
-        search.set(
-          translateValues(
-            values,
-            search.get('uid')
-          )
-        );
+        search.set(translated_values);
       }
     );
 
     return self;
   };
 
-  this.run = function(cache_size) {
-    _.each(self.searches, function(search) { search.run(cache_size); });
+  var funcOnEach = function(func_name, before_func) {
+    return function() {
+             var args = Pride.Util.slice(arguments);
 
-    return self;
+             Pride.Util.safeApply(before_func, args);
+
+             _.each(search_array, function(search) {
+               search[func_name].apply(search, args);
+             });
+
+             return self;
+           };
   };
 
-  this.setMute = function(state) {
-    muted = state;
-    _.each(self.searches, function(search) { search.setMute(state); });
-
-    return self;
-  };
+  this.run      = funcOnEach('run');
+  this.nextPage = funcOnEach('nextPage');
+  this.prevPage = funcOnEach('prevPage');
+  this.setMute  = funcOnEach('setMute', function(state) { muted = state; });
 
   this.getMute = function() {
     return muted;

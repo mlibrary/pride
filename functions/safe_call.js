@@ -10,3 +10,11 @@ Pride.Util.safeCall = function(maybe_func) {
     return maybe_func;
   }
 };
+
+Pride.Util.safeApply = function(maybe_func, args) {
+  if (_.isFunction(maybe_func)) {
+    return maybe_func.apply(this, args);
+  } else {
+    return maybe_func;
+  }
+};

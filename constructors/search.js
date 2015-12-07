@@ -128,21 +128,21 @@ Pride.Core.Search = function(setup) {
     return self;
   };
 
-  this.nextPage = function() {
+  this.nextPage = function(cache_size) {
     var current_page = core.query.get('page');
     if (_.isNumber(current_page) && current_page < core.query.get('page_limit')) {
       self.set({page: current_page + 1});
-      self.run();
+      self.run(cache_size);
     }
 
     return self;
   };
 
-  this.prevPage = function() {
+  this.prevPage = function(cache_size) {
     var current_page = core.query.get('page');
     if (_.isNumber(current_page) && current_page > 1) {
       self.set({page: current_page - 1});
-      self.run();
+      self.run(cache_size);
     }
 
     return self;

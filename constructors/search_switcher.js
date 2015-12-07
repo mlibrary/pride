@@ -9,6 +9,8 @@ Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
 
   current_search.setMute(false);
 
+  this.uid = current_search.uid;
+
   this.run = function(cache_size) {
     current_search.run(cache_size);
     search_cache.run(0);
@@ -19,6 +21,20 @@ Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
   this.set = function(settings) {
     current_search.set(settings);
     search_cache.set(settings);
+
+    return self;
+  };
+
+  this.nextPage = function() {
+    current_search.nextPage();
+    search_cache.nextPage(0);
+
+    return self;
+  };
+
+  this.prevPage = function() {
+    current_search.prevPage();
+    search_cache.prevPage(0);
 
     return self;
   };
@@ -43,6 +59,8 @@ Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
         throw 'Could not find a search with a UID of: ' + requested_uid;
       }
 
+
+      self.uid = current_search.uid;
       current_search.setMute(false);
     }
 
