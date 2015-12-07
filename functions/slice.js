@@ -3,6 +3,6 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.utils.slice = function(array, begin, end) {
+Pride.Util.slice = function(array, begin, end) {
   return Array.prototype.slice.call(array, begin, end);
 };

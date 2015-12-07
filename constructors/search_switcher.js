@@ -3,9 +3,9 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.utils.SearchSwitcher = function(current_search, cached_searches) {
+Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
   var self         = this;
-  var search_cache = new Pride.core.MultiSearch({}, true, cached_searches);
+  var search_cache = new Pride.Util.MultiSearch({}, true, cached_searches);
 
   current_search.setMute(false);
 
@@ -26,8 +26,6 @@ Pride.utils.SearchSwitcher = function(current_search, cached_searches) {
   this.switchTo = function(requested_uid) {
     if (requested_uid != current_search) {
       current_search.setMute(true);
-      console.log(search_cache)
-      console.log(search_cache.searches)
       search_cache.searches.push(current_search);
       current_search = undefined;
 

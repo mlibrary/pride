@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.core.SearchCore = function(setup) {
+Pride.Core.SearchCore = function(setup) {
   this.datastore = setup.datastore;
   this.query     = setup.query || this.datastore.baseQuery();
 
@@ -19,9 +19,9 @@ Pride.core.SearchCore = function(setup) {
 
   this.set = function(set_hash) {
     self.query.set(set_hash);
-    Pride.utils.safeCall(self.setDataChanged);
+    Pride.Util.safeCall(self.setDataChanged);
 
-    if (!_.isEmpty(_.omit(set_hash, Pride.utils.Paginater.getPossibleKeys()))) {
+    if (!_.isEmpty(_.omit(set_hash, Pride.Util.Paginater.getPossibleKeys()))) {
       results = [];
     }
 
@@ -29,7 +29,7 @@ Pride.core.SearchCore = function(setup) {
   };
 
   this.run = function(cache_size) {
-    Pride.utils.safeCall(self.resultsChanged);
+    Pride.Util.safeCall(self.resultsChanged);
 
     if (_.isUndefined(cache_size)) {
       cache_size = defaultCacheSize;
@@ -45,7 +45,7 @@ Pride.core.SearchCore = function(setup) {
   };
 
   this.results = function() {
-    return resultsPiece(new Pride.utils.Section(
+    return resultsPiece(new Pride.Util.Section(
              self.query.get('start'),
              Math.min(self.query.get('end'), self.query.get('index_limit'))
            ));
@@ -89,7 +89,7 @@ Pride.core.SearchCore = function(setup) {
     } else {
       // We don't need to run a search, but should update run observers in case
       // set() was called since the last run().
-      Pride.utils.safeCall(self.runDataChanged);
+      Pride.Util.safeCall(self.runDataChanged);
     }
   };
 
@@ -103,7 +103,7 @@ Pride.core.SearchCore = function(setup) {
 
       // Update the results that are not already filled.
       if (_.isUndefined(results[item_index])) {
-        results[item_index] = Pride.utils.safeCall(self.createItem, item_data);
+        results[item_index] = Pride.Util.safeCall(self.createItem, item_data);
 
         if (self.query.toSection().inSection(item_index)) {
           query_results_added = true;
@@ -114,7 +114,7 @@ Pride.core.SearchCore = function(setup) {
     console.log('[' + self.datastore.get('uid') + '] CACHE SIZE:', results.length);
 
     if (query_results_added || _.isEmpty(new_items_array)) {
-      Pride.utils.safeCall(self.resultsChanged);
+      Pride.Util.safeCall(self.resultsChanged);
     }
   };
 
@@ -125,7 +125,7 @@ Pride.core.SearchCore = function(setup) {
     new_query_data.total_available = response_data.total_available;
     self.query.set(new_query_data);
 
-    Pride.utils.safeCall(self.runDataChanged);
+    Pride.Util.safeCall(self.runDataChanged);
   };
 
   var getMissingSection = function(section) {
@@ -139,7 +139,7 @@ Pride.core.SearchCore = function(setup) {
       // Adjust for the offset from the start of the results.
       start += section.start;
 
-      return new Pride.utils.Section(start, end);
+      return new Pride.Util.Section(start, end);
     }
   };
 

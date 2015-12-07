@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.core.MultiSearch = function(uid, muted, searches) {
+Pride.Util.MultiSearch = function(uid, muted, searches) {
   var query_data = {};
   var self       = this;
 

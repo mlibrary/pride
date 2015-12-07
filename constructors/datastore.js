@@ -3,11 +3,11 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.core.Datastore = function(datastore_info) {
-  datastore_info = Pride.utils.deepClone(datastore_info);
+Pride.Core.Datastore = function(datastore_info) {
+  datastore_info = Pride.Util.deepClone(datastore_info);
 
   this.baseQuery = function() {
-    return new Pride.core.Query({
+    return new Pride.Core.Query({
              uid:        datastore_info.uid,
              sort:       datastore_info.default_sort,
              start:      0,
@@ -29,12 +29,12 @@ Pride.core.Datastore = function(datastore_info) {
   };
 
   this.baseSearch = function() {
-    return new Pride.core.Search({datastore: this});
+    return new Pride.Core.Search({datastore: this});
   };
 
   this.runQuery = function(request_arguments) {
     request_arguments.url = datastore_info.url;
-    Pride.utils.request(request_arguments);
+    Pride.Util.request(request_arguments);
 
     return this;
   };

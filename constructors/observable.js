@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.utils.Observable = function(extention) {
+Pride.Util.Observable = function(extention) {
   var observer_array = [];
 
   this.add = function (func) {
@@ -24,7 +24,7 @@ Pride.utils.Observable = function(extention) {
     var func_args = arguments;
 
     _.each(observer_array, function(func) {
-      func.apply(func, Pride.utils.slice(func_args));
+      func.apply(func, Pride.Util.slice(func_args));
     });
 
     return this;

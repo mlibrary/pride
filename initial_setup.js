@@ -4,5 +4,5 @@
 // Authored by Colin Fulton (fultonis@umich.edu)
 
 var Pride   = {};
-Pride.utils = {};
-Pride.core  = {};
+Pride.Util = {};
+Pride.Core  = {};

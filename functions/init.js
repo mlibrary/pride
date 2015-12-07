@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.core.init_request_buffer = new Pride.utils.RequestBuffer({
+Pride.Core.init_request_buffer = new Pride.Util.RequestBuffer({
   url:             Pride.Settings.datastores_url,
   attempts:        Pride.Settings.init_attempts,
   failure_message: 'Failed to load datastores',
@@ -12,10 +12,10 @@ Pride.core.init_request_buffer = new Pride.utils.RequestBuffer({
     Pride.AllDatastores.array = _.map(
       response['response'],
       function(datastore_data) {
-        return new Pride.core.Datastore(datastore_data);
+        return new Pride.Core.Datastore(datastore_data);
       }
     );
   }
 });
 
-Pride.init = Pride.core.init_request_buffer.request;
+Pride.init = Pride.Core.init_request_buffer.request;

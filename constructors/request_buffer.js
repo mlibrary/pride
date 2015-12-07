@@ -3,11 +3,11 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.utils.RequestBuffer = function(request_options) {
+Pride.Util.RequestBuffer = function(request_options) {
   request_options = request_options || {};
 
-  var success_functions = new Pride.utils.Observable();
-  var failure_functions = new Pride.utils.Observable();
+  var success_functions = new Pride.Util.Observable();
+  var failure_functions = new Pride.Util.Observable();
 
   var request_issued     = false;
   var request_successful = false;
@@ -39,7 +39,7 @@ Pride.utils.RequestBuffer = function(request_options) {
   var sendRequest = function() {
     request_issued = true;
 
-    Pride.utils.request({
+    Pride.Util.request({
       url:             request_options.url,
       attempts:        request_options.attempts || Pride.Settings.connection_attempts,
       failure_message: request_options.failure_message,
@@ -47,17 +47,17 @@ Pride.utils.RequestBuffer = function(request_options) {
       failure: function(error) {
         request_failed = true;
 
-        Pride.utils.safeCall(request_options.before_failure, response);
+        Pride.Util.safeCall(request_options.before_failure, response);
 
         callWithResponse(error);
 
-        Pride.utils.safeCall(request_options.after_failure, response);
+        Pride.Util.safeCall(request_options.after_failure, response);
       },
 
       success: function(response) {
         request_successful = true;
 
-        Pride.utils.safeCall(request_options.before_success, response);
+        Pride.Util.safeCall(request_options.before_success, response);
 
         if (_.isFunction(request_options.edit_response)) {
           response = request_options.edit_response(response);
@@ -65,7 +65,7 @@ Pride.utils.RequestBuffer = function(request_options) {
 
         callWithResponse(response);
 
-        Pride.utils.safeCall(request_options.after_success, response);
+        Pride.Util.safeCall(request_options.after_success, response);
       }
     });
   };

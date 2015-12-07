@@ -3,12 +3,12 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.core.Search = function(setup) {
+Pride.Core.Search = function(setup) {
   var self = this;
-  var core = new Pride.core.SearchCore(setup);
+  var core = new Pride.Core.SearchCore(setup);
 
   core.createItem = function(item_data) {
-    return new Pride.core.Record(item_data);
+    return new Pride.Core.Record(item_data);
   };
 
   //////////////////
@@ -20,13 +20,13 @@ Pride.core.Search = function(setup) {
   this.getData = function() {
     return {
              uid:             self.uid,
-             metadata:        Pride.utils.deepClone(core.datastore.get('metadata')),
-             sorts:           Pride.utils.deepClone(core.datastore.get('sorts')),
+             metadata:        Pride.Util.deepClone(core.datastore.get('metadata')),
+             sorts:           Pride.Util.deepClone(core.datastore.get('sorts')),
              current_sort:    core.query.get('sort'),
-             facets:          Pride.utils.deepClone(core.query.get('facets')),
-             fields:          Pride.utils.deepClone(core.datastore.get('fields')),
-             field_tree:      Pride.utils.deepClone(core.query.get('field_tree')),
-             settings:        Pride.utils.deepClone(core.query.get('settings')),
+             facets:          Pride.Util.deepClone(core.query.get('facets')),
+             fields:          Pride.Util.deepClone(core.datastore.get('fields')),
+             field_tree:      Pride.Util.deepClone(core.query.get('field_tree')),
+             settings:        Pride.Util.deepClone(core.query.get('settings')),
              page:            core.query.get('page'),
              count:           core.query.get('count'),
              total_available: core.query.get('total_available'),
@@ -62,7 +62,6 @@ Pride.core.Search = function(setup) {
 
       if (!muted) {
         _.each(mutable_observables, function(observable) {
-          console.log(observable)
           observable.notify();
         });
       }
@@ -76,7 +75,7 @@ Pride.core.Search = function(setup) {
   };
 
   var createObservable = function(name, data_func, never_mute) {
-    var object = new Pride.utils.Observable(function() {
+    var object = new Pride.Util.Observable(function() {
                    var addObserver     = this.add;
                    var notifyObservers = this.notify;
 

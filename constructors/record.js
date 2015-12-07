@@ -3,8 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.core.Record = function(data) {
-  var request_buffer = new Pride.utils.RequestBuffer({
+Pride.Core.Record = function(data) {
+  var request_buffer = new Pride.Util.RequestBuffer({
                          url: data.source,
                          failure_message: Pride.Messenger.preset(
                                             'failed_record_load',
@@ -43,7 +43,7 @@ Pride.core.Record = function(data) {
                         new_data.fields,
                         function(field) {
                           if (!field.value_has_html) {
-                            field.value = Pride.utils.escape(field.value);
+                            field.value = Pride.Util.escape(field.value);
                           }
 
                           return _.omit(field, 'value_has_html');
@@ -54,7 +54,7 @@ Pride.core.Record = function(data) {
       new_data.names = _.map(
                          new_data.names,
                          function(name) {
-                           return Pride.utils.escape(name);
+                           return Pride.Util.escape(name);
                          }
                        );
     }

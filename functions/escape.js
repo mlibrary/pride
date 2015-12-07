@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.utils.escape = function(string) {
+Pride.Util.escape = function(string) {
   var temp_element = document.createElement('div');
   temp_element.appendChild(document.createTextNode(string));
 

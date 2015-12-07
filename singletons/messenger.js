@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.Messenger = new Pride.utils.Observable(function() {
+Pride.Messenger = new Pride.Util.Observable(function() {
   var notifyObservers = this.notify;
 
   this.addObserver    = this.add;
@@ -42,7 +42,7 @@ Pride.Messenger = new Pride.utils.Observable(function() {
   // Given a type of preset message and some optional arguments, generate a
   // message string.
   this.preset = function(type) {
-    var variables = Pride.utils.slice(arguments);
+    var variables = Pride.Util.slice(arguments);
 
     return Pride.Settings
                 .message_formats[type]

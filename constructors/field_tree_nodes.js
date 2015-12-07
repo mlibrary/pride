@@ -6,9 +6,9 @@
 Pride.FieldTree = {};
 
 // Factory for creating functions to create various field tree node types.
-Pride.core.nodeFactory = function(type, child_types, extention) {
+Pride.Core.nodeFactory = function(type, child_types, extention) {
   return function(value) {
-           this.children     = Pride.utils.slice(arguments, 1);
+           this.children     = Pride.Util.slice(arguments, 1);
            this.type         = type;
            this.value        = value.trim();
            this.child_types  = child_types || [];
@@ -85,8 +85,8 @@ Pride.core.nodeFactory = function(type, child_types, extention) {
 
 // Specialized version of Pride.nodefactory() which produces boolean
 // nodes.
-Pride.core.boolNodeFactory = function(type, child_types) {
-  return Pride.core.nodeFactory(
+Pride.Core.boolNodeFactory = function(type, child_types) {
+  return Pride.Core.nodeFactory(
            type,
            child_types,
            function () {
@@ -125,10 +125,10 @@ var inside_field_nodes = ['value_boolean', 'literal', 'tag', 'special'];
 
 // Create constructor functions for all the various node types.
 
-Pride.FieldTree.FieldBoolean = Pride.core.boolNodeFactory('field_boolean', top_level_nodes);
-Pride.FieldTree.ValueBoolean = Pride.core.boolNodeFactory('value_boolean', inside_field_nodes);
+Pride.FieldTree.FieldBoolean = Pride.Core.boolNodeFactory('field_boolean', top_level_nodes);
+Pride.FieldTree.ValueBoolean = Pride.Core.boolNodeFactory('value_boolean', inside_field_nodes);
 
-Pride.FieldTree.Field = Pride.core.nodeFactory(
+Pride.FieldTree.Field = Pride.Core.nodeFactory(
                     'field',
                     inside_field_nodes,
                     function() {
@@ -140,7 +140,7 @@ Pride.FieldTree.Field = Pride.core.nodeFactory(
                     }
                   );
 
-Pride.FieldTree.Tag = Pride.core.nodeFactory(
+Pride.FieldTree.Tag = Pride.Core.nodeFactory(
                   'tag',
                   inside_field_nodes,
                   function() {
@@ -155,5 +155,5 @@ Pride.FieldTree.Tag = Pride.core.nodeFactory(
                   }
                 );
 
-Pride.FieldTree.Literal = Pride.core.nodeFactory('literal');
-Pride.FieldTree.Special = Pride.core.nodeFactory('special');
+Pride.FieldTree.Literal = Pride.Core.nodeFactory('literal');
+Pride.FieldTree.Special = Pride.Core.nodeFactory('special');
