@@ -107,9 +107,9 @@ Pride.Core.Search = function(setup) {
     return object;
   };
 
-  this.resultsObservers = createObservable('results', this.getData);
-  this.setDataObservers = createObservable('setData', this.getResults);
-  this.runDataObservers = createObservable('runData', this.getResults);
+  this.resultsObservers = createObservable('results', this.getResults);
+  this.setDataObservers = createObservable('setData', this.getData);
+  this.runDataObservers = createObservable('runData', this.getData);
   this.muteObservers    = createObservable('mute',    this.getMute, true);
 
   /////////////////////////
