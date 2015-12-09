@@ -35,9 +35,7 @@ Pride.Core.Search = function(setup) {
            };
   };
 
-  this.getResults = function() {
-    return core.results;
-  };
+  this.getResults = core.results;
 
   ///////////////////
   // Observerables //
