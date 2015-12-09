@@ -5,7 +5,11 @@
 
 Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
   var self         = this;
-  var search_cache = new Pride.Util.MultiSearch({}, true, cached_searches);
+  var search_cache = new Pride.Util.MultiSearch(
+                       '__pride_search_switcher__',
+                       true,
+                       cached_searches
+                     );
 
   current_search.setMute(false);
 

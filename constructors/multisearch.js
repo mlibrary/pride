@@ -32,7 +32,7 @@ Pride.Util.MultiSearch = function(uid, muted, search_array) {
              Pride.Util.safeApply(before_func, args);
 
              _.each(search_array, function(search) {
-               search[func_name].apply(this, search, args);
+               search[func_name].apply(search, args);
              });
 
              return self;

@@ -83,7 +83,7 @@ Pride.Core.Search = function(setup) {
                    if (!never_mute) mutable_observables.push(this);
 
                    this.add = function(func) {
-                     if (!self.muted || never_mute) {
+                     if (!muted || never_mute) {
                        func(data_func());
                      }
 
@@ -93,7 +93,7 @@ Pride.Core.Search = function(setup) {
                    };
 
                    this.notify = function() {
-                     if (!self.muted || never_mute) {
+                     if (!muted || never_mute) {
                        console.log('[' + core.datastore.get('uid') + '] NOTIFY (' + name + ')')
                        notifyObservers(data_func());
                      }
