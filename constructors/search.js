@@ -83,9 +83,7 @@ Pride.Core.Search = function(setup) {
                    if (!never_mute) mutable_observables.push(this);
 
                    this.add = function(func) {
-                     if (!muted || never_mute) {
-                       func(data_func());
-                     }
+                     if (!muted || never_mute) func(data_func());
 
                      addObserver(func);
 
@@ -103,7 +101,7 @@ Pride.Core.Search = function(setup) {
                    };
                  });
 
-    core[name + 'Changed'] = this.notify;
+    core[name + 'Changed'] = object.notify;
 
     return object;
   };
