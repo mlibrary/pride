@@ -77,6 +77,8 @@ Pride.Core.Search = function(setup) {
                    var addObserver     = this.add;
                    var notifyObservers = this.call;
 
+                   this.call = undefined;
+
                    observables.push(this);
                    if (!never_mute) mutable_observables.push(this);
 
@@ -101,7 +103,7 @@ Pride.Core.Search = function(setup) {
                    };
                  });
 
-    core[name + 'Changed'] = object.call;
+    core[name + 'Changed'] = this.notify;
 
     return object;
   };
