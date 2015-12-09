@@ -8,9 +8,9 @@ Pride.AllDatastores = {
 
   newSearch: function(uid) {
     var datastore = _.find(
-                    this.array,
-                    function(datastore) { return datastore.get('uid') == uid; }
-                  );
+                      this.array,
+                      function(datastore) { return datastore.get('uid') == uid; }
+                    );
 
     return datastore ? datastore.baseSearch() : undefined;
   },

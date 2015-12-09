@@ -75,9 +75,9 @@ Pride.Core.Search = function(setup) {
   };
 
   var createObservable = function(name, data_func, never_mute) {
-    var object = new Pride.Util.Observable(function() {
+    var object = new Pride.Util.FuncBuffer(function() {
                    var addObserver     = this.add;
-                   var notifyObservers = this.notify;
+                   var notifyObservers = this.call;
 
                    observables.push(this);
                    if (!never_mute) mutable_observables.push(this);
@@ -102,7 +102,7 @@ Pride.Core.Search = function(setup) {
                    };
                  });
 
-    core[name + 'Changed'] = object.notify;
+    core[name + 'Changed'] = object.call;
 
     return object;
   };

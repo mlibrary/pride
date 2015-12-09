@@ -6,8 +6,7 @@
 Pride.Util.RequestBuffer = function(request_options) {
   request_options = request_options || {};
 
-  var success_functions = new Pride.Util.Observable();
-  var failure_functions = new Pride.Util.Observable();
+  var func_buffer = new Pride.Util.FuncBuffer();
 
   var request_issued     = false;
   var request_successful = false;
@@ -16,8 +15,8 @@ Pride.Util.RequestBuffer = function(request_options) {
   var cached_response_data;
 
   this.request = function(func_hash) {
-    success_functions.add(func_hash.success);
-    failure_functions.add(func_hash.failure);
+    func_buffer.add(func_hash.success, 'success')
+               .add(func_hash.failure, 'failure');
 
     if (request_issued) {
       callWithResponse();
@@ -30,9 +29,9 @@ Pride.Util.RequestBuffer = function(request_options) {
     cached_response_data = data || cached_response_data;
 
     if (request_successful) {
-      callAll(success_functions);
+      callThenClear('success');
     } else if (request_failed) {
-      callAll(failure_functions);
+      callThenClear('failure');
     }
   };
 
@@ -48,11 +47,11 @@ Pride.Util.RequestBuffer = function(request_options) {
       failure: function(error) {
         request_failed = true;
 
-        Pride.Util.safeCall(request_options.before_failure, response);
+        Pride.Util.safeCall(request_options.before_failure, error);
 
         callWithResponse(error);
 
-        Pride.Util.safeCall(request_options.after_failure, response);
+        Pride.Util.safeCall(request_options.after_failure, error);
       },
 
       success: function(response) {
@@ -71,10 +70,8 @@ Pride.Util.RequestBuffer = function(request_options) {
     });
   };
 
-  var callAll = function(observable) {
-    observable.notify(cached_response_data);
-
-    success_functions.clear();
-    failure_functions.clear();
+  var callThenClear = function(name) {
+    func_buffer.call(name, cached_response_data)
+               .clearAll();
   };
 };
