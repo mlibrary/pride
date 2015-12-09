@@ -94,7 +94,8 @@ Pride.Core.Search = function(setup) {
 
                    this.notify = function() {
                      if (!muted || never_mute) {
-                       console.log('[' + core.datastore.get('uid') + '] NOTIFY (' + name + ')')
+                       core.log('NOTIFY (' + name + ')', data_func());
+
                        notifyObservers(data_func());
                      }
 

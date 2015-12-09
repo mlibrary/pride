@@ -13,6 +13,13 @@ Pride.Core.SearchCore = function(setup) {
   var defaultCacheSize = Pride.Settings.cache_size[this.datastore.uid] ||
                          Pride.Settings.default_cache_size;
 
+  this.log = function() {
+    var message = Pride.Util.slice(arguments);
+    message.unshift('Search (' + self.datastore.get('uid') + ')');
+
+    Pride.Core.log.apply(window, message);
+  };
+
   /////////////////////////
   // Performing Searches //
   /////////////////////////
@@ -68,7 +75,6 @@ Pride.Core.SearchCore = function(setup) {
                            self.datastore.get('metadata').name
                          ),
         success: function(response_data) {
-          console.log('[' + self.datastore.get('uid') + '] RAW RESULT', response_data)
           // Update things if the response matches the current query.
           if (response_data.request.request_id == self.query.get('request_id')) {
             updateData(response_data);
@@ -96,7 +102,7 @@ Pride.Core.SearchCore = function(setup) {
   var addResults = function(new_items_array, offset) {
     var query_results_added = false;
 
-    console.log('[' + self.datastore.get('uid') + '] NEW RECORDS', new_items_array)
+    self.log('NEW RECORDS', new_items_array);
 
     _.each(new_items_array, function(item_data, array_index) {
       var item_index = array_index + offset;
@@ -111,7 +117,7 @@ Pride.Core.SearchCore = function(setup) {
       }
     });
 
-    console.log('[' + self.datastore.get('uid') + '] CACHE SIZE:', results.length);
+    self.log('CACHE LENGTH', results.length);
 
     if (query_results_added || _.isEmpty(new_items_array)) {
       Pride.Util.safeCall(self.resultsChanged);

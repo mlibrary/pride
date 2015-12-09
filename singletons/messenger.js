@@ -22,7 +22,7 @@ Pride.Messenger = new Pride.Util.FuncBuffer(function() {
 
       notifyObservers(message);
 
-      console.log('[messenger] MESSAGE SENT:', message)
+      Pride.Core.log('Messenger', 'MESSAGE SENT', message);
     }
 
     return this;
