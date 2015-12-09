@@ -40,9 +40,10 @@ Pride.Util.RequestBuffer = function(request_options) {
     request_issued = true;
 
     Pride.Util.request({
-      url:             request_options.url,
-      attempts:        request_options.attempts || Pride.Settings.connection_attempts,
-      failure_message: request_options.failure_message,
+      url:             Pride.Util.safeCall(request_options.url),
+      attempts:        Pride.Util.safeCall(request_options.attempts) ||
+                       Pride.Settings.connection_attempts,
+      failure_message: Pride.Util.safeCall(request_options.failure_message),
 
       failure: function(error) {
         request_failed = true;
