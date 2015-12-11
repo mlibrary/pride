@@ -1126,7 +1126,8 @@ Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
                        cached_searches
                      );
 
-  current_search.setMute(false);
+  current_search.set({ page: 1 }).setMute(false);
+  search_cache.set({ page: 1 });
 
   this.uid = current_search.uid;
 
@@ -1139,28 +1140,26 @@ Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
 
   this.set = function(settings) {
     current_search.set(settings);
-    search_cache.set(settings);
+    search_cache.set(_.omit(settings, 'page'));
 
     return self;
   };
 
   this.nextPage = function() {
     current_search.nextPage();
-    search_cache.nextPage(0);
 
     return self;
   };
 
   this.prevPage = function() {
     current_search.prevPage();
-    search_cache.prevPage(0);
 
     return self;
   };
 
   this.switchTo = function(requested_uid) {
     if (requested_uid != current_search) {
-      current_search.setMute(true);
+      current_search.setMute(true).set({ page: 1 });
       search_cache.searches.push(current_search);
       current_search = undefined;
 
