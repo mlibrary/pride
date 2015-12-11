@@ -31,15 +31,17 @@ Pride.Core.Query = function(query_info) {
     var new_pagination_values = _.pick(new_values, paginater_keys);
     var new_query_values      = _.omit(new_values, paginater_keys);
 
+    // If the set of things being searched was altered...
+    if (!_.isEmpty(new_query_values)) {
+      paginater.set({ total_available: undefined });
+
+      if (!_.isNumber(new_query_values.request_id)) {
+        query_info.request_id += 1;
+      }
+    }
+
     paginater.set(new_pagination_values);
     _.extend(query_info, new_query_values);
-
-    // Increment the request_id if the set of things being searched was altered
-    // and the request_id isn't being set manually.
-    if (!_.isEmpty(new_query_values) &&
-        !_.isNumber(new_query_values.request_id)) {
-      query_info.request_id += 1;
-    }
 
     return this;
   };
