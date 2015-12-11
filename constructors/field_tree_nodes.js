@@ -125,35 +125,42 @@ var inside_field_nodes = ['value_boolean', 'literal', 'tag', 'special'];
 
 // Create constructor functions for all the various node types.
 
-Pride.FieldTree.FieldBoolean = Pride.Core.boolNodeFactory('field_boolean', top_level_nodes);
-Pride.FieldTree.ValueBoolean = Pride.Core.boolNodeFactory('value_boolean', inside_field_nodes);
+Pride.FieldTree.FieldBoolean = Pride.Core.boolNodeFactory(
+                                 'field_boolean',
+                                 top_level_nodes
+                               );
+
+Pride.FieldTree.ValueBoolean = Pride.Core.boolNodeFactory(
+                                 'value_boolean',
+                                 inside_field_nodes
+                               );
 
 Pride.FieldTree.Field = Pride.Core.nodeFactory(
-                    'field',
-                    inside_field_nodes,
-                    function() {
-                      this.serialize = function() {
-                        return this.value + ': (' +
-                                 this.serializedChildren().join(' ') +
-                               ')';
-                      };
-                    }
-                  );
+  'field',
+  inside_field_nodes,
+  function() {
+    this.serialize = function() {
+      return this.value + ': (' +
+               this.serializedChildren().join(' ') +
+             ')';
+    };
+  }
+);
 
 Pride.FieldTree.Tag = Pride.Core.nodeFactory(
-                  'tag',
-                  inside_field_nodes,
-                  function() {
-                    this.serialize = function() {
-                      var serialized_children = this.serializedChildren();
-                      if (serialized_children.length === 0) {
-                        return '';
-                      } else {
-                        return this.value + '(' + serialized_children.join(' ') + ')';
-                      }
-                    };
-                  }
-                );
+  'tag',
+  inside_field_nodes,
+  function() {
+    this.serialize = function() {
+      var serialized_children = this.serializedChildren();
+      if (serialized_children.length === 0) {
+        return '';
+      } else {
+        return this.value + '(' + serialized_children.join(' ') + ')';
+      }
+    };
+  }
+);
 
 Pride.FieldTree.Literal = Pride.Core.nodeFactory('literal');
 Pride.FieldTree.Special = Pride.Core.nodeFactory('special');
