@@ -47,7 +47,7 @@ Pride.Settings = {
 
   },
 
-  datastores_url: 'http://dev.www.lib.umich.edu/testapp/spectrum/',
+  datastores_url: '',
 
   connection_attempts: 3,
   init_attempts:       3,
@@ -59,7 +59,7 @@ Pride.Settings = {
     failed_init:        'Failed to initialize Pride'
   },
 
-  obnoxious: true
+  obnoxious: false
 };
 
 // Copyright (c) 2015, Regents of the University of Michigan.
@@ -466,7 +466,7 @@ Pride.Util.Paginater = function(initial_values) {
     if (_.has(new_values, 'page') &&
         (_.has(new_values, 'start') || _.has(new_values, 'end'))
        ) {
-      throw 'Can not set page while the start and/or end';
+      throw 'Can not set page as well as the start and/or end';
     }
 
     //////////////////////////////
@@ -477,11 +477,7 @@ Pride.Util.Paginater = function(initial_values) {
 
     // If the page is being set, we have to update the start.
     if (_.has(new_values, 'page')) {
-      if (values.count > 0) {
-        values.start = values.count * (values.page - 1);
-      } else {
-        throw 'Can not set page if count is zero or undefined';
-      }
+      values.start = (values.count || 0) * (values.page - 1);
     }
 
     // If the end is being set, we calculate what start or count should now be.
@@ -1437,13 +1433,6 @@ Pride.AllDatastores = {
   }
 };
 
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-Pride.MessengerBuffer = new Pride.Util.FuncBuffer();
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
