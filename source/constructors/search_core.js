@@ -8,7 +8,7 @@ Pride.Core.SearchCore = function(setup) {
   this.query     = setup.query || this.datastore.baseQuery();
 
   var self             = this;
-  var request_func     = setup.request_func || this.datastore.runQuery;
+  var requestFunc      = setup.requestFunc || this.datastore.runQuery;
   var results          = setup.starting_results || [];
   var defaultCacheSize = Pride.Settings.cache_size[this.datastore.uid] ||
                          Pride.Settings.default_cache_size;
@@ -59,8 +59,13 @@ Pride.Core.SearchCore = function(setup) {
   };
 
   var requestResults = function(requested_section) {
+    self.log('REQUESTING', requested_section);
+    self.log('TOTAL AVAILABLE (pre-request)', self.query.get('total_available'));
+
     if (requested_section &&
         self.query.toLimitSection().overlaps(requested_section)) {
+
+      self.log('Sending query...');
 
       var new_query = self.query.clone()
                            .set({
@@ -68,7 +73,7 @@ Pride.Core.SearchCore = function(setup) {
                              count: requested_section.calcLength()
                            });
 
-      request_func({
+      requestFunc({
         query: new_query,
         failure_message: Pride.Messenger.preset(
                            'failed_search_run',
