@@ -9,7 +9,7 @@ var rename = require('gulp-rename');
 
 // Lint Task
 gulp.task('lint', function() {
-  return gulp.src('./source/*.js')
+  return gulp.src('./source/**/*.js')
              .pipe(jshint())
              .pipe(jshint.reporter('default'));
 });
@@ -18,9 +18,9 @@ gulp.task('scripts', function() {
   return gulp.src([
            './source/initial_setup.js',
            './source/settings.js',
-           './source/constructors/*.js',
-           './source/functions/*.js',
-           './source/singletons/*.js'
+           './source/constructors/**/*.js',
+           './source/functions/**/*.js',
+           './source/singletons/**/*.js'
          ])
         .pipe(concat('pride.js'))
         .pipe(gulp.dest('./'))
@@ -30,3 +30,7 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('default', ['lint', 'scripts']);
+
+gulp.task('watch', function() {
+  gulp.watch('./source/**/*.js', ['default']);
+});
