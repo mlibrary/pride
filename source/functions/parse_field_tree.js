@@ -4,8 +4,12 @@
 // Authored by Colin Fulton (fultonis@umich.edu)
 
 Pride.FieldTree.parseField = function(field_name, content) {
-  return new Pride.FieldTree.Field(
-           field_name,
-           new Pride.FieldTree.Literal(content)
-         );
+  if (!content) {
+    return {};
+  } else {
+    return new Pride.FieldTree.Field(
+             field_name,
+             new Pride.FieldTree.Literal(content)
+           );
+  }
 };

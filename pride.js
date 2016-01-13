@@ -809,6 +809,17 @@ Pride.Core.Search = function(setup) {
     return new Pride.Core.Record(item_data);
   };
 
+  ////////////////////
+  // Facet Searches //
+  ////////////////////
+
+  var facet_searches = [];
+  var current_facets = [];
+
+  this.getFacets = function() {
+    return facet_searches;
+  };
+
   //////////////////
   // Data Getters //
   //////////////////
@@ -820,8 +831,8 @@ Pride.Core.Search = function(setup) {
              uid:             self.uid,
              metadata:        Pride.Util.deepClone(core.datastore.get('metadata')),
              sorts:           Pride.Util.deepClone(core.datastore.get('sorts')),
-             current_sort:    core.query.get('sort'),
-             facets:          Pride.Util.deepClone(core.query.get('facets')),
+             selected_sort:   core.query.get('sort'),
+             selected_facets: Pride.Util.deepClone(core.query.get('facets')),
              fields:          Pride.Util.deepClone(core.datastore.get('fields')),
              field_tree:      Pride.Util.deepClone(core.query.get('field_tree')),
              settings:        Pride.Util.deepClone(core.query.get('settings')),
@@ -843,10 +854,33 @@ Pride.Core.Search = function(setup) {
   var observables         = [];
   var mutable_observables = [];
 
+  var initialize_internal_observers = function() {
+    self.runDataObservers.add(function() {
+      var facets = core.datastore.get('facets');
+
+      // if (!Pride.Util.deepMatch(current_facets, facets)) {
+      //   _.each(facet_searches, function(facet_search) {
+      //     facet_search.clearAllObservers();
+      //   });
+
+      //   facet_searches = _.map(
+      //                      facets,
+      //                      function(facet_data) {
+      //                        return new Pride.Core.FacetSearch(facet_data);
+      //                      }
+      //                    );
+
+      //   current_facets = facets;
+      // }
+    });
+  };
+
   this.clearAllObservers = function() {
     _.each(observables, function(observable) {
       observable.clear();
     });
+
+    initialize_internal_observers();
 
     return self;
   };
@@ -888,9 +922,10 @@ Pride.Core.Search = function(setup) {
 
                    this.notify = function() {
                      if (!muted || never_mute) {
-                       core.log('NOTIFY (' + name + ')', data_func());
+                       data = data_func();
+                       core.log('NOTIFY (' + name + ')', data);
 
-                       call_observers('observers', data_func());
+                       call_observers('observers', data);
                      }
 
                      return this;
@@ -905,6 +940,7 @@ Pride.Core.Search = function(setup) {
   this.resultsObservers = createObservable('results', this.getResults);
   this.setDataObservers = createObservable('setData', this.getData);
   this.runDataObservers = createObservable('runData', this.getData);
+  this.facetsObservers  = createObservable('facets',  this.getFacets);
   this.muteObservers    = createObservable('mute',    this.getMute, true);
 
   /////////////////////////
@@ -942,6 +978,8 @@ Pride.Core.Search = function(setup) {
 
     return self;
   };
+
+  initialize_internal_observers();
 };
 
 // Copyright (c) 2015, Regents of the University of Michigan.
@@ -1118,11 +1156,7 @@ Pride.Core.SearchCore = function(setup) {
 
 Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
   var self         = this;
-  var search_cache = new Pride.Util.MultiSearch(
-                       '__pride_search_switcher__',
-                       true,
-                       cached_searches
-                     );
+  var search_cache = new Pride.Util.MultiSearch(null, true, cached_searches);
 
   current_search.set({ page: 1 }).setMute(false);
   search_cache.set({ page: 1 });
@@ -1313,10 +1347,14 @@ Pride.Core.log = function(source, info) {
 // Authored by Colin Fulton (fultonis@umich.edu)
 
 Pride.FieldTree.parseField = function(field_name, content) {
-  return new Pride.FieldTree.Field(
-           field_name,
-           new Pride.FieldTree.Literal(content)
-         );
+  if (!content) {
+    return {};
+  } else {
+    return new Pride.FieldTree.Field(
+             field_name,
+             new Pride.FieldTree.Literal(content)
+           );
+  }
 };
 
 // Copyright (c) 2015, Regents of the University of Michigan.
