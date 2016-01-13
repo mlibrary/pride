@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.Core.SearchCore = function(setup) {
+Pride.Core.SearchBase = function(setup) {
   this.datastore = setup.datastore;
   this.query     = setup.query || this.datastore.baseQuery();
 

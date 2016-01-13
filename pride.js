@@ -803,48 +803,37 @@ Pride.Util.RequestBuffer = function(request_options) {
 
 Pride.Core.Search = function(setup) {
   var self = this;
-  var core = new Pride.Core.SearchCore(setup);
+  var base = new Pride.Core.SearchBase(setup);
 
-  core.createItem = function(item_data) {
+  base.createItem = function(item_data) {
     return new Pride.Core.Record(item_data);
-  };
-
-  ////////////////////
-  // Facet Searches //
-  ////////////////////
-
-  var facet_searches = [];
-  var current_facets = [];
-
-  this.getFacets = function() {
-    return facet_searches;
   };
 
   //////////////////
   // Data Getters //
   //////////////////
 
-  this.uid = core.datastore.get('uid');
+  this.uid = base.datastore.get('uid');
 
   this.getData = function() {
     return {
              uid:             self.uid,
-             metadata:        Pride.Util.deepClone(core.datastore.get('metadata')),
-             sorts:           Pride.Util.deepClone(core.datastore.get('sorts')),
-             selected_sort:   core.query.get('sort'),
-             selected_facets: Pride.Util.deepClone(core.query.get('facets')),
-             fields:          Pride.Util.deepClone(core.datastore.get('fields')),
-             field_tree:      Pride.Util.deepClone(core.query.get('field_tree')),
-             settings:        Pride.Util.deepClone(core.query.get('settings')),
-             page:            core.query.get('page'),
-             count:           core.query.get('count'),
-             total_available: core.query.get('total_available'),
-             total_pages:     core.query.get('total_pages'),
-             page_limit:      core.query.get('page_limit')
+             metadata:        Pride.Util.deepClone(base.datastore.get('metadata')),
+             sorts:           Pride.Util.deepClone(base.datastore.get('sorts')),
+             selected_sort:   base.query.get('sort'),
+             selected_facets: Pride.Util.deepClone(base.query.get('facets')),
+             fields:          Pride.Util.deepClone(base.datastore.get('fields')),
+             field_tree:      Pride.Util.deepClone(base.query.get('field_tree')),
+             settings:        Pride.Util.deepClone(base.query.get('settings')),
+             page:            base.query.get('page'),
+             count:           base.query.get('count'),
+             total_available: base.query.get('total_available'),
+             total_pages:     base.query.get('total_pages'),
+             page_limit:      base.query.get('page_limit')
            };
   };
 
-  this.getResults = core.results;
+  this.getResults = base.results;
 
   ///////////////////
   // Observerables //
@@ -854,33 +843,10 @@ Pride.Core.Search = function(setup) {
   var observables         = [];
   var mutable_observables = [];
 
-  var initialize_internal_observers = function() {
-    self.runDataObservers.add(function() {
-      var facets = core.datastore.get('facets');
-
-      // if (!Pride.Util.deepMatch(current_facets, facets)) {
-      //   _.each(facet_searches, function(facet_search) {
-      //     facet_search.clearAllObservers();
-      //   });
-
-      //   facet_searches = _.map(
-      //                      facets,
-      //                      function(facet_data) {
-      //                        return new Pride.Core.FacetSearch(facet_data);
-      //                      }
-      //                    );
-
-      //   current_facets = facets;
-      // }
-    });
-  };
-
   this.clearAllObservers = function() {
     _.each(observables, function(observable) {
       observable.clear();
     });
-
-    initialize_internal_observers();
 
     return self;
   };
@@ -923,7 +889,7 @@ Pride.Core.Search = function(setup) {
                    this.notify = function() {
                      if (!muted || never_mute) {
                        data = data_func();
-                       core.log('NOTIFY (' + name + ')', data);
+                       base.log('NOTIFY (' + name + ')', data);
 
                        call_observers('observers', data);
                      }
@@ -932,7 +898,7 @@ Pride.Core.Search = function(setup) {
                    };
                  });
 
-    core[name + 'Changed'] = object.notify;
+    base[name + 'Changed'] = object.notify;
 
     return object;
   };
@@ -940,7 +906,6 @@ Pride.Core.Search = function(setup) {
   this.resultsObservers = createObservable('results', this.getResults);
   this.setDataObservers = createObservable('setData', this.getData);
   this.runDataObservers = createObservable('runData', this.getData);
-  this.facetsObservers  = createObservable('facets',  this.getFacets);
   this.muteObservers    = createObservable('mute',    this.getMute, true);
 
   /////////////////////////
@@ -948,20 +913,20 @@ Pride.Core.Search = function(setup) {
   /////////////////////////
 
   this.set = function(set_hash) {
-    core.set(set_hash);
+    base.set(set_hash);
 
     return self;
   };
 
   this.run = function(cache_size) {
-    core.run(cache_size);
+    base.run(cache_size);
 
     return self;
   };
 
   this.nextPage = function(cache_size) {
-    var current_page = core.query.get('page');
-    if (_.isNumber(current_page) && current_page < core.query.get('page_limit')) {
+    var current_page = base.query.get('page');
+    if (_.isNumber(current_page) && current_page < base.query.get('page_limit')) {
       self.set({page: current_page + 1});
       self.run(cache_size);
     }
@@ -970,7 +935,7 @@ Pride.Core.Search = function(setup) {
   };
 
   this.prevPage = function(cache_size) {
-    var current_page = core.query.get('page');
+    var current_page = base.query.get('page');
     if (_.isNumber(current_page) && current_page > 1) {
       self.set({page: current_page - 1});
       self.run(cache_size);
@@ -978,8 +943,6 @@ Pride.Core.Search = function(setup) {
 
     return self;
   };
-
-  initialize_internal_observers();
 };
 
 // Copyright (c) 2015, Regents of the University of Michigan.
@@ -987,7 +950,7 @@ Pride.Core.Search = function(setup) {
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.Core.SearchCore = function(setup) {
+Pride.Core.SearchBase = function(setup) {
   this.datastore = setup.datastore;
   this.query     = setup.query || this.datastore.baseQuery();
 
@@ -1156,7 +1119,11 @@ Pride.Core.SearchCore = function(setup) {
 
 Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
   var self         = this;
-  var search_cache = new Pride.Util.MultiSearch(null, true, cached_searches);
+  var search_cache = new Pride.Util.MultiSearch(
+                       '__pride_search_switcher__',
+                       true,
+                       cached_searches
+                     );
 
   current_search.set({ page: 1 }).setMute(false);
   search_cache.set({ page: 1 });
@@ -1269,6 +1236,47 @@ Pride.Util.Section = function(start, end) {
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+Pride.Util.bindObservable = function(options) {
+  return options.receiver[options.name + 'Observers'] = new Pride.Util.FuncBuffer(
+    function() {
+      var add_observer   = this.add;
+      var call_observers = this.call;
+
+      this.add = function(func) {
+        if (!options.mute_getter() || options.never_mute) {
+          func(options.data_func());
+        }
+
+        add_observer(func, 'observers');
+
+        return this;
+      };
+
+      this.notify = function() {
+        if (!options.mute_getter() || options.never_mute) {
+          data = options.data_func();
+
+          if (options.log_func)
+          options.log_func('NOTIFY (' + options.name + ')', data);
+
+          call_observers('observers', data);
+        }
+
+        return this;
+      };
+
+      if (_.isFunction(options.extension)) {
+        options.extension.call(this, options);
+      }
+    }
+  );
+};
+
+// Copyright (c) 2015, Regents of the University of Michigan.
+// All rights reserved. See LICENSE.txt for details.
+
+// Authored by Colin Fulton (fultonis@umich.edu)
+
 // Perform a deep clone that leaves functions untouched.
 Pride.Util.deepClone = function(original) {
   if (_.isFunction(original)) {
@@ -1325,6 +1333,32 @@ Pride.init = new Pride.Util.RequestBuffer({
     );
   }
 }).request;
+
+// Copyright (c) 2015, Regents of the University of Michigan.
+// All rights reserved. See LICENSE.txt for details.
+
+// Authored by Colin Fulton (fultonis@umich.edu)
+
+Pride.Util.isDeepMatch = function(object, pattern) {
+  var both_arrays  = _.isArray(object)  && _.isArray(pattern);
+  var both_objects = _.isObject(object) && _.isObject(pattern);
+
+  if (both_arrays  && pattern.length != object.length) {
+    return false;
+  }
+
+  if (both_objects && _.keys(pattern).length != _.keys(object).length) {
+    return false;
+  }
+
+  if (both_arrays && both_objects) {
+    return _.every(pattern, function(value, key) {
+             return Pride.Util.isDeepMatch(object[key], value);
+           });
+  } else {
+    return object === pattern;
+  }
+};
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.

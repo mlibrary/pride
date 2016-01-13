@@ -5,9 +5,9 @@
 
 Pride.Core.Search = function(setup) {
   var self = this;
-  var core = new Pride.Core.SearchCore(setup);
+  var base = new Pride.Core.SearchBase(setup);
 
-  core.createItem = function(item_data) {
+  base.createItem = function(item_data) {
     return new Pride.Core.Record(item_data);
   };
 
@@ -15,27 +15,27 @@ Pride.Core.Search = function(setup) {
   // Data Getters //
   //////////////////
 
-  this.uid = core.datastore.get('uid');
+  this.uid = base.datastore.get('uid');
 
   this.getData = function() {
     return {
              uid:             self.uid,
-             metadata:        Pride.Util.deepClone(core.datastore.get('metadata')),
-             sorts:           Pride.Util.deepClone(core.datastore.get('sorts')),
-             current_sort:    core.query.get('sort'),
-             facets:          Pride.Util.deepClone(core.query.get('facets')),
-             fields:          Pride.Util.deepClone(core.datastore.get('fields')),
-             field_tree:      Pride.Util.deepClone(core.query.get('field_tree')),
-             settings:        Pride.Util.deepClone(core.query.get('settings')),
-             page:            core.query.get('page'),
-             count:           core.query.get('count'),
-             total_available: core.query.get('total_available'),
-             total_pages:     core.query.get('total_pages'),
-             page_limit:      core.query.get('page_limit')
+             metadata:        Pride.Util.deepClone(base.datastore.get('metadata')),
+             sorts:           Pride.Util.deepClone(base.datastore.get('sorts')),
+             selected_sort:   base.query.get('sort'),
+             selected_facets: Pride.Util.deepClone(base.query.get('facets')),
+             fields:          Pride.Util.deepClone(base.datastore.get('fields')),
+             field_tree:      Pride.Util.deepClone(base.query.get('field_tree')),
+             settings:        Pride.Util.deepClone(base.query.get('settings')),
+             page:            base.query.get('page'),
+             count:           base.query.get('count'),
+             total_available: base.query.get('total_available'),
+             total_pages:     base.query.get('total_pages'),
+             page_limit:      base.query.get('page_limit')
            };
   };
 
-  this.getResults = core.results;
+  this.getResults = base.results;
 
   ///////////////////
   // Observerables //
@@ -90,16 +90,17 @@ Pride.Core.Search = function(setup) {
 
                    this.notify = function() {
                      if (!muted || never_mute) {
-                       core.log('NOTIFY (' + name + ')', data_func());
+                       data = data_func();
+                       base.log('NOTIFY (' + name + ')', data);
 
-                       call_observers('observers', data_func());
+                       call_observers('observers', data);
                      }
 
                      return this;
                    };
                  });
 
-    core[name + 'Changed'] = object.notify;
+    base[name + 'Changed'] = object.notify;
 
     return object;
   };
@@ -114,20 +115,20 @@ Pride.Core.Search = function(setup) {
   /////////////////////////
 
   this.set = function(set_hash) {
-    core.set(set_hash);
+    base.set(set_hash);
 
     return self;
   };
 
   this.run = function(cache_size) {
-    core.run(cache_size);
+    base.run(cache_size);
 
     return self;
   };
 
   this.nextPage = function(cache_size) {
-    var current_page = core.query.get('page');
-    if (_.isNumber(current_page) && current_page < core.query.get('page_limit')) {
+    var current_page = base.query.get('page');
+    if (_.isNumber(current_page) && current_page < base.query.get('page_limit')) {
       self.set({page: current_page + 1});
       self.run(cache_size);
     }
@@ -136,7 +137,7 @@ Pride.Core.Search = function(setup) {
   };
 
   this.prevPage = function(cache_size) {
-    var current_page = core.query.get('page');
+    var current_page = base.query.get('page');
     if (_.isNumber(current_page) && current_page > 1) {
       self.set({page: current_page - 1});
       self.run(cache_size);
