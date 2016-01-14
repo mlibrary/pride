@@ -234,7 +234,7 @@ var createObservable = function(name, data_func) {
     return object;
   };
 
-  this.valuesObservers  = createObservable('results', this.getResults);
+  this.resultsObservers = createObservable('results', this.getResults);
   this.setDataObservers = createObservable('setData', this.getData);
   this.runDataObservers = createObservable('runData', this.getData);
 };
