@@ -5,10 +5,21 @@
 
 Pride.Core.Search = function(setup) {
   var self = this;
-  var base = new Pride.Core.SearchBase(setup);
+  var base = new Pride.Core.SearchBase(setup, this);
 
   base.createItem = function(item_data) {
     return new Pride.Core.Record(item_data);
+  };
+
+  ////////////////////
+  // Facet Searches //
+  ////////////////////
+
+  var facet_searches = [];
+  var current_facets = [];
+
+  this.getFacets = function() {
+    return facet_searches;
   };
 
   //////////////////
@@ -41,108 +52,46 @@ Pride.Core.Search = function(setup) {
   // Observerables //
   ///////////////////
 
-  var muted               = false;
-  var observables         = [];
-  var mutable_observables = [];
+  base.initialize_observables = function() {
+    self.runDataObservers.add(function() {
+      var facets = base.datastore.get('facets');
 
-  this.clearAllObservers = function() {
-    _.each(observables, function(observable) {
-      observable.clear();
+      if (!Pride.Util.isDeepMatch(current_facets, facets)) {
+        _.each(facet_searches, function(facet_search) {
+          facet_search.clearAllObservers();
+        });
+
+        facet_searches = _.map(
+                           facets,
+                           function(facet_data) {
+                             return new Pride.Core.FacetSearch({
+                               data:    _.omit(facet_data, 'values'),
+                               results: facet_data.values
+                             });
+                           }
+                         );
+
+        current_facets = facets;
+
+        self.facetsObservers.notify();
+      }
     });
-
-    return self;
   };
+
+  this.getMute = base.getMute;
 
   this.setMute = function(state) {
-    if (state != muted) {
-      muted = state;
-      self.muteObservers.notify();
-
-      if (!muted) {
-        _.each(mutable_observables, function(observable) {
-          observable.notify();
-        });
-      }
-    }
+    _.each(facet_searches, function(facet) { facet.setMute(state); });
+    base.setMute(state);
 
     return self;
   };
 
-  this.getMute = function() {
-    return muted;
-  };
+  this.resultsObservers = base.createObservable('results', this.getResults);
+  this.setDataObservers = base.createObservable('setData', this.getData);
+  this.runDataObservers = base.createObservable('runData', this.getData);
+  this.facetsObservers  = base.createObservable('facets',  this.getFacets);
+  this.muteObservers    = base.muteObservers;
 
-  var createObservable = function(name, data_func, never_mute) {
-    var object = new Pride.Util.FuncBuffer(function() {
-                   var add_observer   = this.add;
-                   var call_observers = this.call;
-
-                   observables.push(this);
-                   if (!never_mute) mutable_observables.push(this);
-
-                   this.add = function(func) {
-                     if (!muted || never_mute) func(data_func());
-
-                     add_observer(func, 'observers');
-
-                     return this;
-                   };
-
-                   this.notify = function() {
-                     if (!muted || never_mute) {
-                       data = data_func();
-                       base.log('NOTIFY (' + name + ')', data);
-
-                       call_observers('observers', data);
-                     }
-
-                     return this;
-                   };
-                 });
-
-    base[name + 'Changed'] = object.notify;
-
-    return object;
-  };
-
-  this.resultsObservers = createObservable('results', this.getResults);
-  this.setDataObservers = createObservable('setData', this.getData);
-  this.runDataObservers = createObservable('runData', this.getData);
-  this.muteObservers    = createObservable('mute',    this.getMute, true);
-
-  /////////////////////////
-  // Performing Searches //
-  /////////////////////////
-
-  this.set = function(set_hash) {
-    base.set(set_hash);
-
-    return self;
-  };
-
-  this.run = function(cache_size) {
-    base.run(cache_size);
-
-    return self;
-  };
-
-  this.nextPage = function(cache_size) {
-    var current_page = base.query.get('page');
-    if (_.isNumber(current_page) && current_page < base.query.get('page_limit')) {
-      self.set({page: current_page + 1});
-      self.run(cache_size);
-    }
-
-    return self;
-  };
-
-  this.prevPage = function(cache_size) {
-    var current_page = base.query.get('page');
-    if (_.isNumber(current_page) && current_page > 1) {
-      self.set({page: current_page - 1});
-      self.run(cache_size);
-    }
-
-    return self;
-  };
+  base.initialize_observables();
 };

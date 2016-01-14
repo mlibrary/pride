@@ -163,6 +163,87 @@ Pride.Core.Datastore = function(datastore_info) {
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+Pride.Core.FacetSearch = function(setup) {
+  example_facet = this;
+  var data    = setup.data;
+  var results = setup.results;
+
+  //////////////////
+  // Data Getters //
+  //////////////////
+
+  this.uid        = data.uid;
+  this.getData    = function() { return data; };
+  this.getResults = function() { return results; };
+
+  ////////////
+  // Muting //
+  ////////////
+
+  var muted = false;
+
+  this.getMute = function() { return muted; };
+
+  this.setMute = function(state) {
+    muted = state;
+
+    return self;
+  };
+
+  ///////////////////
+  // Observerables //
+  ///////////////////
+
+  var observables = [];
+
+  this.clearAllObservers = function() {
+    _.each(observables, function(observable) {
+      observable.clearAll();
+    });
+
+    return self;
+  };
+
+var createObservable = function(name, data_func) {
+    var object = new Pride.Util.FuncBuffer(function() {
+                   var add_observer   = this.add;
+                   var call_observers = this.call;
+
+                     observables.push(this);
+
+                   this.add = function(func) {
+                     if (!self.muted) func(data_func());
+
+                     add_observer(func, 'observers');
+
+                     return this;
+                   };
+
+                   this.notify = function() {
+                     if (!self.muted) {
+                       data = data_func();
+                       self.log('NOTIFY (' + name + ')', data);
+
+                       call_observers('observers', data);
+                     }
+
+                     return this;
+                   };
+                 });
+
+    return object;
+  };
+
+  this.valuesObservers  = createObservable('results', this.getResults);
+  this.setDataObservers = createObservable('setData', this.getData);
+  this.runDataObservers = createObservable('runData', this.getData);
+};
+
+// Copyright (c) 2015, Regents of the University of Michigan.
+// All rights reserved. See LICENSE.txt for details.
+
+// Authored by Colin Fulton (fultonis@umich.edu)
+
 Pride.FieldTree = {};
 
 // Factory for creating functions to create various field tree node types.
@@ -803,10 +884,21 @@ Pride.Util.RequestBuffer = function(request_options) {
 
 Pride.Core.Search = function(setup) {
   var self = this;
-  var base = new Pride.Core.SearchBase(setup);
+  var base = new Pride.Core.SearchBase(setup, this);
 
   base.createItem = function(item_data) {
     return new Pride.Core.Record(item_data);
+  };
+
+  ////////////////////
+  // Facet Searches //
+  ////////////////////
+
+  var facet_searches = [];
+  var current_facets = [];
+
+  this.getFacets = function() {
+    return facet_searches;
   };
 
   //////////////////
@@ -839,110 +931,48 @@ Pride.Core.Search = function(setup) {
   // Observerables //
   ///////////////////
 
-  var muted               = false;
-  var observables         = [];
-  var mutable_observables = [];
+  base.initialize_observables = function() {
+    self.runDataObservers.add(function() {
+      var facets = base.datastore.get('facets');
 
-  this.clearAllObservers = function() {
-    _.each(observables, function(observable) {
-      observable.clear();
+      if (!Pride.Util.isDeepMatch(current_facets, facets)) {
+        _.each(facet_searches, function(facet_search) {
+          facet_search.clearAllObservers();
+        });
+
+        facet_searches = _.map(
+                           facets,
+                           function(facet_data) {
+                             return new Pride.Core.FacetSearch({
+                               data:    _.omit(facet_data, 'values'),
+                               results: facet_data.values
+                             });
+                           }
+                         );
+
+        current_facets = facets;
+
+        self.facetsObservers.notify();
+      }
     });
-
-    return self;
   };
+
+  this.getMute = base.getMute;
 
   this.setMute = function(state) {
-    if (state != muted) {
-      muted = state;
-      self.muteObservers.notify();
-
-      if (!muted) {
-        _.each(mutable_observables, function(observable) {
-          observable.notify();
-        });
-      }
-    }
+    _.each(facet_searches, function(facet) { facet.setMute(state); });
+    base.setMute(state);
 
     return self;
   };
 
-  this.getMute = function() {
-    return muted;
-  };
+  this.resultsObservers = base.createObservable('results', this.getResults);
+  this.setDataObservers = base.createObservable('setData', this.getData);
+  this.runDataObservers = base.createObservable('runData', this.getData);
+  this.facetsObservers  = base.createObservable('facets',  this.getFacets);
+  this.muteObservers    = base.muteObservers;
 
-  var createObservable = function(name, data_func, never_mute) {
-    var object = new Pride.Util.FuncBuffer(function() {
-                   var add_observer   = this.add;
-                   var call_observers = this.call;
-
-                   observables.push(this);
-                   if (!never_mute) mutable_observables.push(this);
-
-                   this.add = function(func) {
-                     if (!muted || never_mute) func(data_func());
-
-                     add_observer(func, 'observers');
-
-                     return this;
-                   };
-
-                   this.notify = function() {
-                     if (!muted || never_mute) {
-                       data = data_func();
-                       base.log('NOTIFY (' + name + ')', data);
-
-                       call_observers('observers', data);
-                     }
-
-                     return this;
-                   };
-                 });
-
-    base[name + 'Changed'] = object.notify;
-
-    return object;
-  };
-
-  this.resultsObservers = createObservable('results', this.getResults);
-  this.setDataObservers = createObservable('setData', this.getData);
-  this.runDataObservers = createObservable('runData', this.getData);
-  this.muteObservers    = createObservable('mute',    this.getMute, true);
-
-  /////////////////////////
-  // Performing Searches //
-  /////////////////////////
-
-  this.set = function(set_hash) {
-    base.set(set_hash);
-
-    return self;
-  };
-
-  this.run = function(cache_size) {
-    base.run(cache_size);
-
-    return self;
-  };
-
-  this.nextPage = function(cache_size) {
-    var current_page = base.query.get('page');
-    if (_.isNumber(current_page) && current_page < base.query.get('page_limit')) {
-      self.set({page: current_page + 1});
-      self.run(cache_size);
-    }
-
-    return self;
-  };
-
-  this.prevPage = function(cache_size) {
-    var current_page = base.query.get('page');
-    if (_.isNumber(current_page) && current_page > 1) {
-      self.set({page: current_page - 1});
-      self.run(cache_size);
-    }
-
-    return self;
-  };
+  base.initialize_observables();
 };
 
 // Copyright (c) 2015, Regents of the University of Michigan.
@@ -950,7 +980,7 @@ Pride.Core.Search = function(setup) {
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.Core.SearchBase = function(setup) {
+Pride.Core.SearchBase = function(setup, parent) {
   this.datastore = setup.datastore;
   this.query     = setup.query || this.datastore.baseQuery();
 
@@ -1110,6 +1140,114 @@ Pride.Core.SearchBase = function(setup) {
 
     return output;
   };
+
+  ///////////////////
+  // Observerables //
+  ///////////////////
+
+  var muted               = false;
+  var observables         = [];
+  var mutable_observables = [];
+
+  this.clearAllObservers = function() {
+    _.each(observables, function(observable) {
+      observable.clearAll();
+    });
+
+    Pride.Util.safeCall(self.initialize_observables);
+
+    return self;
+  };
+
+  this.getMute = function() {
+    return muted;
+  };
+
+  this.setMute = function(state) {
+    if (state != muted) {
+      muted = state;
+      Pride.Util.safeCall(self.muteChanged());
+
+      if (!muted) {
+        _.each(mutable_observables, function(observable) {
+          observable.notify();
+        });
+      }
+    }
+
+    return self;
+  };
+
+  this.createObservable = function(name, data_func, never_mute) {
+    var object = new Pride.Util.FuncBuffer(function() {
+                   var add_observer   = this.add;
+                   var call_observers = this.call;
+
+                   observables.push(this);
+                   if (!never_mute) mutable_observables.push(this);
+
+                   this.add = function(func) {
+                     if (!self.muted || never_mute) func(data_func());
+
+                     add_observer(func, 'observers');
+
+                     return this;
+                   };
+
+                   this.notify = function() {
+                     if (!self.muted || never_mute) {
+                       data = data_func();
+                       self.log('NOTIFY (' + name + ')', data);
+
+                       call_observers('observers', data);
+                     }
+
+                     return this;
+                   };
+                 });
+
+    self[name + 'Changed'] = object.notify;
+
+    return object;
+  };
+
+  this.muteObservers = this.createObservable('mute', this.getMute, true);
+
+  ///////////////
+  // UTILITIES //
+  ///////////////
+
+  parent.set = function(set_hash) {
+    self.set(set_hash);
+
+    return parent;
+  };
+
+  parent.run = function(cache_size) {
+    self.run(cache_size);
+
+    return parent;
+  };
+
+  parent.nextPage = function(cache_size) {
+    var current_page = self.query.get('page');
+    if (_.isNumber(current_page) && current_page < self.query.get('page_limit')) {
+      parent.set({page: current_page + 1});
+      parent.run(cache_size);
+    }
+
+    return parent;
+  };
+
+  parent.prevPage = function(cache_size) {
+    var current_page = self.query.get('page');
+    if (_.isNumber(current_page) && current_page > 1) {
+      parent.set({page: current_page - 1});
+      parent.run(cache_size);
+    }
+
+    return parent;
+  };
 };
 
 // Copyright (c) 2015, Regents of the University of Michigan.
@@ -1119,11 +1257,7 @@ Pride.Core.SearchBase = function(setup) {
 
 Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
   var self         = this;
-  var search_cache = new Pride.Util.MultiSearch(
-                       '__pride_search_switcher__',
-                       true,
-                       cached_searches
-                     );
+  var search_cache = new Pride.Util.MultiSearch(null, true, cached_searches);
 
   current_search.set({ page: 1 }).setMute(false);
   search_cache.set({ page: 1 });
@@ -1229,47 +1363,6 @@ Pride.Util.Section = function(start, end) {
              _.max(arguments, function(section) { return section.end;   })
            );
   };
-};
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-Pride.Util.bindObservable = function(options) {
-  return options.receiver[options.name + 'Observers'] = new Pride.Util.FuncBuffer(
-    function() {
-      var add_observer   = this.add;
-      var call_observers = this.call;
-
-      this.add = function(func) {
-        if (!options.mute_getter() || options.never_mute) {
-          func(options.data_func());
-        }
-
-        add_observer(func, 'observers');
-
-        return this;
-      };
-
-      this.notify = function() {
-        if (!options.mute_getter() || options.never_mute) {
-          data = options.data_func();
-
-          if (options.log_func)
-          options.log_func('NOTIFY (' + options.name + ')', data);
-
-          call_observers('observers', data);
-        }
-
-        return this;
-      };
-
-      if (_.isFunction(options.extension)) {
-        options.extension.call(this, options);
-      }
-    }
-  );
 };
 
 // Copyright (c) 2015, Regents of the University of Michigan.
@@ -1526,42 +1619,42 @@ Pride.Messenger = new Pride.Util.FuncBuffer(function() {
   this.clear  = undefined;
 
   this.sendMessage = function(message) {
-    if (message['summary']) {
-      message['class']   = message['class']   || 'info';
-      message['details'] = message['details'] || '';
+    // if (message['summary']) {
+    //   message['class']   = message['class']   || 'info';
+    //   message['details'] = message['details'] || '';
 
-      notifyObservers(message);
+    //   notifyObservers(message);
 
-      Pride.Core.log('Messenger', 'MESSAGE SENT', message);
-    }
+    //   Pride.Core.log('Messenger', 'MESSAGE SENT', message);
+    // }
 
-    return this;
+    // return this;
   };
 
   this.sendMessageArray = function(message_array) {
-    var messenger = this;
+    // var messenger = this;
 
-    _.each(
-      message_array,
-      function(message) { messenger.sendMessage(message); }
-    );
+    // _.each(
+    //   message_array,
+    //   function(message) { messenger.sendMessage(message); }
+    // );
 
-    return this;
+    // return this;
   };
 
   // Given a type of preset message and some optional arguments, generate a
   // message string.
   this.preset = function(type) {
-    var variables = Pride.Util.slice(arguments);
+    // var variables = Pride.Util.slice(arguments);
 
-    return Pride.Settings
-                .message_formats[type]
-                .replace(
-                  /(^|[^\\])\$(\d+)/,
-                  function(match, previous_char, number) {
-                    return previous_char + (variables[Number(number)] || '');
-                  }
-                )
-                .replace('\\$', '$');
+    // return Pride.Settings
+    //             .message_formats[type]
+    //             .replace(
+    //               /(^|[^\\])\$(\d+)/,
+    //               function(match, previous_char, number) {
+    //                 return previous_char + (variables[Number(number)] || '');
+    //               }
+    //             )
+    //             .replace('\\$', '$');
   };
 });

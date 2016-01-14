@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.Core.SearchBase = function(setup) {
+Pride.Core.SearchBase = function(setup, parent) {
   this.datastore = setup.datastore;
   this.query     = setup.query || this.datastore.baseQuery();
 
@@ -162,5 +162,113 @@ Pride.Core.SearchBase = function(setup) {
     }
 
     return output;
+  };
+
+  ///////////////////
+  // Observerables //
+  ///////////////////
+
+  var muted               = false;
+  var observables         = [];
+  var mutable_observables = [];
+
+  this.clearAllObservers = function() {
+    _.each(observables, function(observable) {
+      observable.clearAll();
+    });
+
+    Pride.Util.safeCall(self.initialize_observables);
+
+    return self;
+  };
+
+  this.getMute = function() {
+    return muted;
+  };
+
+  this.setMute = function(state) {
+    if (state != muted) {
+      muted = state;
+      Pride.Util.safeCall(self.muteChanged());
+
+      if (!muted) {
+        _.each(mutable_observables, function(observable) {
+          observable.notify();
+        });
+      }
+    }
+
+    return self;
+  };
+
+  this.createObservable = function(name, data_func, never_mute) {
+    var object = new Pride.Util.FuncBuffer(function() {
+                   var add_observer   = this.add;
+                   var call_observers = this.call;
+
+                   observables.push(this);
+                   if (!never_mute) mutable_observables.push(this);
+
+                   this.add = function(func) {
+                     if (!self.muted || never_mute) func(data_func());
+
+                     add_observer(func, 'observers');
+
+                     return this;
+                   };
+
+                   this.notify = function() {
+                     if (!self.muted || never_mute) {
+                       data = data_func();
+                       self.log('NOTIFY (' + name + ')', data);
+
+                       call_observers('observers', data);
+                     }
+
+                     return this;
+                   };
+                 });
+
+    self[name + 'Changed'] = object.notify;
+
+    return object;
+  };
+
+  this.muteObservers = this.createObservable('mute', this.getMute, true);
+
+  ///////////////
+  // UTILITIES //
+  ///////////////
+
+  parent.set = function(set_hash) {
+    self.set(set_hash);
+
+    return parent;
+  };
+
+  parent.run = function(cache_size) {
+    self.run(cache_size);
+
+    return parent;
+  };
+
+  parent.nextPage = function(cache_size) {
+    var current_page = self.query.get('page');
+    if (_.isNumber(current_page) && current_page < self.query.get('page_limit')) {
+      parent.set({page: current_page + 1});
+      parent.run(cache_size);
+    }
+
+    return parent;
+  };
+
+  parent.prevPage = function(cache_size) {
+    var current_page = self.query.get('page');
+    if (_.isNumber(current_page) && current_page > 1) {
+      parent.set({page: current_page - 1});
+      parent.run(cache_size);
+    }
+
+    return parent;
   };
 };
