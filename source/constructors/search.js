@@ -34,7 +34,7 @@ Pride.Core.Search = function(setup) {
              metadata:        Pride.Util.deepClone(base.datastore.get('metadata')),
              sorts:           Pride.Util.deepClone(base.datastore.get('sorts')),
              selected_sort:   base.query.get('sort'),
-             selected_facets: Pride.Util.deepClone(base.query.get('facets')),
+             facets:          Pride.Util.deepClone(base.query.get('facets')),
              fields:          Pride.Util.deepClone(base.datastore.get('fields')),
              field_tree:      Pride.Util.deepClone(base.query.get('field_tree')),
              settings:        Pride.Util.deepClone(base.query.get('settings')),
