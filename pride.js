@@ -1366,7 +1366,7 @@ Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
 
   this.set = function(settings) {
     current_search.set(settings);
-    search_cache.set(_.omit(settings, 'page', 'facet'));
+    search_cache.set(_.omit(settings, 'page', 'facets'));
 
     return self;
   };
