@@ -1194,12 +1194,16 @@ Pride.Core.SearchBase = function(setup, parent) {
                    };
                  });
 
-    self[name + 'Changed'] = object.notify;
+    self[name + 'Changed']     = object.notify;
+    parent[name + 'Observers'] = object;
 
-    return object;
+    return self;
   };
 
-  this.muteObservers = this.createObservable('mute', this.getMute, true);
+  this.createObservable('mute',    this.getMute, true)
+      .createObservable('setData', function() { parent.getData(); })
+      .createObservable('runData', function() { parent.getData(); })
+      .createObservable('results', this.results);
 
   ///////////////
   // UTILITIES //
