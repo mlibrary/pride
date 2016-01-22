@@ -974,7 +974,8 @@ Pride.Core.SearchBase = function(setup, parent) {
   var self             = this;
   var requestFunc      = setup.requestFunc || this.datastore.runQuery;
   var results          = setup.starting_results || [];
-  var defaultCacheSize = Pride.Settings.cache_size[this.datastore.uid] ||
+  var defaultCacheSize = setup.cache_size ||
+                         Pride.Settings.cache_size[this.datastore.uid] ||
                          Pride.Settings.default_cache_size;
 
   this.log = function() {
