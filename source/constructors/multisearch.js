@@ -13,13 +13,9 @@ Pride.Util.MultiSearch = function(uid, muted, search_array) {
   this.set = function(values) {
     _.extend(query_data, values);
 
-    var translated_values = translateValues(values, search.uid);
-
     _.each(
       search_array,
-      function(search) {
-        search.set(translated_values);
-      }
+      function(search) { search.set(values); }
     );
 
     return self;
@@ -46,15 +42,6 @@ Pride.Util.MultiSearch = function(uid, muted, search_array) {
 
   this.getMute = function() {
     return muted;
-  };
-
-  var translateValues = function(values, search_uid) {
-    // FIRST:  Convert or remove fields in the field_tree if nessesary
-    // SECOND: Convert or remove facets if nessesary
-    // THIRD:  Convert or remove settings if nessesary
-    // FOURTH: Convert the sort setting
-
-    return values;
   };
 
   this.setMute(muted);

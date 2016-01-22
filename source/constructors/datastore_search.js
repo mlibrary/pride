@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride.Core.Search = function(setup) {
+Pride.Core.DatastoreSearch = function(setup) {
   var self = this;
   var base = new Pride.Core.SearchBase(setup, this);
 
@@ -87,11 +87,6 @@ Pride.Core.Search = function(setup) {
     return self;
   };
 
-  this.resultsObservers = base.createObservable('results', this.getResults);
-  this.setDataObservers = base.createObservable('setData', this.getData);
-  this.runDataObservers = base.createObservable('runData', this.getData);
-  this.facetsObservers  = base.createObservable('facets',  this.getFacets);
-  this.muteObservers    = base.muteObservers;
-
-  base.initialize_observables();
+  base.createObservable('facets', this.getFacets)
+      .initialize_observables();
 };

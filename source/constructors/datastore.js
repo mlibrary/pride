@@ -29,7 +29,7 @@ Pride.Core.Datastore = function(datastore_info) {
   };
 
   this.baseSearch = function() {
-    return new Pride.Core.Search({datastore: this});
+    return new Pride.Core.DatastoreSearch({datastore: this});
   };
 
   this.runQuery = function(request_arguments) {
