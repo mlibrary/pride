@@ -508,16 +508,21 @@ Pride.Util.FuncBuffer = function(extension) {
   var buffer = {};
   var self   = this;
 
-  this.add = function(func, name) {
+  var safeGet = function(name) {
     if (!_.has(buffer, name)) buffer[name] = [];
-    buffer[name].push(func);
+
+    return buffer[name];
+  };
+
+  this.add = function(func, name) {
+    safeGet(name).push(func);
 
     return self;
   };
 
   this.remove = function(func, name) {
     buffer[name] = _.reject(
-                     buffer,
+                     safeGet(name),
                      function(other_func) { return func == other_func; }
                    );
 
@@ -525,13 +530,13 @@ Pride.Util.FuncBuffer = function(extension) {
   };
 
   this.clear = function(name) {
-    buffer[name].length = 0;
+    delete buffer[name];
 
     return self;
   };
 
-  this.clearAll = function(name) {
-    _.mapObject(buffer, function() { return []; });
+  this.clearAll = function() {
+    buffer = {};
 
     return self;
   };
@@ -543,7 +548,7 @@ Pride.Util.FuncBuffer = function(extension) {
   };
 
   this.apply = function(name, args) {
-    _.each(buffer[name], function(func) { Pride.Util.safeApply(func, args); });
+    _.each(safeGet(name), function(func) { Pride.Util.safeApply(func, args); });
 
     return self;
   };
