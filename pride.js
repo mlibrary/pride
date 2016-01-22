@@ -1494,11 +1494,12 @@ Pride.Util.request = function(request_info) {
   request_info.attempts -= 1;
 
   reqwest({
-    url:         request_info.url,
-    data:        JSON.stringify(request_info.query),
-    type:        'json',
-    method:      request_method,
-    contentType: 'application/json',
+    url:             request_info.url,
+    data:            JSON.stringify(request_info.query),
+    type:            'json',
+    method:          request_method,
+    contentType:     'application/json',
+    withCredentials: true,
 
     error: function (error) {
       if (request_info.attempts <= 0) {
