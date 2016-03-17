@@ -639,6 +639,7 @@ Pride.Util.Paginater = function(initial_values) {
     // Set and calculate values //
     //////////////////////////////
 
+    // We wait to set the new end value until after an exception can be thrown.
     _.extend(values, _.omit(new_values, 'end'));
 
     // If the page is being set, we have to update the start.
@@ -648,16 +649,13 @@ Pride.Util.Paginater = function(initial_values) {
 
     // If the end is being set, we calculate what start or count should now be.
     if (_.has(new_values, 'end')) {
+      // If we are also setting the count, calculate a new start.
       if (_.has(new_values, 'count')) {
-        // If we are also setting the count, calculate a new start.
-        values.start = Math.max(
-                         new_values.end,
-                         new_values.end - (values.count - 1)
-                       );
+        values.start = Math.max(0, new_values.end - (values.count - 1));
       // If we are not setting the count, calculate a new count.
       } else {
-        // Throw an error if the start now comes after the end, because that
-        // makes no sense at all.
+        // Throw an error if the start now comes after the end,
+        // because that makes no sense at all.
         if (values.start <= new_values.end) {
           values.count = (new_values.end - values.start) + 1;
         } else {
@@ -665,7 +663,7 @@ Pride.Util.Paginater = function(initial_values) {
         }
       }
 
-      // We wait to set the new end value until after an exception can be thrown.
+      // Now it is safe to set the end
       values.end = new_values.end;
     } else {
       // Calculate what the new end value should be.
