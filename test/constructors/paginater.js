@@ -96,25 +96,6 @@ QUnit.test(
 );
 
 QUnit.test(
-  "Certain combinations can't be set",
-  function(assert) {
-    testPaginatorUnsettable(assert, { total_pages: 100 });
-    testPaginatorUnsettable(assert, { index_limit: 100 });
-    testPaginatorUnsettable(assert, { start: 10, count: 5, end: 14 });
-    testPaginatorUnsettable(assert, { page: 3, start: 10 }, {});
-    testPaginatorUnsettable(assert, { page: 3, end: 14 }, {});
-    testPaginatorUnsettable(assert, { page: 3, end: 14 }, {});
-
-    assert.throws(
-      function() {
-        new Pride.Util.Paginater({ start: 10, end: 5});
-      },
-      "start can't be greater than the end"
-    );
-  }
-);
-
-QUnit.test(
   "Going through available keys",
   function(assert) {
     var all_keys  = [
