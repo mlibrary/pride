@@ -160,19 +160,14 @@ QUnit.test(
 QUnit.test(
   "Can be extended",
   function(assert) {
-    var example = new Pride.Util.FuncBuffer(function() {
-                    this.a_number = 42;
-                    this.a_number_method = function() { return 42; };
-                  });
+    var this_value = null;
+    var example    = new Pride.Util.FuncBuffer(function() {
+                       this_value = this;
+                     });
 
-    assert.equal(
-      example.a_number, 42,
-      "with properties"
-    );
-
-    assert.equal(
-      example.a_number_method(), 42,
-      "with methods"
+    assert.strictEqual(
+      example, this_value,
+      "function passed in on init is called with 'this' set to the func_buffer"
     );
   }
 );
