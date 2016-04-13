@@ -33,13 +33,4 @@ Pride.Util.Section = function(start, end) {
              this.end   + end_amount
            );
   };
-
-  this.merge = function() {
-    arguments.push(this);
-
-    return new Pride.Util.Section(
-             _.min(arguments, function(section) { return section.start; }),
-             _.max(arguments, function(section) { return section.end;   })
-           );
-  };
 };
