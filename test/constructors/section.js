@@ -177,3 +177,43 @@ QUnit.test(
     );
   }
 );
+
+QUnit.test(
+  'shifted()',
+  function(assert) {
+    var start   = 55;
+    var end     = 978;
+    var amount  = 11;
+    var example = new Pride.Util.Section(start, end);
+
+    assert.notEqual(
+      example.shifted(amount), example,
+      'returns a new object'
+    );
+
+    var shifted_together = example.shifted(amount);
+
+    assert.equal(
+      shifted_together.start, start + amount,
+      'given one number, moves the start forward by that amount'
+    );
+
+    assert.equal(
+      shifted_together.end, end + amount,
+      'given one number, moves the end forward by that amount'
+    );
+
+    var another_amount = amount + 4;
+    var shifted = example.shifted(amount, another_amount);
+
+    assert.equal(
+      shifted.start, start + amount,
+      'can move the start seperatly from the end'
+    );
+
+    assert.equal(
+      shifted.end, end + another_amount,
+      'can move the end seperatly from the start'
+    );
+  }
+);
