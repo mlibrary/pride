@@ -15,7 +15,7 @@ Pride.Util.isDeepMatch = function(object, pattern) {
     return false;
   }
 
-  if (both_arrays && both_objects) {
+  if (both_arrays || both_objects) {
     return _.every(pattern, function(value, key) {
              return Pride.Util.isDeepMatch(object[key], value);
            });
