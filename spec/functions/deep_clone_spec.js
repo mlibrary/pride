@@ -4,7 +4,7 @@
 // Authored by Colin Fulton (fultonis@umich.edu)
 
 describe('deepClone()', function() {
-  it('passes functions straigh through', function() {
+  it('passes functions straight through', function() {
     var func   = function() {};
     var cloned = Pride.Util.deepClone(func);
 
@@ -50,6 +50,6 @@ describe('deepClone()', function() {
     var object = {x: 1, y: ['one', {q: 'two'}, 3], z: null};
     var cloned = Pride.Util.deepClone(object);
 
-    expect(cloned['y'][1]['q']).toEqual(cloned['y'][1]['q']);
+    expect(object['y'][1]['q']).toEqual(cloned['y'][1]['q']);
   });
 });

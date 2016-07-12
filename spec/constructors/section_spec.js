@@ -178,8 +178,8 @@ describe("Section", function() {
 
       this.shifted_together = this.example.shifted(this.amount);
 
-      this.another_amount = this.amount + 4;
-      this.shifted        = this.example.shifted(this.amount, this.another_amount);
+      this.another_amount     = this.amount + 4;
+      this.shifted_separately = this.example.shifted(this.amount, this.another_amount);
     });
 
     it('returns a new object', function() {
@@ -195,11 +195,11 @@ describe("Section", function() {
     });
 
     it('can move the start seperatly from the end', function() {
-      expect(this.shifted.start).toEqual(this.start + this.amount);
+      expect(this.shifted_separately.start).toEqual(this.start + this.amount);
     });
 
     it('can move the end seperatly from the start', function() {
-      expect(this.shifted.end).toEqual(this.end + this.another_amount);
+      expect(this.shifted_separately.end).toEqual(this.end + this.another_amount);
     });
   });
 });

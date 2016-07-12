@@ -3,6 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+// Given a safeCall like function, check that it has the correct basic behavior
 function test_safe_func_caller(caller) {
   describe("given something that isn't a function", function() {
     it("returns the given object", function() {
@@ -12,7 +13,7 @@ function test_safe_func_caller(caller) {
   });
 
   describe("given a function, calls the function", function() {
-    it("returns the result fo calling the function", function() {
+    it("returns the result of calling the function", function() {
       var returned = 8435;
       var example  = function() { return returned; };
       expect(caller(example)).toEqual(returned);

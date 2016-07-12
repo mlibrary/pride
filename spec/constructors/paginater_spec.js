@@ -3,17 +3,17 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-function paginatorBasicExpectations(key_1, key_2) {
+function paginatorBasicExpectations(key_1, key_2, valid) {
   beforeEach(function() {
     var settings    = {};
-    settings[key_1] = this.valid[key_1];
-    settings[key_2] = this.valid[key_2];
+    settings[key_1] = valid[key_1];
+    settings[key_2] = valid[key_2];
     this.example    = new Pride.Util.Paginater(settings);
   });
 
-  _.each(this.valid, function(value, key) {
+  _.each(valid, function(value, key) {
     it('sets ' + key + ' correctly', function() {
-      expect(key).toEqual(value);
+      expect(valid[key]).toEqual(value);
     });
   });
 
@@ -38,16 +38,16 @@ function paginatorBasicExpectations(key_1, key_2) {
 function testPaginatorBasics(key_1, key_2) {
   describe('given a valid ' + key_1 + ' and ' + key_2, function() {
       beforeEach(function() {
-        this.valid = { start: 10,  count: 5,   end: 14,  page: 3 };
+        this.valid = { start: 10, count: 5, end: 14, page: 3 };
       });
 
-      paginatorBasicExpectations(key_1, key_2);
+      paginatorBasicExpectations(key_1, key_2, { start: 10, count: 5, end: 14, page: 3 });
 
       beforeEach(function() {
         this.valid = { start: 500, count: 100, end: 599, page: 6 };
       });
 
-      paginatorBasicExpectations(key_1, key_2);
+      paginatorBasicExpectations(key_1, key_2, { start: 500, count: 100, end: 599, page: 6 });
     }
   );
 }
