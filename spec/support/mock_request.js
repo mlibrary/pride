@@ -5,7 +5,7 @@
 
 if (typeof reqwest !== 'undefined') var originalRequest = reqwest;
 
-function testRequest(method, request_info) {
+function testRequest(request_method, request_info) {
   describe('sends a valid request', function() {
     it('is given the nessesary fields', function() {
       _.each(['url', 'data', 'method', 'contentType'], function(field) {
@@ -18,7 +18,7 @@ function testRequest(method, request_info) {
     });
 
     it('is given the expected method', function() {
-      expect(request_info['method']).toEqual(method);
+      expect(request_info['method']).toEqual(request_method);
     });
 
     if (request_info['type'] == 'json') {
@@ -35,17 +35,17 @@ function testRequest(method, request_info) {
   });
 }
 
-function mockRequestSuccess(method, result) {
+function mockRequestSuccess(request_method, result) {
   reqwest = function(request_info) {
-    testRequest(method, request_info);
-    request_info['success'](result);
+    testRequest(request_method, request_info);
+    request_info['success'](Pride.Util.safeCall(result) || {});
   };
 }
 
 
-function mockRequestError(method, result) {
+function mockRequestFailure(request_method, result) {
   reqwest = function(request_info) {
-    testRequest(method, request_info);
-    request_info['error'](result);
+    testRequest(request_method, request_info);
+    request_info['error'](Pride.Util.safeCall(result) || {});
   };
 }

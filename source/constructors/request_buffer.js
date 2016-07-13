@@ -23,6 +23,8 @@ Pride.Util.RequestBuffer = function(request_options) {
     } else {
       sendRequest();
     }
+
+    return this;
   };
 
   var callWithResponse = function(data) {

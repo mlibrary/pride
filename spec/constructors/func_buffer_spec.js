@@ -4,6 +4,13 @@
 // Authored by Colin Fulton (fultonis@umich.edu)
 
 function testFuncBufferMethods(name) {
+  describe('add()', function() {
+    it('returns self', function() {
+      var buffer = new Pride.Util.FuncBuffer();
+      expect(buffer.add(function() {})).toBe(buffer);
+    });
+  });
+
   beforeEach(function() {
     var self               = this;
     this.name              = name;
@@ -15,9 +22,9 @@ function testFuncBufferMethods(name) {
 
     this.example_function = function() { self.number++; };
 
-    this.buffer.add(this.example_function, name);
-    this.buffer.add(function() { self.another_number++; }, name);
-    this.buffer.add(function() { self.from_another_name++; }, this.another_name);
+    this.buffer.add(this.example_function, name)
+               .add(function() { self.another_number++; }, name)
+               .add(function() { self.from_another_name++; }, this.another_name);
   });
 
   describe("call()", function() {
