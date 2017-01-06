@@ -9,9 +9,9 @@ Pride.init = new Pride.Util.RequestBuffer({
   failure_message: function() { return Pride.Messenger.preset('failed_init'); },
 
   edit_response:   function() { return undefined; },
-  before_success:  function(response) {
+  before_success:  function(data) {
     Pride.AllDatastores.array = _.map(
-      response['response'],
+      data.response,
       function(datastore_data) {
         return new Pride.Core.Datastore(datastore_data);
       }
