@@ -27,9 +27,10 @@ Pride.Core.Record = function(data) {
   };
 
   this.renderFull = function(func) {
-    callWithData(func);
-
-    if (!data.complete) {
+    if (data.complete) {
+      callWithData(func);
+    }
+    else {
       request_buffer.request({success: func});
     }
   };
