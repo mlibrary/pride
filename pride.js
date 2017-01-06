@@ -828,7 +828,7 @@ Pride.Core.Record = function(data) {
                                             data.names[0]
                                           ),
                          edit_response: function(response) {
-                           data = translateData(response.results[0]);
+                           data = translateData(response);
 
                            return data;
                          }
@@ -907,6 +907,8 @@ Pride.Util.RequestBuffer = function(request_options) {
     } else {
       sendRequest();
     }
+
+    return this;
   };
 
   var callWithResponse = function(data) {
@@ -1398,9 +1400,9 @@ Pride.init = new Pride.Util.RequestBuffer({
   failure_message: function() { return Pride.Messenger.preset('failed_init'); },
 
   edit_response:   function() { return undefined; },
-  before_success:  function(response) {
+  before_success:  function(data) {
     Pride.AllDatastores.array = _.map(
-      response['response'],
+      data.response,
       function(datastore_data) {
         return new Pride.Core.Datastore(datastore_data);
       }
@@ -1464,6 +1466,56 @@ Pride.FieldTree.parseField = function(field_name, content) {
            );
   }
 };
+
+// Copyright (c) 2015, Regents of the University of Michigan.
+// All rights reserved. See LICENSE.txt for details.
+
+// Authored by Colin Fulton (fultonis@umich.edu)
+
+Pride.FieldTree = Pride.FieldTree || {};
+
+Pride.FieldTree.tokens = [':', 'AND', 'OR', '+', '-', '(', ')', '*', ' ', '\n', '\t', '\r'];
+
+Pride.FieldTree.tokenize = function(string) {
+  var result = [];
+  var index  = 0;
+  var type   = null;
+
+  while (index < string.length) {
+    var slice = string.slice(index);
+    var found = _.find(
+                  Pride.FieldTree.tokens,
+                  function(pattern) {
+                    return (new RegExp('^\\' + pattern)).exec(slice);
+                  }
+                );
+
+
+
+    if (found) {
+      if (/\s/.exec(found)) {
+        type = 'whitespace';
+      }
+      type   = found;
+      index += found.length;
+    } else {
+      found = string.charAt(index);
+      type  = 'string';
+      index++;
+
+      var last = _.last(result);
+
+      if (last && last.type == 'string') {
+        found = result.pop().content + found;
+      }
+    }
+
+    result.push({ type: type, content: found });
+  }
+
+  return result;
+};
+
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.

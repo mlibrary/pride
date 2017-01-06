@@ -11,7 +11,7 @@ Pride.Core.Record = function(data) {
                                             data.names[0]
                                           ),
                          edit_response: function(response) {
-                           data = translateData(response.results[0]);
+                           data = translateData(response);
 
                            return data;
                          }
