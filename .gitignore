@@ -2,3 +2,6 @@ example/
 node_modules/
 .DS_Store
 ._.*
+*~
+*,
+yarn.lock
