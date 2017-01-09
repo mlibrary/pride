@@ -3,8 +3,10 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.Core.FacetSearch = function(setup) {
-  example_facet = this;
+  var example_facet = this;
   var data    = setup.data;
   var results = setup.results;
 

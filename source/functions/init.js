@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.init = new Pride.Util.RequestBuffer({
   url:             function() { return Pride.Settings.datastores_url; },
   attempts:        function() { return Pride.Settings.init_attempts; },

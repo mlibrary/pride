@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.Core.Datastore = function(datastore_info) {
   datastore_info = Pride.Util.deepClone(datastore_info);
 
@@ -67,7 +69,7 @@ Pride.Core.Datastore = function(datastore_info) {
   var fillFieldTree = function(given_tree) {
     given_tree = given_tree || new Pride.FieldTree.FieldBoolean('AND');
 
-    output = _.reduce(
+    var output = _.reduce(
                datastore_info.fields,
                function(tree, field) {
                  if ((field.required || field.fixed) &&

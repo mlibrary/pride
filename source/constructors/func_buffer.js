@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.Util.FuncBuffer = function(extension) {
   var buffer = {};
   var self   = this;

@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.Core.DatastoreSearch = function(setup) {
   var self = this;
   var base = new Pride.Core.SearchBase(setup, this);

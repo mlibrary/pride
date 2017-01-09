@@ -3,12 +3,14 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 // Perform a deep clone that leaves functions untouched.
 Pride.Util.deepClone = function(original) {
   if (_.isFunction(original)) {
     return original;
   } else {
-    collection_function = false;
+    var collection_function = false;
 
     if (_.isArray(original)) {
       collection_function = 'map';
