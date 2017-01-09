@@ -1,11 +1,12 @@
 // Include gulp
-var gulp = require('gulp');
+const gulp = require('gulp');
+const babel = require('gulp-babel');
 
 // Include Our Plugins
-var jshint = require('gulp-jshint');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
+const jshint = require('gulp-jshint');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
 
 // Lint Task
 gulp.task('lint', function() {
@@ -22,6 +23,9 @@ gulp.task('scripts', function() {
            './source/functions/**/*.js',
            './source/singletons/**/*.js'
          ])
+         .pipe(babel({
+           presets: ['es2015']
+         }))
         .pipe(concat('pride.js'))
         .pipe(gulp.dest('./'))
         .pipe(rename('pride.min.js'))

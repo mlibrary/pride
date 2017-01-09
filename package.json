@@ -1,9 +1,15 @@
 {
   "name": "pride",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "main": "pride.js",
+  "dependencies": {
+    "reqwest": "^2.0.5",
+    "underscore": "^1.8.3"
+  },
   "devDependencies": {
+    "babel-preset-es2016": "^6.16.0",
     "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.1",
     "gulp-jshint": "^2.0.4",
     "gulp-rename": "^1.2.2",

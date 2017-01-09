@@ -3,6 +3,9 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride      = {};
+import { _ } from 'underscore';
+import reqwest  from 'reqwest';
+
+export var Pride = {};
 Pride.Util = {};
 Pride.Core = {};
