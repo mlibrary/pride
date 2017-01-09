@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.Util.Paginater = function(initial_values) {
   this.set = function(new_values) {
 

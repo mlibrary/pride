@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.Core.Query = function(query_info) {
   // Setup the paginater to do all pagination calculations.
   var paginater = new Pride.Util.Paginater({

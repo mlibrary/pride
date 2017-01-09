@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.FieldTree = {};
 
 // Factory for creating functions to create various field tree node types.

@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.FieldTree = Pride.FieldTree || {};
 
 Pride.FieldTree.tokens = [':', 'AND', 'OR', '+', '-', '(', ')', '*', ' ', '\n', '\t', '\r'];
@@ -46,4 +48,3 @@ Pride.FieldTree.tokenize = function(string) {
 
   return result;
 };
-

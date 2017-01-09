@@ -3,6 +3,9 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+import reqwest from 'reqwest';
+
 Pride.Util.request = function(request_info) {
   Pride.Core.log('Request', 'Sending HTTP request...');
   Pride.Core.log('Request', 'URL', request_info.url);

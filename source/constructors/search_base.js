@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.Core.SearchBase = function(setup, parent) {
   this.datastore = setup.datastore;
   this.query     = setup.query || this.datastore.baseQuery();
@@ -220,7 +222,7 @@ Pride.Core.SearchBase = function(setup, parent) {
 
                    this.notify = function() {
                      if (!self.muted || never_mute) {
-                       data = data_func();
+                       var data = data_func();
                        self.log('NOTIFY (' + name + ')', data);
 
                        call_observers('observers', data);

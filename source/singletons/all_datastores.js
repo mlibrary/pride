@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.AllDatastores = {
   array: [],
 
@@ -21,4 +23,3 @@ Pride.AllDatastores = {
     return this;
   }
 };
-

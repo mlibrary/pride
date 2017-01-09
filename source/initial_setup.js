@@ -3,6 +3,6 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-Pride      = {};
+export var Pride = {};
 Pride.Util = {};
 Pride.Core = {};

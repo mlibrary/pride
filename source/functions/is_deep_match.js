@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.Util.isDeepMatch = function(object, pattern) {
   var both_arrays  = _.isArray(object)  && _.isArray(pattern);
   var both_objects = _.isObject(object) && _.isObject(pattern);

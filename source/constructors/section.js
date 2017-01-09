@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.Util.Section = function(start, end) {
   this.start = Math.max(Math.min(start, end), 0);
   this.end   = Math.max(Math.max(start, end), 0);

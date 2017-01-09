@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.Core.Record = function(data) {
   var request_buffer = new Pride.Util.RequestBuffer({
                          url: data.source,
