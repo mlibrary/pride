@@ -104,9 +104,7 @@ Pride.Core.Datastore = function(datastore_info) {
   };
 
   this.get = function(key) {
-    if (key != 'url') {
-      return datastore_info[key];
-    }
+    return datastore_info[key];
   };
 
   this.update = function(new_info) {
@@ -1650,7 +1648,7 @@ Pride.requestRecord = function(source, id, func) {
   }
   data = {
     complete: false,
-    source: Pride.Settings.datastores_url + '/' + source + '/record/' + id,
+    source: Pride.AllDatastores.get(source).get('url') + '/record/' + id,
     names: [ undefined ]
   };
   record = new Pride.Core.Record(data);
@@ -1696,6 +1694,13 @@ Pride.Util.slice = function(array, begin, end) {
 
 Pride.AllDatastores = {
   array: [],
+
+  get: function(uid) {
+    return _.find(
+      this.array,
+      function(datastore) { return datastore.get('uid') == uid; }
+    );
+  },
 
   newSearch: function(uid) {
     var datastore = _.find(
