@@ -8,6 +8,13 @@ import { _ } from 'underscore';
 Pride.AllDatastores = {
   array: [],
 
+  get: function(uid) {
+    return _.find(
+      this.array,
+      function(datastore) { return datastore.get('uid') == uid; }
+    );
+  },
+
   newSearch: function(uid) {
     var datastore = _.find(
                       this.array,

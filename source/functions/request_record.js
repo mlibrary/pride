@@ -8,7 +8,7 @@ Pride.requestRecord = function(source, id, func) {
   }
   var data = {
     complete: false,
-    source: Pride.Settings.datastores_url + '/' + source + '/record/' + id,
+    source: Pride.AllDatastores.get(source).get('url') + '/record/' + id,
     names: [ undefined ]
   };
   var record = new Pride.Core.Record(data);

@@ -42,9 +42,7 @@ Pride.Core.Datastore = function(datastore_info) {
   };
 
   this.get = function(key) {
-    if (key != 'url') {
-      return datastore_info[key];
-    }
+    return datastore_info[key];
   };
 
   this.update = function(new_info) {
