@@ -12,10 +12,16 @@ Pride.Core.Record = function(data) {
                                           ),
                          edit_response: function(response) {
                            data = translateData(response);
-
                            return data;
                          }
                        });
+
+  var holdings = new Pride.Core.Holdings(data);
+
+  this.getHoldings = function(func) {
+    holdings.getData(func);
+  };
+
 
   this.renderPart = function(func) {
     callWithData(func);
