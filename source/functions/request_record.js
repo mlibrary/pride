@@ -6,12 +6,12 @@ Pride.requestRecord = function(source, id, func) {
   if (func === undefined) {
     func = function(data) {};
   }
-  data = {
+  var data = {
     complete: false,
     source: Pride.Settings.datastores_url + '/' + source + '/record/' + id,
     names: [ undefined ]
   };
-  record = new Pride.Core.Record(data);
+  var record = new Pride.Core.Record(data);
   record.renderFull(func);
   return record;
 };
