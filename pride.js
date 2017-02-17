@@ -526,6 +526,56 @@ Pride.Util.FuncBuffer = function (extension) {
 
 var _underscore = require('underscore');
 
+Pride.Core.Holdings = function (data) {
+  this.data = data;
+
+  var getHoldingsUrl = function getHoldingsUrl(data) {
+    var ret;
+    _underscore._.each(data.fields, function (field) {
+      if (field.uid === 'holdings_url') {
+        ret = field.value;
+      }
+    });
+    return ret;
+  };
+
+  var getLinks = function getLinks(data) {
+    var ret;
+    _underscore._.each(data.fields, function (field) {
+      if (field.uid == 'links') {
+        ret = field.value;
+      }
+    });
+    return ret;
+  };
+
+  var request_buffer = new Pride.Util.RequestBuffer({
+    url: getHoldingsUrl(data),
+    failure_message: Pride.Messenger.preset('failed_holdings_load', data.names[0]),
+    edit_response: function edit_response(response) {
+      data = translateData(response);
+      return data;
+    }
+  });
+
+  var translateData = function translateData(input) {
+    return {
+      'physical': input,
+      'electronic': getLinks(data)
+    };
+  };
+
+  this.getData = function (func) {
+    request_buffer.request({ success: func });
+  };
+}; // Copyright (c) 2017, Regents of the University of Michigan.
+// All rights reserved. See LICENSE.txt for details.
+
+// Authored by Albert Bertram (bertrama@umich.edu)
+'use strict';
+
+var _underscore = require('underscore');
+
 Pride.Util.MultiSearch = function (uid, muted, search_array) {
   var query_data = {};
   var self = this;
@@ -788,6 +838,12 @@ Pride.Core.Record = function (data) {
       return data;
     }
   });
+
+  var holdings = new Pride.Core.Holdings(data);
+
+  this.getHoldings = function (func) {
+    holdings.getData(func);
+  };
 
   this.renderPart = function (func) {
     callWithData(func);
@@ -1527,12 +1583,12 @@ Pride.requestRecord = function (source, id, func) {
   if (func === undefined) {
     func = function func(data) {};
   }
-  data = {
+  var data = {
     complete: false,
     source: Pride.Settings.datastores_url + '/' + source + '/record/' + id,
     names: [undefined]
   };
-  record = new Pride.Core.Record(data);
+  var record = new Pride.Core.Record(data);
   record.renderFull(func);
   return record;
 };
