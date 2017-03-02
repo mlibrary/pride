@@ -19,10 +19,19 @@ Pride.Core.Record = function(data) {
                          }
                        });
 
-  var holdings = new Pride.Core.Holdings(data);
+  var holdings = {};
 
   this.getHoldings = function(func) {
-    holdings.getData(func);
+    if (data.complete) {
+      holdings = new Pride.Core.Holdings(data);
+      holdings.getData(func);
+    }
+    else {
+      request_buffer.request({success: function(data) {
+        holdings = new Pride.Core.Holdings(data);
+        holdings.getData(func);
+      }});
+    }
   };
 
   this.renderPart = function(func) {
