@@ -557,10 +557,18 @@ Pride.Core.Holdings = function (data) {
   });
 
   var translateData = function translateData(input) {
-    return {
-      'physical': input,
-      'electronic': getLinks(data)
-    };
+    _underscore._.each(getLinks(data), function (link) {
+      var row = { 'type': 'online' };
+      _underscore._.each(link, function (field) {
+        if (field.value.constructor == Array && field.value.length == 1) {
+          row[field.name] = field.value[0];
+        } else {
+          row[field.name] = field.value;
+        }
+      });
+      input.push(row);
+    });
+    return input;
   };
 
   this.getData = function (func) {
