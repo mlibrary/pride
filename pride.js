@@ -845,10 +845,12 @@ Pride.Core.Record = function (data) {
     }
   });
 
-  var holdings = {};
+  var holdings = null;
 
   this.getHoldings = function (func) {
-    if (data.complete) {
+    if (holdings) {
+      holdings.getData(func);
+    } else if (data.complete) {
       holdings = new Pride.Core.Holdings(data);
       holdings.getData(func);
     } else {
