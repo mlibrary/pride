@@ -33,7 +33,7 @@ Pride.Settings = {
   //                      as Pride runs. WARNING: Pride can send out a lot of
   //                      debug messages.
 
-  default_cache_size: 100,
+  default_cache_size: 20,
   cache_size: {
 
   },
