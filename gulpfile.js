@@ -63,5 +63,9 @@ gulp.task('run-tests', function(cb) {
 });
 
 gulp.task('watch-parser', function() {
-  gulp.watch('./source/**/*.pegjs', ['run-tests']);
+  gulp.watch('./source/**/*.pegjs', ['run-tests'])
+    .add(['./test2.js', './source/functions/*.js', './source/singletons/*.js', './source/constructors/*.js'])
+    //.add('./source/functions/*.js')
+    //.add('./source/singletons/*.js')
+    //.add('./source/constructors/*.js')
 });

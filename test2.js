@@ -20,7 +20,7 @@ var strings = [
 for (var i in strings) {
   var string = strings[i]
   console.log("string: " + string)
-  try { console.log(Pride.Parser.parse(string)) }
+  try { console.log(Pride.FieldTree.parseField('field', string)) }
   catch (e) { console.log(e) }
   console.log('')
 }

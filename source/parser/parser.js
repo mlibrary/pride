@@ -838,6 +838,10 @@
       return s0;
     }
 
+
+      var defaultFieldName = options.defaultFieldName || 'all_fields';
+
+
     peg$result = peg$startRuleFunction();
 
     if (peg$result !== peg$FAILED && peg$currPos === input.length) {

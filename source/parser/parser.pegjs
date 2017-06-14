@@ -1,3 +1,6 @@
+{
+  var defaultFieldName = options.defaultFieldName || 'all_fields';
+}
 start
   = coordination
 
