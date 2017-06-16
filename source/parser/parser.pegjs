@@ -5,7 +5,7 @@ start
   = coordination
 
 coordination
-  = cl:clause _ con:conj _ co:coordination { return [con, cl, co]; }
+  = cl:clause _ con:conj _ co:coordination { return new Pride.FieldTree.FieldBoolean(con, cl, co); }
   / clause_list
 
 clause_list
@@ -16,8 +16,8 @@ clause_rest
   = _ rest:clause_list { return rest; }
 
 clause
-  = field ":" literal_list
-  / literal_list
+  = fieldName:field ":" list:literal_list { return new Pride.FieldTree.Field(fieldName, ...list); }
+  / list:literal_list { return new Pride.FieldTree.Field(defaultFieldName, ...list); }
 
 field
   = string:FIELDCHAR+ { return string.join(''); }
@@ -29,10 +29,10 @@ literal_rest
   = _ rest:literal_list { return rest; }
 
 literal
-  = !CONJ first:WORD rest:QWORD+ { return [first + rest.join('')]; }
-  / !CONJ string:WORD+ { return [string.join('')]; }
-  / SQUOTE literal:NONSQUOTE* SQUOTE { return [literal.join('')]; }
-  / DQUOTE literal:NONDQUOTE* DQUOTE { return [literal.join('')]; }
+  = !CONJ first:WORD rest:QWORD+ { return [new Pride.FieldTree.Literal(first + rest.join(''))]; }
+  / !CONJ string:WORD+ { return [new Pride.FieldTree.Literal(string.join(''))]; }
+  / SQUOTE literal:NONSQUOTE* SQUOTE { return [new Pride.FieldTree.Literal(literal.join(''))]; }
+  / DQUOTE literal:NONDQUOTE* DQUOTE { return [new Pride.FieldTree.Literal(literal.join(''))]; }
 
 conj
   = conj:CONJ { return conj; }
