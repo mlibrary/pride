@@ -7,9 +7,15 @@ Pride.FieldTree.parseField = function(field_name, content) {
   if (!content) {
     return {};
   } else {
-    return new Pride.FieldTree.Field(
-             field_name,
-             new Pride.FieldTree.Literal(content)
-           );
+    try {
+      return Pride.Parser.parse(content, {defaultFieldName: field_name});
+    }
+    catch (e) {
+      console.log(e);
+      return new Pride.FieldTree.Field(
+        field_name,
+        new Pride.FieldTree.Literal(content)
+      );
+    }
   }
 };
