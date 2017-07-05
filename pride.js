@@ -395,7 +395,15 @@ Pride.Core.nodeFactory = function (type, child_types, extention) {
     };
 
     this.toJSON = function () {
-      return _underscore._.pick(this, 'value', 'children', 'type');
+      return _underscore._.mapObject(_underscore._.pick(this, 'value', 'children', 'type'), function (val, key) {
+        if (key == 'children') {
+          return _underscore._.map(val, function (item) {
+            return item.toJSON();
+          });
+        } else {
+          return val;
+        }
+      });
     };
 
     // If an extention function was given, call it with this.
