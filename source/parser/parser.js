@@ -152,7 +152,7 @@
         peg$c8 = function(first, rest) { if (rest) { return first.concat( rest ); } else { return first; } },
         peg$c9 = function(first, rest) { return [new Pride.FieldTree.Literal(first + rest.join(''))]; },
         peg$c10 = function(string) { return [new Pride.FieldTree.Literal(string.join(''))]; },
-        peg$c11 = function(literal) { return [new Pride.FieldTree.Literal(literal.join(''))]; },
+        peg$c11 = function(literal) { return [new Pride.FieldTree.Literal('"' + literal.join('') + '"')]; },
         peg$c12 = function(conj) { return conj; },
         peg$c13 = "AND",
         peg$c14 = peg$literalExpectation("AND", false),

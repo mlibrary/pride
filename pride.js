@@ -1916,7 +1916,7 @@ function () {
       return [new Pride.FieldTree.Literal(string.join(''))];
     },
         peg$c11 = function peg$c11(literal) {
-      return [new Pride.FieldTree.Literal(literal.join(''))];
+      return [new Pride.FieldTree.Literal('"' + literal.join('') + '"')];
     },
         peg$c12 = function peg$c12(conj) {
       return conj;

@@ -31,8 +31,8 @@ literal_rest
 literal
   = !CONJ first:WORD rest:QWORD+ { return [new Pride.FieldTree.Literal(first + rest.join(''))]; }
   / !CONJ string:WORD+ { return [new Pride.FieldTree.Literal(string.join(''))]; }
-  / SQUOTE literal:NONSQUOTE* SQUOTE { return [new Pride.FieldTree.Literal(literal.join(''))]; }
-  / DQUOTE literal:NONDQUOTE* DQUOTE { return [new Pride.FieldTree.Literal(literal.join(''))]; }
+  / SQUOTE literal:NONSQUOTE* SQUOTE { return [new Pride.FieldTree.Literal('"' + literal.join('') + '"')]; }
+  / DQUOTE literal:NONDQUOTE* DQUOTE { return [new Pride.FieldTree.Literal('"' + literal.join('') + '"')]; }
 
 conj
   = conj:CONJ { return conj; }
