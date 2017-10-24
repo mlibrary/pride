@@ -1416,6 +1416,8 @@ Pride.init = new Pride.Util.RequestBuffer({
     return undefined;
   },
   before_success: function before_success(data) {
+    // TODO: Look for a better place for this later.
+    Pride.Settings.default_institution = data.default_institution;
     Pride.AllDatastores.array = _underscore._.map(data.response, function (datastore_data) {
       return new Pride.Core.Datastore(datastore_data);
     });
