@@ -532,6 +532,54 @@ Pride.Util.FuncBuffer = function (extension) {
 
 var _underscore = require('underscore');
 
+Pride.Core.GetThis = function (barcode, data) {
+  this.barcode = barcode;
+  this.data = data;
+
+  var getGetThisUrl = function getGetThisUrl(data) {
+    var ret;
+    _underscore._.each(data.fields, function (field) {
+      if (field.uid === 'get_this_url') {
+        ret = field.value;
+      }
+    });
+    return ret;
+  };
+
+  var getLinks = function getLinks(data) {
+    var ret;
+    _underscore._.each(data.fields, function (field) {
+      if (field.uid == 'links') {
+        ret = field.value;
+      }
+    });
+    return ret;
+  };
+
+  var request_buffer = new Pride.Util.RequestBuffer({
+    url: getGetThisUrl(data) + '/' + this.barcode,
+    failure_message: Pride.Messenger.preset('failed_get_this_load', data.names[0]),
+    edit_response: function edit_response(response) {
+      data = translateData(response);
+      return data;
+    }
+  });
+
+  var translateData = function translateData(input) {
+    return input;
+  };
+
+  this.getData = function (func) {
+    request_buffer.request({ success: func });
+  };
+}; // Copyright (c) 2017, Regents of the University of Michigan.
+// All rights reserved. See LICENSE.txt for details.
+
+// Authored by Albert Bertram (bertrama@umich.edu)
+'use strict';
+
+var _underscore = require('underscore');
+
 Pride.Core.Holdings = function (data) {
   this.data = data;
 
@@ -854,6 +902,7 @@ Pride.Core.Record = function (data) {
   });
 
   var holdings = null;
+  var get_this = {};
 
   this.getHoldings = function (func) {
     if (holdings) {
@@ -865,6 +914,20 @@ Pride.Core.Record = function (data) {
       request_buffer.request({ success: function success(data) {
           holdings = new Pride.Core.Holdings(data);
           holdings.getData(func);
+        } });
+    }
+  };
+
+  this.getGetThis = function (barcode, func) {
+    if (get_this[barcode]) {
+      get_this[barcode].getData(func);
+    } else if (data.complete) {
+      get_this[barcode] = new Pride.Core.GetThis(barcode, data);
+      get_this[barcode].getData(func);
+    } else {
+      request_buffer.request({ success: function success(data) {
+          get_this[barcode] = new Pride.Core.GetThis(barcode, data);
+          get_this[barcode].getData(func);
         } });
     }
   };

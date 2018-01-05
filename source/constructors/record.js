@@ -20,6 +20,7 @@ Pride.Core.Record = function(data) {
                        });
 
   var holdings = null;
+  var get_this = {};
 
   this.getHoldings = function(func) {
     if (holdings) {
@@ -33,6 +34,22 @@ Pride.Core.Record = function(data) {
       request_buffer.request({success: function(data) {
         holdings = new Pride.Core.Holdings(data);
         holdings.getData(func);
+      }});
+    }
+  };
+
+  this.getGetThis = function(barcode, func) {
+    if (get_this[barcode]) {
+      get_this[barcode].getData(func);
+    }
+    else if (data.complete) {
+      get_this[barcode] = new Pride.Core.GetThis(barcode, data);
+      get_this[barcode].getData(func);
+    }
+    else {
+      request_buffer.request({success: function(data) {
+        get_this[barcode] = new Pride.Core.GetThis(barcode, data);
+        get_this[barcode].getData(func);
       }});
     }
   };
