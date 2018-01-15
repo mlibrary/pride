@@ -613,6 +613,7 @@ Pride.Core.Holdings = function (data) {
   });
 
   var translateData = function translateData(input) {
+    var links = [];
     _underscore._.each(getLinks(data), function (link) {
       var row = { 'type': 'online' };
       _underscore._.each(link, function (field) {
@@ -622,9 +623,9 @@ Pride.Core.Holdings = function (data) {
           row[field.name] = field.value;
         }
       });
-      input.push(row);
+      links.push(row);
     });
-    return input;
+    return links.concat(input);
   };
 
   this.getData = function (func) {
