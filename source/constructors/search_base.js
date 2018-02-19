@@ -136,6 +136,7 @@ Pride.Core.SearchBase = function(setup, parent) {
     self.datastore.update(response_data.datastore);
 
     var new_query_data = _.omit(response_data.new_request, 'start', 'count');
+    new_query_data.specialists = response_data.specialists;
     new_query_data.total_available = response_data.total_available;
     self.query.set(new_query_data);
 
