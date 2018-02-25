@@ -22,6 +22,33 @@ Pride.Core.Record = function(data) {
   var holdings = null;
   var get_this = {};
 
+  this.placeHold = function(item, pickup_location, not_needed_after, callback_function) {
+    this.renderFull(function (data) {
+      var getHoldingsUrl = function() {
+        var ret;
+        _.each(data.fields, function(field) {
+          if (field.uid === 'holdings_url') {
+            ret = field.value;
+          }
+        });
+        return ret;
+      };
+
+      var response = Pride.Util.request({
+        url: [getHoldingsUrl(), item, pickup_location, not_needed_after].join('/'),
+        query: true,
+        failure: function(data) { Pride.Messenger.sendMessage({
+          summary: 'Failed to place hold',
+          class: 'error'
+        });},
+        success: callback_function,
+        failure_message: 'placeHold failed',
+        success_message: 'placeHold succeeded',
+      });
+    });
+  };
+
+
   this.getHoldings = function(func) {
     if (holdings) {
       holdings.getData(func);
