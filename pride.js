@@ -998,6 +998,12 @@ Pride.Core.Record = function (data) {
       });
     }
 
+    if (new_data.uid) {
+      new_data.status = 200;
+    } else {
+      new_data.status = 404;
+    }
+
     return _underscore._.omit(new_data, 'names_have_html');
   };
 
