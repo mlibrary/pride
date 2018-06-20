@@ -18,6 +18,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-jshint": "^2.0.4",
     "gulp-rename": "^1.2.2",
+    "gulp-replace": "^1.0.0",
     "gulp-uglify": "^2.0.0",
     "jshint": "^2.9.4"
   }

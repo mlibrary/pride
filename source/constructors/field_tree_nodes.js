@@ -11,6 +11,9 @@ Pride.FieldTree = {};
 Pride.Core.nodeFactory = function(type, child_types, extention) {
   return function(value) {
            this.children     = Pride.Util.slice(arguments, 1);
+           if (this.children.length === 1 && Array.isArray(this.children[0])) {
+             this.children = this.children[0];
+           }
            this.type         = type;
            this.value        = value.trim();
            this.child_types  = child_types || [];

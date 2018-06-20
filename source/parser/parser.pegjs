@@ -16,8 +16,8 @@ clause_rest
   = _ rest:clause_list { return rest; }
 
 clause
-  = fieldName:field ":" list:literal_list { return new Pride.FieldTree.Field(fieldName, ...list); }
-  / list:literal_list { return new Pride.FieldTree.Field(defaultFieldName, ...list); }
+  = fieldName:field ":" list:literal_list { return new Pride.FieldTree.Field(fieldName, list); }
+  / list:literal_list { return new Pride.FieldTree.Field(defaultFieldName, list); }
 
 field
   = string:FIELDCHAR+ { return string.join(''); }

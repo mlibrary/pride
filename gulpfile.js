@@ -9,12 +9,14 @@ const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const pegjs  = require('gulp-pegjs');
 const clean  = require('gulp-clean');
+const replace = require('gulp-replace');
 
 gulp.task('clean', function() {
   return gulp.src([
     './source/singletons/parser.js',
     './pride.js',
     './pride.min.js',
+    './pride.execjs.js',
   ]).pipe(clean());
 });
 
@@ -58,7 +60,22 @@ gulp.task('scripts', ['parser2'], function() {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('default', ['lint', 'scripts']);
+gulp.task('default', ['lint', 'execjs']);
+
+gulp.task('execjs', ['scripts'], function() {
+  return gulp.src([
+           './source/initial_setup.js',
+           './source/settings.js',
+           './source/constructors/**/*.js',
+           './source/functions/**/*.js',
+           './source/singletons/**/*.js'
+         ])
+        .pipe(replace('export', 'var reqwest = {};'))
+        .pipe(replace("import { _ } from 'underscore';", ''))
+        .pipe(replace("import reqwest from 'reqwest';", ''))
+        .pipe(concat('pride.execjs.js'))
+        .pipe(gulp.dest('./'));
+});
 
 gulp.task('watch', function() {
   gulp.watch('./source/**/*.js', ['default']);
