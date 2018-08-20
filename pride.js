@@ -1007,6 +1007,15 @@ Pride.Core.Record = function (data) {
       new_data.status = 404;
     }
 
+    if (Pride.PreferenceEngine.favorited(new_data)) {
+      new_data.favorited = true;
+      new_data.favorite_tags = Pride.PreferenceEngine.favoriteTags(new_data);
+    }
+
+    if (Pride.PreferenceEngine.selected(new_data)) {
+      new_data.selected = true;
+    }
+
     return _underscore._.omit(new_data, 'names_have_html');
   };
 
@@ -2755,3 +2764,78 @@ function () {
     parse: peg$parse
   };
 }();
+"use strict";
+
+Pride.PreferenceEngine = {
+  favoritedRecords: {},
+  favoritedRecordsTags: {},
+  selectedRecords: {},
+  engine: null,
+
+  favorited: function favorited(record) {
+    if (!this.engine) {
+      return false;
+    }
+    return (this.selectedRecords[record.datastore] || {})[record.uid];
+  },
+
+  selected: function selected(record) {
+    if (!this.engine) {
+      return false;
+    }
+    return (this.selectedRecords[record.datastore] || {})[record.uid];
+  },
+
+  favoriteTags: function favoriteTags(record) {
+    if (!this.engine) {
+      return [];
+    }
+    return (this.favoritedRecordsTags[record.datastore] || {})[record.uid] || [];
+  },
+
+  registerEngine: function registerEngine(engine) {
+    this.engine = engine;
+    if (!engine) {
+      return this;
+    }
+
+    this.updateSelectedRecords(this.engine.listRecords());
+    //this.updateFavoritedRecords({});
+
+    this.engine.addFavoritesListObserver(function (preferenceEngine) {
+      return function (data) {
+        preferenceEngine.updateFavoritedRecords(data);
+      };
+    }(this));
+    this.engine.addObserver(function (preferenceEngine) {
+      return function (data) {
+        preferenceEngine.updateSelectedRecords(data);
+      };
+    }(this));
+    return this;
+  },
+
+  updateFavoritedRecords: function updateFavoritedRecords(data) {},
+
+  updateSelectedRecords: function updateSelectedRecords(data) {
+    if (data.forEach) {
+      data.forEach(function (record) {
+        this.selectedRecords[record.datastore] = this.selectedRecords[record.datastore] || {};
+        this.selectedRecords[record.datastore][record.uid] = true;
+      }, this);
+      return this;
+    }
+    for (var prop in data) {
+      if (data.hasOwnProperty(prop)) {
+        this.selectedRecords[prop] = {};
+        data[prop].forEach(function (prop) {
+          return function (record) {
+            this.selectedRecords[prop][record.uid] = true;
+          };
+        }(prop), this);
+      }
+    }
+    return this;
+  }
+
+};
