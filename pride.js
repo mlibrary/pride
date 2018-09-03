@@ -2764,19 +2764,19 @@ function () {
     parse: peg$parse
   };
 }();
-"use strict";
+'use strict';
 
 Pride.PreferenceEngine = {
-  favoritedRecords: {},
-  favoritedRecordsTags: {},
-  selectedRecords: {},
+  favoritedRecords: null,
+  favoritedRecordsTags: null,
+  selectedRecords: null,
   engine: null,
 
   favorited: function favorited(record) {
     if (!this.engine) {
       return false;
     }
-    return (this.selectedRecords[record.datastore] || {})[record.uid];
+    return (this.favoritedRecords[record.datastore] || {})[record.uid];
   },
 
   selected: function selected(record) {
@@ -2800,7 +2800,7 @@ Pride.PreferenceEngine = {
     }
 
     this.updateSelectedRecords(this.engine.listRecords());
-    //this.updateFavoritedRecords({});
+    this.updateFavoritedRecords(this.engine.favoritesList.last);
 
     this.engine.addFavoritesListObserver(function (preferenceEngine) {
       return function (data) {
@@ -2815,9 +2815,48 @@ Pride.PreferenceEngine = {
     return this;
   },
 
-  updateFavoritedRecords: function updateFavoritedRecords(data) {},
+  blankList: function blankList() {
+    return {
+      mirlyn: {},
+      articlesplus: {},
+      databases: {},
+      journals: {}
+    };
+  },
+
+  updateFavoritedRecords: function updateFavoritedRecords(data) {
+    this.favoritedRecords = this.favoritedRecords || this.blankList();
+    this.favoritedRecordsTags = this.favoritedRecordsTags || this.blankList();
+    if (!data || data.length < 1) {
+      this.favoritedRecords = this.blankList();
+      this.favoritedRecordsTags = this.blankList();
+    }
+    data.forEach(function (record) {
+      var remove, id, datastore, tags;
+      if ((remove = record.tags.indexOf('mirlyn-favorite')) >= 0) {
+        id = record.id[0].split('/')[4];
+        datastore = 'mirlyn';
+      } else if ((remove = record.tags.indexOf('articles-favorite')) >= 0) {
+        id = record.id[0].split('/')[5];
+        datastore = 'articlesplus';
+      } else if ((remove = record.tags.indexOf('databases-favorite')) >= 0) {
+        id = record.id[0];
+        datastore = 'databases';
+      } else if ((remove = record.tags.indexOf('journals-favorite')) >= 0) {
+        id = record.id[0];
+        datastore = 'journals';
+      } else {
+        return this;
+      }
+      tags = record.tags.slice(0, remove).concat(record.tags.slice(remove + 1, record.tags.length));
+      this.favoritedRecords[datastore][id] = true;
+      this.favoritedRecordsTags[datastore][id] = tags;
+    }, this);
+    return this;
+  },
 
   updateSelectedRecords: function updateSelectedRecords(data) {
+    this.selectedRecords = this.selectedRecords || this.blankList();
     if (data.forEach) {
       data.forEach(function (record) {
         this.selectedRecords[record.datastore] = this.selectedRecords[record.datastore] || {};
