@@ -2916,9 +2916,10 @@ Pride.PreferenceEngine = {
   updateFavoritedRecords: function (data) {
     this.favoritedRecords = this.favoritedRecords || this.blankList();
     this.favoritedRecordsTags = this.favoritedRecordsTags || this.blankList();
-    if (!data || data.length < 1) {
+    if (!data || data.length < 1 || !data.forEach) {
       this.favoritedRecords = this.blankList();
       this.favoritedRecordsTags = this.blankList();
+      return this;
     }
     data.forEach(function (record) {
       var remove, id, datastore, tags;
