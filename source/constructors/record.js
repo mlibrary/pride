@@ -130,6 +130,15 @@ Pride.Core.Record = function(data) {
       new_data.status = 404;
     }
 
+    if (Pride.PreferenceEngine.favorited(new_data)) {
+      new_data.favorited = true;
+      new_data.favorite_tags = Pride.PreferenceEngine.favoriteTags(new_data);
+    }
+
+    if (Pride.PreferenceEngine.selected(new_data)) {
+      new_data.selected = true;
+    }
+
     return _.omit(new_data, 'names_have_html');
   };
 
