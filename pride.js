@@ -1581,7 +1581,7 @@ Pride.Core.log = function (source, info) {
     console.log.apply(console, message);
   }
 };
-"use strict";
+'use strict';
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
@@ -1593,6 +1593,7 @@ Pride.FieldTree.parseField = function (field_name, content) {
     return {};
   } else {
     try {
+      content = content.replace(/[“”]/, '"').replace(/ :/, ' ').replace(/: /, ' ').replace(/:$/, '').replace(/^:/, '');
       return Pride.Parser.parse(content, { defaultFieldName: field_name });
     } catch (e) {
       console.log(e);

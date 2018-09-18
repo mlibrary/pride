@@ -1705,6 +1705,12 @@ Pride.FieldTree.parseField = function(field_name, content) {
     return {};
   } else {
     try {
+      content = content
+        .replace(/[“”]/, '"')
+        .replace(/ :/, ' ')
+        .replace(/: /, ' ')
+        .replace(/:$/, '')
+        .replace(/^:/, '');
       return Pride.Parser.parse(content, {defaultFieldName: field_name});
     }
     catch (e) {
