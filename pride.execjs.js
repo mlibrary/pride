@@ -1706,11 +1706,12 @@ Pride.FieldTree.parseField = function(field_name, content) {
   } else {
     try {
       content = content
-        .replace(/[“”]/, '"')
-        .replace(/ :/, ' ')
-        .replace(/: /, ' ')
-        .replace(/:$/, '')
-        .replace(/^:/, '');
+        .replace(/[“”]/g, '"')
+        .replace(/ [:&]/g, ' ')
+        .replace(/[:&] /g, ' ')
+        .replace(/[:&]$/g, '')
+        .replace(/^[:&]/g, '')
+        ;
       return Pride.Parser.parse(content, {defaultFieldName: field_name});
     }
     catch (e) {
