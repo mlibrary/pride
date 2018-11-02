@@ -18,10 +18,10 @@ Pride.Core.Holdings = function(data) {
     return ret;
   };
 
-  var getLinks = function(data) {
+  var getResourceAccess = function(data) {
     var ret;
     _.each(data.fields, function(field) {
-      if (field.uid == 'links') {
+      if (field.uid === 'resource_access') {
         ret = field.value;
       }
     });
@@ -41,20 +41,7 @@ Pride.Core.Holdings = function(data) {
   });
 
   var translateData = function(input) {
-    var links = [];
-    _.each(getLinks(data), function(link) {
-      var row = {'type': 'online'};
-      _.each(link, function(field) {
-        if (field.value.constructor == Array && field.value.length == 1) {
-          row[field.name] = field.value[0];
-        }
-        else {
-          row[field.name] = field.value;
-        }
-      });
-      links.push(row);
-    });
-    return links.concat(input);
+    return [getResourceAccess(data)].concat(input);
   };
 
   this.getData = function(func) {
