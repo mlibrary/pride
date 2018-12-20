@@ -2809,7 +2809,8 @@ Pride.PreferenceEngine = {
       mirlyn: {},
       articlesplus: {},
       databases: {},
-      journals: {}
+      journals: {},
+      website: {}
     };
   },
 
