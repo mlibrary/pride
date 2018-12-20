@@ -2830,11 +2830,14 @@ Pride.PreferenceEngine = {
         id = record.id[0].split('/')[5];
         datastore = 'articlesplus';
       } else if ((remove = record.tags.indexOf('databases-favorite')) >= 0) {
-        id = record.id[0];
+        id = record.id[0].split('/')[4];
         datastore = 'databases';
       } else if ((remove = record.tags.indexOf('journals-favorite')) >= 0) {
-        id = record.id[0];
+        id = record.id[0].split('/')[4];
         datastore = 'journals';
+      } else if ((remove = record.tags.indexOf('website-favorite')) >= 0) {
+        id = record.id[0];
+        datastore = 'website';
       } else {
         return this;
       }
