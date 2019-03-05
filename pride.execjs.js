@@ -1050,6 +1050,19 @@ Pride.Core.Record = function(data) {
     }
   };
 
+  this.renderCSL = function(func) {
+    this.renderFull(function(data) {
+      var ret;
+      _.each(data.fields, function(field) {
+        if (field.uid === 'csl') {
+          ret = field.value;
+        }
+      });
+
+      func(ret);
+    });
+  };
+
   var callWithData = function(func) {
     func(_.omit(data, 'complete', 'source'), data.complete);
   };

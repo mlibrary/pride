@@ -970,6 +970,19 @@ Pride.Core.Record = function (data) {
     }
   };
 
+  this.renderCSL = function (func) {
+    this.renderFull(function (data) {
+      var ret;
+      _underscore._.each(data.fields, function (field) {
+        if (field.uid === 'csl') {
+          ret = field.value;
+        }
+      });
+
+      func(ret);
+    });
+  };
+
   var callWithData = function callWithData(func) {
     func(_underscore._.omit(data, 'complete', 'source'), data.complete);
   };
