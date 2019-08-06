@@ -5,8 +5,8 @@ start
   = coordination
 
 coordination
-  = cl:clause _ con:conj _ co:coordination { return new Pride.FieldTree.FieldBoolean(con, cl, co); }
-  / clause_list
+  = cl:clause _ con:conj _ co:coordination OPTWS { return new Pride.FieldTree.FieldBoolean(con, cl, co); }
+  / clause_list OPTWS
 
 clause_list
   = clause
@@ -17,7 +17,7 @@ clause_rest
 
 clause
   = fieldName:field ":" list:literal_list { return new Pride.FieldTree.Field(fieldName, list); }
-  / list:literal_list { return new Pride.FieldTree.Field(defaultFieldName, list); }
+  / list:literal_list OPTWS { return new Pride.FieldTree.Field(defaultFieldName, list); }
 
 field
   = string:FIELDCHAR+ { return string.join(''); }
@@ -53,3 +53,5 @@ QWORD = [^ \t\r\n():]
 WORD  = [^ \t\r\n'"():]
 
 _ = [ \t\r\n]+
+
+OPTWS = _?

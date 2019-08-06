@@ -324,7 +324,7 @@ Pride.Parser =
     }
 
     function peg$parsecoordination() {
-      var s0, s1, s2, s3, s4, s5;
+      var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
       s1 = peg$parseclause();
@@ -337,9 +337,15 @@ Pride.Parser =
             if (s4 !== peg$FAILED) {
               s5 = peg$parsecoordination();
               if (s5 !== peg$FAILED) {
-                peg$savedPos = s0;
-                s1 = peg$c0(s1, s3, s5);
-                s0 = s1;
+                s6 = peg$parseOPTWS();
+                if (s6 !== peg$FAILED) {
+                  peg$savedPos = s0;
+                  s1 = peg$c0(s1, s3, s5);
+                  s0 = s1;
+                } else {
+                  peg$currPos = s0;
+                  s0 = peg$FAILED;
+                }
               } else {
                 peg$currPos = s0;
                 s0 = peg$FAILED;
@@ -361,7 +367,21 @@ Pride.Parser =
         s0 = peg$FAILED;
       }
       if (s0 === peg$FAILED) {
-        s0 = peg$parseclause_list();
+        s0 = peg$currPos;
+        s1 = peg$parseclause_list();
+        if (s1 !== peg$FAILED) {
+          s2 = peg$parseOPTWS();
+          if (s2 !== peg$FAILED) {
+            s1 = [s1, s2];
+            s0 = s1;
+          } else {
+            peg$currPos = s0;
+            s0 = peg$FAILED;
+          }
+        } else {
+          peg$currPos = s0;
+          s0 = peg$FAILED;
+        }
       }
 
       return s0;
@@ -454,10 +474,19 @@ Pride.Parser =
         s0 = peg$currPos;
         s1 = peg$parseliteral_list();
         if (s1 !== peg$FAILED) {
-          peg$savedPos = s0;
-          s1 = peg$c6(s1);
+          s2 = peg$parseOPTWS();
+          if (s2 !== peg$FAILED) {
+            peg$savedPos = s0;
+            s1 = peg$c6(s1);
+            s0 = s1;
+          } else {
+            peg$currPos = s0;
+            s0 = peg$FAILED;
+          }
+        } else {
+          peg$currPos = s0;
+          s0 = peg$FAILED;
         }
-        s0 = s1;
       }
 
       return s0;
@@ -844,6 +873,17 @@ Pride.Parser =
         }
       } else {
         s0 = peg$FAILED;
+      }
+
+      return s0;
+    }
+
+    function peg$parseOPTWS() {
+      var s0;
+
+      s0 = peg$parse_();
+      if (s0 === peg$FAILED) {
+        s0 = null;
       }
 
       return s0;
