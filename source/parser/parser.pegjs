@@ -13,11 +13,11 @@ clause_list
   / first:clause rest:(clause_rest)? { if (rest) { return [first, rest]; } else { return first; } }
 
 clause_rest
-  = _ rest:clause_list { return rest; }
+  = SPACES rest:clause_list { return rest; }
 
 clause
   = fieldName:field ":" list:literal_list { return new Pride.FieldTree.Field(fieldName, list); }
-  / list:literal_list OPTWS { return new Pride.FieldTree.Field(defaultFieldName, list); }
+  / list:literal_list OPTSPACES { return new Pride.FieldTree.Field(defaultFieldName, list); }
 
 field
   = string:FIELDCHAR+ { return string.join(''); }
@@ -26,7 +26,7 @@ literal_list
   = first:literal rest:(literal_rest)?  { if (rest) { return first.concat( rest ); } else { return first; } }
 
 literal_rest
-  = _ rest:literal_list { return rest; }
+  = SPACES rest:literal_list { return rest; }
 
 literal
   = !CONJ first:WORD rest:QWORD+ { return [new Pride.FieldTree.Literal(first + rest.join(''))]; }
