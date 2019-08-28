@@ -2,7 +2,7 @@
   var defaultFieldName = options.defaultFieldName || 'all_fields';
 }
 start
-  = coordination
+  = c:coordination _? { return c; }
 
 coordination
   = cl:clause _ con:conj _ co:coordination { return new Pride.FieldTree.FieldBoolean(con, cl, co); }
@@ -53,3 +53,4 @@ QWORD = [^ \t\r\n():]
 WORD  = [^ \t\r\n'"():]
 
 _ = [ \t\r\n]+
+
