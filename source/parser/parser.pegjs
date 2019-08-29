@@ -6,7 +6,7 @@ start
 
 coordination
   = cl:clause _ con:conj _ co:coordination { return new Pride.FieldTree.FieldBoolean(con, cl, co); }
-  / clause_list
+  / cl:clause_list OPTSPACE { return cl; }
 
 clause_list
   = clause
@@ -53,3 +53,5 @@ QWORD = [^ \t\r\n():]
 WORD  = [^ \t\r\n'"():]
 
 _ = [ \t\r\n]+
+SPACES = _
+OPTSPACE = SPACES?
