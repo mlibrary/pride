@@ -1,12 +1,30 @@
 {
   var defaultFieldName = options.defaultFieldName || 'all_fields';
+
+  // https://pegjs.org/online
+  //
+  // var Pride = function(){};
+  // Pride.FieldTree = function(){};
+  // Pride.FieldTree.Literal = function(str) {
+  //   this.string =  str;
+  //   function toString() {
+  //     return string;
+  //   }
+  // }
+  // Pride.FieldTree.Field = function(a,lst) {
+  //   this.field = a; this.val = lst.map(function(x){return x.string}).join(" ");
+  //   function toString() {
+  //     return field + ":(" + lst.join(" ") + ")";
+  //   }
+  // }
+  // Pride.FieldTree.FieldBoolean = function(a,b,c) { return [a, b, c];}
 }
 start
-  = coordination
+  = c:coordination OPTSPACE { return c; }
 
 coordination
   = cl:clause _ con:conj _ co:coordination { return new Pride.FieldTree.FieldBoolean(con, cl, co); }
-  / clause_list
+  / cl:clause_list
 
 clause_list
   = clause
@@ -53,3 +71,5 @@ QWORD = [^ \t\r\n():]
 WORD  = [^ \t\r\n'"():]
 
 _ = [ \t\r\n]+
+SPACES = _
+OPTSPACE = SPACES?
