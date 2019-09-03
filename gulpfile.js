@@ -17,15 +17,15 @@ gulp.task('clean', function() {
     './pride.js',
     './pride.min.js',
     './pride.execjs.js',
-  ]).pipe(clean());
+  ],  { allowEmpty: true }).pipe(clean());
 });
 
 // Lint Task
-gulp.task('lint', ['clean'], function() {
+gulp.task('lint', gulp.series('clean', function() {
   return gulp.src('./source/**/*.js')
              .pipe(jshint())
              .pipe(jshint.reporter('default'));
-});
+}));
 
 gulp.task('parser1', function() {
   return gulp.src('./source/parser/parser.pegjs')
@@ -33,16 +33,16 @@ gulp.task('parser1', function() {
     .pipe(gulp.dest('./source/parser'));
 });
 
-gulp.task('parser2', ['parser1'], function() {
+gulp.task('parser2', gulp.series('parser1', function() {
   return gulp.src([
     './source/parser/early.js',
     './source/parser/parser.js'
   ])
     .pipe(concat('parser.js'))
     .pipe(gulp.dest('./source/singletons'));
-});
+}));
 
-gulp.task('scripts', ['parser2'], function() {
+gulp.task('scripts', gulp.series('parser2', function() {
   return gulp.src([
            './source/initial_setup.js',
            './source/settings.js',
@@ -58,11 +58,9 @@ gulp.task('scripts', ['parser2'], function() {
         .pipe(rename('pride.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('./'));
-});
+}));
 
-gulp.task('default', ['lint', 'execjs']);
-
-gulp.task('execjs', ['scripts'], function() {
+gulp.task('execjs', gulp.series('scripts', function() {
   return gulp.src([
            './source/initial_setup.js',
            './source/settings.js',
@@ -75,8 +73,11 @@ gulp.task('execjs', ['scripts'], function() {
         .pipe(replace("import reqwest from 'reqwest';", ''))
         .pipe(concat('pride.execjs.js'))
         .pipe(gulp.dest('./'));
-});
+	  }));
 
 gulp.task('watch', function() {
   gulp.watch('./source/**/*.js', ['default']);
 });
+
+gulp.task('default', gulp.series('lint', 'execjs'));
+
