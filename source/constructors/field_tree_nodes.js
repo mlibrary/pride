@@ -180,3 +180,4 @@ Pride.FieldTree.Tag = Pride.Core.nodeFactory(
 
 Pride.FieldTree.Literal = Pride.Core.nodeFactory('literal');
 Pride.FieldTree.Special = Pride.Core.nodeFactory('special');
+Pride.FieldTree.Raw = Pride.Core.nodeFactory('raw');

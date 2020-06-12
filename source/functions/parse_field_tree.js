@@ -19,10 +19,7 @@ Pride.FieldTree.parseField = function(field_name, content) {
     }
     catch (e) {
       console.log(e);
-      return new Pride.FieldTree.Field(
-        field_name,
-        new Pride.FieldTree.Literal(content)
-      );
+      return new Pride.FieldTree.Raw(content);
     }
   }
 };

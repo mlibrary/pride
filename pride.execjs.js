@@ -519,6 +519,7 @@ Pride.FieldTree.Tag = Pride.Core.nodeFactory(
 
 Pride.FieldTree.Literal = Pride.Core.nodeFactory('literal');
 Pride.FieldTree.Special = Pride.Core.nodeFactory('special');
+Pride.FieldTree.Raw = Pride.Core.nodeFactory('raw');
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
@@ -1717,10 +1718,7 @@ Pride.FieldTree.parseField = function(field_name, content) {
     }
     catch (e) {
       console.log(e);
-      return new Pride.FieldTree.Field(
-        field_name,
-        new Pride.FieldTree.Literal(content)
-      );
+      return new Pride.FieldTree.Raw(content);
     }
   }
 };

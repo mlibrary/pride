@@ -473,6 +473,7 @@ Pride.FieldTree.Tag = Pride.Core.nodeFactory('tag', inside_field_nodes, function
 
 Pride.FieldTree.Literal = Pride.Core.nodeFactory('literal');
 Pride.FieldTree.Special = Pride.Core.nodeFactory('special');
+Pride.FieldTree.Raw = Pride.Core.nodeFactory('raw');
 'use strict';
 
 var _underscore = require('underscore');
@@ -1605,7 +1606,7 @@ Pride.FieldTree.parseField = function (field_name, content) {
       return Pride.Parser.parse(content, { defaultFieldName: field_name });
     } catch (e) {
       console.log(e);
-      return new Pride.FieldTree.Field(field_name, new Pride.FieldTree.Literal(content));
+      return new Pride.FieldTree.Raw(content);
     }
   }
 };
