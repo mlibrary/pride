@@ -45,6 +45,7 @@ Pride.Core.DatastoreSearch = function(setup) {
              total_available: base.query.get('total_available'),
              total_pages:     base.query.get('total_pages'),
              page_limit:      base.query.get('page_limit'),
+             raw_query:  document.getElementById('search-query'),
              specialists:     Pride.Util.deepClone(base.query.get('specialists'))
            };
   };
