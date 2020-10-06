@@ -16,6 +16,7 @@ Pride.Core.Datastore = function(datastore_info) {
              count:      0,
              settings:   {},
              field_tree: fillFieldTree(),
+             raw_query:  document.getElementById('search-query'),
              facets:     _.reduce(
                            datastore_info.facets,
                            function(memo, facet) {
