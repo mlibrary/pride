@@ -74,7 +74,7 @@ Pride.Core.Query = function(query_info) {
              facets:     this.get('facets'),
              sort:       this.get('sort'),
              settings:   this.get('settings'),
-             raw_query:  document.getElementById('search-query')
+             raw_query:  this.get('raw_query')
            };
   };
 };
