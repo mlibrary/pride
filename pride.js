@@ -873,7 +873,8 @@ Pride.Core.Query = function (query_info) {
       field_tree: this.get('field_tree'),
       facets: this.get('facets'),
       sort: this.get('sort'),
-      settings: this.get('settings')
+      settings: this.get('settings'),
+      raw_query: this.get('raw_query')
     };
   };
 }; // Copyright (c) 2015, Regents of the University of Michigan.
