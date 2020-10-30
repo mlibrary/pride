@@ -1603,8 +1603,7 @@ Pride.FieldTree.parseField = function (field_name, content) {
       //        .replace(/[:&]$/g, '')
       //        .replace(/^[:&]/g, '')
       //        ;
-      //       return Pride.Parser.parse(content, {defaultFieldName: field_name});
-      return new Pride.FieldTree.Raw(content);
+      return Pride.Parser.parse(content, { defaultFieldName: field_name });
     } catch (e) {
       console.log(e);
       return new Pride.FieldTree.Raw(content);
