@@ -11,8 +11,7 @@
     "xhr2": "^0.2.0"
   },
   "devDependencies": {
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-es2016": "^6.16.0",
+    "babel-preset-env": "^1.7.0",
     "gulp": "^4.0",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.1",

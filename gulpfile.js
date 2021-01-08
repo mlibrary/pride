@@ -51,7 +51,7 @@ gulp.task('scripts', gulp.series('parser2', function() {
            './source/singletons/**/*.js'
          ])
          .pipe(babel({
-           presets: ['es2015']
+           presets: ['env']
          }))
         .pipe(concat('pride.js'))
         .pipe(gulp.dest('./'))
