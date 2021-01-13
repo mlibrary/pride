@@ -5,20 +5,14 @@ When it is ready for use, we wil add documentation on how to use it. Until then,
 
 ## Setup
 
-Set up your Pride build environment by running `yarn`.
-
 ```bash
-yarn install
+npm install
 ```
-
-`npm` might also work for you, but you'll be on your own with `gulp`: `yarn exec gulp` works, `npm exec gulp` does not.
 
 ## Build
 
-The build is a little convoluted, but it's all put into gulp tasks, so aside from being noisey, it's not too much to worry about.
-
 ```bash
-yarn exec gulp
+npm run build
 ```
 
 Things to safely ignore:
@@ -52,7 +46,7 @@ source/parser/parser.js: line 877, col 5, Missing semicolon.
 ## Making changes
 
 1. Edit the javascript files in `source/`.
-2. Build with `yarn exec gulp`.
+2. Build with `npm run build`.
 3. Test as appropriate.
 4. Add and commit your changes, along with the built `pride.js`, `pride.min.js`, and `pride.execjs.js`.
 
