@@ -19,6 +19,7 @@
     "@babel/core": "^7.12.10",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
+    "eslint": "^7.18.0",
     "esm": "^3.2.25",
     "gulp": "^4.0",
     "gulp-babel": "^8.0.0",
