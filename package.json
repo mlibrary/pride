@@ -5,6 +5,7 @@
   "scripts": {
     "build": "gulp",
     "gulp": "gulp",
+    "lint": "npx eslint src/* test/*",
     "test": "mocha --recursive 'test/**/*.test.js' --require esm"
   },
   "dependencies": {
@@ -20,6 +21,10 @@
     "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
     "eslint": "^7.18.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
     "esm": "^3.2.25",
     "gulp": "^4.0",
     "gulp-babel": "^8.0.0",
