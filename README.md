@@ -53,3 +53,7 @@ source/parser/parser.js: line 877, col 5, Missing semicolon.
 ## Running tests
 
 Colin wrote some Jasmine tests.  They're run in-browser iirc, you'd load `SpecRunner.html`.
+
+```bash
+npm run test
+```
