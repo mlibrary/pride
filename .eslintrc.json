@@ -21,5 +21,12 @@
         "no-var": "error", // Discourages using `var` and recommends using `let` or `const` instead
         "semi": ["error", "always"], // Requires a semicolon wherever necessary
         "spaced-comment": ["error", "always"] // Requires whitespace after starting a comment
-    }
+    },
+    "overrides": [{
+        "files": ["*.test.js"],
+        "rules": {
+            "no-empty-function": "off",
+            "no-unused-expressions": "off"
+        }
+    }]
 }
