@@ -5,8 +5,8 @@
   "scripts": {
     "build": "gulp",
     "gulp": "gulp",
-    "lint": "npx eslint src/* test/*",
-    "test": "mocha --recursive 'test/**/*.test.js' --require esm"
+    "lint": "npx eslint src/*",
+    "test": "mocha --recursive 'src/**/*.test.js' --require esm"
   },
   "dependencies": {
     "gulp-clean": "^0.4.0",
