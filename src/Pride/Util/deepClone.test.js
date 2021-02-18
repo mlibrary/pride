@@ -1,7 +1,7 @@
-import deepClone from './deepClone';
 import { expect } from 'chai';
+import deepClone from './deepClone';
 
-describe.only('deepClone()', () => {
+describe('deepClone()', () => {
   it('passes functions straight through', () => {
     const func = () => {};
     const cloned = deepClone(func);
