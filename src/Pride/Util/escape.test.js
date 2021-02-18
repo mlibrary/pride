@@ -4,7 +4,7 @@ import escape from './escape';
 
 describe('escape()', () => {
   before(() => {
-    const dom = new JSDOM('<!DOCTYPE html><html><head></head><body></body></html>');
+    const dom = new JSDOM();
     global.document = dom.window.document;
   });
   it('encodes "&" properly', () => {
