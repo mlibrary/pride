@@ -1,6 +1,6 @@
 'use strict';
 
-import Util from './Util.js';
+import Util from './Pride/Util.js';
 
 const Pride = {};
 
