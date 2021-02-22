@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import safeCall from './safeCall';
 
-describe.only('safeCall()', () => {
+describe('safeCall()', () => {
   describe("given something that isn't a function", () => {
     it('returns the given object', () => {
       const object = {};
@@ -18,7 +18,7 @@ describe.only('safeCall()', () => {
   });
 
   describe('given additional arguments', () => {
-    beforeEach(() => {
+    before(function() {
       this.givenFirst = 'first!';
       this.givenSecond = 'not first!';
 
@@ -33,11 +33,11 @@ describe.only('safeCall()', () => {
       safeCall(this.example, this.givenFirst, this.givenSecond);
     });
 
-    it('passes given argument into the fuction', () => {
+    it('passes given argument into the fuction', function() {
       expect(this.returnedFirst).to.equal(this.givenFirst);
     });
 
-    it('can pass multiple arguments', () => {
+    it('can pass multiple arguments', function() {
       expect(this.returnedSecond).to.equal(this.givenSecond);
     });
   });
