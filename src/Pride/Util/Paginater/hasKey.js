@@ -1,5 +1,5 @@
 import getPossibleKeys from './getPossibleKeys';
 
 export default function hasKey(key) {
-  return getPossibleKeys().indexOf(key) > -1;
-}
+  return getPossibleKeys().includes(key);
+};

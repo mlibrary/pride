@@ -9,4 +9,4 @@ export default function getPossibleKeys() {
     'total_available',
     'page_limit'
   ];
-}
+};
