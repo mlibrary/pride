@@ -41,20 +41,19 @@ const Paginater = function(initialValues) {
 
     // If the end is being set, we calculate what start or count should now be.
     if (_.has(newValues, 'end')) {
-      // If we are also setting the count, calculate a new start.
-      if (_.has(newValues, 'count')) {
-        values.start = Math.max(0, newValues.end - (values.count - 1));
-      // If we are not setting the count, calculate a new count.
-      } else {
+      if (!_.has(newValues, 'count')) {
         /*
          * Throw an error if the start now comes after the end,
          * because that makes no sense at all.
          */
-        if (values.start <= newValues.end) {
-          values.count = (newValues.end - values.start) + 1;
-        } else {
+        if (values.start > newValues.end) {
           throw new Error('The start value can not be greater than the end value');
         }
+        // If we are not setting the count, calculate a new count.
+        values.count = (newValues.end - values.start) + 1;
+      } else {
+        // If we are also setting the count, calculate a new start.
+        values.start = Math.max(0, newValues.end - (values.count - 1));
       }
 
       // Now it is safe to set the end
@@ -65,35 +64,6 @@ const Paginater = function(initialValues) {
       values.end = (end < values.start) ? undefined : end;
     }
 
-    // Calculate what the last index can be.
-    if (!_.isNumber(values.total_available)) {
-      values.index_limit = Infinity;
-    } else if (values.total_available > 0) {
-      values.index_limit = values.total_available - 1;
-    } else {
-      values.index_limit = undefined;
-    }
-
-    /*
-     * Calculate pagination
-     */
-
-    if (values.count > 0 && values.start % values.count === 0) {
-      values.page = Math.floor(values.start / values.count) + 1;
-
-      if (_.isNumber(values.total_available)) {
-        values.total_pages = Math.ceil(values.total_available / values.count);
-        values.page_limit = values.total_pages;
-      } else {
-        values.total_pages = undefined;
-        values.page_limit = Infinity;
-      }
-    } else {
-      values.page = undefined;
-      values.total_pages = undefined;
-      values.page_limit = undefined;
-    }
-
     /*
      * Check to make sure enough is set
      */
@@ -102,10 +72,36 @@ const Paginater = function(initialValues) {
       throw new Error('Not enough information given to create Paginater');
     }
 
+    // Calculate what the last index can be.
+    values.index_limit = undefined;
+    if (!_.isNumber(values.total_available)) {
+      values.index_limit = Infinity;
+    }
+    if (values.total_available > 0) {
+      values.index_limit = values.total_available - 1;
+    }
+
+    /*
+     * Calculate pagination
+     */
+
+    values.page = undefined;
+    values.total_pages = undefined;
+    values.page_limit = undefined;
+    if (values.count > 0 && values.start % values.count === 0) {
+      values.page = Math.floor(values.start / values.count) + 1;
+      values.total_pages = undefined;
+      values.page_limit = Infinity;
+      if (_.isNumber(values.total_available)) {
+        values.total_pages = Math.ceil(values.total_available / values.count);
+        values.page_limit = values.total_pages;
+      }
+    }
+
     return this;
   };
 
-  this.get = function(name) {
+  this.get = (name) => {
     return values[name];
   };
 

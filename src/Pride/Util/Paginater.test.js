@@ -35,7 +35,7 @@ const paginatorBasicExpectations = (key1, key2, valid) => {
 
 // Test setting basic values
 const testPaginatorBasics = (key1, key2) => {
-  describe(`given a valid ${key1} and ${key2}`, function() {
+  describe(`given a valid ${key1} and ${key2}`, () => {
     paginatorBasicExpectations(key1, key2, { start: 10, count: 5, end: 14, page: 3 });
     paginatorBasicExpectations(key1, key2, { start: 500, count: 100, end: 599, page: 6 });
   });
@@ -59,12 +59,12 @@ const testPaginatorUnsettable = (invalidSettings, basicSettings) => {
   );
 };
 
-describe('Paginater', function() {
+describe('Paginater', () => {
   testPaginatorBasics('start', 'count');
   testPaginatorBasics('start', 'end');
   testPaginatorBasics('count', 'end');
 
-  describe('certain combinations cannot be set', function() {
+  describe('certain combinations cannot be set', () => {
     testPaginatorUnsettable({ total_pages: 100 });
     testPaginatorUnsettable({ index_limit: 100 });
     testPaginatorUnsettable({ start: 10, count: 5, end: 14 });
