@@ -5,6 +5,8 @@
   "scripts": {
     "build": "gulp",
     "gulp": "gulp",
+    "build-webpack": "webpack --config webpack.config.js",
+    "webpack": "webpack",
     "lint": "npx eslint src/*",
     "test": "mocha --recursive 'src/**/*.test.js' --require esm"
   },
@@ -35,6 +37,8 @@
     "gulp-uglify": "^3.0.2",
     "jsdom": "^16.4.0",
     "jshint": "^2.9.4",
-    "mocha": "^8.2.1"
+    "mocha": "^8.2.1",
+    "webpack": "^5.24.4",
+    "webpack-cli": "^4.5.0"
   }
 }
