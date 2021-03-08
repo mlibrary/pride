@@ -4,6 +4,7 @@ import isDeepMatch from './Util/isDeepMatch';
 import Paginater from './Util/Paginater';
 import safeApply from './Util/safeApply';
 import safeCall from './Util/safeCall';
+import SearchSwitcher from './Util/SearchSwitcher';
 import slice from './Util/slice';
 
 const Util = {
@@ -16,5 +17,6 @@ const Util = {
 };
 
 Object.defineProperty(Util, 'Paginater', { value: Paginater });
+Object.defineProperty(Util, 'SearchSwitcher', { value: SearchSwitcher });
 
 export default Util;
