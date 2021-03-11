@@ -5,30 +5,22 @@ function testFuncBufferMethods(name) {
   describe('add()', function() {
     it('returns self', function() {
       const buffer = new FuncBuffer();
-      expect(buffer.add(function() {})).to.equal(buffer);
+      expect(buffer.add(() => {})).to.equal(buffer);
     });
   });
 
   beforeEach(function() {
-    const self = this;
-    this.name = name;
-    this.another_name = 'another_buffer';
     this.buffer = new FuncBuffer();
     this.number = 0;
     this.another_number = 0;
+    this.example_function = () => this.number++;
+    this.name = name;
+    this.another_name = 'another_buffer';
     this.from_another_name = 0;
 
-    this.example_function = function() {
-      self.number++;
-    };
-
     this.buffer.add(this.example_function, name)
-      .add(function() {
-        self.another_number++;
-      }, name)
-      .add(function() {
-        self.from_another_name++;
-      }, this.another_name);
+      .add(() => this.another_number++, name)
+      .add(() => this.from_another_name++, this.another_name);
   });
 
   describe('call()', function() {
@@ -67,20 +59,11 @@ function testFuncBufferMethods(name) {
 
   describe('apply()', function() {
     beforeEach(function() {
-      const self = this;
-      this.touched_1 = false;
-      this.touched_2 = false;
+      this.touched_1 = this.touched_2 = false;
 
       this.buffer.add(
-        function(x, y) {
-          if (x && y) self.touched_1 = true;
-        },
-        this.name
-      );
-
-      this.buffer.add(
-        function(x, y) {
-          if (x && y) self.touched_2 = true;
+        (x, y) => {
+          if (x && y) this.touched_1 = this.touched_2 = true;
         },
         this.name
       );
