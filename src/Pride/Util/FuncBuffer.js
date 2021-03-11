@@ -4,55 +4,46 @@ import safeApply from './safeApply';
 
 const FuncBuffer = function(extension) {
   let buffer = {};
-  const self = this;
 
-  const safeGet = function(name) {
+  this.safeGet = (name) => {
     if (!_.has(buffer, name)) buffer[name] = [];
-
     return buffer[name];
   };
 
-  this.add = function(func, name) {
-    safeGet(name).push(func);
-
-    return self;
+  this.add = (func, name) => {
+    this.safeGet(name).push(func);
+    return this;
   };
 
-  this.remove = function(func, name) {
+  this.remove = (func, name) => {
     buffer[name] = _.reject(
-      safeGet(name),
-      function(otherFunc) {
-        return func === otherFunc;
-      }
+      this.safeGet(name),
+      (otherFunc) => func === otherFunc
     );
-
-    return self;
+    return this;
   };
 
-  this.clear = function(name) {
+  this.clear = (name) => {
     delete buffer[name];
-
-    return self;
+    return this;
   };
 
-  this.clearAll = function() {
+  this.clearAll = () => {
     buffer = {};
-
-    return self;
+    return this;
   };
 
-  this.call = function(name) {
-    self.apply(name, slice(arguments, 1));
-
-    return self;
+  this.apply = (name, args) => {
+    _.each(
+      this.safeGet(name),
+      (func) => safeApply(func, args)
+    );
+    return this;
   };
 
-  this.apply = function(name, args) {
-    _.each(safeGet(name), function(func) {
-      safeApply(func, args);
-    });
-
-    return self;
+  this.call = (name) => {
+    this.apply(name, slice(arguments, 1));
+    return this;
   };
 
   if (_.isFunction(extension)) extension.call(this);
