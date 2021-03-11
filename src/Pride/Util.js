@@ -1,3 +1,5 @@
+'use strict';
+
 import deepClone from './Util/deepClone';
 import escape from './Util/escape';
 import FuncBuffer from './Util/FuncBuffer';
