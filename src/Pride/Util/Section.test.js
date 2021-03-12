@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import Section from './Section';
 
-describe.only('Section', () => {
+describe('Section', () => {
   beforeEach(function() {
     this.start = 7;
     this.end = 10;
