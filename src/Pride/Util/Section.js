@@ -18,17 +18,16 @@ const Section = function(start, end) {
     return this.end - this.start + 1;
   };
 
-  this.expanded = function(amount) {
-    return this.shifted(-1 * amount, amount);
-  };
-
   this.shifted = function(startAmount, endAmount) {
     if (!_.isNumber(endAmount)) endAmount = startAmount;
-
     return new Section(
       this.start + startAmount,
       this.end + endAmount
     );
+  };
+
+  this.expanded = function(amount) {
+    return this.shifted(-1 * amount, amount);
   };
 };
 
