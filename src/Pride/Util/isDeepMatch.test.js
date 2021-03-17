@@ -105,16 +105,8 @@ describe('isDeepMatch()', () => {
 
     it('treats objects with functions as equal as long as the functions have the same names', () => {
       expect(isDeepMatch(
-        {
-          f: () => {
-            return true;
-          }
-        },
-        {
-          f: () => {
-            return false;
-          }
-        }
+        { f: () => true },
+        { f: () => false }
       )).to.be.true;
     });
 
