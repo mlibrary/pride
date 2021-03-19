@@ -36,12 +36,12 @@ describe('Section', () => {
       });
     });
 
-    it('sets the start to zero if one of the numbers is negative', function() {
+    it('sets the start to zero if one of the numbers is negative', () => {
       const example = new Section(-9, 3);
       expect(example.start).to.equal(0);
     });
 
-    it('sets the end to zero if both of the numbers are negative', function() {
+    it('sets the end to zero if both of the numbers are negative', () => {
       const example = new Section(-99, -1999);
       expect(example.end).to.equal(0);
     });
@@ -141,8 +141,7 @@ describe('Section', () => {
     it('gives the length of the section, even when given the start and end out of order', () => {
       expect((new Section(100, 27)).calcLength()).to.equal(74);
     });
-  }
-  );
+  });
 
   describe('expanded()', () => {
     beforeEach(function() {
@@ -164,8 +163,7 @@ describe('Section', () => {
     it('moves the end forwards', function() {
       expect(this.expanded.end).to.equal(this.end + this.amount);
     });
-  }
-  );
+  });
 
   describe('shifted()', () => {
     beforeEach(function() {
