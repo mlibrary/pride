@@ -1,11 +1,9 @@
 import { _ } from 'underscore';
 import reqwest from 'reqwest';
-/*
- * import log from '../Core/log';
- * import Messenger from '../Messenger';
- * import safeCall from './safeCall';
- * import Settings from '../Settings';
- */
+import log from '../Core/log';
+import Messenger from '../Messenger';
+import safeCall from './safeCall';
+import Settings from '../Settings';
 
 export default function request(requestInfo) {
   log('Request', 'Sending HTTP request...');
@@ -31,7 +29,7 @@ export default function request(requestInfo) {
     contentType: 'application/json',
     withCredentials: true,
 
-    error: function(error) {
+    error: (error) => {
       if (requestInfo.attempts <= 0) {
         log('Request', 'ERROR', error);
 
@@ -44,15 +42,13 @@ export default function request(requestInfo) {
       } else {
         log('Request', 'Trying request again...');
         window.setTimeout(
-          function() {
-            request(requestInfo);
-          },
+          () => request(requestInfo),
           Settings.ms_between_attempts
         );
       }
     },
 
-    success: function(response) {
+    success: (response) => {
       log('Request', 'SUCCESS', response);
 
       safeCall(requestInfo.success, response);
