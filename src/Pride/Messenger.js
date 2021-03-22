@@ -1,8 +1,10 @@
 import { _ } from 'underscore';
 import FuncBuffer from './Util/FuncBuffer';
 import log from './Core/log';
-import Settings from './Settings';
-import slice from './Util/slice';
+/*
+ * import Settings from './Settings';
+ * import slice from './Util/slice';
+ */
 
 const Messenger = new FuncBuffer(function() {
   const notifyObservers = this.call;
@@ -40,15 +42,15 @@ const Messenger = new FuncBuffer(function() {
    */
   this.preset = (type) => {
     /*
-     *const variables = slice(arguments);
+     * const variables = slice(arguments);
      *
-     *return Settings
-     *  .message_formats[type]
-     *  .replace(
-     *    /(^|[^\\])\$(\d+)/,
-     *    (match, previousChar, number) => previousChar + (variables[Number(number)] || '')
-     *  )
-     *  .replace('\\$', '$');
+     * return Settings
+     *   .message_formats[type]
+     *   .replace(
+     *     /(^|[^\\])\$(\d+)/,
+     *     (match, previousChar, number) => previousChar + (variables[Number(number)] || '')
+     *   )
+     *   .replace('\\$', '$');
      */
   };
 });

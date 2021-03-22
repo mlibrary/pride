@@ -1,44 +1,55 @@
 import { expect } from 'chai';
 import Messenger from './Messenger';
 
-describe.only('Messenger()', () => {
-  describe('sendMessage()', () => {
-    beforeEach(function() {
-      this.sendMessage = Messenger.sendMessage({
-        summary: 'There was an error.',
-        class: 'error'
-      });
+describe('Messenger()', () => {
+  describe('safeGet()', () => {
+    it('returns a function', () => {
+      expect(Messenger.safeGet).to.be.a('function');
     });
-    it('sendMessage', () => {
-      console.log(this.sendMessage);
-      expect(this.sendMessage).to.not.be.null;
+  });
+  describe('add()', () => {
+    it('returns undefined', () => {
+      expect(Messenger.add).to.be.undefined;
+    });
+  });
+  describe('remove()', () => {
+    it('returns undefined', () => {
+      expect(Messenger.remove).to.be.undefined;
+    });
+  });
+  describe('clear()', () => {
+    it('returns undefined', () => {
+      expect(Messenger.clear).to.be.undefined;
+    });
+  });
+  describe('clearAll()', () => {
+    it('returns a function', () => {
+      expect(Messenger.clearAll).to.be.a('function');
+    });
+  });
+  describe('apply()', () => {
+    it('returns a function', () => {
+      expect(Messenger.apply).to.be.a('function');
+    });
+  });
+  describe('call()', () => {
+    it('returns undefined', () => {
+      expect(Messenger.call).to.be.undefined;
+    });
+  });
+  describe('sendMessage()', () => {
+    it('returns a function', () => {
+      expect(Messenger.sendMessage).to.be.a('function');
     });
   });
   describe('sendMessageArray()', () => {
-    beforeEach(function() {
-      this.sendMessageArray = Messenger.sendMessageArray([
-        {
-          summary: 'There was an error.',
-          class: 'error'
-        },
-        {
-          summary: 'This has been a success!',
-          class: 'success'
-        }
-      ]);
-    });
-    it('sendMessageArray', () => {
-      console.log(this.sendMessageArray);
-      expect(this.sendMessageArray).to.not.be.null;
+    it('returns a function', () => {
+      expect(Messenger.sendMessageArray).to.be.a('function');
     });
   });
   describe('preset()', () => {
-    beforeEach(function() {
-      this.preset = Messenger.preset('failed_init');
-    });
-    it('preset', () => {
-      console.log(this.preset);
-      expect(this.preset).to.not.be.null;
+    it('returns a function', () => {
+      expect(Messenger.preset).to.be.a('function');
     });
   });
 });
