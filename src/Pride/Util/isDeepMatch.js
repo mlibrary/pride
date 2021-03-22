@@ -12,9 +12,10 @@ export default function isDeepMatch(object, pattern) {
   }
 
   if (bothArrays || bothObjects) {
-    return _.every(pattern, (value, key) => {
-      return isDeepMatch(object[key], value);
-    });
+    return _.every(
+      pattern,
+      (value, key) => isDeepMatch(object[key], value)
+    );
   }
 
   return object === pattern;
