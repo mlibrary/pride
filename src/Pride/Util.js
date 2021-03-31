@@ -6,6 +6,7 @@ import FuncBuffer from './Util/FuncBuffer';
 import isDeepMatch from './Util/isDeepMatch';
 import Paginater from './Util/Paginater';
 import request from './Util/request';
+import RequestBuffer from './Util/RequestBuffer';
 import safeApply from './Util/safeApply';
 import safeCall from './Util/safeCall';
 import Section from './Util/Section';
@@ -23,6 +24,7 @@ const Util = {
 
 Object.defineProperty(Util, 'FuncBuffer', { value: FuncBuffer });
 Object.defineProperty(Util, 'Paginater', { value: Paginater });
+Object.defineProperty(Util, 'RequestBuffer', { value: RequestBuffer });
 Object.defineProperty(Util, 'Section', { value: Section });
 
 export default Util;
