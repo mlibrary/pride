@@ -1,5 +1,7 @@
 'use strict';
 
+import AllDatastores from './Pride/AllDatastores.js';
+
 import Core from './Pride/Core';
 
 import Messenger from './Pride/Messenger.js';
@@ -10,6 +12,8 @@ import Util from './Pride/Util.js';
 import Paginater from './Pride/Util/Paginater';
 
 const Pride = {};
+
+Object.defineProperty(Pride, 'AllDatastores', { value: AllDatastores });
 
 Object.defineProperty(Pride, 'Core', { value: Core });
 
