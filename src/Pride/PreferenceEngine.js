@@ -66,7 +66,7 @@ const PreferenceEngine = {
       return this;
     }
     data.forEach(function(record) {
-      let remove, id, datastore, tags;
+      let remove, id, datastore;
       if ((remove = record.tags.indexOf('mirlyn-favorite')) >= 0) {
         id = record.id[0].split('/')[4];
         datastore = 'mirlyn';
@@ -85,10 +85,10 @@ const PreferenceEngine = {
       } else {
         return this;
       }
-      tags = record.tags.slice(0, remove)
-        .concat(record.tags.slice(remove + 1, record.tags.length));
       this.favoritedRecords[datastore][id] = true;
-      this.favoritedRecordsTags[datastore][id] = tags;
+      this.favoritedRecordsTags[datastore][id] = record.tags
+        .slice(0, remove)
+        .concat(record.tags.slice(remove + 1, record.tags.length));
     }, this);
     return this;
   },
@@ -103,7 +103,7 @@ const PreferenceEngine = {
       return this;
     }
     for (const prop in data) {
-      if (data.hasOwnProperty(prop)) {
+      if (Object.prototype.hasOwnProperty.call(data, prop)) {
         this.selectedRecords[prop] = {};
         data[prop].forEach((function(prop) {
           return function(record) {
