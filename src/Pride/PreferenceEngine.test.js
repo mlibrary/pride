@@ -71,7 +71,7 @@ describe.only('PreferenceEngine()', () => {
       expect(example('favoritedRecordsTags').favoriteTags({ datastore: 'databases', uid: 'uid2' })).to.equal('dolor');
     });
   });
-  describe.only('registerEngine()', () => {
+  describe('registerEngine()', () => {
     it('is a function', () => {
       expect(PreferenceEngine.registerEngine).to.be.a('function');
     });
@@ -95,12 +95,23 @@ describe.only('PreferenceEngine()', () => {
       });
     });
   });
-  describe.only('updateFavoritedRecords()', () => {
+  describe('updateFavoritedRecords()', () => {
+    beforeEach(() => {
+      this.preferenceEngineExample = { ...PreferenceEngine };
+    });
     it('is a function', () => {
       expect(PreferenceEngine.updateFavoritedRecords).to.be.a('function');
     });
+    it('assigns `this.blankList()` to `this.favoriteRecords`', () => {
+      this.preferenceEngineExample.updateFavoritedRecords({});
+      expect(this.preferenceEngineExample.favoritedRecords).to.deep.equal(this.preferenceEngineExample.blankList());
+    });
+    it('assigns `this.blankList()` to `this.favoritedRecordsTags`', () => {
+      this.preferenceEngineExample.updateFavoritedRecords({});
+      expect(this.preferenceEngineExample.favoritedRecordsTags).to.deep.equal(this.preferenceEngineExample.blankList());
+    });
   });
-  describe.only('updateSelectedRecords()', () => {
+  describe('updateSelectedRecords()', () => {
     it('is a function', () => {
       expect(PreferenceEngine.updateSelectedRecords).to.be.a('function');
     });
