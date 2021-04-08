@@ -1,6 +1,19 @@
 import { expect } from 'chai';
 import PreferenceEngine from './PreferenceEngine';
 
+const example = (object) => {
+  const preferenceEngine = { ...PreferenceEngine };
+  preferenceEngine.engine = !preferenceEngine.engine;
+  preferenceEngine[object] = {
+    mirlyn: { uid0: 'lorem' },
+    articlesplus: { uid1: 'ipsum' },
+    databases: { uid2: 'dolor' },
+    journals: { uid3: 'sit' },
+    website: { uid4: 'amet' }
+  };
+  return preferenceEngine;
+};
+
 describe.only('PreferenceEngine()', () => {
   it('works', () => {
     expect(PreferenceEngine).to.not.be.null;
@@ -29,8 +42,11 @@ describe.only('PreferenceEngine()', () => {
     it('is a function', () => {
       expect(PreferenceEngine.favorited).to.be.a('function');
     });
-    it('returns false if engine is null', () => {
+    it('returns `false` if `engine` is null', () => {
       expect(PreferenceEngine.favorited({})).to.be.false;
+    });
+    it('returns a value from `this.favoritedRecords` with matching `record.datastore` and `record.uid` property names', () => {
+      expect(example('favoritedRecords').favorited({ datastore: 'mirlyn', uid: 'uid0' })).to.equal('lorem');
     });
   });
   describe('selected()', () => {
@@ -40,6 +56,9 @@ describe.only('PreferenceEngine()', () => {
     it('returns false if engine is null', () => {
       expect(PreferenceEngine.selected({})).to.be.false;
     });
+    it('returns a value from `this.selectedRecords` with matching `record.datastore` and `record.uid` property names', () => {
+      expect(example('selectedRecords').selected({ datastore: 'articlesplus', uid: 'uid1' })).to.equal('ipsum');
+    });
   });
   describe('favoriteTags()', () => {
     it('is a function', () => {
@@ -48,8 +67,11 @@ describe.only('PreferenceEngine()', () => {
     it('returns an empty array if engine is null', () => {
       expect(PreferenceEngine.favoriteTags({})).to.deep.equal([]);
     });
+    it('returns a value from `this.favoritedRecordsTags` with matching `record.datastore` and `record.uid` property names', () => {
+      expect(example('favoritedRecordsTags').favoriteTags({ datastore: 'databases', uid: 'uid2' })).to.equal('dolor');
+    });
   });
-  describe('registerEngine()', () => {
+  describe.only('registerEngine()', () => {
     it('is a function', () => {
       expect(PreferenceEngine.registerEngine).to.be.a('function');
     });
@@ -73,12 +95,12 @@ describe.only('PreferenceEngine()', () => {
       });
     });
   });
-  describe('updateFavoritedRecords()', () => {
+  describe.only('updateFavoritedRecords()', () => {
     it('is a function', () => {
       expect(PreferenceEngine.updateFavoritedRecords).to.be.a('function');
     });
   });
-  describe('updateSelectedRecords()', () => {
+  describe.only('updateSelectedRecords()', () => {
     it('is a function', () => {
       expect(PreferenceEngine.updateSelectedRecords).to.be.a('function');
     });
