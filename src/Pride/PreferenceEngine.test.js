@@ -14,7 +14,7 @@ const example = (object) => {
   return preferenceEngine;
 };
 
-describe.only('PreferenceEngine()', () => {
+describe('PreferenceEngine()', () => {
   it('works', () => {
     expect(PreferenceEngine).to.not.be.null;
   });
@@ -102,18 +102,55 @@ describe.only('PreferenceEngine()', () => {
     it('is a function', () => {
       expect(PreferenceEngine.updateFavoritedRecords).to.be.a('function');
     });
-    it('assigns `this.blankList()` to `this.favoriteRecords`', () => {
+    it('assigns `this.blankList()` to `this.favoriteRecords` if null', () => {
       this.preferenceEngineExample.updateFavoritedRecords({});
       expect(this.preferenceEngineExample.favoritedRecords).to.deep.equal(this.preferenceEngineExample.blankList());
     });
-    it('assigns `this.blankList()` to `this.favoritedRecordsTags`', () => {
+    it('assigns `this.blankList()` to `this.favoritedRecordsTags` if null', () => {
       this.preferenceEngineExample.updateFavoritedRecords({});
       expect(this.preferenceEngineExample.favoritedRecordsTags).to.deep.equal(this.preferenceEngineExample.blankList());
     });
   });
   describe('updateSelectedRecords()', () => {
+    beforeEach(() => {
+      this.preferenceEngineExample = { ...PreferenceEngine };
+    });
     it('is a function', () => {
       expect(PreferenceEngine.updateSelectedRecords).to.be.a('function');
+    });
+    it('assigns `this.blankList()` to `this.selectedRecords` if null', () => {
+      this.preferenceEngineExample.updateSelectedRecords({});
+      expect(this.preferenceEngineExample.selectedRecords).to.deep.equal(this.preferenceEngineExample.blankList());
+    });
+    it('updates `this.selectedRecords[record.datastore][record.uid] to equal true`', () => {
+      this.preferenceEngineExample.updateSelectedRecords([{
+        datastore: 'mirlyn',
+        uid: 'mirlynUID'
+      }]);
+      expect(this.preferenceEngineExample.selectedRecords.mirlyn.mirlynUID).to.be.true;
+    });
+    it('updates `this.selectedRecords[record.datastore]` with `record.uid` property to equal true', () => {
+      const record = {
+        datastore: 'journals',
+        uid: 'journalsUID'
+      };
+      this.preferenceEngineExample.updateSelectedRecords([record]);
+      expect(this.preferenceEngineExample.selectedRecords[record.datastore][record.uid]).to.be.true;
+    });
+    it('adds `record.datastore` property to `this.selectedRecords` with `record.uid` property to equal true', () => {
+      const record = {
+        datastore: 'datastoreTest',
+        uid: 'datastoreTestUID'
+      };
+      this.preferenceEngineExample.updateSelectedRecords([record]);
+      expect(this.preferenceEngineExample.selectedRecords[record.datastore][record.uid]).to.be.true;
+    });
+    it('returns itself', () => {
+      const record = {
+        datastore: 'datastoreTest',
+        uid: 'datastoreTestUID'
+      };
+      expect(this.preferenceEngineExample.updateSelectedRecords([record])).to.equal(this.preferenceEngineExample);
     });
   });
 });
