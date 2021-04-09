@@ -98,17 +98,38 @@ describe('PreferenceEngine()', () => {
   describe('updateFavoritedRecords()', () => {
     beforeEach(() => {
       this.preferenceEngineExample = { ...PreferenceEngine };
+      this.preferenceEngineExample.favoritedRecords = {
+        mirlyn: {},
+        articlesplus: {},
+        databases: { 11527: true },
+        journals: { 101952588: true },
+        website: {}
+      };
+      this.id = 1234567890;
+      this.preferenceEngineExample.updateFavoritedRecords([{
+        tags: ['tag', 'articles-favorite', 'another tag'],
+        id: [`http://www.lib.umich.edu/articles/details/${this.id}`]
+      }]);
     });
     it('is a function', () => {
       expect(PreferenceEngine.updateFavoritedRecords).to.be.a('function');
     });
     it('assigns `this.blankList()` to `this.favoriteRecords` if null', () => {
-      this.preferenceEngineExample.updateFavoritedRecords({});
-      expect(this.preferenceEngineExample.favoritedRecords).to.deep.equal(this.preferenceEngineExample.blankList());
+      PreferenceEngine.updateFavoritedRecords({});
+      expect(PreferenceEngine.favoritedRecords).to.deep.equal(PreferenceEngine.blankList());
     });
     it('assigns `this.blankList()` to `this.favoritedRecordsTags` if null', () => {
-      this.preferenceEngineExample.updateFavoritedRecords({});
-      expect(this.preferenceEngineExample.favoritedRecordsTags).to.deep.equal(this.preferenceEngineExample.blankList());
+      PreferenceEngine.updateFavoritedRecords({});
+      expect(PreferenceEngine.favoritedRecordsTags).to.deep.equal(PreferenceEngine.blankList());
+    });
+    it('adds new property to `this.favoritedRecords[datastore]`', () => {
+      expect(Object.prototype.hasOwnProperty.call(this.preferenceEngineExample.favoritedRecords.articlesplus, this.id)).to.be.true;
+    });
+    it('sets new property to `this.favoritedRecords[datastore][id]` to `true`', () => {
+      expect(this.preferenceEngineExample.favoritedRecords.articlesplus[this.id]).to.be.true;
+    });
+    it('adds all tags except `articles-favorite` to `this.favoritedRecordsTags[datastore][id]`', () => {
+      expect(this.preferenceEngineExample.favoritedRecordsTags.articlesplus[this.id].indexOf('articles-favorite')).to.equal(-1);
     });
   });
   describe('updateSelectedRecords()', () => {
@@ -129,15 +150,7 @@ describe('PreferenceEngine()', () => {
       }]);
       expect(this.preferenceEngineExample.selectedRecords.mirlyn.mirlynUID).to.be.true;
     });
-    it('updates `this.selectedRecords[record.datastore]` with `record.uid` property to equal true', () => {
-      const record = {
-        datastore: 'journals',
-        uid: 'journalsUID'
-      };
-      this.preferenceEngineExample.updateSelectedRecords([record]);
-      expect(this.preferenceEngineExample.selectedRecords[record.datastore][record.uid]).to.be.true;
-    });
-    it('adds `record.datastore` property to `this.selectedRecords` with `record.uid` property to equal true', () => {
+    it('adds or updates `record.datastore` property in `this.selectedRecords` with `record.uid` property to equal true', () => {
       const record = {
         datastore: 'datastoreTest',
         uid: 'datastoreTestUID'
@@ -146,11 +159,7 @@ describe('PreferenceEngine()', () => {
       expect(this.preferenceEngineExample.selectedRecords[record.datastore][record.uid]).to.be.true;
     });
     it('returns itself', () => {
-      const record = {
-        datastore: 'datastoreTest',
-        uid: 'datastoreTestUID'
-      };
-      expect(this.preferenceEngineExample.updateSelectedRecords([record])).to.equal(this.preferenceEngineExample);
+      expect(this.preferenceEngineExample.updateSelectedRecords({})).to.equal(this.preferenceEngineExample);
     });
   });
 });
