@@ -79,6 +79,18 @@ describe('PreferenceEngine()', () => {
       const self = PreferenceEngine;
       expect(PreferenceEngine.registerEngine()).to.equal(self);
     });
+    it('requires `this.engine.listRecords()` for `this.updateSelectedRecords()` to be called??', () => {
+      expect(() => PreferenceEngine.registerEngine({})).to.throw('this.engine.listRecords is not a function');
+    });
+    it('requires `this.engine.favoritesList.last` for `this.updateFavoritedRecords()` to be called', () => {
+      expect(() => PreferenceEngine.registerEngine({ listRecords: () => [] })).to.throw("Cannot read property 'last' of undefined");
+    });
+    it('calls `this.engine.addFavoritesListObserver()`', () => {
+      expect(() => PreferenceEngine.registerEngine({ listRecords: () => [], favoritesList: [] })).to.throw('this.engine.addFavoritesListObserver is not a function');
+    });
+    it('calls `this.engine.addObserver()`', () => {
+      expect(() => PreferenceEngine.registerEngine({ listRecords: () => [], favoritesList: [], addFavoritesListObserver: () => {} })).to.throw('this.engine.addObserver is not a function');
+    });
   });
   describe('blankList()', () => {
     it('is a function', () => {
