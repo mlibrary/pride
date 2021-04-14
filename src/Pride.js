@@ -6,6 +6,8 @@ import Core from './Pride/Core';
 
 import Messenger from './Pride/Messenger.js';
 
+import PreferenceEngine from './Pride/PreferenceEngine.js';
+
 import Settings from './Pride/Settings.js';
 
 import Util from './Pride/Util.js';
@@ -18,6 +20,8 @@ Object.defineProperty(Pride, 'AllDatastores', { value: AllDatastores });
 Object.defineProperty(Pride, 'Core', { value: Core });
 
 Object.defineProperty(Pride, 'Messenger', { value: Messenger });
+
+Object.defineProperty(Pride, 'PreferenceEngine', { value: PreferenceEngine });
 
 Object.defineProperty(Pride, 'Settings', { value: Settings });
 
