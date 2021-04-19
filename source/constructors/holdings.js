@@ -10,7 +10,12 @@ Pride.Core.Holdings = function(data) {
 
   const getResourceAccess = function(data) {
     const dataField = data.fields.find((field) => field.uid === 'resource_access');
-    return dataField.value;
+    if (dataField && dataField.value) {
+      return dataField.value
+    }
+    else {
+      return dataField;
+    }
   };
 
   const translateData = function(input) {
