@@ -559,55 +559,32 @@ Pride.Core.GetThis = function (barcode, data) {
 };
 "use strict";
 
-var _underscore = require("underscore");
-
-// Copyright (c) 2017, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
+/*
+ * Copyright (c) 2021, Regents of the University of Michigan.
+ * All rights reserved. See LICENSE.txt for details.
+ */
 // Authored by Albert Bertram (bertrama@umich.edu)
 Pride.Core.Holdings = function (data) {
   this.data = data;
 
-  var getHoldingsUrl = function getHoldingsUrl(data) {
-    var ret;
-
-    _underscore._.each(data.fields, function (field) {
-      if (field.uid === 'holdings_url') {
-        ret = field.value;
-      }
-    });
-
-    return ret;
-  };
-
   var getResourceAccess = function getResourceAccess(data) {
-    var ret;
-
-    _underscore._.each(data.fields, function (field) {
-      if (field.uid === 'resource_access') {
-        ret = field.value;
-      }
+    var dataField = data.fields.find(function (field) {
+      return field.uid === 'resource_access';
     });
 
-    return ret;
-  };
-
-  var request_buffer = new Pride.Util.RequestBuffer({
-    url: getHoldingsUrl(data),
-    failure_message: Pride.Messenger.preset('failed_holdings_load', data.names[0]),
-    edit_response: function edit_response(response) {
-      data = translateData(response);
-      return data;
+    if (dataField && dataField.value) {
+      return dataField.value;
+    } else {
+      return dataField;
     }
-  });
+  };
 
   var translateData = function translateData(input) {
     return [getResourceAccess(data)].concat(input);
   };
 
   this.getData = function (func) {
-    request_buffer.request({
-      success: func
-    });
+    Pride.Util.safeCall(func, translateData(this.data.holdings));
   };
 };
 "use strict";

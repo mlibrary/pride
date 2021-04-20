@@ -633,56 +633,33 @@ Pride.Core.GetThis = function(barcode, data) {
 
 };
 
-// Copyright (c) 2017, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
+/*
+ * Copyright (c) 2021, Regents of the University of Michigan.
+ * All rights reserved. See LICENSE.txt for details.
+ */
 
 // Authored by Albert Bertram (bertrama@umich.edu)
-
-
 
 Pride.Core.Holdings = function(data) {
   this.data = data;
 
-  var getHoldingsUrl = function(data) {
-    var ret;
-    _.each(data.fields, function(field) {
-      if (field.uid === 'holdings_url') {
-        ret = field.value;
-      }
-    });
-    return ret;
-  };
-
-  var getResourceAccess = function(data) {
-    var ret;
-    _.each(data.fields, function(field) {
-      if (field.uid === 'resource_access') {
-        ret = field.value;
-      }
-    });
-    return ret;
-  };
-
-  var request_buffer = new Pride.Util.RequestBuffer({
-    url: getHoldingsUrl(data),
-    failure_message: Pride.Messenger.preset(
-      'failed_holdings_load',
-      data.names[0]
-    ),
-    edit_response: function(response) {
-      data = translateData(response);
-      return data;
+  const getResourceAccess = function(data) {
+    const dataField = data.fields.find((field) => field.uid === 'resource_access');
+    if (dataField && dataField.value) {
+      return dataField.value
     }
-  });
+    else {
+      return dataField;
+    }
+  };
 
-  var translateData = function(input) {
+  const translateData = function(input) {
     return [getResourceAccess(data)].concat(input);
   };
 
   this.getData = function(func) {
-    request_buffer.request({success: func});
+    Pride.Util.safeCall(func, translateData(this.data.holdings));
   };
-
 };
 
 // Copyright (c) 2015, Regents of the University of Michigan.
