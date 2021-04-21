@@ -79,7 +79,7 @@ describe('PreferenceEngine()', () => {
       const self = PreferenceEngine;
       expect(PreferenceEngine.registerEngine()).to.equal(self);
     });
-    it('requires `this.engine.listRecords()` for `this.updateSelectedRecords()` to be called??', () => {
+    it('requires `this.engine.listRecords()` for `this.updateSelectedRecords()` to be called', () => {
       expect(() => PreferenceEngine.registerEngine({})).to.throw('this.engine.listRecords is not a function');
     });
     it('requires `this.engine.favoritesList.last` for `this.updateFavoritedRecords()` to be called', () => {

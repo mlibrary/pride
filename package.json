@@ -13,7 +13,7 @@
     "gulp-pegjs": "^0.2.0",
     "pegjs": "^0.10.0",
     "reqwest": "^2.0.5",
-    "underscore": "^1.8.3",
+    "underscore": "~1.8.3",
     "xhr2": "^0.2.0"
   },
   "devDependencies": {
