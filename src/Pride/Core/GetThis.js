@@ -14,7 +14,7 @@ const GetThis = function(barcode, data) {
   };
 
   const requestBuffer = new RequestBuffer({
-    url: getGetThisUrl(data) + '/' + this.barcode,
+    url: `${getGetThisUrl(data)}/${this.barcode}`,
     failure_message: Messenger.preset(
       'failed_get_this_load',
       data.names[0]
