@@ -1,29 +1,16 @@
-import { _ } from 'underscore';
-// import RequestBuffer from '../Util/RequestBuffer';
-// import Messenger from '../Messenger';
+import RequestBuffer from '../Util/RequestBuffer';
+import Messenger from '../Messenger';
 
 const GetThis = function(barcode, data) {
   this.barcode = barcode;
   this.data = data;
 
   const getGetThisUrl = (data) => {
-    let ret;
-    _.each(data.fields, function(field) {
-      if (field.uid === 'get_this_url') {
-        ret = field.value;
-      }
-    });
-    return ret;
-  };
-
-  const getLinks = (data) => {
-    let ret;
-    _.each(data.fields, (field) => {
-      if (field.uid === 'links') {
-        ret = field.value;
-      }
-    });
-    return ret;
+    const dataField = data.fields.find((field) => field.uid === 'get_this_url');
+    if (dataField && dataField.value) {
+      return dataField.value;
+    }
+    return dataField;
   };
 
   const requestBuffer = new RequestBuffer({
