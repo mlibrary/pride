@@ -59,7 +59,7 @@ describe('Holdings()', () => {
       expect(this.getResourceAccessExample({ fields: this.data.fields })).to.equal(this.data.fields[1].value);
     });
   });
-  describe('translateDataExample()', () => {
+  describe('translateData()', () => {
     it('returns an array', () => {
       expect(this.translateDataExample()).to.be.an('array');
     });
