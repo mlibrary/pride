@@ -1,11 +1,11 @@
 import { _ } from 'underscore';
-// import RequestBuffer from '../Util/RequestBuffer';
-// import Messenger from '../Messenger';
-// import request from '../Util/request';
-// import Holdings from '../Core/Holdings';
-// import GetThis from '../Core/GetThis';
-// import escape from '../Util/escape';
-// import PreferenceEngine from '../PreferenceEngine';
+import RequestBuffer from '../Util/RequestBuffer';
+import Messenger from '../Messenger';
+import request from '../Util/request';
+import Holdings from '../Core/Holdings';
+import GetThis from '../Core/GetThis';
+import escape from '../Util/escape';
+import PreferenceEngine from '../PreferenceEngine';
 
 const Record = function(data) {
   const requestBuffer = new RequestBuffer({
@@ -16,7 +16,6 @@ const Record = function(data) {
     ),
     edit_response: (response) => {
       data = translateData(response);
-
       return data;
     }
   });
@@ -27,13 +26,11 @@ const Record = function(data) {
   this.placeHold = function(item, pickupLocation, notNeededAfter, callbackFunction) {
     this.renderFull((data) => {
       const getHoldingsUrl = () => {
-        let ret;
-        _.each(data.fields, (field) => {
-          if (field.uid === 'holdings_url') {
-            ret = field.value;
-          }
-        });
-        return ret;
+        const dataField = data.fields.find((field) => field.uid === 'holdings_url');
+        if (dataField && dataField.value) {
+          return dataField.value;
+        }
+        return dataField;
       };
 
       const response = request({
@@ -103,14 +100,11 @@ const Record = function(data) {
 
   this.renderCSL = function(func) {
     this.renderFull((data) => {
-      let ret;
-      _.each(data.fields, (field) => {
-        if (field.uid === 'csl') {
-          ret = field.value;
-        }
-      });
-
-      func(ret);
+      let dataField = data.fields.find((field) => field.uid === 'csl');
+      if (dataField && dataField.value) {
+        dataField = dataField.value;
+      }
+      func(dataField);
     });
   };
 
