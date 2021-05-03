@@ -11,8 +11,10 @@ describe.only('SearchBase()', () => {
   it('works', () => {
     expect(SearchBase).to.not.be.null;
   });
-  it('datastore()', () => {
-    console.log(this.searchBaseExample);
-    expect(this.searchBaseExample).to.not.be.null;
+  describe('datastore()', () => {
+    it('datastore()', () => {
+      console.log(this.searchBaseExample);
+      expect(this.searchBaseExample).to.not.be.null;
+    });
   });
 });
