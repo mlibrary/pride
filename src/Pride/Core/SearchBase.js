@@ -1,13 +1,13 @@
 import { _ } from 'underscore';
 
-// import Settings from '../Settings';
+import Settings from '../Settings';
 import slice from '../Util/slice';
-// import log from './log';
+import log from './log';
 import safeCall from '../Util/safeCall';
 import Paginater from '../Util/Paginater';
-// import Section from '../Util/Section';
-// import Messenger from './Messenger';
-// import FuncBuffer from '../Util/FuncBuffer';
+import Section from '../Util/Section';
+import Messenger from '../Messenger';
+import FuncBuffer from '../Util/FuncBuffer';
 
 const SearchBase = function(setup, parent) {
   this.datastore = setup.datastore;
@@ -20,9 +20,9 @@ const SearchBase = function(setup, parent) {
                          Settings.cacheSize[this.datastore.uid] ||
                          Settings.default_cacheSize;
 
-  this.log = () => {
-    const message = slice(arguments);
-    message.unshift('Search (' + self.datastore.get('uid') + ')');
+  this.log = (...args) => {
+    const message = slice(args);
+    message.unshift(`Search (${self.datastore.get('uid')})`);
 
     log.apply(window, message);
   };
@@ -229,7 +229,7 @@ const SearchBase = function(setup, parent) {
       this.notify = () => {
         if (!self.muted || neverMute) {
           const data = dataFunc();
-          self.log('NOTIFY (' + name + ')', data);
+          self.log(`NOTIFY (${name})`, data);
 
           callObservers('observers', data);
         }
@@ -238,8 +238,8 @@ const SearchBase = function(setup, parent) {
       };
     });
 
-    self[name + 'Changed'] = object.notify;
-    parent[name + 'Observers'] = object;
+    self[`${name}Changed`] = object.notify;
+    parent[`${name}Observers`] = object;
 
     return self;
   };
@@ -280,7 +280,7 @@ const SearchBase = function(setup, parent) {
   };
 
   parent.prevPage = (cacheSize) => {
-    const currentPage = self.query.get('page');
+    const currentPage = this.query.get('page');
     if (_.isNumber(currentPage) && currentPage > 1) {
       parent.set({ page: currentPage - 1 });
       parent.run(cacheSize);
