@@ -1,5 +1,5 @@
-// import AllDatastores from './AllDatastores';
-// import Record from './Core/Record';
+import AllDatastores from './AllDatastores';
+import Record from './Core/Record';
 
 export default function requestRecord(source, id, func) {
   if (func === undefined) {
@@ -9,7 +9,7 @@ export default function requestRecord(source, id, func) {
   }
   const data = {
     complete: false,
-    source: AllDatastores.get(source).get('url') + '/record/' + id,
+    source: `${AllDatastores.get(source).get('url')}/record/${id}`,
     names: [undefined]
   };
   const record = new Record(data);
