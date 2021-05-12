@@ -2,7 +2,7 @@ import { JSDOM } from 'jsdom';
 import { expect } from 'chai';
 import SearchBase from './SearchBase';
 
-describe.only('SearchBase()', () => {
+describe('SearchBase()', () => {
   before(() => {
     const dom = new JSDOM();
     global.window = dom.window;
