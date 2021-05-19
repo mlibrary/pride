@@ -3,7 +3,7 @@
 
 // Authored by Albert Bertram (bertrama@umich.edu)
 
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 Pride.Core.GetThis = function(barcode, data) {
   this.barcode = barcode;
