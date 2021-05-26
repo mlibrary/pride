@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import FacetSearch from './FacetSearch';
 import FuncBuffer from '../Util/FuncBuffer';
 
-describe.only('FacetSearch()', () => {
+describe('FacetSearch()', () => {
   beforeEach(() => {
     this.setup = {
       data: {},
