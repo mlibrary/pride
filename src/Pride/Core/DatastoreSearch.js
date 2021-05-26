@@ -1,13 +1,11 @@
 import { _ } from 'underscore';
-
-// import SearchBase from './SearchBase';
-// import Record from './Record';
+import SearchBase from './SearchBase';
+import Record from './Record';
 import deepClone from '../Util/deepClone';
 import isDeepMatch from '../Util/isDeepMatch';
-// import FacetSearch from './FacetSearch';
+import FacetSearch from './FacetSearch';
 
 const DatastoreSearch = function(setup) {
-  const self = this;
   const base = new SearchBase(setup, this);
 
   base.createItem = (itemData) => {
@@ -21,9 +19,7 @@ const DatastoreSearch = function(setup) {
   let facetSearches = [];
   let currentFacets = [];
 
-  this.getFacets = () => {
-    return facetSearches;
-  };
+  this.getFacets = () => facetSearches;
 
   /*
    * Data Getters
@@ -33,7 +29,7 @@ const DatastoreSearch = function(setup) {
 
   this.getData = () => {
     return {
-      uid: self.uid,
+      uid: this.uid,
       metadata: deepClone(base.datastore.get('metadata')),
       sorts: deepClone(base.datastore.get('sorts')),
       selectedSort: base.query.get('sort'),
@@ -57,7 +53,7 @@ const DatastoreSearch = function(setup) {
    */
 
   base.initialize_observables = () => {
-    self.runDataObservers.add(() => {
+    this.runDataObservers.add(() => {
       const facets = base.datastore.get('facets');
 
       if (!isDeepMatch(currentFacets, facets)) {
@@ -77,7 +73,7 @@ const DatastoreSearch = function(setup) {
 
         currentFacets = facets;
 
-        self.facetsObservers.notify();
+        this.facetsObservers.notify();
       }
     });
   };
@@ -90,7 +86,7 @@ const DatastoreSearch = function(setup) {
     });
     base.setMute(state);
 
-    return self;
+    return this;
   };
 
   base.createObservable('facets', this.getFacets)
