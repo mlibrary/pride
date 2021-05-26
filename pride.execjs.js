@@ -633,56 +633,33 @@ Pride.Core.GetThis = function(barcode, data) {
 
 };
 
-// Copyright (c) 2017, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
+/*
+ * Copyright (c) 2021, Regents of the University of Michigan.
+ * All rights reserved. See LICENSE.txt for details.
+ */
 
 // Authored by Albert Bertram (bertrama@umich.edu)
-
-
 
 Pride.Core.Holdings = function(data) {
   this.data = data;
 
-  var getHoldingsUrl = function(data) {
-    var ret;
-    _.each(data.fields, function(field) {
-      if (field.uid === 'holdings_url') {
-        ret = field.value;
-      }
-    });
-    return ret;
-  };
-
-  var getResourceAccess = function(data) {
-    var ret;
-    _.each(data.fields, function(field) {
-      if (field.uid === 'resource_access') {
-        ret = field.value;
-      }
-    });
-    return ret;
-  };
-
-  var request_buffer = new Pride.Util.RequestBuffer({
-    url: getHoldingsUrl(data),
-    failure_message: Pride.Messenger.preset(
-      'failed_holdings_load',
-      data.names[0]
-    ),
-    edit_response: function(response) {
-      data = translateData(response);
-      return data;
+  const getResourceAccess = function(data) {
+    const dataField = data.fields.find((field) => field.uid === 'resource_access');
+    if (dataField && dataField.value) {
+      return dataField.value
     }
-  });
+    else {
+      return dataField;
+    }
+  };
 
-  var translateData = function(input) {
+  const translateData = function(input) {
     return [getResourceAccess(data)].concat(input);
   };
 
   this.getData = function(func) {
-    request_buffer.request({success: func});
+    Pride.Util.safeCall(func, translateData(this.data.holdings));
   };
-
 };
 
 // Copyright (c) 2015, Regents of the University of Michigan.
@@ -945,7 +922,8 @@ Pride.Core.Query = function(query_info) {
              field_tree: this.get('field_tree'),
              facets:     this.get('facets'),
              sort:       this.get('sort'),
-             settings:   this.get('settings')
+             settings:   this.get('settings'),
+             raw_query:  this.get('raw_query')
            };
   };
 };
@@ -1929,6 +1907,8 @@ Pride.AllDatastores = {
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+
+
 Pride.Messenger = new Pride.Util.FuncBuffer(function() {
   var notifyObservers = this.call;
 
@@ -1942,27 +1922,27 @@ Pride.Messenger = new Pride.Util.FuncBuffer(function() {
   this.clear  = undefined;
 
   this.sendMessage = function(message) {
-    // if (message['summary']) {
-    //   message['class']   = message['class']   || 'info';
-    //   message['details'] = message['details'] || '';
+    if (message.summary) {
+      message.class   = message.class   || 'info';
+      message.details = message.details || '';
 
-    //   notifyObservers(message);
+      notifyObservers(message.class, message);
 
-    //   Pride.Core.log('Messenger', 'MESSAGE SENT', message);
-    // }
+      Pride.Core.log('Messenger', 'MESSAGE SENT', message);
+    }
 
-    // return this;
+    return this;
   };
 
   this.sendMessageArray = function(message_array) {
-    // var messenger = this;
+    var messenger = this;
 
-    // _.each(
-    //   message_array,
-    //   function(message) { messenger.sendMessage(message); }
-    // );
+    _.each(
+      message_array,
+      function(message) { messenger.sendMessage(message); }
+    );
 
-    // return this;
+    return this;
   };
 
   // Given a type of preset message and some optional arguments, generate a
