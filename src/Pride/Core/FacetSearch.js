@@ -1,9 +1,7 @@
 import { _ } from 'underscore';
-
-// import FuncBuffer from '../Util/FuncBuffer';
+import FuncBuffer from '../Util/FuncBuffer';
 
 const FacetSearch = function(setup) {
-  const exampleFacet = this;
   let data = setup.data;
   const results = setup.results;
 
@@ -12,12 +10,8 @@ const FacetSearch = function(setup) {
    */
 
   this.uid = data.uid;
-  this.getData = () => {
-    return data;
-  };
-  this.getResults = () => {
-    return results;
-  };
+  this.getData = () => data;
+  this.getResults = () => results;
 
   /*
    * Muting
@@ -25,14 +19,11 @@ const FacetSearch = function(setup) {
 
   let muted = false;
 
-  this.getMute = () => {
-    return muted;
-  };
+  this.getMute = () => muted;
 
   this.setMute = (state) => {
     muted = state;
-
-    return self;
+    return this;
   };
 
   /*
@@ -45,8 +36,7 @@ const FacetSearch = function(setup) {
     _.each(observables, (observable) => {
       observable.clearAll();
     });
-
-    return self;
+    return this;
   };
 
   const createObservable = function(name, dataFunc) {
@@ -58,20 +48,16 @@ const FacetSearch = function(setup) {
 
       this.add = function(func) {
         if (!self.muted) func(dataFunc());
-
         addObserver(func, 'observers');
-
         return this;
       };
 
       this.notify = function() {
         if (!self.muted) {
           data = dataFunc();
-          self.log('NOTIFY (' + name + ')', data);
-
+          self.log(`NOTIFY (${name})`, data);
           callObservers('observers', data);
         }
-
         return this;
       };
     });
