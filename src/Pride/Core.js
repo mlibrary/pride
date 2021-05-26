@@ -1,3 +1,4 @@
+import FacetSearch from './Core/FacetSearch';
 import GetThis from './Core/GetThis';
 import Holdings from './Core/Holdings';
 import log from './Core/log';
@@ -10,9 +11,10 @@ const Core = {
   nodeFactory: (type, childTypes, extention) => nodeFactory(type, childTypes, extention)
 };
 
-Object.defineProperty(Core, 'SearchBase', { value: SearchBase });
+Object.defineProperty(Core, 'FacetSearch', { value: FacetSearch });
 Object.defineProperty(Core, 'GetThis', { value: GetThis });
 Object.defineProperty(Core, 'Holdings', { value: Holdings });
 Object.defineProperty(Core, 'Record', { value: Record });
+Object.defineProperty(Core, 'SearchBase', { value: SearchBase });
 
 export default Core;
