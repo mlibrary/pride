@@ -1,5 +1,4 @@
 import { _ } from 'underscore';
-
 import slice from './slice';
 import safeApply from './safeApply';
 
@@ -7,31 +6,30 @@ const MultiSearch = function(uid, muted, searchArray) {
   const queryData = {};
   const self = this;
 
-  this.searches = searchArray;
   this.uid = uid;
+  this.searches = searchArray;
 
   this.set = (values) => {
     _.extend(queryData, values);
 
     _.each(
       searchArray,
-      (search) => {
-        search.set(values);
-      }
+      (search) => search.set(values)
     );
 
-    return self;
+    return this;
   };
 
-  const funcOnEach = function(funcName, beforeFunc) {
-    return () => {
+  const funcOnEach = (funcName, beforeFunc) => {
+    return function() {
       const args = slice(arguments);
 
       safeApply(beforeFunc, args);
 
-      _.each(searchArray, (search) => {
-        search[funcName].apply(search, args);
-      });
+      _.each(
+        searchArray,
+        (search) => search[funcName].apply(search, args)
+      );
 
       return self;
     };
@@ -44,9 +42,7 @@ const MultiSearch = function(uid, muted, searchArray) {
     muted = state;
   });
 
-  this.getMute = () => {
-    return muted;
-  };
+  this.getMute = () => muted;
 
   this.setMute(muted);
 };
