@@ -3,6 +3,8 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
+import { _ } from 'underscore';
+
 Pride.Messenger = new Pride.Util.FuncBuffer(function() {
   var notifyObservers = this.call;
 
@@ -16,27 +18,27 @@ Pride.Messenger = new Pride.Util.FuncBuffer(function() {
   this.clear  = undefined;
 
   this.sendMessage = function(message) {
-    // if (message['summary']) {
-    //   message['class']   = message['class']   || 'info';
-    //   message['details'] = message['details'] || '';
+    if (message.summary) {
+      message.class   = message.class   || 'info';
+      message.details = message.details || '';
 
-    //   notifyObservers(message);
+      notifyObservers(message.class, message);
 
-    //   Pride.Core.log('Messenger', 'MESSAGE SENT', message);
-    // }
+      Pride.Core.log('Messenger', 'MESSAGE SENT', message);
+    }
 
-    // return this;
+    return this;
   };
 
   this.sendMessageArray = function(message_array) {
-    // var messenger = this;
+    var messenger = this;
 
-    // _.each(
-    //   message_array,
-    //   function(message) { messenger.sendMessage(message); }
-    // );
+    _.each(
+      message_array,
+      function(message) { messenger.sendMessage(message); }
+    );
 
-    // return this;
+    return this;
   };
 
   // Given a type of preset message and some optional arguments, generate a
