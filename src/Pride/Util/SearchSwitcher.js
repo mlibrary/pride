@@ -1,9 +1,7 @@
 import { _ } from 'underscore';
-
-// import MultiSearch from './MultiSearch';
+import MultiSearch from './MultiSearch';
 
 const SearchSwitcher = function(currentSearch, cachedSearches) {
-  const self = this;
   const searchCache = new MultiSearch(null, true, cachedSearches);
 
   currentSearch.set({ page: 1 }).setMute(false);
@@ -15,26 +13,26 @@ const SearchSwitcher = function(currentSearch, cachedSearches) {
     currentSearch.run(cacheSize);
     searchCache.run(0);
 
-    return self;
+    return this;
   };
 
   this.set = (settings) => {
     currentSearch.set(settings);
     searchCache.set(_.omit(settings, 'page', 'facets'));
 
-    return self;
+    return this;
   };
 
   this.nextPage = () => {
     currentSearch.nextPage();
 
-    return self;
+    return this;
   };
 
   this.prevPage = () => {
     currentSearch.prevPage();
 
-    return self;
+    return this;
   };
 
   this.switchTo = (requestedUid) => {
@@ -53,15 +51,13 @@ const SearchSwitcher = function(currentSearch, cachedSearches) {
         }
       );
 
-      if (!currentSearch) {
-        throw new Error('Could not find a search with a UID of: ' + requestedUid);
-      }
+      if (!currentSearch) throw new Error(`Could not find a search with a UID of: ${requestedUid}`);
 
-      self.uid = currentSearch.uid;
+      this.uid = currentSearch.uid;
       currentSearch.setMute(false);
     }
 
-    return self;
+    return this;
   };
 };
 
