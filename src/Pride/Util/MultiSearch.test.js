@@ -30,7 +30,7 @@ describe('MultiSearch()', () => {
       expect(() => this.multiSearchExample.set()).to.be.a('function');
     });
     it('returns self', () => {
-      expect(this.multiSearchExample.set([1, 2, 3])).to.deep.equal(this.multiSearchExample);
+      expect(this.multiSearchExample.set([1, 2, 3])).to.equal(this.multiSearchExample);
     });
   });
   describe('run()', () => {
@@ -38,7 +38,7 @@ describe('MultiSearch()', () => {
       expect(() => this.multiSearchExample.run).to.be.a('function');
     });
     it('returns self', () => {
-      expect(this.multiSearchExample.run()).to.deep.equal(this.multiSearchExample);
+      expect(this.multiSearchExample.run()).to.equal(this.multiSearchExample);
     });
   });
   describe('nextPage()', () => {
@@ -46,7 +46,7 @@ describe('MultiSearch()', () => {
       expect(() => this.multiSearchExample.nextPage).to.be.a('function');
     });
     it('returns self', () => {
-      expect(this.multiSearchExample.nextPage()).to.deep.equal(this.multiSearchExample);
+      expect(this.multiSearchExample.nextPage()).to.equal(this.multiSearchExample);
     });
   });
   describe('prevPage()', () => {
@@ -54,7 +54,7 @@ describe('MultiSearch()', () => {
       expect(() => this.multiSearchExample.prevPage).to.be.a('function');
     });
     it('returns self', () => {
-      expect(this.multiSearchExample.prevPage()).to.deep.equal(this.multiSearchExample);
+      expect(this.multiSearchExample.prevPage()).to.equal(this.multiSearchExample);
     });
   });
   describe('getMute()', () => {
