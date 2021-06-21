@@ -21,16 +21,14 @@ describe('safeCall()', () => {
     before(function() {
       this.givenFirst = 'first!';
       this.givenSecond = 'not first!';
+      this.returnedFirst = this.returnedSecond = null;
 
-      this.returnedFirst = null;
-      this.returnedSecond = null;
-
-      this.example = (first, second) => {
+      const example = (first, second) => {
         this.returnedFirst = first;
         this.returnedSecond = second;
       };
 
-      safeCall(this.example, this.givenFirst, this.givenSecond);
+      safeCall(example, this.givenFirst, this.givenSecond);
     });
 
     it('passes given argument into the fuction', function() {
