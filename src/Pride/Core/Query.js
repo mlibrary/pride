@@ -1,8 +1,7 @@
 import { _ } from 'underscore';
-
 import Paginater from '../Util/Paginater';
 import deepClone from '../Util/deepClone';
-// import Section from '../Util/Section';
+import Section from '../Util/Section';
 
 const Query = function(queryInfo) {
   // Setup the paginater to do all pagination calculations.
@@ -12,16 +11,16 @@ const Query = function(queryInfo) {
   });
 
   // Memoize the paginater keys for future use.
-  const paginaterKeys = Paginater.getPossibleKeys();
+  const paginaterKeys = paginater.getPossibleKeys();
 
   // Remove the pagination info from queryInfo.
   queryInfo = _.omit(deepClone(queryInfo), paginaterKeys);
 
-  // Set the default requestId if it isn't already set.
-  queryInfo.requestId = queryInfo.requestId || 0;
+  // Set the default request_id if it isn't already set.
+  queryInfo.request_id = queryInfo.request_id || 0;
 
   this.get = (key) => {
-    if (Paginater.hasKey(key)) {
+    if (paginater.hasKey(key)) {
       return paginater.get(key);
     } else {
       return queryInfo[key];
@@ -36,8 +35,8 @@ const Query = function(queryInfo) {
     if (!_.isEmpty(newQueryValues)) {
       paginater.set({ total_available: undefined });
 
-      if (!_.isNumber(newQueryValues.requestId)) {
-        queryInfo.requestId += 1;
+      if (!_.isNumber(newQueryValues.request_id)) {
+        queryInfo.request_id += 1;
       }
     }
 
