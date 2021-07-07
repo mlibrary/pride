@@ -3,7 +3,6 @@ import deepClone from '../Util/deepClone';
 import Query from './Query';
 import DatastoreSearch from './DatastoreSearch';
 import request from '../Util/request';
-import FieldTree from '../FieldTree';
 
 const Datastore = function(datastoreInfo) {
   datastoreInfo = deepClone(datastoreInfo);
@@ -15,7 +14,6 @@ const Datastore = function(datastoreInfo) {
       start: 0,
       count: 0,
       settings: {},
-      fieldTree: fillFieldTree(),
       facets: _.reduce(
         datastoreInfo.facets,
         (memo, facet) => {
@@ -47,50 +45,6 @@ const Datastore = function(datastoreInfo) {
 
   this.update = (newInfo) => {
     _.extend(datastoreInfo, newInfo);
-  };
-
-  const fillFacets = (setFacets) => {
-    return _.reduce(
-      datastoreInfo.facets,
-      (memo, facet) => {
-        memo[facet.uid] = _.find(setFacets, (possibleFacet) => {
-          return possibleFacet.uid === facet.uid;
-        }) || facet;
-
-        return memo;
-      },
-      {}
-    );
-  };
-
-  const fillFieldTree = (givenTree) => {
-    givenTree = givenTree || new FieldTree.FieldBoolean('AND');
-
-    const output = _.reduce(
-      datastoreInfo.fields,
-      (tree, field) => {
-        if (
-          (field.required || field.fixed) &&
-          !tree.contains({ type: 'field', value: field.uid })
-        ) {
-          const missingField = new FieldTree.Field(
-            field.uid,
-            new FieldTree.Literal(field.default_value)
-          );
-
-          if (_.isMatch(tree, { type: 'field_boolean', value: 'AND' })) {
-            return tree.addChild(missingField);
-          } else {
-            return new FieldTree.FieldBoolean('AND', tree, missingField);
-          }
-        }
-
-        return tree;
-      },
-      givenTree
-    );
-
-    return output.matches({ type: 'field_boolean', children: [] }) ? {} : output;
   };
 };
 
