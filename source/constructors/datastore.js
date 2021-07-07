@@ -34,6 +34,17 @@ Pride.Core.Datastore = function(datastore_info) {
     return new Pride.Core.DatastoreSearch({datastore: this});
   };
 
+  this.baseBrowse = function() {
+    return new Pride.Core.DatastoreBrowse({datastore: this});
+  }
+
+  this.runBrowse = function(request_arguments) {
+    request_arguments.url = datastore_info.url + '/browse';
+    Pride.Util.request(request_arguments);
+
+    return this;
+  };
+
   this.runQuery = function(request_arguments) {
     request_arguments.url = datastore_info.url;
     Pride.Util.request(request_arguments);
