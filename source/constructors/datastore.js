@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 Pride.Core.Datastore = function(datastore_info) {
   datastore_info = Pride.Util.deepClone(datastore_info);

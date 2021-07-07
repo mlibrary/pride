@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 Pride.Messenger = new Pride.Util.FuncBuffer(function() {
   var notifyObservers = this.call;
