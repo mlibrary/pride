@@ -69,7 +69,7 @@ gulp.task('execjs', gulp.series('scripts', function() {
            './source/singletons/**/*.js'
          ])
         .pipe(replace('export', 'var reqwest = {};'))
-        .pipe(replace("import { _ } from 'underscore';", ''))
+        .pipe(replace("import _ from 'underscore';", ''))
         .pipe(replace("import reqwest from 'reqwest';", ''))
         .pipe(concat('pride.execjs.js'))
         .pipe(gulp.dest('./'));

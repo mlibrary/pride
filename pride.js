@@ -60,6 +60,10 @@ Pride.Settings = {
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
@@ -74,7 +78,7 @@ Pride.Core.Datastore = function (datastore_info) {
       count: 0,
       settings: {},
       field_tree: fillFieldTree(),
-      facets: _underscore._.reduce(datastore_info.facets, function (memo, facet) {
+      facets: _underscore2.default.reduce(datastore_info.facets, function (memo, facet) {
         if (facet.required && !facet.fixed) {
           memo[facet.uid] = facet.default_value;
         }
@@ -101,12 +105,12 @@ Pride.Core.Datastore = function (datastore_info) {
   };
 
   this.update = function (new_info) {
-    _underscore._.extend(datastore_info, new_info);
+    _underscore2.default.extend(datastore_info, new_info);
   };
 
   var fillFacets = function fillFacets(set_facets) {
-    return _underscore._.reduce(datastore_info.facets, function (memo, facet) {
-      memo[facet.uid] = _underscore._.find(set_facets, function (possible_facet) {
+    return _underscore2.default.reduce(datastore_info.facets, function (memo, facet) {
+      memo[facet.uid] = _underscore2.default.find(set_facets, function (possible_facet) {
         return possible_facet.uid === facet.uid;
       }) || facet;
       return memo;
@@ -116,14 +120,14 @@ Pride.Core.Datastore = function (datastore_info) {
   var fillFieldTree = function fillFieldTree(given_tree) {
     given_tree = given_tree || new Pride.FieldTree.FieldBoolean('AND');
 
-    var output = _underscore._.reduce(datastore_info.fields, function (tree, field) {
+    var output = _underscore2.default.reduce(datastore_info.fields, function (tree, field) {
       if ((field.required || field.fixed) && !tree.contains({
         type: 'field',
         value: field.uid
       })) {
         missing_field = new Pride.FieldTree.Field(field.uid, new Pride.FieldTree.Literal(field.default_value));
 
-        if (_underscore._.isMatch(tree, {
+        if (_underscore2.default.isMatch(tree, {
           type: 'field_boolean',
           value: 'AND'
         })) {
@@ -145,6 +149,10 @@ Pride.Core.Datastore = function (datastore_info) {
 "use strict";
 
 var _underscore = require("underscore");
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
@@ -200,13 +208,13 @@ Pride.Core.DatastoreSearch = function (setup) {
       var facets = base.datastore.get('facets');
 
       if (!Pride.Util.isDeepMatch(current_facets, facets)) {
-        _underscore._.each(facet_searches, function (facet_search) {
+        _underscore2.default.each(facet_searches, function (facet_search) {
           facet_search.clearAllObservers();
         });
 
-        facet_searches = _underscore._.map(facets, function (facet_data) {
+        facet_searches = _underscore2.default.map(facets, function (facet_data) {
           return new Pride.Core.FacetSearch({
-            data: _underscore._.omit(facet_data, 'values'),
+            data: _underscore2.default.omit(facet_data, 'values'),
             results: facet_data.values
           });
         });
@@ -219,7 +227,7 @@ Pride.Core.DatastoreSearch = function (setup) {
   this.getMute = base.getMute;
 
   this.setMute = function (state) {
-    _underscore._.each(facet_searches, function (facet) {
+    _underscore2.default.each(facet_searches, function (facet) {
       facet.setMute(state);
     });
 
@@ -232,6 +240,10 @@ Pride.Core.DatastoreSearch = function (setup) {
 "use strict";
 
 var _underscore = require("underscore");
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
@@ -273,7 +285,7 @@ Pride.Core.FacetSearch = function (setup) {
   var observables = [];
 
   this.clearAllObservers = function () {
-    _underscore._.each(observables, function (observable) {
+    _underscore2.default.each(observables, function (observable) {
       observable.clearAll();
     });
 
@@ -313,6 +325,10 @@ Pride.Core.FacetSearch = function (setup) {
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
@@ -333,7 +349,7 @@ Pride.Core.nodeFactory = function (type, child_types, extention) {
     // If it is, add it to the array of children.
 
     this.addChild = function (new_child) {
-      if (_underscore._.find(this.child_types, function (a_type) {
+      if (_underscore2.default.find(this.child_types, function (a_type) {
         return new_child.type === a_type;
       })) {
         this.children.push(new_child);
@@ -349,10 +365,10 @@ Pride.Core.nodeFactory = function (type, child_types, extention) {
     this.contains = function (query) {
       if (this.matches(query)) {
         return this;
-      } else if (_underscore._.isEmpty(this.children)) {
+      } else if (_underscore2.default.isEmpty(this.children)) {
         return false;
       } else {
-        return _underscore._.find(this.children, function (possible) {
+        return _underscore2.default.find(this.children, function (possible) {
           return possible.contains(query);
         });
       }
@@ -361,10 +377,10 @@ Pride.Core.nodeFactory = function (type, child_types, extention) {
     this.matches = function (query) {
       var this_node = this;
       var query_children = query.children || [];
-      return _underscore._.every(_underscore._.omit(query, 'children'), function (value, key) {
+      return _underscore2.default.every(_underscore2.default.omit(query, 'children'), function (value, key) {
         return this_node[key] == value;
-      }) && _underscore._.every(query_children, function (query_child) {
-        return _underscore._.any(children, function (real_child) {
+      }) && _underscore2.default.every(query_children, function (query_child) {
+        return _underscore2.default.any(children, function (real_child) {
           return query_child.matches(real_child);
         });
       });
@@ -375,15 +391,15 @@ Pride.Core.nodeFactory = function (type, child_types, extention) {
     };
 
     this.serializedChildren = function () {
-      return _underscore._.chain(this.children).map(function (child) {
+      return _underscore2.default.chain(this.children).map(function (child) {
         return child.serialize();
       }).compact().value();
     };
 
     this.toJSON = function () {
-      return _underscore._.mapObject(_underscore._.pick(this, 'value', 'children', 'type'), function (val, key) {
+      return _underscore2.default.mapObject(_underscore2.default.pick(this, 'value', 'children', 'type'), function (val, key) {
         if (key == 'children') {
-          return _underscore._.map(val, function (item) {
+          return _underscore2.default.map(val, function (item) {
             return item.toJSON();
           });
         } else {
@@ -393,7 +409,7 @@ Pride.Core.nodeFactory = function (type, child_types, extention) {
     }; // If an extention function was given, call it with this.
 
 
-    if (_underscore._.isFunction(extention)) {
+    if (_underscore2.default.isFunction(extention)) {
       extention.call(this);
     }
   };
@@ -404,7 +420,7 @@ Pride.Core.nodeFactory = function (type, child_types, extention) {
 Pride.Core.boolNodeFactory = function (type, child_types) {
   return Pride.Core.nodeFactory(type, child_types, function () {
     // Ensure that only valid boolean values are given.
-    if (!_underscore._.contains(['AND', 'OR', 'NOT'], this.value)) {
+    if (!_underscore2.default.contains(['AND', 'OR', 'NOT'], this.value)) {
       throw 'Not a valid boolean value';
     }
 
@@ -414,7 +430,7 @@ Pride.Core.boolNodeFactory = function (type, child_types) {
 
     this.serializedChildren = function () {
       var this_node = this;
-      return _underscore._.chain(this_node.children).map(function (child) {
+      return _underscore2.default.chain(this_node.children).map(function (child) {
         if (child.type == this_node.type || child.type == 'literal' && child.value.match(/\s/)) {
           return '(' + child.serialize() + ')';
         } else {
@@ -454,6 +470,10 @@ Pride.FieldTree.Raw = Pride.Core.nodeFactory('raw');
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
@@ -462,7 +482,7 @@ Pride.Util.FuncBuffer = function (extension) {
   var self = this;
 
   var safeGet = function safeGet(name) {
-    if (!_underscore._.has(buffer, name)) buffer[name] = [];
+    if (!_underscore2.default.has(buffer, name)) buffer[name] = [];
     return buffer[name];
   };
 
@@ -472,7 +492,7 @@ Pride.Util.FuncBuffer = function (extension) {
   };
 
   this.remove = function (func, name) {
-    buffer[name] = _underscore._.reject(safeGet(name), function (other_func) {
+    buffer[name] = _underscore2.default.reject(safeGet(name), function (other_func) {
       return func == other_func;
     });
     return self;
@@ -494,18 +514,22 @@ Pride.Util.FuncBuffer = function (extension) {
   };
 
   this.apply = function (name, args) {
-    _underscore._.each(safeGet(name), function (func) {
+    _underscore2.default.each(safeGet(name), function (func) {
       Pride.Util.safeApply(func, args);
     });
 
     return self;
   };
 
-  if (_underscore._.isFunction(extension)) extension.call(this);
+  if (_underscore2.default.isFunction(extension)) extension.call(this);
 };
 "use strict";
 
 var _underscore = require("underscore");
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Copyright (c) 2017, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
@@ -517,7 +541,7 @@ Pride.Core.GetThis = function (barcode, data) {
   var getGetThisUrl = function getGetThisUrl(data) {
     var ret;
 
-    _underscore._.each(data.fields, function (field) {
+    _underscore2.default.each(data.fields, function (field) {
       if (field.uid === 'get_this_url') {
         ret = field.value;
       }
@@ -529,7 +553,7 @@ Pride.Core.GetThis = function (barcode, data) {
   var getLinks = function getLinks(data) {
     var ret;
 
-    _underscore._.each(data.fields, function (field) {
+    _underscore2.default.each(data.fields, function (field) {
       if (field.uid == 'links') {
         ret = field.value;
       }
@@ -591,6 +615,10 @@ Pride.Core.Holdings = function (data) {
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
@@ -601,9 +629,9 @@ Pride.Util.MultiSearch = function (uid, muted, search_array) {
   this.uid = uid;
 
   this.set = function (values) {
-    _underscore._.extend(query_data, values);
+    _underscore2.default.extend(query_data, values);
 
-    _underscore._.each(search_array, function (search) {
+    _underscore2.default.each(search_array, function (search) {
       search.set(values);
     });
 
@@ -615,7 +643,7 @@ Pride.Util.MultiSearch = function (uid, muted, search_array) {
       var args = Pride.Util.slice(arguments);
       Pride.Util.safeApply(before_func, args);
 
-      _underscore._.each(search_array, function (search) {
+      _underscore2.default.each(search_array, function (search) {
         search[func_name].apply(search, args);
       });
 
@@ -640,6 +668,10 @@ Pride.Util.MultiSearch = function (uid, muted, search_array) {
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
@@ -648,19 +680,19 @@ Pride.Util.Paginater = function (initial_values) {
     ////////////////////////
     // Basic error checks //
     ////////////////////////
-    if (_underscore._.has(new_values, 'total_pages')) {
+    if (_underscore2.default.has(new_values, 'total_pages')) {
       throw 'Can not set total_pages (it is a calculated value)';
     }
 
-    if (_underscore._.has(new_values, 'index_limit')) {
+    if (_underscore2.default.has(new_values, 'index_limit')) {
       throw 'Can not set index_limit (it is a calculated value)';
     }
 
-    if (_underscore._.intersection(['start', 'end', 'count'], _underscore._.keys(new_values)).length > 2) {
+    if (_underscore2.default.intersection(['start', 'end', 'count'], _underscore2.default.keys(new_values)).length > 2) {
       throw 'Can not set start, end and count all at the same time';
     }
 
-    if (_underscore._.has(new_values, 'page') && (_underscore._.has(new_values, 'start') || _underscore._.has(new_values, 'end'))) {
+    if (_underscore2.default.has(new_values, 'page') && (_underscore2.default.has(new_values, 'start') || _underscore2.default.has(new_values, 'end'))) {
       throw 'Can not set page as well as the start and/or end';
     } //////////////////////////////
     // Set and calculate values //
@@ -668,17 +700,17 @@ Pride.Util.Paginater = function (initial_values) {
     // We wait to set the new end value until after an exception can be thrown.
 
 
-    _underscore._.extend(values, _underscore._.omit(new_values, 'end')); // If the page is being set, we have to update the start.
+    _underscore2.default.extend(values, _underscore2.default.omit(new_values, 'end')); // If the page is being set, we have to update the start.
 
 
-    if (_underscore._.has(new_values, 'page')) {
+    if (_underscore2.default.has(new_values, 'page')) {
       values.start = (values.count || 0) * (values.page - 1);
     } // If the end is being set, we calculate what start or count should now be.
 
 
-    if (_underscore._.has(new_values, 'end')) {
+    if (_underscore2.default.has(new_values, 'end')) {
       // If we are also setting the count, calculate a new start.
-      if (_underscore._.has(new_values, 'count')) {
+      if (_underscore2.default.has(new_values, 'count')) {
         values.start = Math.max(0, new_values.end - (values.count - 1)); // If we are not setting the count, calculate a new count.
       } else {
         // Throw an error if the start now comes after the end,
@@ -699,7 +731,7 @@ Pride.Util.Paginater = function (initial_values) {
     } // Calculate what the last index can be.
 
 
-    if (!_underscore._.isNumber(values.total_available)) {
+    if (!_underscore2.default.isNumber(values.total_available)) {
       values.index_limit = Infinity;
     } else if (values.total_available > 0) {
       values.index_limit = values.total_available - 1;
@@ -713,7 +745,7 @@ Pride.Util.Paginater = function (initial_values) {
     if (values.count > 0 && values.start % values.count === 0) {
       values.page = Math.floor(values.start / values.count) + 1;
 
-      if (_underscore._.isNumber(values.total_available)) {
+      if (_underscore2.default.isNumber(values.total_available)) {
         values.total_pages = Math.ceil(values.total_available / values.count);
         values.page_limit = values.total_pages;
       } else {
@@ -729,7 +761,7 @@ Pride.Util.Paginater = function (initial_values) {
     //////////////////////////////////////
 
 
-    if (!_underscore._.has(values, 'start') || !_underscore._.has(values, 'count')) {
+    if (!_underscore2.default.has(values, 'start') || !_underscore2.default.has(values, 'count')) {
       throw 'Not enough information given to create Paginater';
     }
 
@@ -756,6 +788,10 @@ Pride.Util.Paginater.hasKey = function (key) {
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
@@ -768,7 +804,7 @@ Pride.Core.Query = function (query_info) {
 
   var paginater_keys = Pride.Util.Paginater.getPossibleKeys(); // Remove the pagination info from query_info.
 
-  query_info = _underscore._.omit(Pride.Util.deepClone(query_info), paginater_keys); // Set the default request_id if it isn't already set.
+  query_info = _underscore2.default.omit(Pride.Util.deepClone(query_info), paginater_keys); // Set the default request_id if it isn't already set.
 
   query_info.request_id = query_info.request_id || 0;
 
@@ -781,24 +817,24 @@ Pride.Core.Query = function (query_info) {
   };
 
   this.set = function (new_values) {
-    var new_pagination_values = _underscore._.pick(new_values, paginater_keys);
+    var new_pagination_values = _underscore2.default.pick(new_values, paginater_keys);
 
-    var new_query_values = _underscore._.omit(new_values, paginater_keys); // If the set of things being searched was altered...
+    var new_query_values = _underscore2.default.omit(new_values, paginater_keys); // If the set of things being searched was altered...
 
 
-    if (!_underscore._.isEmpty(new_query_values)) {
+    if (!_underscore2.default.isEmpty(new_query_values)) {
       paginater.set({
         total_available: undefined
       });
 
-      if (!_underscore._.isNumber(new_query_values.request_id)) {
+      if (!_underscore2.default.isNumber(new_query_values.request_id)) {
         query_info.request_id += 1;
       }
     }
 
     paginater.set(new_pagination_values);
 
-    _underscore._.extend(query_info, new_query_values);
+    _underscore2.default.extend(query_info, new_query_values);
 
     return this;
   };
@@ -836,6 +872,10 @@ Pride.Core.Query = function (query_info) {
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
@@ -856,7 +896,7 @@ Pride.Core.Record = function (data) {
       var getHoldingsUrl = function getHoldingsUrl() {
         var ret;
 
-        _underscore._.each(data.fields, function (field) {
+        _underscore2.default.each(data.fields, function (field) {
           if (field.uid === 'holdings_url') {
             ret = field.value;
           }
@@ -936,7 +976,7 @@ Pride.Core.Record = function (data) {
     this.renderFull(function (data) {
       var ret;
 
-      _underscore._.each(data.fields, function (field) {
+      _underscore2.default.each(data.fields, function (field) {
         if (field.uid === 'csl') {
           ret = field.value;
         }
@@ -947,20 +987,20 @@ Pride.Core.Record = function (data) {
   };
 
   var callWithData = function callWithData(func) {
-    func(_underscore._.omit(data, 'complete', 'source'), data.complete);
+    func(_underscore2.default.omit(data, 'complete', 'source'), data.complete);
   };
 
   var translateData = function translateData(new_data) {
-    new_data.fields = _underscore._.map(new_data.fields, function (field) {
+    new_data.fields = _underscore2.default.map(new_data.fields, function (field) {
       if (!field.value_has_html) {
         field.value = Pride.Util.escape(field.value);
       }
 
-      return _underscore._.omit(field, 'value_has_html');
+      return _underscore2.default.omit(field, 'value_has_html');
     });
 
     if (!new_data.names_have_html) {
-      new_data.names = _underscore._.map(new_data.names, function (name) {
+      new_data.names = _underscore2.default.map(new_data.names, function (name) {
         return Pride.Util.escape(name);
       });
     }
@@ -980,7 +1020,7 @@ Pride.Core.Record = function (data) {
       new_data.selected = true;
     }
 
-    return _underscore._.omit(new_data, 'names_have_html');
+    return _underscore2.default.omit(new_data, 'names_have_html');
   };
 
   data = translateData(data);
@@ -988,6 +1028,10 @@ Pride.Core.Record = function (data) {
 "use strict";
 
 var _underscore = require("underscore");
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
@@ -1038,7 +1082,7 @@ Pride.Util.RequestBuffer = function (request_options) {
         request_successful = true;
         Pride.Util.safeCall(request_options.before_success, response);
 
-        if (_underscore._.isFunction(request_options.edit_response)) {
+        if (_underscore2.default.isFunction(request_options.edit_response)) {
           response = request_options.edit_response(response);
         }
 
@@ -1055,6 +1099,10 @@ Pride.Util.RequestBuffer = function (request_options) {
 "use strict";
 
 var _underscore = require("underscore");
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
@@ -1080,7 +1128,7 @@ Pride.Core.SearchBase = function (setup, parent) {
     self.query.set(set_hash);
     Pride.Util.safeCall(self.setDataChanged);
 
-    if (!_underscore._.isEmpty(_underscore._.omit(set_hash, Pride.Util.Paginater.getPossibleKeys()))) {
+    if (!_underscore2.default.isEmpty(_underscore2.default.omit(set_hash, Pride.Util.Paginater.getPossibleKeys()))) {
       results = [];
     }
 
@@ -1090,7 +1138,7 @@ Pride.Core.SearchBase = function (setup, parent) {
   this.run = function (cache_size) {
     Pride.Util.safeCall(self.resultsChanged);
 
-    if (_underscore._.isUndefined(cache_size)) {
+    if (_underscore2.default.isUndefined(cache_size)) {
       cache_size = defaultCacheSize;
     }
 
@@ -1139,10 +1187,10 @@ Pride.Core.SearchBase = function (setup, parent) {
     var query_results_added = false;
     self.log('NEW RECORDS', new_items_array);
 
-    _underscore._.each(new_items_array, function (item_data, array_index) {
+    _underscore2.default.each(new_items_array, function (item_data, array_index) {
       var item_index = array_index + offset; // Update the results that are not already filled.
 
-      if (_underscore._.isUndefined(results[item_index])) {
+      if (_underscore2.default.isUndefined(results[item_index])) {
         results[item_index] = Pride.Util.safeCall(self.createItem, item_data);
 
         if (self.query.toSection().inSection(item_index)) {
@@ -1153,7 +1201,7 @@ Pride.Core.SearchBase = function (setup, parent) {
 
     self.log('CACHE LENGTH', results.length);
 
-    if (query_results_added || _underscore._.isEmpty(new_items_array)) {
+    if (query_results_added || _underscore2.default.isEmpty(new_items_array)) {
       Pride.Util.safeCall(self.resultsChanged);
     }
   };
@@ -1161,7 +1209,7 @@ Pride.Core.SearchBase = function (setup, parent) {
   var updateData = function updateData(response_data) {
     self.datastore.update(response_data.datastore);
 
-    var new_query_data = _underscore._.omit(response_data.new_request, 'start', 'count');
+    var new_query_data = _underscore2.default.omit(response_data.new_request, 'start', 'count');
 
     new_query_data.specialists = response_data.specialists;
     new_query_data.total_available = response_data.total_available;
@@ -1172,11 +1220,11 @@ Pride.Core.SearchBase = function (setup, parent) {
   var getMissingSection = function getMissingSection(section) {
     var list = resultsPiece(section);
 
-    var start = _underscore._.indexOf(list, undefined); // If the item is not found, indexOf returns -1.
+    var start = _underscore2.default.indexOf(list, undefined); // If the item is not found, indexOf returns -1.
 
 
     if (start != -1) {
-      var end = section.start + _underscore._.lastIndexOf(list, undefined); // Adjust for the offset from the start of the results.
+      var end = section.start + _underscore2.default.lastIndexOf(list, undefined); // Adjust for the offset from the start of the results.
 
 
       start += section.start;
@@ -1202,7 +1250,7 @@ Pride.Core.SearchBase = function (setup, parent) {
   var mutable_observables = [];
 
   this.clearAllObservers = function () {
-    _underscore._.each(observables, function (observable) {
+    _underscore2.default.each(observables, function (observable) {
       observable.clearAll();
     });
 
@@ -1220,7 +1268,7 @@ Pride.Core.SearchBase = function (setup, parent) {
       Pride.Util.safeCall(self.muteChanged());
 
       if (!muted) {
-        _underscore._.each(mutable_observables, function (observable) {
+        _underscore2.default.each(mutable_observables, function (observable) {
           observable.notify();
         });
       }
@@ -1278,7 +1326,7 @@ Pride.Core.SearchBase = function (setup, parent) {
   parent.nextPage = function (cache_size) {
     var current_page = self.query.get('page');
 
-    if (_underscore._.isNumber(current_page) && current_page < self.query.get('page_limit')) {
+    if (_underscore2.default.isNumber(current_page) && current_page < self.query.get('page_limit')) {
       parent.set({
         page: current_page + 1
       });
@@ -1291,7 +1339,7 @@ Pride.Core.SearchBase = function (setup, parent) {
   parent.prevPage = function (cache_size) {
     var current_page = self.query.get('page');
 
-    if (_underscore._.isNumber(current_page) && current_page > 1) {
+    if (_underscore2.default.isNumber(current_page) && current_page > 1) {
       parent.set({
         page: current_page - 1
       });
@@ -1304,6 +1352,10 @@ Pride.Core.SearchBase = function (setup, parent) {
 "use strict";
 
 var _underscore = require("underscore");
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
@@ -1327,7 +1379,7 @@ Pride.Util.SearchSwitcher = function (current_search, cached_searches) {
 
   this.set = function (settings) {
     current_search.set(settings);
-    search_cache.set(_underscore._.omit(settings, 'page', 'facets'));
+    search_cache.set(_underscore2.default.omit(settings, 'page', 'facets'));
     return self;
   };
 
@@ -1348,7 +1400,7 @@ Pride.Util.SearchSwitcher = function (current_search, cached_searches) {
       });
       search_cache.searches.push(current_search);
       current_search = undefined;
-      search_cache.searches = _underscore._.reject(search_cache.searches, function (search) {
+      search_cache.searches = _underscore2.default.reject(search_cache.searches, function (search) {
         if (search.uid == requested_uid) {
           current_search = search;
           return true;
@@ -1369,6 +1421,10 @@ Pride.Util.SearchSwitcher = function (current_search, cached_searches) {
 "use strict";
 
 var _underscore = require("underscore");
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
@@ -1394,7 +1450,7 @@ Pride.Util.Section = function (start, end) {
   };
 
   this.shifted = function (start_amount, end_amount) {
-    if (!_underscore._.isNumber(end_amount)) end_amount = start_amount;
+    if (!_underscore2.default.isNumber(end_amount)) end_amount = start_amount;
     return new Pride.Util.Section(this.start + start_amount, this.end + end_amount);
   };
 };
@@ -1402,28 +1458,32 @@ Pride.Util.Section = function (start, end) {
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
 // Perform a deep clone that leaves functions untouched.
 Pride.Util.deepClone = function (original) {
-  if (_underscore._.isFunction(original)) {
+  if (_underscore2.default.isFunction(original)) {
     return original;
   } else {
     var collection_function = false;
 
-    if (_underscore._.isArray(original)) {
+    if (_underscore2.default.isArray(original)) {
       collection_function = 'map';
-    } else if (_underscore._.isObject(original)) {
+    } else if (_underscore2.default.isObject(original)) {
       collection_function = 'mapObject';
     }
 
     if (collection_function) {
-      return _underscore._[collection_function](original, function (item) {
+      return _underscore2.default[collection_function](original, function (item) {
         return Pride.Util.deepClone(item);
       });
     } else {
-      return _underscore._.clone(original);
+      return _underscore2.default.clone(original);
     }
   }
 };
@@ -1440,6 +1500,10 @@ Pride.Util.escape = function (string) {
 "use strict";
 
 var _underscore = require("underscore");
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
@@ -1461,7 +1525,7 @@ Pride.init = new Pride.Util.RequestBuffer({
     // TODO: Look for a better place for this later.
     Pride.Settings.default_institution = data.default_institution;
     Pride.Settings.affiliation = data.affiliation;
-    Pride.AllDatastores.array = _underscore._.map(data.response, function (datastore_data) {
+    Pride.AllDatastores.array = _underscore2.default.map(data.response, function (datastore_data) {
       return new Pride.Core.Datastore(datastore_data);
     });
   }
@@ -1470,24 +1534,28 @@ Pride.init = new Pride.Util.RequestBuffer({
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
 Pride.Util.isDeepMatch = function (object, pattern) {
-  var both_arrays = _underscore._.isArray(object) && _underscore._.isArray(pattern);
+  var both_arrays = _underscore2.default.isArray(object) && _underscore2.default.isArray(pattern);
 
-  var both_objects = _underscore._.isObject(object) && _underscore._.isObject(pattern);
+  var both_objects = _underscore2.default.isObject(object) && _underscore2.default.isObject(pattern);
 
   if (both_arrays && pattern.length != object.length) {
     return false;
   }
 
-  if (both_objects && _underscore._.keys(pattern).length != _underscore._.keys(object).length) {
+  if (both_objects && _underscore2.default.keys(pattern).length != _underscore2.default.keys(object).length) {
     return false;
   }
 
   if (both_arrays || both_objects) {
-    return _underscore._.every(pattern, function (value, key) {
+    return _underscore2.default.every(pattern, function (value, key) {
       return Pride.Util.isDeepMatch(object[key], value);
     });
   } else {
@@ -1537,6 +1605,10 @@ Pride.FieldTree.parseField = function (field_name, content) {
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
@@ -1551,7 +1623,7 @@ Pride.FieldTree.tokenize = function (string) {
   while (index < string.length) {
     var slice = string.slice(index);
 
-    var found = _underscore._.find(Pride.FieldTree.tokens, function (pattern) {
+    var found = _underscore2.default.find(Pride.FieldTree.tokens, function (pattern) {
       return new RegExp('^\\' + pattern).exec(slice);
     });
 
@@ -1567,7 +1639,7 @@ Pride.FieldTree.tokenize = function (string) {
       type = 'string';
       index++;
 
-      var last = _underscore._.last(result);
+      var last = _underscore2.default.last(result);
 
       if (last && last.type == 'string') {
         found = result.pop().content + found;
@@ -1586,6 +1658,8 @@ Pride.FieldTree.tokenize = function (string) {
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
 var _reqwest = require("reqwest");
 
 var _reqwest2 = _interopRequireDefault(_reqwest);
@@ -1603,7 +1677,7 @@ Pride.Util.request = function (request_info) {
   var request_method = 'get';
   if (request_info.query) request_method = 'post';
 
-  if (!_underscore._.isNumber(request_info.attempts)) {
+  if (!_underscore2.default.isNumber(request_info.attempts)) {
     request_info.attempts = Pride.Settings.connection_attempts;
   }
 
@@ -1664,11 +1738,15 @@ Pride.requestRecord = function (source, id, func) {
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
 Pride.Util.safeCall = function (maybe_func) {
-  if (_underscore._.isFunction(maybe_func)) {
+  if (_underscore2.default.isFunction(maybe_func)) {
     return maybe_func.apply(this, Pride.Util.slice(arguments, 1));
   } else {
     return maybe_func;
@@ -1676,7 +1754,7 @@ Pride.Util.safeCall = function (maybe_func) {
 };
 
 Pride.Util.safeApply = function (maybe_func, args) {
-  if (_underscore._.isFunction(maybe_func)) {
+  if (_underscore2.default.isFunction(maybe_func)) {
     return maybe_func.apply(this, args);
   } else {
     return maybe_func;
@@ -1694,25 +1772,29 @@ Pride.Util.slice = function (array, begin, end) {
 
 var _underscore = require("underscore");
 
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
 // Authored by Colin Fulton (fultonis@umich.edu)
 Pride.AllDatastores = {
   array: [],
   get: function get(uid) {
-    return _underscore._.find(this.array, function (datastore) {
+    return _underscore2.default.find(this.array, function (datastore) {
       return datastore.get('uid') == uid;
     });
   },
   newSearch: function newSearch(uid) {
-    var datastore = _underscore._.find(this.array, function (datastore) {
+    var datastore = _underscore2.default.find(this.array, function (datastore) {
       return datastore.get('uid') == uid;
     });
 
     return datastore ? datastore.baseSearch() : undefined;
   },
   each: function each(func) {
-    _underscore._.each(this.array, func);
+    _underscore2.default.each(this.array, func);
 
     return this;
   }
@@ -1720,6 +1802,10 @@ Pride.AllDatastores = {
 "use strict";
 
 var _underscore = require("underscore");
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Copyright (c) 2015, Regents of the University of Michigan.
 // All rights reserved. See LICENSE.txt for details.
@@ -1748,7 +1834,7 @@ Pride.Messenger = new Pride.Util.FuncBuffer(function () {
   this.sendMessageArray = function (message_array) {
     var messenger = this;
 
-    _underscore._.each(message_array, function (message) {
+    _underscore2.default.each(message_array, function (message) {
       messenger.sendMessage(message);
     });
 
