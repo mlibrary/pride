@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 import FuncBuffer from './Util/FuncBuffer';
 import log from './Core/log';
 /*

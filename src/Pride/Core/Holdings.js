@@ -1,4 +1,3 @@
-import { _ } from 'underscore';
 import safeCall from '../Util/safeCall';
 
 const Holdings = function(data) {

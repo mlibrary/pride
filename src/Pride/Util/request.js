@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 import reqwest from 'reqwest';
 import log from '../Core/log';
 import Messenger from '../Messenger';

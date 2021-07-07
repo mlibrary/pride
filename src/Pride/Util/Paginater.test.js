@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { _ } from 'underscore';
+import _ from 'underscore';
 import Paginater from './Paginater';
 
 const paginatorBasicExpectations = (key1, key2, valid) => {

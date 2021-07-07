@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 import getPossibleKeys from './Paginater/getPossibleKeys';
 import hasKey from './Paginater/hasKey';
 

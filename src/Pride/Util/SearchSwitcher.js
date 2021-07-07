@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 import MultiSearch from './MultiSearch';
 
 const SearchSwitcher = function(currentSearch, cachedSearches) {

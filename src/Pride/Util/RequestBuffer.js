@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 import FuncBuffer from './FuncBuffer';
 import request from './request';
 import safeCall from './safeCall';

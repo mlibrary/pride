@@ -1,10 +1,9 @@
-import { _ } from 'underscore';
-
+import _ from 'underscore';
 import deepClone from '../Util/deepClone';
-// import Query from './Query';
-// import DatastoreSearch from './DatastoreSearch';
-// import request from '../Util/request';
-// import FieldTree from '../FieldTree';
+import Query from './Query';
+import DatastoreSearch from './DatastoreSearch';
+import request from '../Util/request';
+import FieldTree from '../FieldTree';
 
 const Datastore = function(datastoreInfo) {
   datastoreInfo = deepClone(datastoreInfo);

@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 export default function safeApply(maybeFunc, args) {
   if (_.isFunction(maybeFunc)) {

@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 import SearchBase from './SearchBase';
 import Record from './Record';
 import deepClone from '../Util/deepClone';

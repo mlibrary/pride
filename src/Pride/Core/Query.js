@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 import Paginater from '../Util/Paginater';
 import deepClone from '../Util/deepClone';
 import Section from '../Util/Section';
