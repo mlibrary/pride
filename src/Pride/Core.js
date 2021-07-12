@@ -1,3 +1,4 @@
+import BrowseBase from './Core/BrowseBase';
 import Datastore from './Core/Datastore';
 import DatastoreSearch from './Core/DatastoreSearch';
 import FacetSearch from './Core/FacetSearch';
@@ -14,6 +15,7 @@ const Core = {
   nodeFactory: (type, childTypes, extention) => nodeFactory(type, childTypes, extention)
 };
 
+Object.defineProperty(Core, 'BrowseBase', { value: BrowseBase });
 Object.defineProperty(Core, 'Datastore', { value: Datastore });
 Object.defineProperty(Core, 'DatastoreSearch', { value: DatastoreSearch });
 Object.defineProperty(Core, 'FacetSearch', { value: FacetSearch });
