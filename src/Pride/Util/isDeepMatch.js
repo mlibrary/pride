@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 export default function isDeepMatch(object, pattern) {
   const bothArrays = _.isArray(object) && _.isArray(pattern);

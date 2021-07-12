@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 export default function deepClone(original) {
   if (_.isFunction(original)) {

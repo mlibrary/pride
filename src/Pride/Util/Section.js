@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 const Section = function(start, end) {
   this.start = Math.max(Math.min(start, end), 0);

@@ -1,3 +1,4 @@
+import Datastore from './Core/Datastore';
 import DatastoreSearch from './Core/DatastoreSearch';
 import FacetSearch from './Core/FacetSearch';
 import GetThis from './Core/GetThis';
@@ -13,6 +14,7 @@ const Core = {
   nodeFactory: (type, childTypes, extention) => nodeFactory(type, childTypes, extention)
 };
 
+Object.defineProperty(Core, 'Datastore', { value: Datastore });
 Object.defineProperty(Core, 'DatastoreSearch', { value: DatastoreSearch });
 Object.defineProperty(Core, 'FacetSearch', { value: FacetSearch });
 Object.defineProperty(Core, 'GetThis', { value: GetThis });

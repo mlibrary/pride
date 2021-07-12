@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 import RequestBuffer from '../Util/RequestBuffer';
 import Messenger from '../Messenger';
 import request from '../Util/request';

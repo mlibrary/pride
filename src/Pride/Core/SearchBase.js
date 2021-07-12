@@ -1,5 +1,4 @@
-import { _ } from 'underscore';
-
+import _ from 'underscore';
 import Settings from '../Settings';
 import slice from '../Util/slice';
 import log from './log';
