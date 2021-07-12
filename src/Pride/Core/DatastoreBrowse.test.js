@@ -2,7 +2,7 @@ import { JSDOM } from 'jsdom';
 import { expect } from 'chai';
 import DatastoreBrowse from './DatastoreBrowse';
 
-describe.only('DatastoreBrowse()', () => {
+describe('DatastoreBrowse()', () => {
   before(() => {
     const dom = new JSDOM();
     global.window = dom.window;
