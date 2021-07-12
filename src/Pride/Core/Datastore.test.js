@@ -3,12 +3,12 @@ import { expect } from 'chai';
 import Datastore from './Datastore';
 import Query from './Query';
 
-describe.only('Datastore()', () => {
+describe('Datastore()', () => {
   beforeEach(() => {
     const dom = new JSDOM();
     global.window = dom.window;
     this.args = {
-      url: 'https://lib.umich.edu'
+      url: 'http://localhost:3000'
     };
     this.datastoreExample = new Datastore(this.args);
   });
@@ -38,9 +38,12 @@ describe.only('Datastore()', () => {
     it('requires argument to have `url` property', () => {
       expect(() => this.datastoreExample.runQuery()).to.throw('Cannot set property \'url\' of undefined');
     });
-    it('returns self', () => {
-      expect(this.datastoreExample.runQuery({})).to.deep.equal(this.datastoreExample);
-    });
+    // Commented out to not run 'request'.
+    /*
+     * it('returns self', () => {
+     *   expect(this.datastoreExample.runQuery({})).to.deep.equal(this.datastoreExample);
+     * });
+     */
   });
   describe('get()', () => {
     it('is a function', () => {
