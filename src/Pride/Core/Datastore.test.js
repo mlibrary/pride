@@ -45,6 +45,25 @@ describe('Datastore()', () => {
      * });
      */
   });
+  describe('baseBrowse()', () => {
+    it('is a function', () => {
+      expect(this.datastoreExample.baseBrowse).to.be.a('function');
+    });
+  });
+  describe('runBrowse()', () => {
+    it('is a function', () => {
+      expect(this.datastoreExample.runBrowse).to.be.a('function');
+    });
+    it('requires argument to have `url` property', () => {
+      expect(() => this.datastoreExample.runBrowse()).to.throw('Cannot set property \'url\' of undefined');
+    });
+    // Commented out to not run 'request'.
+    /*
+     * it('returns self', () => {
+     *   expect(this.datastoreExample.runBrowse({})).to.deep.equal(this.datastoreExample);
+     * });
+     */
+  });
   describe('get()', () => {
     it('is a function', () => {
       expect(this.datastoreExample.get).to.be.a('function');

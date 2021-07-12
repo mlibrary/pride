@@ -2,6 +2,7 @@ import _ from 'underscore';
 import deepClone from '../Util/deepClone';
 import Query from './Query';
 import DatastoreSearch from './DatastoreSearch';
+import DatastoreBrowse from './DatastoreBrowse';
 import request from '../Util/request';
 
 const Datastore = function(datastoreInfo) {
@@ -34,6 +35,17 @@ const Datastore = function(datastoreInfo) {
 
   this.runQuery = function(requestArguments) {
     requestArguments.url = datastoreInfo.url;
+    request(requestArguments);
+
+    return this;
+  };
+
+  this.baseBrowse = function() {
+    return new DatastoreBrowse({ datastore: this });
+  };
+
+  this.runBrowse = function(requestArguments) {
+    requestArguments.url = `${datastoreInfo.url}/browse`;
     request(requestArguments);
 
     return this;

@@ -1,5 +1,6 @@
 import BrowseBase from './Core/BrowseBase';
 import Datastore from './Core/Datastore';
+import DatastoreBrowse from './Core/DatastoreBrowse';
 import DatastoreSearch from './Core/DatastoreSearch';
 import FacetSearch from './Core/FacetSearch';
 import GetThis from './Core/GetThis';
@@ -17,6 +18,7 @@ const Core = {
 
 Object.defineProperty(Core, 'BrowseBase', { value: BrowseBase });
 Object.defineProperty(Core, 'Datastore', { value: Datastore });
+Object.defineProperty(Core, 'DatastoreBrowse', { value: DatastoreBrowse });
 Object.defineProperty(Core, 'DatastoreSearch', { value: DatastoreSearch });
 Object.defineProperty(Core, 'FacetSearch', { value: FacetSearch });
 Object.defineProperty(Core, 'GetThis', { value: GetThis });
