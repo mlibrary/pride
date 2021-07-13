@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import isDeepMatch from './isDeepMatch';
+import isDeepMatch from '../../../src/Pride/Util/isDeepMatch';
 
 describe('isDeepMatch()', () => {
   describe('returning false', () => {

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Settings from './Settings';
+import Settings from '../../../src/Pride/Settings';
 
 describe('Settings', () => {
   ['default_cache_size', 'connection_attempts', 'init_attempts', 'ms_between_attempts'].forEach((property) => {

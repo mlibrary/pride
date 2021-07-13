@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import safeApply from './safeApply';
+import safeApply from '../../../src/Pride/Util/safeApply';
 
 describe('safeApply()', () => {
   describe("given something that isn't a function", () => {

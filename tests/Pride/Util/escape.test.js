@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom';
 import { expect } from 'chai';
-import escape from './escape';
+import escape from '../../../src/Pride/Util/escape';
 
 describe('escape()', () => {
   before(() => {

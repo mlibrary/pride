@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Paginater from './Paginater';
+import Paginater from '../../../src/Pride/Util/Paginater';
 
 const paginatorBasicExpectations = (key1, key2, valid) => {
   beforeEach(function() {

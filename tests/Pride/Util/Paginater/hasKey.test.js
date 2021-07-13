@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import getPossibleKeys from './getPossibleKeys';
-import hasKey from './hasKey';
+import getPossibleKeys from '../../../../src/Pride/Util/Paginater/getPossibleKeys';
+import hasKey from '../../../../src/Pride/Util/Paginater/hasKey';
 
 describe('hasKey()', () => {
   it('returns true when asked for any key that exists', () => {
