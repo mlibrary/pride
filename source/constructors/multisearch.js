@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 Pride.Util.MultiSearch = function(uid, muted, search_array) {
   var query_data = {};

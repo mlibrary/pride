@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 Pride.Core.Query = function(query_info) {
   // Setup the paginater to do all pagination calculations.
@@ -73,7 +73,8 @@ Pride.Core.Query = function(query_info) {
              field_tree: this.get('field_tree'),
              facets:     this.get('facets'),
              sort:       this.get('sort'),
-             settings:   this.get('settings')
+             settings:   this.get('settings'),
+             raw_query:  this.get('raw_query')
            };
   };
 };

@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 // Perform a deep clone that leaves functions untouched.
 Pride.Util.deepClone = function(original) {

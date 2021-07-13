@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 export default function isDeepMatch(object, pattern) {
   const bothArrays = _.isArray(object) && _.isArray(pattern);
@@ -12,9 +12,10 @@ export default function isDeepMatch(object, pattern) {
   }
 
   if (bothArrays || bothObjects) {
-    return _.every(pattern, (value, key) => {
-      return isDeepMatch(object[key], value);
-    });
+    return _.every(
+      pattern,
+      (value, key) => isDeepMatch(object[key], value)
+    );
   }
 
   return object === pattern;
