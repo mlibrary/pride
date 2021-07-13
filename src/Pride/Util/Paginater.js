@@ -84,18 +84,13 @@ const Paginater = function(initialValues) {
     /*
      * Calculate pagination
      */
+    const countStart = values.count > 0 && values.start % values.count === 0;
 
-    values.page = undefined;
+    values.page = countStart ? Math.floor(values.start / values.count) + 1 : undefined;
+    values.page_limit = countStart ? Infinity : undefined;
     values.total_pages = undefined;
-    values.page_limit = undefined;
-    if (values.count > 0 && values.start % values.count === 0) {
-      values.page = Math.floor(values.start / values.count) + 1;
-      values.total_pages = undefined;
-      values.page_limit = Infinity;
-      if (_.isNumber(values.total_available)) {
-        values.total_pages = Math.ceil(values.total_available / values.count);
-        values.page_limit = values.total_pages;
-      }
+    if (countStart && _.isNumber(values.total_available)) {
+      values.page_limit = values.total_pages = Math.ceil(values.total_available / values.count);
     }
 
     return this;
