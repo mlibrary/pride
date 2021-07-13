@@ -6,20 +6,21 @@ const FuncBuffer = function(extension) {
   let buffer = {};
 
   this.safeGet = (name) => {
-    if (!_.has(buffer, name)) buffer[name] = [];
+    if (!Object.prototype.hasOwnProperty.call(buffer, name)) buffer[name] = [];
     return buffer[name];
   };
 
   this.add = (func, name) => {
-    this.safeGet(name).push(func);
+    this
+      .safeGet(name)
+      .push(func);
     return this;
   };
 
   this.remove = (func, name) => {
-    buffer[name] = _.reject(
-      this.safeGet(name),
-      (otherFunc) => func === otherFunc
-    );
+    buffer[name] = this
+      .safeGet(name)
+      .filter((otherFunc) => func !== otherFunc);
     return this;
   };
 
@@ -34,10 +35,9 @@ const FuncBuffer = function(extension) {
   };
 
   this.apply = (name, args) => {
-    _.each(
-      this.safeGet(name),
-      (func) => safeApply(func, args)
-    );
+    this
+      .safeGet(name)
+      .forEach((func) => safeApply(func, args));
     return this;
   };
 

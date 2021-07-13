@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import Settings from '../Settings';
-import slice from '../Util/slice';
+import Settings from '../../../src/Pride/Settings';
+import slice from '../../../src/Pride/Util/slice';
 
 function logCopy(source, info) {
   if (Settings.obnoxious) {

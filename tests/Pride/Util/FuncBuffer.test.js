@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import FuncBuffer from './FuncBuffer';
+import FuncBuffer from '../../../src/Pride/Util/FuncBuffer';
 
 function testFuncBufferMethods(name) {
   describe('add()', function() {
