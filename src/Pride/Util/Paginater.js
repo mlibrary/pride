@@ -3,28 +3,26 @@ import getPossibleKeys from './Paginater/getPossibleKeys';
 import hasKey from './Paginater/hasKey';
 
 const Paginater = function(initialValues) {
-  this.set = function(newValues) {
+  const values = {};
+
+  this.get = (name) => values[name];
+
+  this.set = function(newValues = initialValues) {
+    // Get keys of new values
+    const newValuesKeys = Object.keys(newValues);
+
     /*
      * Basic error checks
      */
 
-    if (_.has(newValues, 'total_pages')) {
-      throw new Error('Can not set total_pages (it is a calculated value)');
-    }
+    ['total_pages', 'index_limit'].forEach((property) => {
+      if (newValuesKeys.includes(property)) {
+        throw new Error(`Can not set ${property} (it is a calculated value)`);
+      }
+    });
 
-    if (_.has(newValues, 'index_limit')) {
-      throw new Error('Can not set index_limit (it is a calculated value)');
-    }
-
-    if (_.intersection(['start', 'end', 'count'], _.keys(newValues)).length > 2) {
+    if (_.intersection(['start', 'end', 'count'], newValuesKeys).length > 2) {
       throw new Error('Can not set start, end and count all at the same time');
-    }
-
-    if (
-      _.has(newValues, 'page') &&
-      (_.has(newValues, 'start') || _.has(newValues, 'end'))
-    ) {
-      throw new Error('Can not set page as well as the start and/or end');
     }
 
     /*
@@ -35,13 +33,16 @@ const Paginater = function(initialValues) {
     _.extend(values, _.omit(newValues, 'end'));
 
     // If the page is being set, we have to update the start.
-    if (_.has(newValues, 'page')) {
+    if (newValuesKeys.includes('page')) {
+      if (newValuesKeys.includes('start') || newValuesKeys.includes('end')) {
+        throw new Error('Can not set page as well as the start and/or end');
+      }
       values.start = (values.count || 0) * (values.page - 1);
     }
 
     // If the end is being set, we calculate what start or count should now be.
-    if (_.has(newValues, 'end')) {
-      if (!_.has(newValues, 'count')) {
+    if (newValuesKeys.includes('end')) {
+      if (!newValuesKeys.includes('count')) {
         /*
          * Throw an error if the start now comes after the end,
          * because that makes no sense at all.
@@ -68,7 +69,9 @@ const Paginater = function(initialValues) {
      * Check to make sure enough is set
      */
 
-    if (!_.has(values, 'start') || !_.has(values, 'count')) {
+    const valuesKeys = Object.keys(values);
+
+    if (!valuesKeys.includes('start') || !valuesKeys.includes('count')) {
       throw new Error('Not enough information given to create Paginater');
     }
 
@@ -96,11 +99,8 @@ const Paginater = function(initialValues) {
     return this;
   };
 
-  this.get = (name) => values[name];
-
   // Set the initial values.
-  const values = {};
-  this.set(initialValues);
+  this.set();
 };
 
 Paginater.prototype.getPossibleKeys = () => getPossibleKeys();
