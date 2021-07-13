@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import _ from 'underscore';
 import Paginater from './Paginater';
 
 const paginatorBasicExpectations = (key1, key2, valid) => {
@@ -10,11 +9,11 @@ const paginatorBasicExpectations = (key1, key2, valid) => {
     this.example = new Paginater(settings);
   });
 
-  _.each(valid, (value, key) => {
+  for (const [key, value] of Object.entries(valid)) {
     it(`sets ${key} correctly`, () => {
       expect(valid[key]).to.equal(value);
     });
-  });
+  }
 
   it('sets page_limit to Infinity', function() {
     expect(this.example.get('page_limit')).to.equal(Infinity);
@@ -25,11 +24,11 @@ const paginatorBasicExpectations = (key1, key2, valid) => {
   });
 
   it('sets total_pages to undefined', function() {
-    expect(this.example.get('total_pages')).to.equal(undefined);
+    expect(this.example.get('total_pages')).to.be.undefined;
   });
 
   it('sets total_available to undefined', function() {
-    expect(this.example.get('total_available')).to.equal(undefined);
+    expect(this.example.get('total_available')).to.be.undefined;
   });
 };
 
@@ -44,19 +43,15 @@ const testPaginatorBasics = (key1, key2) => {
 const testPaginatorUnsettable = (invalidSettings, basicSettings) => {
   basicSettings = basicSettings || { start: 10, count: 5 };
 
-  it(
-    `cannot set ${_.keys(invalidSettings).join(' and ')} together after initializaion`,
-    () => {
-      expect(() => (new Paginater(basicSettings)).set(invalidSettings)).to.throw();
-    }
-  );
+  const invalidSettingsKeys = Object.keys(invalidSettings).join(' and ');
 
-  it(
-    `cannot set ${_.keys(invalidSettings).join(' and ')} together on initializaion`,
-    () => {
-      expect(() => new Paginater(_.extend(basicSettings, invalidSettings))).to.throw();
-    }
-  );
+  it(`cannot set ${invalidSettingsKeys} together after initializaion`, () => {
+    expect(() => (new Paginater(basicSettings)).set(invalidSettings)).to.throw();
+  });
+
+  it(`cannot set ${invalidSettingsKeys} together on initializaion`, () => {
+    expect(() => new Paginater({ ...basicSettings, ...invalidSettings })).to.throw();
+  });
 };
 
 describe('Paginater', () => {
