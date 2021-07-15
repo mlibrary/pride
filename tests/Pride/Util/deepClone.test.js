@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import deepClone from './deepClone';
+import deepClone from '../../../src/Pride/Util/deepClone';
 
 describe('deepClone()', () => {
   it('passes functions straight through', () => {

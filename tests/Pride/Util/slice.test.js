@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import slice from './slice';
+import slice from '../../../src/Pride/Util/slice';
 
 describe('slice()', () => {
   it('returns an array', () => {

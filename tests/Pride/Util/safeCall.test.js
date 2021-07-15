@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import safeCall from './safeCall';
+import safeCall from '../../../src/Pride/Util/safeCall';
 
 describe('safeCall()', () => {
   describe("given something that isn't a function", () => {
