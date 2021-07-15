@@ -7,9 +7,11 @@ describe('escape()', () => {
     const dom = new JSDOM();
     global.document = dom.window.document;
   });
+
   it('encodes "&" properly', () => {
     expect(escape('&')).to.equal('&amp;');
   });
+
   it('encodes "<" properly', () => {
     expect(escape('<')).to.equal('&lt;');
   });

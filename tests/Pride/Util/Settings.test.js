@@ -9,11 +9,13 @@ describe('Settings', () => {
       });
     });
   });
+
   ['cache_size', 'message_formats'].forEach((property) => {
     describe(property, () => {
       it('returns an object', () => {
         expect(Settings[property]).to.be.an('object');
       });
+
       Object.keys(Settings[property]).forEach((key) => {
         describe(key, () => {
           it('returns a non-empty string', () => {
@@ -24,11 +26,13 @@ describe('Settings', () => {
       });
     });
   });
+
   describe('datastores_url', () => {
     it('returns a string', () => {
       expect(Settings.datastores_url).to.be.a('string');
     });
   });
+
   describe('obnoxious', () => {
     it('returns a boolean', () => {
       expect(Settings.obnoxious).to.be.a('boolean');

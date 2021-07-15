@@ -42,7 +42,7 @@ const FuncBuffer = function(extension) {
   };
 
   this.call = (name) => {
-    this.apply(name, slice(arguments, 1));
+    this.apply(name, slice([name], 1));
     return this;
   };
 

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Section from './Section';
+import Section from '../../../src/Pride/Util/Section';
 
 describe('Section', () => {
   beforeEach(function() {
