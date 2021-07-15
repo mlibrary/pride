@@ -1,32 +1,41 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true,
-        "node": true,
-        "mocha": true
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true,
+    "mocha": true
+  },
+  "extends": [
+    "standard"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {
+    "arrow-parens": ["error", "always"], // Requires () around arrow function arguments
+    "brace-style": ["error", "1tbs"], // Requires one true brace style
+    "multiline-comment-style": ["error", "starred-block"], // Enforces consistent multiline comments
+    "no-empty-function": "error", // Require an empty function to at least have a comment explaining why
+    "no-var": "error", // Discourages using `var` and recommends using `let` or `const` instead
+    "semi": ["error", "always"], // Requires a semicolon wherever necessary
+    "space-before-function-paren": ["error", "never"], // Remove requiring space before function paren
+    "spaced-comment": ["error", "always"] // Requires whitespace after starting a comment
+  },
+  "overrides": [
+    {
+      "files": ["*.test.js"],
+      "rules": {
+        "no-empty-function": "off",
+        "no-unused-expressions": "off"
+      }
     },
-    "extends": [
-        "standard"
-    ],
-    "parserOptions": {
-        "ecmaVersion": 12,
-        "sourceType": "module"
-    },
-    "rules": {
-        "arrow-parens": ["error", "always"], // Requires () around arrow function arguments
-        "brace-style": ["error", "1tbs"], // Requires one true brace style
-        "multiline-comment-style": ["error", "starred-block"], // Enforces consistent multiline comments
-        "no-empty-function": "error", // Require an empty function to at least have a comment explaining why
-        "no-var": "error", // Discourages using `var` and recommends using `let` or `const` instead
-        "semi": ["error", "always"], // Requires a semicolon wherever necessary
-        "space-before-function-paren": ["error", "never"], // Remove requiring space before function paren
-        "spaced-comment": ["error", "always"] // Requires whitespace after starting a comment
-    },
-    "overrides": [{
-        "files": ["*.test.js"],
-        "rules": {
-            "no-empty-function": "off",
-            "no-unused-expressions": "off"
-        }
-    }]
+    {
+      "files": ["./tests/mockRequests/*.test.js"],
+      "rules": {
+        "no-import-assign": "off",
+        "no-unused-vars": "off"
+      }
+    }
+  ]
 }

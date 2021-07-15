@@ -1,6 +1,5 @@
 import FuncBuffer from './Util/FuncBuffer';
 import log from './Core/log';
-import _ from 'underscore';
 /*
  * import Settings from './Settings';
  * import slice from './Util/slice';

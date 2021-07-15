@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import Messenger from '../../src/Pride/Messenger';
-import log from '../../src/Pride/Core/log';
 import Settings from '../../src/Pride/Settings';
 import slice from '../../src/Pride/Util/slice';
 
