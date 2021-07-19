@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import safeCall from '../../../src/Pride/Util/safeCall';
 
-describe('safeCall()', () => {
-  describe("given something that isn't a function", () => {
+describe('safeCall()', function() {
+  describe('given something that isn\'t a function', () => {
     it('returns the given object', () => {
       const object = {};
       expect(safeCall(object)).to.equal(object);
@@ -18,7 +18,7 @@ describe('safeCall()', () => {
   });
 
   describe('given additional arguments', () => {
-    before(function() {
+    before(() => {
       this.givenFirst = 'first!';
       this.givenSecond = 'not first!';
       this.returnedFirst = this.returnedSecond = null;
@@ -31,11 +31,11 @@ describe('safeCall()', () => {
       safeCall(example, this.givenFirst, this.givenSecond);
     });
 
-    it('passes given argument into the fuction', function() {
+    it('passes given argument into the fuction', () => {
       expect(this.returnedFirst).to.equal(this.givenFirst);
     });
 
-    it('can pass multiple arguments', function() {
+    it('can pass multiple arguments', () => {
       expect(this.returnedSecond).to.equal(this.givenSecond);
     });
   });

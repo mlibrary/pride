@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import deepClone from '../../../src/Pride/Util/deepClone';
 
-describe('deepClone()', () => {
+describe('deepClone()', function() {
   it('passes functions straight through', () => {
     const func = () => {};
     const cloned = deepClone(func);
@@ -29,18 +29,18 @@ describe('deepClone()', () => {
     const array = [1, 'two', null];
     const cloned = deepClone(array);
 
-    expect(cloned[0]).to.equal(array[0]);
-    expect(cloned[1]).to.equal(array[1]);
-    expect(cloned[2]).to.equal(array[2]);
+    array.forEach((element, index) => {
+      expect(cloned[index]).to.equal(element);
+    });
   });
 
   it('clones content of objects', () => {
     const object = { x: 1, y: 'two', z: null };
     const cloned = deepClone(object);
 
-    expect(cloned.x).to.equal(object.x);
-    expect(cloned.y).to.equal(object.y);
-    expect(cloned.z).to.equal(object.z);
+    Object.keys(object).forEach((key) => {
+      expect(cloned[key]).to.equal(object[key]);
+    });
   });
 
   it('clones nested content', () => {

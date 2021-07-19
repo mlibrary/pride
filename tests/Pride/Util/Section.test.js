@@ -1,37 +1,37 @@
 import { expect } from 'chai';
 import Section from '../../../src/Pride/Util/Section';
 
-describe('Section', () => {
-  beforeEach(function() {
+describe('Section', function() {
+  beforeEach(() => {
     this.start = 7;
     this.end = 10;
   });
 
   describe('initialized values are validated and corrected', () => {
     describe('with correct parameter order', () => {
-      beforeEach(function() {
+      beforeEach(() => {
         this.example = new Section(this.start, this.end);
       });
 
-      it('sets start at init', function() {
+      it('sets start at init', () => {
         expect(this.example.start).to.equal(this.start);
       });
 
-      it('sets end at init', function() {
+      it('sets end at init', () => {
         expect(this.example.end).to.equal(this.end);
       });
     });
 
     describe('with reversed parameter order', () => {
-      beforeEach(function() {
+      beforeEach(() => {
         this.example = new Section(this.end, this.start);
       });
 
-      it('always sets start to the smaller number', function() {
+      it('always sets start to the smaller number', () => {
         expect(this.example.start).to.equal(this.start);
       });
 
-      it('always sets end to the larger number', function() {
+      it('always sets end to the larger number', () => {
         expect(this.example.end).to.equal(this.end);
       });
     });
@@ -48,85 +48,85 @@ describe('Section', () => {
   });
 
   describe('inSection()', () => {
-    beforeEach(function() {
+    beforeEach(() => {
       this.start = 105;
       this.end = 200;
       this.inside = 157;
       this.example = new Section(this.start, this.end);
     });
 
-    it('returns true if the value is inside the section', function() {
+    it('returns true if the value is inside the section', () => {
       expect(this.example.inSection(this.inside)).to.be.true;
     });
 
-    it('returns true if the value is the start the section', function() {
+    it('returns true if the value is the start the section', () => {
       expect(this.example.inSection(this.start)).to.be.true;
     });
 
-    it('returns true if the value is the end the section', function() {
+    it('returns true if the value is the end the section', () => {
       expect(this.example.inSection(this.end)).to.be.true;
     });
 
-    it('returns false if the value is the past the end', function() {
+    it('returns false if the value is the past the end', () => {
       expect(this.example.inSection(this.end + 1)).to.be.false;
     });
 
-    it('returns false if the value is the before the start', function() {
+    it('returns false if the value is the before the start', () => {
       expect(this.example.inSection(this.start - 1)).to.be.false;
     });
   });
 
   describe('overlaps()', () => {
-    beforeEach(function() {
+    beforeEach(() => {
       this.start = 500;
       this.end = 600;
       this.example = new Section(this.start, this.end);
       this.inner_section = new Section(this.start + 3, this.end - 3);
     });
 
-    it('returns true if the two sections overlap by one at the end', function() {
+    it('returns true if the two sections overlap by one at the end', () => {
       expect(
         this.example.overlaps(new Section(this.end - 1, this.end + 4))
       ).to.be.true;
     });
 
-    it('returns true if the two sections overlap by more than one at the end', function() {
+    it('returns true if the two sections overlap by more than one at the end', () => {
       expect(
         this.example.overlaps(new Section(this.end - 4, this.end + 4))
       ).to.be.true;
     });
 
-    it('returns true if the two sections overlap by one at the start', function() {
+    it('returns true if the two sections overlap by one at the start', () => {
       expect(
         this.example.overlaps(new Section(this.start - 4, this.start + 1))
       ).to.be.true;
     });
 
-    it('returns true if the two sections overlap by more than one at the start', function() {
+    it('returns true if the two sections overlap by more than one at the start', () => {
       expect(
         this.example.overlaps(new Section(this.start - 4, this.start + 4))
       ).to.be.true;
     });
 
-    it('returns true if one section is inside of the other section', function() {
+    it('returns true if one section is inside of the other section', () => {
       expect(
         this.example.overlaps(this.inner_section)
       ).to.be.true;
     });
 
-    it('returns true if one section contains the other section', function() {
+    it('returns true if one section contains the other section', () => {
       expect(
         this.example.overlaps(this.inner_section)
       ).to.be.true;
     });
 
-    it('returns false if one section comes before the other section', function() {
+    it('returns false if one section comes before the other section', () => {
       expect(
         this.example.overlaps(new Section(this.start - 10, this.start - 15))
       ).to.be.false;
     });
 
-    it('returns false if one section comes after the other section', function() {
+    it('returns false if one section comes after the other section', () => {
       expect(
         this.example.overlaps(new Section(this.end + 20, this.end + 25))
       ).to.be.false;
@@ -144,7 +144,7 @@ describe('Section', () => {
   });
 
   describe('expanded()', () => {
-    beforeEach(function() {
+    beforeEach(() => {
       this.start = 6;
       this.end = 14;
       this.amount = 3;
@@ -152,21 +152,21 @@ describe('Section', () => {
       this.expanded = this.example.expanded(this.amount);
     });
 
-    it('returns a new object', function() {
+    it('returns a new object', () => {
       expect(this.example.expanded(this.amount)).not.to.equal(this.example);
     });
 
-    it('moves the start backwards', function() {
+    it('moves the start backwards', () => {
       expect(this.expanded.start).to.equal(this.start - this.amount);
     });
 
-    it('moves the end forwards', function() {
+    it('moves the end forwards', () => {
       expect(this.expanded.end).to.equal(this.end + this.amount);
     });
   });
 
   describe('shifted()', () => {
-    beforeEach(function() {
+    beforeEach(() => {
       this.start = 55;
       this.end = 978;
       this.amount = 11;
@@ -178,23 +178,23 @@ describe('Section', () => {
       this.shifted_separately = this.example.shifted(this.amount, this.another_amount);
     });
 
-    it('returns a new object', function() {
+    it('returns a new object', () => {
       expect(this.example.shifted(this.amount)).not.to.equal(this.example);
     });
 
-    it('given one number, moves the start forward by that amount', function() {
+    it('given one number, moves the start forward by that amount', () => {
       expect(this.shifted_together.start).to.equal(this.start + this.amount);
     });
 
-    it('given one number, moves the end forward by that amount', function() {
+    it('given one number, moves the end forward by that amount', () => {
       expect(this.shifted_together.end).to.equal(this.end + this.amount);
     });
 
-    it('can move the start seperatly from the end', function() {
+    it('can move the start seperatly from the end', () => {
       expect(this.shifted_separately.start).to.equal(this.start + this.amount);
     });
 
-    it('can move the end seperatly from the start', function() {
+    it('can move the end seperatly from the start', () => {
       expect(this.shifted_separately.end).to.equal(this.end + this.another_amount);
     });
   });

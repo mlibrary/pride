@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import Settings from '../../../src/Pride/Settings';
 
-describe('Settings', () => {
+describe('Settings', function() {
   ['default_cache_size', 'connection_attempts', 'init_attempts', 'ms_between_attempts'].forEach((property) => {
     describe(property, () => {
       it('returns a number', () => {

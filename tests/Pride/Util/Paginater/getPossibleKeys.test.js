@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import getPossibleKeys from '../../../../src/Pride/Util/Paginater/getPossibleKeys';
 
-describe('getPossibleKeys()', () => {
+describe('getPossibleKeys()', function() {
   it('returns an array', () => {
     expect(getPossibleKeys()).to.be.an('array');
   });

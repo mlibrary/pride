@@ -3,7 +3,7 @@ import Messenger from '../../src/Pride/Messenger';
 import Settings from '../../src/Pride/Settings';
 import slice from '../../src/Pride/Util/slice';
 
-describe('Messenger()', () => {
+describe('Messenger()', function() {
   beforeEach(() => {
     this.messengerExample = Messenger;
     this.message = { summary: 'summary' };

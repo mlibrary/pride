@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import isDeepMatch from '../../../src/Pride/Util/isDeepMatch';
 
-describe('isDeepMatch()', () => {
+describe('isDeepMatch()', function() {
   describe('returning false', () => {
     it('treats strings as not equal to numbers', () => {
       expect(isDeepMatch('7', 7)).to.be.false;
