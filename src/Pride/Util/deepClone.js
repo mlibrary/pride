@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 export default function deepClone(original) {
   if (_.isFunction(original)) {
@@ -14,9 +14,7 @@ export default function deepClone(original) {
   if (collectionFunction) {
     return _[collectionFunction](
       original,
-      (item) => {
-        return deepClone(item);
-      }
+      (item) => deepClone(item)
     );
   }
   return _.clone(original);

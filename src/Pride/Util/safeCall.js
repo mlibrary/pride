@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 import slice from './slice';
 
 export default function safeCall(maybeFunc) {

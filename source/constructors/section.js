@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 Pride.Util.Section = function(start, end) {
   this.start = Math.max(Math.min(start, end), 0);

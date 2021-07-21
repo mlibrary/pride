@@ -1,4 +1,4 @@
-import { _ } from 'underscore';
+import _ from 'underscore';
 import getPossibleKeys from './Paginater/getPossibleKeys';
 import hasKey from './Paginater/hasKey';
 
@@ -101,9 +101,7 @@ const Paginater = function(initialValues) {
     return this;
   };
 
-  this.get = (name) => {
-    return values[name];
-  };
+  this.get = (name) => values[name];
 
   // Set the initial values.
   const values = {};

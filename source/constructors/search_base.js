@@ -3,7 +3,7 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-import { _ } from 'underscore';
+import _ from 'underscore';
 
 Pride.Core.SearchBase = function(setup, parent) {
   this.datastore = setup.datastore;
