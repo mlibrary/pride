@@ -4,10 +4,8 @@ import _ from 'underscore';
 import request from '../../../src/Pride/Util/request';
 import log from '../../../src/Pride/Core/log';
 import Settings from '../../../src/Pride/Settings';
-/*
- * import mockRequestFailure from '../../mockRequests/mockRequestFailure.test';
- * import mockRequestSuccess from '../../mockRequests/mockRequestSuccess.test';
- */
+import safeCall from '../../../src/Pride/Util/safeCall';
+// import Messenger from '../../../src/Pride/Messenger';
 
 describe.only('request()', function() {
   beforeEach(() => {
@@ -44,14 +42,16 @@ describe.only('request()', function() {
 
         error: (error) => {
           if (requestInfo.attempts <= 0) {
-            log('Request', 'ERROR', error);
+            // log('Request', 'ERROR', error);
 
             safeCall(requestInfo.failure, error);
 
-            Messenger.sendMessage({
-              summary: requestInfo.failure_message,
-              class: 'error'
-            });
+            /*
+             * Messenger.sendMessage({
+             *   summary: requestInfo.failure_message,
+             *   class: 'error'
+             * });
+             */
           } else {
             log('Request', 'Trying request again...');
             window.setTimeout(
@@ -62,16 +62,18 @@ describe.only('request()', function() {
         },
 
         success: (response) => {
-          log('Request', 'SUCCESS', response);
+          // log('Request', 'SUCCESS', response);
 
           safeCall(requestInfo.success, response);
 
-          Messenger.sendMessage({
-            summary: requestInfo.success_message,
-            class: 'success'
-          });
+          /*
+           * Messenger.sendMessage({
+           *   summary: requestInfo.success_message,
+           *   class: 'success'
+           * });
+           */
 
-          Messenger.sendMessageArray(response.messages);
+          // Messenger.sendMessageArray(response.messages);
         }
       };
     };
@@ -127,6 +129,11 @@ describe.only('request()', function() {
         expect(this.requestExample(this.requestInfo)[property]).to.be.a('string');
       });
     });
+    it('expects `withCredentials` to be true', () => {
+      expect(this.requestExample(this.requestInfo).withCredentials)
+        .to.be.a('boolean')
+        .and.to.be.true;
+    });
     describe('JSON type', () => {
       it('expects contentType to be application/json', () => {
         expect(this.requestExample(this.requestInfo).contentType).to.equal('application/json');
@@ -136,7 +143,7 @@ describe.only('request()', function() {
         const jsonString = this.requestExample(this.requestInfo).data;
         expect(jsonString)
           .to.be.a('string')
-          .and.to.deep.equal(JSON.stringify(this.requestInfo.query));
+          .and.to.equal(JSON.stringify(this.requestInfo.query));
         expect(JSON.parse(jsonString))
           .to.be.an('object')
           .and.to.deep.equal(this.requestInfo.query);
