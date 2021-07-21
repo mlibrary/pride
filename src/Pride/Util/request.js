@@ -6,19 +6,16 @@ import safeCall from './safeCall';
 import Settings from '../Settings';
 
 export default function request(requestInfo) {
+  if (!requestInfo.url) throw new Error('No URL given to request()');
+
   log('Request', 'Sending HTTP request...');
   log('Request', 'URL', requestInfo.url);
   log('Request', 'CONTENT', JSON.stringify(requestInfo.query));
 
-  if (!requestInfo.url) throw new Error('No URL given to request()');
-
   let requestMethod = 'get';
   if (requestInfo.query) requestMethod = 'post';
 
-  if (!_.isNumber(requestInfo.attempts)) {
-    requestInfo.attempts = Settings.connection_attempts;
-  }
-
+  if (!_.isNumber(requestInfo.attempts)) requestInfo.attempts = Settings.connection_attempts;
   requestInfo.attempts -= 1;
 
   reqwest({

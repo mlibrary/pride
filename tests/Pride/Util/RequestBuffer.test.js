@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import RequestBuffer from './RequestBuffer';
+import RequestBuffer from '../../../src/Pride/Util/RequestBuffer';
 
-describe('RequestBuffer()', () => {
+describe('RequestBuffer()', function() {
   beforeEach(() => {
     this.requestBuffer = new RequestBuffer();
   });
