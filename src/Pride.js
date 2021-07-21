@@ -1,6 +1,7 @@
 'use strict';
 
 import AllDatastores from './Pride/AllDatastores.js';
+import init from './Pride/init.js';
 import Messenger from './Pride/Messenger.js';
 import PreferenceEngine from './Pride/PreferenceEngine.js';
 import requestRecord from './Pride/requestRecord.js';
@@ -12,6 +13,7 @@ import Util from './Pride/Util.js';
 import Paginater from './Pride/Util/Paginater';
 
 const Pride = {
+  init: (requestOptions) => init(requestOptions),
   requestRecord: (source, id, func) => requestRecord(source, id, func)
 };
 
