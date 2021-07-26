@@ -10,7 +10,6 @@ import Settings from './Pride/Settings.js';
 import Core from './Pride/Core';
 
 import Util from './Pride/Util.js';
-import Paginater from './Pride/Util/Paginater';
 
 const Pride = {
   init: (requestOptions) => init(requestOptions),
@@ -25,6 +24,5 @@ Object.defineProperty(Pride, 'Settings', { value: Settings });
 Object.defineProperty(Pride, 'Core', { value: Core });
 
 Object.defineProperty(Pride, 'Util', { value: Util });
-Object.defineProperty(Pride.Util, 'Paginater', { value: Paginater });
 
 export default Pride;
