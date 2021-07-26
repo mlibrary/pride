@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import Core from './Core';
+import Core from '../../src/Pride/Core';
 
-describe('Core()', () => {
+describe('Core()', function() {
   it('works', () => {
     expect(Core).to.not.be.null;
   });

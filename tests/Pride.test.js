@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import Pride from './Pride';
+import Pride from '../src/Pride';
 
-describe('Pride()', () => {
+describe('Pride()', function() {
   it('works', () => {
     expect(Pride).to.not.be.null;
   });

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import Util from './Util';
+import Util from '../../src/Pride/Util';
 
-describe('Util()', () => {
+describe('Util()', function() {
   it('works', () => {
     expect(Util).to.not.be.null;
   });
