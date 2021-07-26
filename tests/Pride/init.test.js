@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import init from './init';
+import init from '../../src/Pride/init';
 
 describe('init()', function() {
   it('works', () => {
