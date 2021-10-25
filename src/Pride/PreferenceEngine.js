@@ -30,10 +30,8 @@ const PreferenceEngine = {
     if (!engine) {
       return this;
     }
-
     this.updateSelectedRecords(this.engine.listRecords());
     this.updateFavoritedRecords(this.engine.favoritesList.last);
-
     this.engine.addFavoritesListObserver((function(preferenceEngine) {
       return function(data) {
         preferenceEngine.updateFavoritedRecords(data);

@@ -7,7 +7,7 @@ import Settings from '../../../src/Pride/Settings';
 import safeCall from '../../../src/Pride/Util/safeCall';
 // import Messenger from '../../../src/Pride/Messenger';
 
-describe.only('request()', function() {
+describe('request()', function() {
   beforeEach(() => {
     const dom = new JSDOM();
     global.window = dom.window;

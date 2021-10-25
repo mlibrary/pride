@@ -34,7 +34,7 @@ describe('Messenger()', function() {
     });
 
     it('must have `message.summary` defined', () => {
-      expect(() => this.messengerExample.sendMessage()).to.throw('Cannot read property \'summary\' of undefined');
+      expect(() => this.messengerExample.sendMessage()).to.throw('Cannot read properties of undefined (reading \'summary\')');
     });
 
     it('assigns `message.class` as `info` if not defined', () => {

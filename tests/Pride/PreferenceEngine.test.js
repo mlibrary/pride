@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import PreferenceEngine from './PreferenceEngine';
+import PreferenceEngine from '../../src/Pride/PreferenceEngine';
 
 const example = (object) => {
   const preferenceEngine = { ...PreferenceEngine };
@@ -14,28 +14,15 @@ const example = (object) => {
   return preferenceEngine;
 };
 
-describe('PreferenceEngine()', () => {
+describe('PreferenceEngine()', function() {
   it('works', () => {
     expect(PreferenceEngine).to.not.be.null;
   });
-  describe('favoritedRecords', () => {
-    it('is null by default', () => {
-      expect(PreferenceEngine.favoritedRecords).to.be.null;
-    });
-  });
-  describe('favoritedRecordsTags', () => {
-    it('is null by default', () => {
-      expect(PreferenceEngine.favoritedRecordsTags).to.be.null;
-    });
-  });
-  describe('selectedRecords', () => {
-    it('is null by default', () => {
-      expect(PreferenceEngine.selectedRecords).to.be.null;
-    });
-  });
-  describe('engine', () => {
-    it('is null by default', () => {
-      expect(PreferenceEngine.engine).to.be.null;
+  ['favoritedRecords', 'favoritedRecordsTags', 'selectedRecords', 'engine'].forEach((property) => {
+    describe(`${property}`, () => {
+      it('is null by default', () => {
+        expect(PreferenceEngine[property]).to.be.null;
+      });
     });
   });
   describe('favorited()', () => {
@@ -83,13 +70,17 @@ describe('PreferenceEngine()', () => {
       expect(() => PreferenceEngine.registerEngine({})).to.throw('this.engine.listRecords is not a function');
     });
     it('requires `this.engine.favoritesList.last` for `this.updateFavoritedRecords()` to be called', () => {
-      expect(() => PreferenceEngine.registerEngine({ listRecords: () => [] })).to.throw("Cannot read property 'last' of undefined");
+      expect(() => PreferenceEngine.registerEngine({ listRecords: () => [] })).to.throw('Cannot read properties of undefined (reading \'last\')');
     });
     it('calls `this.engine.addFavoritesListObserver()`', () => {
       expect(() => PreferenceEngine.registerEngine({ listRecords: () => [], favoritesList: [] })).to.throw('this.engine.addFavoritesListObserver is not a function');
     });
     it('calls `this.engine.addObserver()`', () => {
       expect(() => PreferenceEngine.registerEngine({ listRecords: () => [], favoritesList: [], addFavoritesListObserver: () => {} })).to.throw('this.engine.addObserver is not a function');
+    });
+    it('returns itself', () => {
+      const self = PreferenceEngine;
+      expect(PreferenceEngine.registerEngine({ listRecords: () => [], favoritesList: [], addFavoritesListObserver: () => {}, addObserver: () => {} })).to.equal(self);
     });
   });
   describe('blankList()', () => {
@@ -117,7 +108,6 @@ describe('PreferenceEngine()', () => {
         journals: { 101952588: true },
         website: {}
       };
-      this.id = 1234567890;
       this.preferenceEngineExample.updateFavoritedRecords([{
         tags: ['tag', 'articles-favorite', 'another tag'],
         id: [`http://www.lib.umich.edu/articles/details/${this.id}`]
