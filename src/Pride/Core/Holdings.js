@@ -5,10 +5,7 @@ const Holdings = function(data) {
 
   const getResourceAccess = function(data) {
     const dataField = data.fields.find((field) => field.uid === 'resource_access');
-    if (dataField && dataField.value) {
-      return dataField.value;
-    }
-    return dataField;
+    return dataField ? dataField.value : undefined;
   };
 
   const translateData = function(input) {

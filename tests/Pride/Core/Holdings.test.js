@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import Holdings from './Holdings';
+import Holdings from '../../../src/Pride/Core/Holdings';
 
-describe('Holdings()', () => {
+describe('Holdings()', function() {
   beforeEach(() => {
     this.data = {
       fields: [
@@ -33,13 +33,10 @@ describe('Holdings()', () => {
         }
       ]
     };
-    this.holdingsExample = new Holdings();
+    this.holdingsExample = new Holdings(this.data);
     this.getResourceAccessExample = function(data) {
       const dataField = data.fields.find((field) => field.uid === 'resource_access');
-      if (dataField && dataField.value) {
-        return dataField.value;
-      }
-      return dataField;
+      return dataField ? dataField.value : undefined;
     };
     this.translateDataExample = function(input) {
       return [this.getResourceAccessExample(this.data)].concat(input);
@@ -50,7 +47,7 @@ describe('Holdings()', () => {
   });
   describe('getResourceAccess()', () => {
     it('requires `data.fields` for getResourceAccess() to be called', () => {
-      expect(() => this.getResourceAccessExample()).to.throw("Cannot read property 'fields' of undefined");
+      expect(() => this.getResourceAccessExample()).to.throw('Cannot read properties of undefined (reading \'fields\')');
     });
     it('returns undefined if there is no `uid` equalling `resource_access`', () => {
       expect(this.getResourceAccessExample({ fields: [] })).to.be.undefined;
@@ -78,7 +75,6 @@ describe('Holdings()', () => {
       expect(this.holdingsExample.getData).to.be.a('function');
     });
     it('runs safeCall()', () => {
-      this.holdingsExample = new Holdings(this.data);
       let example;
       const func = (args) => {
         example = args;
