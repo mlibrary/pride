@@ -5,9 +5,25 @@ describe('AllDatastores()', function() {
   beforeEach(() => {
     this.allDatastoresExample = { ...AllDatastores };
     this.allDatastoresExample.array = [
-      { uid: 'test1' },
-      { uid: 'test2' },
-      { uid: 'test3' }
+      {
+        uid: 'test0',
+        get: function() {
+          return this.uid;
+        }
+      },
+      {
+        uid: 'test1',
+        get: function() {
+          return this.uid;
+        }
+      },
+      {
+        uid: 'test2',
+        get: function() {
+          return this.uid;
+        },
+        baseSearch: () => 'baseSearch results'
+      }
     ];
   });
   it('works', () => {
@@ -28,10 +44,24 @@ describe('AllDatastores()', function() {
     it('returns a function', () => {
       expect(this.allDatastoresExample.get).to.be.a('function');
     });
+    it('finds and returns the first instance where the argument equals the `uid` value', () => {
+      const arrayIndex = 1;
+      expect(this.allDatastoresExample.get(`test${arrayIndex}`)).to.equal(this.allDatastoresExample.array[arrayIndex]);
+    });
   });
   describe('newSearch()', () => {
     it('returns a function', () => {
       expect(this.allDatastoresExample.newSearch).to.be.a('function');
+    });
+    it('returns `undefined` if nothing found', () => {
+      expect(this.allDatastoresExample.newSearch('test')).to.be.undefined;
+    });
+    it('requires `baseSearch()` to exist', () => {
+      expect(() => this.allDatastoresExample.newSearch('test1')).to.throw('datastore.baseSearch is not a function');
+    });
+    it('returns the `baseSearch()` of the found datastore', () => {
+      const arrayIndex = 2;
+      expect(this.allDatastoresExample.newSearch(`test${arrayIndex}`)).to.equal(this.allDatastoresExample.array[arrayIndex].baseSearch());
     });
   });
   describe('each()', () => {

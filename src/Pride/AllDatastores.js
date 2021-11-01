@@ -11,10 +11,7 @@ const AllDatastores = {
   },
 
   newSearch: function(uid) {
-    const datastore = _.find(
-      this.array,
-      (datastore) => datastore.get('uid') === uid
-    );
+    const datastore = this.get(uid);
     return datastore ? datastore.baseSearch() : undefined;
   },
 
