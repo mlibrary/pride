@@ -44,6 +44,10 @@ describe('AllDatastores()', function() {
     it('returns a function', () => {
       expect(this.allDatastoresExample.get).to.be.a('function');
     });
+    it('requires `datastore.get()` to exist', () => {
+      this.allDatastoresExample.array = [{ uid: 'test' }];
+      expect(() => this.allDatastoresExample.get('test')).to.throw('datastore.get is not a function');
+    });
     it('finds and returns the first instance where the argument equals the `uid` value', () => {
       const arrayIndex = 1;
       expect(this.allDatastoresExample.get(`test${arrayIndex}`)).to.equal(this.allDatastoresExample.array[arrayIndex]);
@@ -56,7 +60,7 @@ describe('AllDatastores()', function() {
     it('returns `undefined` if nothing found', () => {
       expect(this.allDatastoresExample.newSearch('test')).to.be.undefined;
     });
-    it('requires `baseSearch()` to exist', () => {
+    it('requires `datastore.baseSearch()` to exist', () => {
       expect(() => this.allDatastoresExample.newSearch('test1')).to.throw('datastore.baseSearch is not a function');
     });
     it('returns the `baseSearch()` of the found datastore', () => {
