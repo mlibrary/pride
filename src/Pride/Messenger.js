@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import FuncBuffer from './Util/FuncBuffer';
 import log from './Core/log';
 /*
@@ -27,7 +28,10 @@ const Messenger = new FuncBuffer(function() {
   };
 
   this.sendMessageArray = function(messageArray) {
-    messageArray.forEach((message) => this.sendMessage(message));
+    _.each(
+      messageArray,
+      (message) => this.sendMessage(message)
+    );
 
     return this;
   };

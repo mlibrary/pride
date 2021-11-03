@@ -12,9 +12,6 @@ export default function request(requestInfo) {
   log('Request', 'URL', requestInfo.url);
   log('Request', 'CONTENT', JSON.stringify(requestInfo.query));
 
-  let requestMethod = 'get';
-  if (requestInfo.query) requestMethod = 'post';
-
   if (!_.isNumber(requestInfo.attempts)) requestInfo.attempts = Settings.connection_attempts;
   requestInfo.attempts -= 1;
 
@@ -22,7 +19,7 @@ export default function request(requestInfo) {
     url: requestInfo.url,
     data: JSON.stringify(requestInfo.query),
     type: 'json',
-    method: requestMethod,
+    method: requestInfo.query ? 'post' : 'get',
     contentType: 'application/json',
     withCredentials: true,
 
