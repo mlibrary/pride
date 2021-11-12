@@ -7,16 +7,18 @@ import Settings from '../../../src/Pride/Settings';
 import safeCall from '../../../src/Pride/Util/safeCall';
 // import Messenger from '../../../src/Pride/Messenger';
 
-describe('request()', function() {
+describe.only('request()', function() {
   beforeEach(() => {
     const dom = new JSDOM();
     global.window = dom.window;
 
     this.requestInfo = {
       url: 'https://lib.umich.edu',
-      type: 'json',
-      contentType: 'application/json',
-      withCredentials: true
+      query: { foo: 'bar' }
+    };
+
+    this.test = function(args) {
+      return args;
     };
 
     this.requestExample = function(requestInfo) {
@@ -29,14 +31,11 @@ describe('request()', function() {
       if (!_.isNumber(requestInfo.attempts)) requestInfo.attempts = Settings.connection_attempts;
       requestInfo.attempts -= 1;
 
-      let requestMethod = 'get';
-      if (requestInfo.query) requestMethod = 'post';
-
       return {
         url: requestInfo.url,
         data: JSON.stringify(requestInfo.query),
         type: 'json',
-        method: requestMethod,
+        method: requestInfo.query ? 'post' : 'get',
         contentType: 'application/json',
         withCredentials: true,
 
@@ -44,7 +43,7 @@ describe('request()', function() {
           if (requestInfo.attempts <= 0) {
             // log('Request', 'ERROR', error);
 
-            safeCall(requestInfo.failure, error);
+            safeCall(this.test, error);
 
             /*
              * Messenger.sendMessage({
@@ -77,37 +76,19 @@ describe('request()', function() {
         }
       };
     };
-
-    this.requestExample(this.requestInfo);
   });
 
   it('works', () => {
-    expect(request).to.not.be.null;
+    expect(this.requestExample).to.not.be.null;
   });
 
   it('is a function', () => {
-    expect(request).to.be.a('function');
-  });
-
-  describe('url', () => {
-    it('requires the argument to have a defined `url` property', () => {
-      expect(() => request()).to.throw();
-    });
-  });
-
-  describe('method', () => {
-    it('defaults the method to \'get\'', () => {
-      expect(this.requestExample(this.requestInfo).method).to.equal('get');
-    });
-
-    it('changes the method to \'post\' if query exists', () => {
-      this.requestInfo.query = true;
-      expect(this.requestExample(this.requestInfo).method).to.equal('post');
-    });
+    expect(this.requestExample).to.be.a('function');
   });
 
   describe('attempts', () => {
     it('sets attempts to `Settings.connection_attempts` if `requestInfo.attempts` is not a number', () => {
+      this.requestExample(this.requestInfo);
       expect(this.requestInfo.attempts).to.equal(Settings.connection_attempts - 1);
     });
 
@@ -120,34 +101,79 @@ describe('request()', function() {
     });
   });
 
-  describe('reqwest', () => {
-    beforeEach(() => {
-      this.requestInfo.query = { some: 'data' };
+  describe('url', () => {
+    it('requires the argument to have a defined `url` property', () => {
+      expect(() => this.requestExample({})).to.throw('No URL given to request()');
     });
-    ['url', 'data', 'type', 'method', 'contentType'].forEach((property) => {
-      it(`\`${property}\` returns a string`, () => {
-        expect(this.requestExample(this.requestInfo)[property]).to.be.a('string');
-      });
-    });
-    it('expects `withCredentials` to be true', () => {
-      expect(this.requestExample(this.requestInfo).withCredentials)
-        .to.be.a('boolean')
-        .and.to.be.true;
-    });
-    describe('JSON type', () => {
-      it('expects contentType to be application/json', () => {
-        expect(this.requestExample(this.requestInfo).contentType).to.equal('application/json');
-      });
-
-      it('gives a valid JSON encoded string', () => {
-        const jsonString = this.requestExample(this.requestInfo).data;
-        expect(jsonString)
-          .to.be.a('string')
-          .and.to.equal(JSON.stringify(this.requestInfo.query));
-        expect(JSON.parse(jsonString))
-          .to.be.an('object')
-          .and.to.deep.equal(this.requestInfo.query);
-      });
+    it('is a string', () => {
+      expect(this.requestExample(this.requestInfo).url).to.be.a('string');
     });
   });
+
+  describe('data', () => {
+    it('is a string', () => {
+      expect(this.requestExample(this.requestInfo).data).to.be.a('string');
+    });
+    it('stringifies the query', () => {
+      expect(this.requestExample(this.requestInfo).data).to.equal(JSON.stringify(this.requestInfo.query));
+    });
+  });
+
+  describe('type', () => {
+    it('is a string', () => {
+      expect(this.requestExample(this.requestInfo).type).to.be.a('string');
+    });
+    it('returns \'json\'', () => {
+      expect(this.requestExample(this.requestInfo).type).to.equal('json');
+    });
+  });
+
+  describe('method', () => {
+    it('is a string', () => {
+      expect(this.requestExample(this.requestInfo).method).to.be.a('string');
+    });
+    it('returns \'post\' if `requestInfo.query` exists', () => {
+      expect(this.requestExample(this.requestInfo).method).to.be.equal('post');
+    });
+    it('defaults to \'get\' if `requestInfo.query` does not exist', () => {
+      this.requestInfo.query = false;
+      expect(this.requestExample(this.requestInfo).method).to.be.equal('get');
+    });
+  });
+
+  describe('contentType', () => {
+    it('is a string', () => {
+      expect(this.requestExample(this.requestInfo).contentType).to.be.a('string');
+    });
+    it('returns \'application/json\'', () => {
+      expect(this.requestExample(this.requestInfo).contentType).to.equal('application/json');
+    });
+  });
+
+  describe('withCredentials', () => {
+    it('is a boolean', () => {
+      expect(this.requestExample(this.requestInfo).withCredentials).to.be.a('boolean');
+    });
+    it('returns \'application/json\'', () => {
+      expect(this.requestExample(this.requestInfo).withCredentials).to.be.true;
+    });
+  });
+
+  /**
+   *describe('error', () => {
+   *  it('does a thing, if requestInfo.attempts <= 0', () => {
+   *    console.log(this.requestExample(this.requestInfo).error);
+   *  });
+   *  it('does a thing, if requestInfo.attempts > 0', () => {
+   *    console.log(this.requestExample(this.requestInfo).error);
+   *  });
+   *});
+   */
+  /**
+   *describe('success', () => {
+   *  it('does a thing', () => {
+   *    console.log(this.requestExample(this.requestInfo).success);
+   *  });
+   *});
+   */
 });
