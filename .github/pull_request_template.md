@@ -25,15 +25,6 @@ _Optional_. If appropriate, provide additional notes the reviewers should be mad
 ## Testing
 List instructions on how to test the pull request. Some examples:
 
-- Run the tests to make sure they pass (`docker-compose run --rm web bundle exec rspec`).
-  - Break the new/updated unit tests to make sure they're working properly.
-- Make sure the PR is consistent in these browsers:
-  - [x] Chrome
-  - [x] Firefox
-  - [x] Safari
-  - [ ] Edge (the assignee was not able to test the pull request in this browser)
-- Run accessibility tests:
-  - [x] WAVE
-  - [x] ARC Toolkit
-  - [x] axe DevTools
+- Build the repository (`npm run build`).
+- Make sure the PR is consistent in repositories that use `pride`.
 - _How to use the feature_.

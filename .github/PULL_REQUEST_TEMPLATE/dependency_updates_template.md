@@ -22,5 +22,5 @@ These dependencies have been updated to their latest versions:
 
 ## Testing
 - Install the updated packages (`npm install`).
-- Make a change, and build the repository (`docker-compose run --rm web npm run build`).
+- Make a change, and build the repository (`npm run build`).
 - Make sure the PR is consistent in repositories that use `pride`.
