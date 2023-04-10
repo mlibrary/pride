@@ -1,5 +1,5 @@
 # Overview
-Monthly dependency update to help maintain the repository.
+Monthly dependency update to help maintain Pride.
 
 ## NPM
 These dependencies have been updated to their latest versions:
