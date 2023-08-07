@@ -15,7 +15,7 @@
     "xhr2": "^0.2.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.6",
+    "@babel/core": "^7.22.9",
     "babel-preset-env": "^1.7.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
@@ -25,5 +25,9 @@
     "gulp-replace": "^1.1.4",
     "gulp-uglify": "^3.0.2",
     "jshint": "^2.13.6"
+  },
+  "overrides": {
+    "chokidar": "^3.5.3",
+    "glob-parent": "^6.0.2"
   }
 }
