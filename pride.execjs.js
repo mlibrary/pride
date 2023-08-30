@@ -1073,11 +1073,6 @@ Pride.Core.Record = function(data) {
       new_data.status = 404;
     }
 
-    if (Pride.PreferenceEngine.favorited(new_data)) {
-      new_data.favorited = true;
-      new_data.favorite_tags = Pride.PreferenceEngine.favoriteTags(new_data);
-    }
-
     if (Pride.PreferenceEngine.selected(new_data)) {
       new_data.selected = true;
     }
@@ -2887,30 +2882,14 @@ Pride.Parser =
   };
 })()
 Pride.PreferenceEngine = {
-  favoritedRecords: null,
-  favoritedRecordsTags: null,
   selectedRecords: null,
   engine: null,
-
-  favorited: function (record) {
-    if (!this.engine) {
-      return false;
-    }
-    return (this.favoritedRecords[record.datastore] || {})[record.uid];
-  },
 
   selected: function (record) {
     if (!this.engine) {
       return false;
     }
     return (this.selectedRecords[record.datastore] || {})[record.uid];
-  },
-
-  favoriteTags: function (record) {
-    if (!this.engine) {
-      return [];
-    }
-    return (this.favoritedRecordsTags[record.datastore] || {})[record.uid] || [];
   },
 
   registerEngine: function (engine) {
@@ -2920,13 +2899,7 @@ Pride.PreferenceEngine = {
     }
 
     this.updateSelectedRecords(this.engine.listRecords());
-    this.updateFavoritedRecords(this.engine.favoritesList.last);
 
-    this.engine.addFavoritesListObserver((function (preferenceEngine) {
-      return function (data) {
-        preferenceEngine.updateFavoritedRecords(data);
-      };
-    })(this));
     this.engine.addObserver((function (preferenceEngine) {
       return function (data) {
         preferenceEngine.updateSelectedRecords(data);
@@ -2943,47 +2916,6 @@ Pride.PreferenceEngine = {
       journals: {},
       website: {}
     };
-  },
-
-  updateFavoritedRecords: function (data) {
-    this.favoritedRecords = this.favoritedRecords || this.blankList();
-    this.favoritedRecordsTags = this.favoritedRecordsTags || this.blankList();
-    if (!data || data.length < 1 || !data.forEach) {
-      this.favoritedRecords = this.blankList();
-      this.favoritedRecordsTags = this.blankList();
-      return this;
-    }
-    data.forEach(function (record) {
-      var remove, id, datastore, tags;
-      if ((remove = record.tags.indexOf('mirlyn-favorite')) >= 0) {
-        id = record.id[0].split('/')[4];
-        datastore = 'mirlyn';
-      }
-      else if ((remove = record.tags.indexOf('articles-favorite')) >= 0) {
-        id = record.id[0].split('/')[5];
-        datastore = 'articlesplus';
-      }
-      else if ((remove = record.tags.indexOf('databases-favorite')) >= 0) {
-        id = record.id[0].split('/')[4];
-        datastore = 'databases';
-      }
-      else if ((remove = record.tags.indexOf('journals-favorite')) >= 0) {
-        id = record.id[0].split('/')[4];
-        datastore = 'journals';
-      }
-      else if ((remove = record.tags.indexOf('website-favorite')) >= 0) {
-        id = record.id[0];
-        datastore = 'website';
-      }
-      else {
-        return this;
-      }
-      tags = record.tags.slice(0, remove)
-        .concat(record.tags.slice(remove + 1, record.tags.length));
-      this.favoritedRecords[datastore][id] = true;
-      this.favoritedRecordsTags[datastore][id] = tags;
-    }, this);
-    return this;
   },
 
   updateSelectedRecords: function (data) {
