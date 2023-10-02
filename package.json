@@ -4,6 +4,10 @@
   "main": "pride.js",
   "scripts": {
     "build": "gulp",
+    "build:esbuild": "npm run concat:node && npx esbuild out/output.js --bundle --outfile=out.js",
+    "build:test": "npx esbuild pride.js --bundle --outfile=pridetest.js",
+    "concat": "cat 'source/initial_setup.js' 'source/settings.js' 'source/constructors/**/*.js' 'source/functions/**/*.js' 'source/singletons/**/*.js' > 'allz.js'",
+    "concat:node": "node esbuild",
     "gulp": "gulp"
   },
   "dependencies": {
@@ -15,9 +19,9 @@
     "xhr2": "^0.2.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.15",
+    "@babel/core": "^7.23.0",
     "babel-preset-env": "^1.7.0",
-    "esbuild": "^0.19.3",
+    "esbuild": "^0.19.4",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.6.1",
