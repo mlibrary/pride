@@ -4,10 +4,10 @@
   "main": "pride.js",
   "scripts": {
     "build": "gulp",
-    "build:esbuild": "npm run concat:node && npx esbuild out/output.js --bundle --outfile=out.js",
-    "build:test": "npx esbuild pride.js --bundle --outfile=pridetest.js",
-    "concat": "cat 'source/initial_setup.js' 'source/settings.js' 'source/constructors/**/*.js' 'source/functions/**/*.js' 'source/singletons/**/*.js' > 'allz.js'",
-    "concat:node": "node esbuild",
+    "esbuild": "npm run esbuild:regular && npm run esbuild:minify && npm run esbuild:exec",
+    "esbuild:exec": "BUNDLE=exec node concat.js && npx esbuild output-exec.js --bundle --format=cjs --outfile=pride.execjs.js",
+    "esbuild:minify": "node concat.js && npx esbuild output.js --bundle --format=cjs --outfile=pride.min.js --minify --analyze",
+    "esbuild:regular": "node concat.js && npx esbuild output.js --bundle --format=cjs --outfile=pride.js",
     "gulp": "gulp"
   },
   "dependencies": {
