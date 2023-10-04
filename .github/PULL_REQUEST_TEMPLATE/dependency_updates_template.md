@@ -3,22 +3,11 @@ Monthly dependency update to help maintain Pride.
 
 ## NPM
 These dependencies have been updated to their latest versions:
-- `@babel/core`
-- `babel-preset-env`
-- `gulp`
-- `gulp-babel`
-- `gulp-clean`
-- `gulp-concat`
-- `gulp-jshint`
-- `gulp-pegjs`
-- `gulp-rename`
-- `gulp-replace`
-- `gulp-uglify`
-- `jshint`
+- `esbuild`
+- `glob`
 - `pegjs`
 - `reqwest`
 - `underscore`
-- `xhr2`
 
 ## Testing
 - Install the updated packages (`npm install`).
