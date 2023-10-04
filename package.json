@@ -3,14 +3,15 @@
   "version": "0.0.1",
   "main": "pride.js",
   "scripts": {
-    "build": "npm run esbuild",
-    "esbuild": "npm run esbuild:regular && npm run esbuild:minify && npm run esbuild:exec",
-    "esbuild:exec": "BUNDLE=exec node concat.js && npx esbuild output-exec.js --bundle --format=cjs --outfile=pride.execjs.js",
-    "esbuild:minify": "node concat.js && npx esbuild output.js --bundle --format=cjs --outfile=pride.min.js --minify --analyze",
-    "esbuild:regular": "node concat.js && npx esbuild output.js --bundle --format=cjs --outfile=pride.js"
+    "build": "node concat.js && npm run esbuild:regular && npm run esbuild:minify && BUNDLE=exec node concat.js && npm run esbuild:exec",
+    "esbuild": "npx esbuild $1 --bundle --format=cjs $*",
+    "esbuild:exec": "npm run esbuild output-exec.js -- --outfile=pride.execjs.js",
+    "esbuild:minify": "npm run esbuild output.js -- --outfile=pride.min.js --minify --analyze",
+    "esbuild:regular": "npm run esbuild output.js -- --outfile=pride.js"
   },
   "dependencies": {
     "esbuild": "^0.19.4",
+    "glob": "^10.3.10",
     "pegjs": "^0.10.0",
     "reqwest": "^2.0.5",
     "underscore": "^1.13.6"

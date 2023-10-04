@@ -1,17 +1,1873 @@
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
+var __defProp = Object.defineProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
 
-// Authored by Colin Fulton (fultonis@umich.edu)
+// node_modules/underscore/modules/index.js
+var modules_exports = {};
+__export(modules_exports, {
+  VERSION: () => VERSION,
+  after: () => after,
+  all: () => every,
+  allKeys: () => allKeys,
+  any: () => some,
+  assign: () => extendOwn_default,
+  before: () => before,
+  bind: () => bind_default,
+  bindAll: () => bindAll_default,
+  chain: () => chain,
+  chunk: () => chunk,
+  clone: () => clone,
+  collect: () => map,
+  compact: () => compact,
+  compose: () => compose,
+  constant: () => constant,
+  contains: () => contains,
+  countBy: () => countBy_default,
+  create: () => create,
+  debounce: () => debounce,
+  default: () => underscore_array_methods_default,
+  defaults: () => defaults_default,
+  defer: () => defer_default,
+  delay: () => delay_default,
+  detect: () => find,
+  difference: () => difference_default,
+  drop: () => rest,
+  each: () => each,
+  escape: () => escape_default,
+  every: () => every,
+  extend: () => extend_default,
+  extendOwn: () => extendOwn_default,
+  filter: () => filter,
+  find: () => find,
+  findIndex: () => findIndex_default,
+  findKey: () => findKey,
+  findLastIndex: () => findLastIndex_default,
+  findWhere: () => findWhere,
+  first: () => first,
+  flatten: () => flatten2,
+  foldl: () => reduce_default,
+  foldr: () => reduceRight_default,
+  forEach: () => each,
+  functions: () => functions,
+  get: () => get,
+  groupBy: () => groupBy_default,
+  has: () => has2,
+  head: () => first,
+  identity: () => identity,
+  include: () => contains,
+  includes: () => contains,
+  indexBy: () => indexBy_default,
+  indexOf: () => indexOf_default,
+  initial: () => initial,
+  inject: () => reduce_default,
+  intersection: () => intersection,
+  invert: () => invert,
+  invoke: () => invoke_default,
+  isArguments: () => isArguments_default,
+  isArray: () => isArray_default,
+  isArrayBuffer: () => isArrayBuffer_default,
+  isBoolean: () => isBoolean,
+  isDataView: () => isDataView_default,
+  isDate: () => isDate_default,
+  isElement: () => isElement,
+  isEmpty: () => isEmpty,
+  isEqual: () => isEqual,
+  isError: () => isError_default,
+  isFinite: () => isFinite2,
+  isFunction: () => isFunction_default,
+  isMap: () => isMap_default,
+  isMatch: () => isMatch,
+  isNaN: () => isNaN2,
+  isNull: () => isNull,
+  isNumber: () => isNumber_default,
+  isObject: () => isObject,
+  isRegExp: () => isRegExp_default,
+  isSet: () => isSet_default,
+  isString: () => isString_default,
+  isSymbol: () => isSymbol_default,
+  isTypedArray: () => isTypedArray_default,
+  isUndefined: () => isUndefined,
+  isWeakMap: () => isWeakMap_default,
+  isWeakSet: () => isWeakSet_default,
+  iteratee: () => iteratee,
+  keys: () => keys,
+  last: () => last,
+  lastIndexOf: () => lastIndexOf_default,
+  map: () => map,
+  mapObject: () => mapObject,
+  matcher: () => matcher,
+  matches: () => matcher,
+  max: () => max,
+  memoize: () => memoize,
+  methods: () => functions,
+  min: () => min,
+  mixin: () => mixin,
+  negate: () => negate,
+  noop: () => noop,
+  now: () => now_default,
+  object: () => object,
+  omit: () => omit_default,
+  once: () => once_default,
+  pairs: () => pairs,
+  partial: () => partial_default,
+  partition: () => partition_default,
+  pick: () => pick_default,
+  pluck: () => pluck,
+  property: () => property,
+  propertyOf: () => propertyOf,
+  random: () => random,
+  range: () => range,
+  reduce: () => reduce_default,
+  reduceRight: () => reduceRight_default,
+  reject: () => reject,
+  rest: () => rest,
+  restArguments: () => restArguments,
+  result: () => result,
+  sample: () => sample,
+  select: () => filter,
+  shuffle: () => shuffle,
+  size: () => size,
+  some: () => some,
+  sortBy: () => sortBy,
+  sortedIndex: () => sortedIndex,
+  tail: () => rest,
+  take: () => first,
+  tap: () => tap,
+  template: () => template,
+  templateSettings: () => templateSettings_default,
+  throttle: () => throttle,
+  times: () => times,
+  toArray: () => toArray,
+  toPath: () => toPath,
+  transpose: () => unzip,
+  unescape: () => unescape_default,
+  union: () => union_default,
+  uniq: () => uniq,
+  unique: () => uniq,
+  uniqueId: () => uniqueId,
+  unzip: () => unzip,
+  values: () => values,
+  where: () => where,
+  without: () => without_default,
+  wrap: () => wrap,
+  zip: () => zip_default
+});
 
-var reqwest = {}; var Pride = {};
+// node_modules/underscore/modules/_setup.js
+var VERSION = "1.13.6";
+var root = typeof self == "object" && self.self === self && self || typeof global == "object" && global.global === global && global || Function("return this")() || {};
+var ArrayProto = Array.prototype;
+var ObjProto = Object.prototype;
+var SymbolProto = typeof Symbol !== "undefined" ? Symbol.prototype : null;
+var push = ArrayProto.push;
+var slice = ArrayProto.slice;
+var toString = ObjProto.toString;
+var hasOwnProperty = ObjProto.hasOwnProperty;
+var supportsArrayBuffer = typeof ArrayBuffer !== "undefined";
+var supportsDataView = typeof DataView !== "undefined";
+var nativeIsArray = Array.isArray;
+var nativeKeys = Object.keys;
+var nativeCreate = Object.create;
+var nativeIsView = supportsArrayBuffer && ArrayBuffer.isView;
+var _isNaN = isNaN;
+var _isFinite = isFinite;
+var hasEnumBug = !{ toString: null }.propertyIsEnumerable("toString");
+var nonEnumerableProps = [
+  "valueOf",
+  "isPrototypeOf",
+  "toString",
+  "propertyIsEnumerable",
+  "hasOwnProperty",
+  "toLocaleString"
+];
+var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
+
+// node_modules/underscore/modules/restArguments.js
+function restArguments(func, startIndex) {
+  startIndex = startIndex == null ? func.length - 1 : +startIndex;
+  return function() {
+    var length = Math.max(arguments.length - startIndex, 0), rest2 = Array(length), index = 0;
+    for (; index < length; index++) {
+      rest2[index] = arguments[index + startIndex];
+    }
+    switch (startIndex) {
+      case 0:
+        return func.call(this, rest2);
+      case 1:
+        return func.call(this, arguments[0], rest2);
+      case 2:
+        return func.call(this, arguments[0], arguments[1], rest2);
+    }
+    var args = Array(startIndex + 1);
+    for (index = 0; index < startIndex; index++) {
+      args[index] = arguments[index];
+    }
+    args[startIndex] = rest2;
+    return func.apply(this, args);
+  };
+}
+
+// node_modules/underscore/modules/isObject.js
+function isObject(obj) {
+  var type = typeof obj;
+  return type === "function" || type === "object" && !!obj;
+}
+
+// node_modules/underscore/modules/isNull.js
+function isNull(obj) {
+  return obj === null;
+}
+
+// node_modules/underscore/modules/isUndefined.js
+function isUndefined(obj) {
+  return obj === void 0;
+}
+
+// node_modules/underscore/modules/isBoolean.js
+function isBoolean(obj) {
+  return obj === true || obj === false || toString.call(obj) === "[object Boolean]";
+}
+
+// node_modules/underscore/modules/isElement.js
+function isElement(obj) {
+  return !!(obj && obj.nodeType === 1);
+}
+
+// node_modules/underscore/modules/_tagTester.js
+function tagTester(name) {
+  var tag = "[object " + name + "]";
+  return function(obj) {
+    return toString.call(obj) === tag;
+  };
+}
+
+// node_modules/underscore/modules/isString.js
+var isString_default = tagTester("String");
+
+// node_modules/underscore/modules/isNumber.js
+var isNumber_default = tagTester("Number");
+
+// node_modules/underscore/modules/isDate.js
+var isDate_default = tagTester("Date");
+
+// node_modules/underscore/modules/isRegExp.js
+var isRegExp_default = tagTester("RegExp");
+
+// node_modules/underscore/modules/isError.js
+var isError_default = tagTester("Error");
+
+// node_modules/underscore/modules/isSymbol.js
+var isSymbol_default = tagTester("Symbol");
+
+// node_modules/underscore/modules/isArrayBuffer.js
+var isArrayBuffer_default = tagTester("ArrayBuffer");
+
+// node_modules/underscore/modules/isFunction.js
+var isFunction = tagTester("Function");
+var nodelist = root.document && root.document.childNodes;
+if (typeof /./ != "function" && typeof Int8Array != "object" && typeof nodelist != "function") {
+  isFunction = function(obj) {
+    return typeof obj == "function" || false;
+  };
+}
+var isFunction_default = isFunction;
+
+// node_modules/underscore/modules/_hasObjectTag.js
+var hasObjectTag_default = tagTester("Object");
+
+// node_modules/underscore/modules/_stringTagBug.js
+var hasStringTagBug = supportsDataView && hasObjectTag_default(new DataView(new ArrayBuffer(8)));
+var isIE11 = typeof Map !== "undefined" && hasObjectTag_default(/* @__PURE__ */ new Map());
+
+// node_modules/underscore/modules/isDataView.js
+var isDataView = tagTester("DataView");
+function ie10IsDataView(obj) {
+  return obj != null && isFunction_default(obj.getInt8) && isArrayBuffer_default(obj.buffer);
+}
+var isDataView_default = hasStringTagBug ? ie10IsDataView : isDataView;
+
+// node_modules/underscore/modules/isArray.js
+var isArray_default = nativeIsArray || tagTester("Array");
+
+// node_modules/underscore/modules/_has.js
+function has(obj, key) {
+  return obj != null && hasOwnProperty.call(obj, key);
+}
+
+// node_modules/underscore/modules/isArguments.js
+var isArguments = tagTester("Arguments");
+(function() {
+  if (!isArguments(arguments)) {
+    isArguments = function(obj) {
+      return has(obj, "callee");
+    };
+  }
+})();
+var isArguments_default = isArguments;
+
+// node_modules/underscore/modules/isFinite.js
+function isFinite2(obj) {
+  return !isSymbol_default(obj) && _isFinite(obj) && !isNaN(parseFloat(obj));
+}
+
+// node_modules/underscore/modules/isNaN.js
+function isNaN2(obj) {
+  return isNumber_default(obj) && _isNaN(obj);
+}
+
+// node_modules/underscore/modules/constant.js
+function constant(value) {
+  return function() {
+    return value;
+  };
+}
+
+// node_modules/underscore/modules/_createSizePropertyCheck.js
+function createSizePropertyCheck(getSizeProperty) {
+  return function(collection) {
+    var sizeProperty = getSizeProperty(collection);
+    return typeof sizeProperty == "number" && sizeProperty >= 0 && sizeProperty <= MAX_ARRAY_INDEX;
+  };
+}
+
+// node_modules/underscore/modules/_shallowProperty.js
+function shallowProperty(key) {
+  return function(obj) {
+    return obj == null ? void 0 : obj[key];
+  };
+}
+
+// node_modules/underscore/modules/_getByteLength.js
+var getByteLength_default = shallowProperty("byteLength");
+
+// node_modules/underscore/modules/_isBufferLike.js
+var isBufferLike_default = createSizePropertyCheck(getByteLength_default);
+
+// node_modules/underscore/modules/isTypedArray.js
+var typedArrayPattern = /\[object ((I|Ui)nt(8|16|32)|Float(32|64)|Uint8Clamped|Big(I|Ui)nt64)Array\]/;
+function isTypedArray(obj) {
+  return nativeIsView ? nativeIsView(obj) && !isDataView_default(obj) : isBufferLike_default(obj) && typedArrayPattern.test(toString.call(obj));
+}
+var isTypedArray_default = supportsArrayBuffer ? isTypedArray : constant(false);
+
+// node_modules/underscore/modules/_getLength.js
+var getLength_default = shallowProperty("length");
+
+// node_modules/underscore/modules/_collectNonEnumProps.js
+function emulatedSet(keys2) {
+  var hash = {};
+  for (var l = keys2.length, i = 0; i < l; ++i)
+    hash[keys2[i]] = true;
+  return {
+    contains: function(key) {
+      return hash[key] === true;
+    },
+    push: function(key) {
+      hash[key] = true;
+      return keys2.push(key);
+    }
+  };
+}
+function collectNonEnumProps(obj, keys2) {
+  keys2 = emulatedSet(keys2);
+  var nonEnumIdx = nonEnumerableProps.length;
+  var constructor = obj.constructor;
+  var proto = isFunction_default(constructor) && constructor.prototype || ObjProto;
+  var prop = "constructor";
+  if (has(obj, prop) && !keys2.contains(prop))
+    keys2.push(prop);
+  while (nonEnumIdx--) {
+    prop = nonEnumerableProps[nonEnumIdx];
+    if (prop in obj && obj[prop] !== proto[prop] && !keys2.contains(prop)) {
+      keys2.push(prop);
+    }
+  }
+}
+
+// node_modules/underscore/modules/keys.js
+function keys(obj) {
+  if (!isObject(obj))
+    return [];
+  if (nativeKeys)
+    return nativeKeys(obj);
+  var keys2 = [];
+  for (var key in obj)
+    if (has(obj, key))
+      keys2.push(key);
+  if (hasEnumBug)
+    collectNonEnumProps(obj, keys2);
+  return keys2;
+}
+
+// node_modules/underscore/modules/isEmpty.js
+function isEmpty(obj) {
+  if (obj == null)
+    return true;
+  var length = getLength_default(obj);
+  if (typeof length == "number" && (isArray_default(obj) || isString_default(obj) || isArguments_default(obj)))
+    return length === 0;
+  return getLength_default(keys(obj)) === 0;
+}
+
+// node_modules/underscore/modules/isMatch.js
+function isMatch(object2, attrs) {
+  var _keys = keys(attrs), length = _keys.length;
+  if (object2 == null)
+    return !length;
+  var obj = Object(object2);
+  for (var i = 0; i < length; i++) {
+    var key = _keys[i];
+    if (attrs[key] !== obj[key] || !(key in obj))
+      return false;
+  }
+  return true;
+}
+
+// node_modules/underscore/modules/underscore.js
+function _(obj) {
+  if (obj instanceof _)
+    return obj;
+  if (!(this instanceof _))
+    return new _(obj);
+  this._wrapped = obj;
+}
+_.VERSION = VERSION;
+_.prototype.value = function() {
+  return this._wrapped;
+};
+_.prototype.valueOf = _.prototype.toJSON = _.prototype.value;
+_.prototype.toString = function() {
+  return String(this._wrapped);
+};
+
+// node_modules/underscore/modules/_toBufferView.js
+function toBufferView(bufferSource) {
+  return new Uint8Array(
+    bufferSource.buffer || bufferSource,
+    bufferSource.byteOffset || 0,
+    getByteLength_default(bufferSource)
+  );
+}
+
+// node_modules/underscore/modules/isEqual.js
+var tagDataView = "[object DataView]";
+function eq(a, b, aStack, bStack) {
+  if (a === b)
+    return a !== 0 || 1 / a === 1 / b;
+  if (a == null || b == null)
+    return false;
+  if (a !== a)
+    return b !== b;
+  var type = typeof a;
+  if (type !== "function" && type !== "object" && typeof b != "object")
+    return false;
+  return deepEq(a, b, aStack, bStack);
+}
+function deepEq(a, b, aStack, bStack) {
+  if (a instanceof _)
+    a = a._wrapped;
+  if (b instanceof _)
+    b = b._wrapped;
+  var className = toString.call(a);
+  if (className !== toString.call(b))
+    return false;
+  if (hasStringTagBug && className == "[object Object]" && isDataView_default(a)) {
+    if (!isDataView_default(b))
+      return false;
+    className = tagDataView;
+  }
+  switch (className) {
+    case "[object RegExp]":
+    case "[object String]":
+      return "" + a === "" + b;
+    case "[object Number]":
+      if (+a !== +a)
+        return +b !== +b;
+      return +a === 0 ? 1 / +a === 1 / b : +a === +b;
+    case "[object Date]":
+    case "[object Boolean]":
+      return +a === +b;
+    case "[object Symbol]":
+      return SymbolProto.valueOf.call(a) === SymbolProto.valueOf.call(b);
+    case "[object ArrayBuffer]":
+    case tagDataView:
+      return deepEq(toBufferView(a), toBufferView(b), aStack, bStack);
+  }
+  var areArrays = className === "[object Array]";
+  if (!areArrays && isTypedArray_default(a)) {
+    var byteLength = getByteLength_default(a);
+    if (byteLength !== getByteLength_default(b))
+      return false;
+    if (a.buffer === b.buffer && a.byteOffset === b.byteOffset)
+      return true;
+    areArrays = true;
+  }
+  if (!areArrays) {
+    if (typeof a != "object" || typeof b != "object")
+      return false;
+    var aCtor = a.constructor, bCtor = b.constructor;
+    if (aCtor !== bCtor && !(isFunction_default(aCtor) && aCtor instanceof aCtor && isFunction_default(bCtor) && bCtor instanceof bCtor) && ("constructor" in a && "constructor" in b)) {
+      return false;
+    }
+  }
+  aStack = aStack || [];
+  bStack = bStack || [];
+  var length = aStack.length;
+  while (length--) {
+    if (aStack[length] === a)
+      return bStack[length] === b;
+  }
+  aStack.push(a);
+  bStack.push(b);
+  if (areArrays) {
+    length = a.length;
+    if (length !== b.length)
+      return false;
+    while (length--) {
+      if (!eq(a[length], b[length], aStack, bStack))
+        return false;
+    }
+  } else {
+    var _keys = keys(a), key;
+    length = _keys.length;
+    if (keys(b).length !== length)
+      return false;
+    while (length--) {
+      key = _keys[length];
+      if (!(has(b, key) && eq(a[key], b[key], aStack, bStack)))
+        return false;
+    }
+  }
+  aStack.pop();
+  bStack.pop();
+  return true;
+}
+function isEqual(a, b) {
+  return eq(a, b);
+}
+
+// node_modules/underscore/modules/allKeys.js
+function allKeys(obj) {
+  if (!isObject(obj))
+    return [];
+  var keys2 = [];
+  for (var key in obj)
+    keys2.push(key);
+  if (hasEnumBug)
+    collectNonEnumProps(obj, keys2);
+  return keys2;
+}
+
+// node_modules/underscore/modules/_methodFingerprint.js
+function ie11fingerprint(methods) {
+  var length = getLength_default(methods);
+  return function(obj) {
+    if (obj == null)
+      return false;
+    var keys2 = allKeys(obj);
+    if (getLength_default(keys2))
+      return false;
+    for (var i = 0; i < length; i++) {
+      if (!isFunction_default(obj[methods[i]]))
+        return false;
+    }
+    return methods !== weakMapMethods || !isFunction_default(obj[forEachName]);
+  };
+}
+var forEachName = "forEach";
+var hasName = "has";
+var commonInit = ["clear", "delete"];
+var mapTail = ["get", hasName, "set"];
+var mapMethods = commonInit.concat(forEachName, mapTail);
+var weakMapMethods = commonInit.concat(mapTail);
+var setMethods = ["add"].concat(commonInit, forEachName, hasName);
+
+// node_modules/underscore/modules/isMap.js
+var isMap_default = isIE11 ? ie11fingerprint(mapMethods) : tagTester("Map");
+
+// node_modules/underscore/modules/isWeakMap.js
+var isWeakMap_default = isIE11 ? ie11fingerprint(weakMapMethods) : tagTester("WeakMap");
+
+// node_modules/underscore/modules/isSet.js
+var isSet_default = isIE11 ? ie11fingerprint(setMethods) : tagTester("Set");
+
+// node_modules/underscore/modules/isWeakSet.js
+var isWeakSet_default = tagTester("WeakSet");
+
+// node_modules/underscore/modules/values.js
+function values(obj) {
+  var _keys = keys(obj);
+  var length = _keys.length;
+  var values2 = Array(length);
+  for (var i = 0; i < length; i++) {
+    values2[i] = obj[_keys[i]];
+  }
+  return values2;
+}
+
+// node_modules/underscore/modules/pairs.js
+function pairs(obj) {
+  var _keys = keys(obj);
+  var length = _keys.length;
+  var pairs2 = Array(length);
+  for (var i = 0; i < length; i++) {
+    pairs2[i] = [_keys[i], obj[_keys[i]]];
+  }
+  return pairs2;
+}
+
+// node_modules/underscore/modules/invert.js
+function invert(obj) {
+  var result2 = {};
+  var _keys = keys(obj);
+  for (var i = 0, length = _keys.length; i < length; i++) {
+    result2[obj[_keys[i]]] = _keys[i];
+  }
+  return result2;
+}
+
+// node_modules/underscore/modules/functions.js
+function functions(obj) {
+  var names = [];
+  for (var key in obj) {
+    if (isFunction_default(obj[key]))
+      names.push(key);
+  }
+  return names.sort();
+}
+
+// node_modules/underscore/modules/_createAssigner.js
+function createAssigner(keysFunc, defaults) {
+  return function(obj) {
+    var length = arguments.length;
+    if (defaults)
+      obj = Object(obj);
+    if (length < 2 || obj == null)
+      return obj;
+    for (var index = 1; index < length; index++) {
+      var source = arguments[index], keys2 = keysFunc(source), l = keys2.length;
+      for (var i = 0; i < l; i++) {
+        var key = keys2[i];
+        if (!defaults || obj[key] === void 0)
+          obj[key] = source[key];
+      }
+    }
+    return obj;
+  };
+}
+
+// node_modules/underscore/modules/extend.js
+var extend_default = createAssigner(allKeys);
+
+// node_modules/underscore/modules/extendOwn.js
+var extendOwn_default = createAssigner(keys);
+
+// node_modules/underscore/modules/defaults.js
+var defaults_default = createAssigner(allKeys, true);
+
+// node_modules/underscore/modules/_baseCreate.js
+function ctor() {
+  return function() {
+  };
+}
+function baseCreate(prototype) {
+  if (!isObject(prototype))
+    return {};
+  if (nativeCreate)
+    return nativeCreate(prototype);
+  var Ctor = ctor();
+  Ctor.prototype = prototype;
+  var result2 = new Ctor();
+  Ctor.prototype = null;
+  return result2;
+}
+
+// node_modules/underscore/modules/create.js
+function create(prototype, props) {
+  var result2 = baseCreate(prototype);
+  if (props)
+    extendOwn_default(result2, props);
+  return result2;
+}
+
+// node_modules/underscore/modules/clone.js
+function clone(obj) {
+  if (!isObject(obj))
+    return obj;
+  return isArray_default(obj) ? obj.slice() : extend_default({}, obj);
+}
+
+// node_modules/underscore/modules/tap.js
+function tap(obj, interceptor) {
+  interceptor(obj);
+  return obj;
+}
+
+// node_modules/underscore/modules/toPath.js
+function toPath(path) {
+  return isArray_default(path) ? path : [path];
+}
+_.toPath = toPath;
+
+// node_modules/underscore/modules/_toPath.js
+function toPath2(path) {
+  return _.toPath(path);
+}
+
+// node_modules/underscore/modules/_deepGet.js
+function deepGet(obj, path) {
+  var length = path.length;
+  for (var i = 0; i < length; i++) {
+    if (obj == null)
+      return void 0;
+    obj = obj[path[i]];
+  }
+  return length ? obj : void 0;
+}
+
+// node_modules/underscore/modules/get.js
+function get(object2, path, defaultValue) {
+  var value = deepGet(object2, toPath2(path));
+  return isUndefined(value) ? defaultValue : value;
+}
+
+// node_modules/underscore/modules/has.js
+function has2(obj, path) {
+  path = toPath2(path);
+  var length = path.length;
+  for (var i = 0; i < length; i++) {
+    var key = path[i];
+    if (!has(obj, key))
+      return false;
+    obj = obj[key];
+  }
+  return !!length;
+}
+
+// node_modules/underscore/modules/identity.js
+function identity(value) {
+  return value;
+}
+
+// node_modules/underscore/modules/matcher.js
+function matcher(attrs) {
+  attrs = extendOwn_default({}, attrs);
+  return function(obj) {
+    return isMatch(obj, attrs);
+  };
+}
+
+// node_modules/underscore/modules/property.js
+function property(path) {
+  path = toPath2(path);
+  return function(obj) {
+    return deepGet(obj, path);
+  };
+}
+
+// node_modules/underscore/modules/_optimizeCb.js
+function optimizeCb(func, context, argCount) {
+  if (context === void 0)
+    return func;
+  switch (argCount == null ? 3 : argCount) {
+    case 1:
+      return function(value) {
+        return func.call(context, value);
+      };
+    case 3:
+      return function(value, index, collection) {
+        return func.call(context, value, index, collection);
+      };
+    case 4:
+      return function(accumulator, value, index, collection) {
+        return func.call(context, accumulator, value, index, collection);
+      };
+  }
+  return function() {
+    return func.apply(context, arguments);
+  };
+}
+
+// node_modules/underscore/modules/_baseIteratee.js
+function baseIteratee(value, context, argCount) {
+  if (value == null)
+    return identity;
+  if (isFunction_default(value))
+    return optimizeCb(value, context, argCount);
+  if (isObject(value) && !isArray_default(value))
+    return matcher(value);
+  return property(value);
+}
+
+// node_modules/underscore/modules/iteratee.js
+function iteratee(value, context) {
+  return baseIteratee(value, context, Infinity);
+}
+_.iteratee = iteratee;
+
+// node_modules/underscore/modules/_cb.js
+function cb(value, context, argCount) {
+  if (_.iteratee !== iteratee)
+    return _.iteratee(value, context);
+  return baseIteratee(value, context, argCount);
+}
+
+// node_modules/underscore/modules/mapObject.js
+function mapObject(obj, iteratee2, context) {
+  iteratee2 = cb(iteratee2, context);
+  var _keys = keys(obj), length = _keys.length, results = {};
+  for (var index = 0; index < length; index++) {
+    var currentKey = _keys[index];
+    results[currentKey] = iteratee2(obj[currentKey], currentKey, obj);
+  }
+  return results;
+}
+
+// node_modules/underscore/modules/noop.js
+function noop() {
+}
+
+// node_modules/underscore/modules/propertyOf.js
+function propertyOf(obj) {
+  if (obj == null)
+    return noop;
+  return function(path) {
+    return get(obj, path);
+  };
+}
+
+// node_modules/underscore/modules/times.js
+function times(n, iteratee2, context) {
+  var accum = Array(Math.max(0, n));
+  iteratee2 = optimizeCb(iteratee2, context, 1);
+  for (var i = 0; i < n; i++)
+    accum[i] = iteratee2(i);
+  return accum;
+}
+
+// node_modules/underscore/modules/random.js
+function random(min2, max2) {
+  if (max2 == null) {
+    max2 = min2;
+    min2 = 0;
+  }
+  return min2 + Math.floor(Math.random() * (max2 - min2 + 1));
+}
+
+// node_modules/underscore/modules/now.js
+var now_default = Date.now || function() {
+  return (/* @__PURE__ */ new Date()).getTime();
+};
+
+// node_modules/underscore/modules/_createEscaper.js
+function createEscaper(map2) {
+  var escaper = function(match) {
+    return map2[match];
+  };
+  var source = "(?:" + keys(map2).join("|") + ")";
+  var testRegexp = RegExp(source);
+  var replaceRegexp = RegExp(source, "g");
+  return function(string) {
+    string = string == null ? "" : "" + string;
+    return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
+  };
+}
+
+// node_modules/underscore/modules/_escapeMap.js
+var escapeMap_default = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#x27;",
+  "`": "&#x60;"
+};
+
+// node_modules/underscore/modules/escape.js
+var escape_default = createEscaper(escapeMap_default);
+
+// node_modules/underscore/modules/_unescapeMap.js
+var unescapeMap_default = invert(escapeMap_default);
+
+// node_modules/underscore/modules/unescape.js
+var unescape_default = createEscaper(unescapeMap_default);
+
+// node_modules/underscore/modules/templateSettings.js
+var templateSettings_default = _.templateSettings = {
+  evaluate: /<%([\s\S]+?)%>/g,
+  interpolate: /<%=([\s\S]+?)%>/g,
+  escape: /<%-([\s\S]+?)%>/g
+};
+
+// node_modules/underscore/modules/template.js
+var noMatch = /(.)^/;
+var escapes = {
+  "'": "'",
+  "\\": "\\",
+  "\r": "r",
+  "\n": "n",
+  "\u2028": "u2028",
+  "\u2029": "u2029"
+};
+var escapeRegExp = /\\|'|\r|\n|\u2028|\u2029/g;
+function escapeChar(match) {
+  return "\\" + escapes[match];
+}
+var bareIdentifier = /^\s*(\w|\$)+\s*$/;
+function template(text, settings, oldSettings) {
+  if (!settings && oldSettings)
+    settings = oldSettings;
+  settings = defaults_default({}, settings, _.templateSettings);
+  var matcher2 = RegExp([
+    (settings.escape || noMatch).source,
+    (settings.interpolate || noMatch).source,
+    (settings.evaluate || noMatch).source
+  ].join("|") + "|$", "g");
+  var index = 0;
+  var source = "__p+='";
+  text.replace(matcher2, function(match, escape, interpolate, evaluate, offset) {
+    source += text.slice(index, offset).replace(escapeRegExp, escapeChar);
+    index = offset + match.length;
+    if (escape) {
+      source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
+    } else if (interpolate) {
+      source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
+    } else if (evaluate) {
+      source += "';\n" + evaluate + "\n__p+='";
+    }
+    return match;
+  });
+  source += "';\n";
+  var argument = settings.variable;
+  if (argument) {
+    if (!bareIdentifier.test(argument))
+      throw new Error(
+        "variable is not a bare identifier: " + argument
+      );
+  } else {
+    source = "with(obj||{}){\n" + source + "}\n";
+    argument = "obj";
+  }
+  source = "var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};\n" + source + "return __p;\n";
+  var render;
+  try {
+    render = new Function(argument, "_", source);
+  } catch (e) {
+    e.source = source;
+    throw e;
+  }
+  var template2 = function(data) {
+    return render.call(this, data, _);
+  };
+  template2.source = "function(" + argument + "){\n" + source + "}";
+  return template2;
+}
+
+// node_modules/underscore/modules/result.js
+function result(obj, path, fallback) {
+  path = toPath2(path);
+  var length = path.length;
+  if (!length) {
+    return isFunction_default(fallback) ? fallback.call(obj) : fallback;
+  }
+  for (var i = 0; i < length; i++) {
+    var prop = obj == null ? void 0 : obj[path[i]];
+    if (prop === void 0) {
+      prop = fallback;
+      i = length;
+    }
+    obj = isFunction_default(prop) ? prop.call(obj) : prop;
+  }
+  return obj;
+}
+
+// node_modules/underscore/modules/uniqueId.js
+var idCounter = 0;
+function uniqueId(prefix) {
+  var id = ++idCounter + "";
+  return prefix ? prefix + id : id;
+}
+
+// node_modules/underscore/modules/chain.js
+function chain(obj) {
+  var instance = _(obj);
+  instance._chain = true;
+  return instance;
+}
+
+// node_modules/underscore/modules/_executeBound.js
+function executeBound(sourceFunc, boundFunc, context, callingContext, args) {
+  if (!(callingContext instanceof boundFunc))
+    return sourceFunc.apply(context, args);
+  var self2 = baseCreate(sourceFunc.prototype);
+  var result2 = sourceFunc.apply(self2, args);
+  if (isObject(result2))
+    return result2;
+  return self2;
+}
+
+// node_modules/underscore/modules/partial.js
+var partial = restArguments(function(func, boundArgs) {
+  var placeholder = partial.placeholder;
+  var bound = function() {
+    var position = 0, length = boundArgs.length;
+    var args = Array(length);
+    for (var i = 0; i < length; i++) {
+      args[i] = boundArgs[i] === placeholder ? arguments[position++] : boundArgs[i];
+    }
+    while (position < arguments.length)
+      args.push(arguments[position++]);
+    return executeBound(func, bound, this, this, args);
+  };
+  return bound;
+});
+partial.placeholder = _;
+var partial_default = partial;
+
+// node_modules/underscore/modules/bind.js
+var bind_default = restArguments(function(func, context, args) {
+  if (!isFunction_default(func))
+    throw new TypeError("Bind must be called on a function");
+  var bound = restArguments(function(callArgs) {
+    return executeBound(func, bound, context, this, args.concat(callArgs));
+  });
+  return bound;
+});
+
+// node_modules/underscore/modules/_isArrayLike.js
+var isArrayLike_default = createSizePropertyCheck(getLength_default);
+
+// node_modules/underscore/modules/_flatten.js
+function flatten(input, depth, strict, output) {
+  output = output || [];
+  if (!depth && depth !== 0) {
+    depth = Infinity;
+  } else if (depth <= 0) {
+    return output.concat(input);
+  }
+  var idx = output.length;
+  for (var i = 0, length = getLength_default(input); i < length; i++) {
+    var value = input[i];
+    if (isArrayLike_default(value) && (isArray_default(value) || isArguments_default(value))) {
+      if (depth > 1) {
+        flatten(value, depth - 1, strict, output);
+        idx = output.length;
+      } else {
+        var j = 0, len = value.length;
+        while (j < len)
+          output[idx++] = value[j++];
+      }
+    } else if (!strict) {
+      output[idx++] = value;
+    }
+  }
+  return output;
+}
+
+// node_modules/underscore/modules/bindAll.js
+var bindAll_default = restArguments(function(obj, keys2) {
+  keys2 = flatten(keys2, false, false);
+  var index = keys2.length;
+  if (index < 1)
+    throw new Error("bindAll must be passed function names");
+  while (index--) {
+    var key = keys2[index];
+    obj[key] = bind_default(obj[key], obj);
+  }
+  return obj;
+});
+
+// node_modules/underscore/modules/memoize.js
+function memoize(func, hasher) {
+  var memoize2 = function(key) {
+    var cache = memoize2.cache;
+    var address = "" + (hasher ? hasher.apply(this, arguments) : key);
+    if (!has(cache, address))
+      cache[address] = func.apply(this, arguments);
+    return cache[address];
+  };
+  memoize2.cache = {};
+  return memoize2;
+}
+
+// node_modules/underscore/modules/delay.js
+var delay_default = restArguments(function(func, wait, args) {
+  return setTimeout(function() {
+    return func.apply(null, args);
+  }, wait);
+});
+
+// node_modules/underscore/modules/defer.js
+var defer_default = partial_default(delay_default, _, 1);
+
+// node_modules/underscore/modules/throttle.js
+function throttle(func, wait, options) {
+  var timeout, context, args, result2;
+  var previous = 0;
+  if (!options)
+    options = {};
+  var later = function() {
+    previous = options.leading === false ? 0 : now_default();
+    timeout = null;
+    result2 = func.apply(context, args);
+    if (!timeout)
+      context = args = null;
+  };
+  var throttled = function() {
+    var _now = now_default();
+    if (!previous && options.leading === false)
+      previous = _now;
+    var remaining = wait - (_now - previous);
+    context = this;
+    args = arguments;
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      previous = _now;
+      result2 = func.apply(context, args);
+      if (!timeout)
+        context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+    return result2;
+  };
+  throttled.cancel = function() {
+    clearTimeout(timeout);
+    previous = 0;
+    timeout = context = args = null;
+  };
+  return throttled;
+}
+
+// node_modules/underscore/modules/debounce.js
+function debounce(func, wait, immediate) {
+  var timeout, previous, args, result2, context;
+  var later = function() {
+    var passed = now_default() - previous;
+    if (wait > passed) {
+      timeout = setTimeout(later, wait - passed);
+    } else {
+      timeout = null;
+      if (!immediate)
+        result2 = func.apply(context, args);
+      if (!timeout)
+        args = context = null;
+    }
+  };
+  var debounced = restArguments(function(_args) {
+    context = this;
+    args = _args;
+    previous = now_default();
+    if (!timeout) {
+      timeout = setTimeout(later, wait);
+      if (immediate)
+        result2 = func.apply(context, args);
+    }
+    return result2;
+  });
+  debounced.cancel = function() {
+    clearTimeout(timeout);
+    timeout = args = context = null;
+  };
+  return debounced;
+}
+
+// node_modules/underscore/modules/wrap.js
+function wrap(func, wrapper) {
+  return partial_default(wrapper, func);
+}
+
+// node_modules/underscore/modules/negate.js
+function negate(predicate) {
+  return function() {
+    return !predicate.apply(this, arguments);
+  };
+}
+
+// node_modules/underscore/modules/compose.js
+function compose() {
+  var args = arguments;
+  var start = args.length - 1;
+  return function() {
+    var i = start;
+    var result2 = args[start].apply(this, arguments);
+    while (i--)
+      result2 = args[i].call(this, result2);
+    return result2;
+  };
+}
+
+// node_modules/underscore/modules/after.js
+function after(times2, func) {
+  return function() {
+    if (--times2 < 1) {
+      return func.apply(this, arguments);
+    }
+  };
+}
+
+// node_modules/underscore/modules/before.js
+function before(times2, func) {
+  var memo;
+  return function() {
+    if (--times2 > 0) {
+      memo = func.apply(this, arguments);
+    }
+    if (times2 <= 1)
+      func = null;
+    return memo;
+  };
+}
+
+// node_modules/underscore/modules/once.js
+var once_default = partial_default(before, 2);
+
+// node_modules/underscore/modules/findKey.js
+function findKey(obj, predicate, context) {
+  predicate = cb(predicate, context);
+  var _keys = keys(obj), key;
+  for (var i = 0, length = _keys.length; i < length; i++) {
+    key = _keys[i];
+    if (predicate(obj[key], key, obj))
+      return key;
+  }
+}
+
+// node_modules/underscore/modules/_createPredicateIndexFinder.js
+function createPredicateIndexFinder(dir) {
+  return function(array, predicate, context) {
+    predicate = cb(predicate, context);
+    var length = getLength_default(array);
+    var index = dir > 0 ? 0 : length - 1;
+    for (; index >= 0 && index < length; index += dir) {
+      if (predicate(array[index], index, array))
+        return index;
+    }
+    return -1;
+  };
+}
+
+// node_modules/underscore/modules/findIndex.js
+var findIndex_default = createPredicateIndexFinder(1);
+
+// node_modules/underscore/modules/findLastIndex.js
+var findLastIndex_default = createPredicateIndexFinder(-1);
+
+// node_modules/underscore/modules/sortedIndex.js
+function sortedIndex(array, obj, iteratee2, context) {
+  iteratee2 = cb(iteratee2, context, 1);
+  var value = iteratee2(obj);
+  var low = 0, high = getLength_default(array);
+  while (low < high) {
+    var mid = Math.floor((low + high) / 2);
+    if (iteratee2(array[mid]) < value)
+      low = mid + 1;
+    else
+      high = mid;
+  }
+  return low;
+}
+
+// node_modules/underscore/modules/_createIndexFinder.js
+function createIndexFinder(dir, predicateFind, sortedIndex2) {
+  return function(array, item, idx) {
+    var i = 0, length = getLength_default(array);
+    if (typeof idx == "number") {
+      if (dir > 0) {
+        i = idx >= 0 ? idx : Math.max(idx + length, i);
+      } else {
+        length = idx >= 0 ? Math.min(idx + 1, length) : idx + length + 1;
+      }
+    } else if (sortedIndex2 && idx && length) {
+      idx = sortedIndex2(array, item);
+      return array[idx] === item ? idx : -1;
+    }
+    if (item !== item) {
+      idx = predicateFind(slice.call(array, i, length), isNaN2);
+      return idx >= 0 ? idx + i : -1;
+    }
+    for (idx = dir > 0 ? i : length - 1; idx >= 0 && idx < length; idx += dir) {
+      if (array[idx] === item)
+        return idx;
+    }
+    return -1;
+  };
+}
+
+// node_modules/underscore/modules/indexOf.js
+var indexOf_default = createIndexFinder(1, findIndex_default, sortedIndex);
+
+// node_modules/underscore/modules/lastIndexOf.js
+var lastIndexOf_default = createIndexFinder(-1, findLastIndex_default);
+
+// node_modules/underscore/modules/find.js
+function find(obj, predicate, context) {
+  var keyFinder = isArrayLike_default(obj) ? findIndex_default : findKey;
+  var key = keyFinder(obj, predicate, context);
+  if (key !== void 0 && key !== -1)
+    return obj[key];
+}
+
+// node_modules/underscore/modules/findWhere.js
+function findWhere(obj, attrs) {
+  return find(obj, matcher(attrs));
+}
+
+// node_modules/underscore/modules/each.js
+function each(obj, iteratee2, context) {
+  iteratee2 = optimizeCb(iteratee2, context);
+  var i, length;
+  if (isArrayLike_default(obj)) {
+    for (i = 0, length = obj.length; i < length; i++) {
+      iteratee2(obj[i], i, obj);
+    }
+  } else {
+    var _keys = keys(obj);
+    for (i = 0, length = _keys.length; i < length; i++) {
+      iteratee2(obj[_keys[i]], _keys[i], obj);
+    }
+  }
+  return obj;
+}
+
+// node_modules/underscore/modules/map.js
+function map(obj, iteratee2, context) {
+  iteratee2 = cb(iteratee2, context);
+  var _keys = !isArrayLike_default(obj) && keys(obj), length = (_keys || obj).length, results = Array(length);
+  for (var index = 0; index < length; index++) {
+    var currentKey = _keys ? _keys[index] : index;
+    results[index] = iteratee2(obj[currentKey], currentKey, obj);
+  }
+  return results;
+}
+
+// node_modules/underscore/modules/_createReduce.js
+function createReduce(dir) {
+  var reducer = function(obj, iteratee2, memo, initial2) {
+    var _keys = !isArrayLike_default(obj) && keys(obj), length = (_keys || obj).length, index = dir > 0 ? 0 : length - 1;
+    if (!initial2) {
+      memo = obj[_keys ? _keys[index] : index];
+      index += dir;
+    }
+    for (; index >= 0 && index < length; index += dir) {
+      var currentKey = _keys ? _keys[index] : index;
+      memo = iteratee2(memo, obj[currentKey], currentKey, obj);
+    }
+    return memo;
+  };
+  return function(obj, iteratee2, memo, context) {
+    var initial2 = arguments.length >= 3;
+    return reducer(obj, optimizeCb(iteratee2, context, 4), memo, initial2);
+  };
+}
+
+// node_modules/underscore/modules/reduce.js
+var reduce_default = createReduce(1);
+
+// node_modules/underscore/modules/reduceRight.js
+var reduceRight_default = createReduce(-1);
+
+// node_modules/underscore/modules/filter.js
+function filter(obj, predicate, context) {
+  var results = [];
+  predicate = cb(predicate, context);
+  each(obj, function(value, index, list) {
+    if (predicate(value, index, list))
+      results.push(value);
+  });
+  return results;
+}
+
+// node_modules/underscore/modules/reject.js
+function reject(obj, predicate, context) {
+  return filter(obj, negate(cb(predicate)), context);
+}
+
+// node_modules/underscore/modules/every.js
+function every(obj, predicate, context) {
+  predicate = cb(predicate, context);
+  var _keys = !isArrayLike_default(obj) && keys(obj), length = (_keys || obj).length;
+  for (var index = 0; index < length; index++) {
+    var currentKey = _keys ? _keys[index] : index;
+    if (!predicate(obj[currentKey], currentKey, obj))
+      return false;
+  }
+  return true;
+}
+
+// node_modules/underscore/modules/some.js
+function some(obj, predicate, context) {
+  predicate = cb(predicate, context);
+  var _keys = !isArrayLike_default(obj) && keys(obj), length = (_keys || obj).length;
+  for (var index = 0; index < length; index++) {
+    var currentKey = _keys ? _keys[index] : index;
+    if (predicate(obj[currentKey], currentKey, obj))
+      return true;
+  }
+  return false;
+}
+
+// node_modules/underscore/modules/contains.js
+function contains(obj, item, fromIndex, guard) {
+  if (!isArrayLike_default(obj))
+    obj = values(obj);
+  if (typeof fromIndex != "number" || guard)
+    fromIndex = 0;
+  return indexOf_default(obj, item, fromIndex) >= 0;
+}
+
+// node_modules/underscore/modules/invoke.js
+var invoke_default = restArguments(function(obj, path, args) {
+  var contextPath, func;
+  if (isFunction_default(path)) {
+    func = path;
+  } else {
+    path = toPath2(path);
+    contextPath = path.slice(0, -1);
+    path = path[path.length - 1];
+  }
+  return map(obj, function(context) {
+    var method = func;
+    if (!method) {
+      if (contextPath && contextPath.length) {
+        context = deepGet(context, contextPath);
+      }
+      if (context == null)
+        return void 0;
+      method = context[path];
+    }
+    return method == null ? method : method.apply(context, args);
+  });
+});
+
+// node_modules/underscore/modules/pluck.js
+function pluck(obj, key) {
+  return map(obj, property(key));
+}
+
+// node_modules/underscore/modules/where.js
+function where(obj, attrs) {
+  return filter(obj, matcher(attrs));
+}
+
+// node_modules/underscore/modules/max.js
+function max(obj, iteratee2, context) {
+  var result2 = -Infinity, lastComputed = -Infinity, value, computed;
+  if (iteratee2 == null || typeof iteratee2 == "number" && typeof obj[0] != "object" && obj != null) {
+    obj = isArrayLike_default(obj) ? obj : values(obj);
+    for (var i = 0, length = obj.length; i < length; i++) {
+      value = obj[i];
+      if (value != null && value > result2) {
+        result2 = value;
+      }
+    }
+  } else {
+    iteratee2 = cb(iteratee2, context);
+    each(obj, function(v, index, list) {
+      computed = iteratee2(v, index, list);
+      if (computed > lastComputed || computed === -Infinity && result2 === -Infinity) {
+        result2 = v;
+        lastComputed = computed;
+      }
+    });
+  }
+  return result2;
+}
+
+// node_modules/underscore/modules/min.js
+function min(obj, iteratee2, context) {
+  var result2 = Infinity, lastComputed = Infinity, value, computed;
+  if (iteratee2 == null || typeof iteratee2 == "number" && typeof obj[0] != "object" && obj != null) {
+    obj = isArrayLike_default(obj) ? obj : values(obj);
+    for (var i = 0, length = obj.length; i < length; i++) {
+      value = obj[i];
+      if (value != null && value < result2) {
+        result2 = value;
+      }
+    }
+  } else {
+    iteratee2 = cb(iteratee2, context);
+    each(obj, function(v, index, list) {
+      computed = iteratee2(v, index, list);
+      if (computed < lastComputed || computed === Infinity && result2 === Infinity) {
+        result2 = v;
+        lastComputed = computed;
+      }
+    });
+  }
+  return result2;
+}
+
+// node_modules/underscore/modules/toArray.js
+var reStrSymbol = /[^\ud800-\udfff]|[\ud800-\udbff][\udc00-\udfff]|[\ud800-\udfff]/g;
+function toArray(obj) {
+  if (!obj)
+    return [];
+  if (isArray_default(obj))
+    return slice.call(obj);
+  if (isString_default(obj)) {
+    return obj.match(reStrSymbol);
+  }
+  if (isArrayLike_default(obj))
+    return map(obj, identity);
+  return values(obj);
+}
+
+// node_modules/underscore/modules/sample.js
+function sample(obj, n, guard) {
+  if (n == null || guard) {
+    if (!isArrayLike_default(obj))
+      obj = values(obj);
+    return obj[random(obj.length - 1)];
+  }
+  var sample2 = toArray(obj);
+  var length = getLength_default(sample2);
+  n = Math.max(Math.min(n, length), 0);
+  var last2 = length - 1;
+  for (var index = 0; index < n; index++) {
+    var rand = random(index, last2);
+    var temp = sample2[index];
+    sample2[index] = sample2[rand];
+    sample2[rand] = temp;
+  }
+  return sample2.slice(0, n);
+}
+
+// node_modules/underscore/modules/shuffle.js
+function shuffle(obj) {
+  return sample(obj, Infinity);
+}
+
+// node_modules/underscore/modules/sortBy.js
+function sortBy(obj, iteratee2, context) {
+  var index = 0;
+  iteratee2 = cb(iteratee2, context);
+  return pluck(map(obj, function(value, key, list) {
+    return {
+      value,
+      index: index++,
+      criteria: iteratee2(value, key, list)
+    };
+  }).sort(function(left, right) {
+    var a = left.criteria;
+    var b = right.criteria;
+    if (a !== b) {
+      if (a > b || a === void 0)
+        return 1;
+      if (a < b || b === void 0)
+        return -1;
+    }
+    return left.index - right.index;
+  }), "value");
+}
+
+// node_modules/underscore/modules/_group.js
+function group(behavior, partition) {
+  return function(obj, iteratee2, context) {
+    var result2 = partition ? [[], []] : {};
+    iteratee2 = cb(iteratee2, context);
+    each(obj, function(value, index) {
+      var key = iteratee2(value, index, obj);
+      behavior(result2, value, key);
+    });
+    return result2;
+  };
+}
+
+// node_modules/underscore/modules/groupBy.js
+var groupBy_default = group(function(result2, value, key) {
+  if (has(result2, key))
+    result2[key].push(value);
+  else
+    result2[key] = [value];
+});
+
+// node_modules/underscore/modules/indexBy.js
+var indexBy_default = group(function(result2, value, key) {
+  result2[key] = value;
+});
+
+// node_modules/underscore/modules/countBy.js
+var countBy_default = group(function(result2, value, key) {
+  if (has(result2, key))
+    result2[key]++;
+  else
+    result2[key] = 1;
+});
+
+// node_modules/underscore/modules/partition.js
+var partition_default = group(function(result2, value, pass) {
+  result2[pass ? 0 : 1].push(value);
+}, true);
+
+// node_modules/underscore/modules/size.js
+function size(obj) {
+  if (obj == null)
+    return 0;
+  return isArrayLike_default(obj) ? obj.length : keys(obj).length;
+}
+
+// node_modules/underscore/modules/_keyInObj.js
+function keyInObj(value, key, obj) {
+  return key in obj;
+}
+
+// node_modules/underscore/modules/pick.js
+var pick_default = restArguments(function(obj, keys2) {
+  var result2 = {}, iteratee2 = keys2[0];
+  if (obj == null)
+    return result2;
+  if (isFunction_default(iteratee2)) {
+    if (keys2.length > 1)
+      iteratee2 = optimizeCb(iteratee2, keys2[1]);
+    keys2 = allKeys(obj);
+  } else {
+    iteratee2 = keyInObj;
+    keys2 = flatten(keys2, false, false);
+    obj = Object(obj);
+  }
+  for (var i = 0, length = keys2.length; i < length; i++) {
+    var key = keys2[i];
+    var value = obj[key];
+    if (iteratee2(value, key, obj))
+      result2[key] = value;
+  }
+  return result2;
+});
+
+// node_modules/underscore/modules/omit.js
+var omit_default = restArguments(function(obj, keys2) {
+  var iteratee2 = keys2[0], context;
+  if (isFunction_default(iteratee2)) {
+    iteratee2 = negate(iteratee2);
+    if (keys2.length > 1)
+      context = keys2[1];
+  } else {
+    keys2 = map(flatten(keys2, false, false), String);
+    iteratee2 = function(value, key) {
+      return !contains(keys2, key);
+    };
+  }
+  return pick_default(obj, iteratee2, context);
+});
+
+// node_modules/underscore/modules/initial.js
+function initial(array, n, guard) {
+  return slice.call(array, 0, Math.max(0, array.length - (n == null || guard ? 1 : n)));
+}
+
+// node_modules/underscore/modules/first.js
+function first(array, n, guard) {
+  if (array == null || array.length < 1)
+    return n == null || guard ? void 0 : [];
+  if (n == null || guard)
+    return array[0];
+  return initial(array, array.length - n);
+}
+
+// node_modules/underscore/modules/rest.js
+function rest(array, n, guard) {
+  return slice.call(array, n == null || guard ? 1 : n);
+}
+
+// node_modules/underscore/modules/last.js
+function last(array, n, guard) {
+  if (array == null || array.length < 1)
+    return n == null || guard ? void 0 : [];
+  if (n == null || guard)
+    return array[array.length - 1];
+  return rest(array, Math.max(0, array.length - n));
+}
+
+// node_modules/underscore/modules/compact.js
+function compact(array) {
+  return filter(array, Boolean);
+}
+
+// node_modules/underscore/modules/flatten.js
+function flatten2(array, depth) {
+  return flatten(array, depth, false);
+}
+
+// node_modules/underscore/modules/difference.js
+var difference_default = restArguments(function(array, rest2) {
+  rest2 = flatten(rest2, true, true);
+  return filter(array, function(value) {
+    return !contains(rest2, value);
+  });
+});
+
+// node_modules/underscore/modules/without.js
+var without_default = restArguments(function(array, otherArrays) {
+  return difference_default(array, otherArrays);
+});
+
+// node_modules/underscore/modules/uniq.js
+function uniq(array, isSorted, iteratee2, context) {
+  if (!isBoolean(isSorted)) {
+    context = iteratee2;
+    iteratee2 = isSorted;
+    isSorted = false;
+  }
+  if (iteratee2 != null)
+    iteratee2 = cb(iteratee2, context);
+  var result2 = [];
+  var seen = [];
+  for (var i = 0, length = getLength_default(array); i < length; i++) {
+    var value = array[i], computed = iteratee2 ? iteratee2(value, i, array) : value;
+    if (isSorted && !iteratee2) {
+      if (!i || seen !== computed)
+        result2.push(value);
+      seen = computed;
+    } else if (iteratee2) {
+      if (!contains(seen, computed)) {
+        seen.push(computed);
+        result2.push(value);
+      }
+    } else if (!contains(result2, value)) {
+      result2.push(value);
+    }
+  }
+  return result2;
+}
+
+// node_modules/underscore/modules/union.js
+var union_default = restArguments(function(arrays) {
+  return uniq(flatten(arrays, true, true));
+});
+
+// node_modules/underscore/modules/intersection.js
+function intersection(array) {
+  var result2 = [];
+  var argsLength = arguments.length;
+  for (var i = 0, length = getLength_default(array); i < length; i++) {
+    var item = array[i];
+    if (contains(result2, item))
+      continue;
+    var j;
+    for (j = 1; j < argsLength; j++) {
+      if (!contains(arguments[j], item))
+        break;
+    }
+    if (j === argsLength)
+      result2.push(item);
+  }
+  return result2;
+}
+
+// node_modules/underscore/modules/unzip.js
+function unzip(array) {
+  var length = array && max(array, getLength_default).length || 0;
+  var result2 = Array(length);
+  for (var index = 0; index < length; index++) {
+    result2[index] = pluck(array, index);
+  }
+  return result2;
+}
+
+// node_modules/underscore/modules/zip.js
+var zip_default = restArguments(unzip);
+
+// node_modules/underscore/modules/object.js
+function object(list, values2) {
+  var result2 = {};
+  for (var i = 0, length = getLength_default(list); i < length; i++) {
+    if (values2) {
+      result2[list[i]] = values2[i];
+    } else {
+      result2[list[i][0]] = list[i][1];
+    }
+  }
+  return result2;
+}
+
+// node_modules/underscore/modules/range.js
+function range(start, stop, step) {
+  if (stop == null) {
+    stop = start || 0;
+    start = 0;
+  }
+  if (!step) {
+    step = stop < start ? -1 : 1;
+  }
+  var length = Math.max(Math.ceil((stop - start) / step), 0);
+  var range2 = Array(length);
+  for (var idx = 0; idx < length; idx++, start += step) {
+    range2[idx] = start;
+  }
+  return range2;
+}
+
+// node_modules/underscore/modules/chunk.js
+function chunk(array, count) {
+  if (count == null || count < 1)
+    return [];
+  var result2 = [];
+  var i = 0, length = array.length;
+  while (i < length) {
+    result2.push(slice.call(array, i, i += count));
+  }
+  return result2;
+}
+
+// node_modules/underscore/modules/_chainResult.js
+function chainResult(instance, obj) {
+  return instance._chain ? _(obj).chain() : obj;
+}
+
+// node_modules/underscore/modules/mixin.js
+function mixin(obj) {
+  each(functions(obj), function(name) {
+    var func = _[name] = obj[name];
+    _.prototype[name] = function() {
+      var args = [this._wrapped];
+      push.apply(args, arguments);
+      return chainResult(this, func.apply(_, args));
+    };
+  });
+  return _;
+}
+
+// node_modules/underscore/modules/underscore-array-methods.js
+each(["pop", "push", "reverse", "shift", "sort", "splice", "unshift"], function(name) {
+  var method = ArrayProto[name];
+  _.prototype[name] = function() {
+    var obj = this._wrapped;
+    if (obj != null) {
+      method.apply(obj, arguments);
+      if ((name === "shift" || name === "splice") && obj.length === 0) {
+        delete obj[0];
+      }
+    }
+    return chainResult(this, obj);
+  };
+});
+each(["concat", "join", "slice"], function(name) {
+  var method = ArrayProto[name];
+  _.prototype[name] = function() {
+    var obj = this._wrapped;
+    if (obj != null)
+      obj = method.apply(obj, arguments);
+    return chainResult(this, obj);
+  };
+});
+var underscore_array_methods_default = _;
+
+// node_modules/underscore/modules/index-default.js
+var _2 = mixin(modules_exports);
+_2._ = _2;
+var index_default_default = _2;
+
+// output-exec.js
+var reqwest = {};
+var Pride = {};
 Pride.Util = {};
 Pride.Core = {};
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
 Pride.Settings = {
   // default_cache_size:  If a cache size isn't set for a datastore, this value
   //                      is used instead.
@@ -41,580 +1897,413 @@ Pride.Settings = {
   // obnoxious:           If true, debug messages will be logged to the console
   //                      as Pride runs. WARNING: Pride can send out a lot of
   //                      debug messages.
-
   default_cache_size: 20,
-  cache_size: {
-
-  },
-
-  datastores_url: '',
-
+  cache_size: {},
+  datastores_url: "",
   connection_attempts: 3,
-  init_attempts:       3,
+  init_attempts: 3,
   ms_between_attempts: 1500,
-
   message_formats: {
-    failed_record_load: 'Failed to load $1',
-    failed_search_run:  'Failed to search $1',
-    failed_init:        'Failed to initialize Pride'
+    failed_record_load: "Failed to load $1",
+    failed_search_run: "Failed to search $1",
+    failed_init: "Failed to initialize Pride"
   },
-
   obnoxious: false
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Core.Datastore = function(datastore_info) {
   datastore_info = Pride.Util.deepClone(datastore_info);
-
   this.baseQuery = function() {
     return new Pride.Core.Query({
-             uid:        datastore_info.uid,
-             sort:       datastore_info.default_sort,
-             start:      0,
-             count:      0,
-             settings:   {},
-             field_tree: fillFieldTree(),
-             facets:     _.reduce(
-                           datastore_info.facets,
-                           function(memo, facet) {
-                             if (facet.required && !facet.fixed) {
-                               memo[facet.uid] = facet.default_value;
-                             }
-
-                             return memo;
-                           },
-                           {}
-                         )
-           });
+      uid: datastore_info.uid,
+      sort: datastore_info.default_sort,
+      start: 0,
+      count: 0,
+      settings: {},
+      field_tree: fillFieldTree(),
+      facets: index_default_default.reduce(
+        datastore_info.facets,
+        function(memo, facet) {
+          if (facet.required && !facet.fixed) {
+            memo[facet.uid] = facet.default_value;
+          }
+          return memo;
+        },
+        {}
+      )
+    });
   };
-
   this.baseSearch = function() {
-    return new Pride.Core.DatastoreSearch({datastore: this});
+    return new Pride.Core.DatastoreSearch({ datastore: this });
   };
-
   this.runQuery = function(request_arguments) {
     request_arguments.url = datastore_info.url;
     Pride.Util.request(request_arguments);
-
     return this;
   };
-
   this.get = function(key) {
     return datastore_info[key];
   };
-
   this.update = function(new_info) {
-    _.extend(datastore_info, new_info);
+    index_default_default.extend(datastore_info, new_info);
   };
-
   var fillFacets = function(set_facets) {
-    return _.reduce(
-             datastore_info.facets,
-             function(memo, facet) {
-               memo[facet.uid] = _.find(set_facets, function(possible_facet) {
-                                   return possible_facet.uid === facet.uid;
-                                 }) ||
-                                 facet;
-
-               return memo;
-             },
-             {}
-           );
+    return index_default_default.reduce(
+      datastore_info.facets,
+      function(memo, facet) {
+        memo[facet.uid] = index_default_default.find(set_facets, function(possible_facet) {
+          return possible_facet.uid === facet.uid;
+        }) || facet;
+        return memo;
+      },
+      {}
+    );
   };
-
   var fillFieldTree = function(given_tree) {
-    given_tree = given_tree || new Pride.FieldTree.FieldBoolean('AND');
-
-    var output = _.reduce(
-               datastore_info.fields,
-               function(tree, field) {
-                 if ((field.required || field.fixed) &&
-                     !tree.contains({ type: 'field', value: field.uid })) {
-
-                   missing_field = new Pride.FieldTree.Field(
-                                     field.uid,
-                                     new Pride.FieldTree.Literal(field.default_value)
-                                   );
-
-                   if (_.isMatch(tree, { type: 'field_boolean', value: 'AND' })) {
-                    return tree.addChild(missing_field);
-                   } else {
-                    return new Pride.FieldTree.FieldBoolean('AND', tree, missing_field);
-                   }
-                 }
-
-                 return tree;
-               },
-               given_tree
-             );
-
-    return output.matches({ type: 'field_boolean', children: [] }) ? {} : output;
+    given_tree = given_tree || new Pride.FieldTree.FieldBoolean("AND");
+    var output = index_default_default.reduce(
+      datastore_info.fields,
+      function(tree, field) {
+        if ((field.required || field.fixed) && !tree.contains({ type: "field", value: field.uid })) {
+          missing_field = new Pride.FieldTree.Field(
+            field.uid,
+            new Pride.FieldTree.Literal(field.default_value)
+          );
+          if (index_default_default.isMatch(tree, { type: "field_boolean", value: "AND" })) {
+            return tree.addChild(missing_field);
+          } else {
+            return new Pride.FieldTree.FieldBoolean("AND", tree, missing_field);
+          }
+        }
+        return tree;
+      },
+      given_tree
+    );
+    return output.matches({ type: "field_boolean", children: [] }) ? {} : output;
   };
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Core.DatastoreSearch = function(setup) {
-  var self = this;
+  var self2 = this;
   var base = new Pride.Core.SearchBase(setup, this);
-
   base.createItem = function(item_data) {
     return new Pride.Core.Record(item_data);
   };
-
-  ////////////////////
-  // Facet Searches //
-  ////////////////////
-
   var facet_searches = [];
   var current_facets = [];
-
   this.getFacets = function() {
     return facet_searches;
   };
-
-  //////////////////
-  // Data Getters //
-  //////////////////
-
-  this.uid = base.datastore.get('uid');
-
+  this.uid = base.datastore.get("uid");
   this.getData = function() {
     return {
-             uid:             self.uid,
-             metadata:        Pride.Util.deepClone(base.datastore.get('metadata')),
-             sorts:           Pride.Util.deepClone(base.datastore.get('sorts')),
-             selected_sort:   base.query.get('sort'),
-             facets:          Pride.Util.deepClone(base.query.get('facets')),
-             fields:          Pride.Util.deepClone(base.datastore.get('fields')),
-             field_tree:      Pride.Util.deepClone(base.query.get('field_tree')),
-             settings:        Pride.Util.deepClone(base.query.get('settings')),
-             page:            base.query.get('page'),
-             count:           base.query.get('count'),
-             total_available: base.query.get('total_available'),
-             total_pages:     base.query.get('total_pages'),
-             page_limit:      base.query.get('page_limit'),
-             specialists:     Pride.Util.deepClone(base.query.get('specialists'))
-           };
+      uid: self2.uid,
+      metadata: Pride.Util.deepClone(base.datastore.get("metadata")),
+      sorts: Pride.Util.deepClone(base.datastore.get("sorts")),
+      selected_sort: base.query.get("sort"),
+      facets: Pride.Util.deepClone(base.query.get("facets")),
+      fields: Pride.Util.deepClone(base.datastore.get("fields")),
+      field_tree: Pride.Util.deepClone(base.query.get("field_tree")),
+      settings: Pride.Util.deepClone(base.query.get("settings")),
+      page: base.query.get("page"),
+      count: base.query.get("count"),
+      total_available: base.query.get("total_available"),
+      total_pages: base.query.get("total_pages"),
+      page_limit: base.query.get("page_limit"),
+      specialists: Pride.Util.deepClone(base.query.get("specialists"))
+    };
   };
-
   this.getResults = base.results;
-
-  ///////////////////
-  // Observerables //
-  ///////////////////
-
   base.initialize_observables = function() {
-    self.runDataObservers.add(function() {
-      var facets = base.datastore.get('facets');
-
+    self2.runDataObservers.add(function() {
+      var facets = base.datastore.get("facets");
       if (!Pride.Util.isDeepMatch(current_facets, facets)) {
-        _.each(facet_searches, function(facet_search) {
+        index_default_default.each(facet_searches, function(facet_search) {
           facet_search.clearAllObservers();
         });
-
-        facet_searches = _.map(
-                           facets,
-                           function(facet_data) {
-                             return new Pride.Core.FacetSearch({
-                               data:    _.omit(facet_data, 'values'),
-                               results: facet_data.values
-                             });
-                           }
-                         );
-
+        facet_searches = index_default_default.map(
+          facets,
+          function(facet_data) {
+            return new Pride.Core.FacetSearch({
+              data: index_default_default.omit(facet_data, "values"),
+              results: facet_data.values
+            });
+          }
+        );
         current_facets = facets;
-
-        self.facetsObservers.notify();
+        self2.facetsObservers.notify();
       }
     });
   };
-
   this.getMute = base.getMute;
-
   this.setMute = function(state) {
-    _.each(facet_searches, function(facet) { facet.setMute(state); });
+    index_default_default.each(facet_searches, function(facet) {
+      facet.setMute(state);
+    });
     base.setMute(state);
-
-    return self;
+    return self2;
   };
-
-  base.createObservable('facets', this.getFacets)
-      .initialize_observables();
+  base.createObservable("facets", this.getFacets).initialize_observables();
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Core.FacetSearch = function(setup) {
   var example_facet = this;
-  var data    = setup.data;
+  var data = setup.data;
   var results = setup.results;
-
-  //////////////////
-  // Data Getters //
-  //////////////////
-
-  this.uid        = data.uid;
-  this.getData    = function() { return data; };
-  this.getResults = function() { return results; };
-
-  ////////////
-  // Muting //
-  ////////////
-
+  this.uid = data.uid;
+  this.getData = function() {
+    return data;
+  };
+  this.getResults = function() {
+    return results;
+  };
   var muted = false;
-
-  this.getMute = function() { return muted; };
-
+  this.getMute = function() {
+    return muted;
+  };
   this.setMute = function(state) {
     muted = state;
-
     return self;
   };
-
-  ///////////////////
-  // Observerables //
-  ///////////////////
-
   var observables = [];
-
   this.clearAllObservers = function() {
-    _.each(observables, function(observable) {
+    index_default_default.each(observables, function(observable) {
       observable.clearAll();
     });
-
     return self;
   };
-
-var createObservable = function(name, data_func) {
-    var object = new Pride.Util.FuncBuffer(function() {
-                   var add_observer   = this.add;
-                   var call_observers = this.call;
-
-                     observables.push(this);
-
-                   this.add = function(func) {
-                     if (!self.muted) func(data_func());
-
-                     add_observer(func, 'observers');
-
-                     return this;
-                   };
-
-                   this.notify = function() {
-                     if (!self.muted) {
-                       data = data_func();
-                       self.log('NOTIFY (' + name + ')', data);
-
-                       call_observers('observers', data);
-                     }
-
-                     return this;
-                   };
-                 });
-
-    return object;
+  var createObservable = function(name, data_func) {
+    var object2 = new Pride.Util.FuncBuffer(function() {
+      var add_observer = this.add;
+      var call_observers = this.call;
+      observables.push(this);
+      this.add = function(func) {
+        if (!self.muted)
+          func(data_func());
+        add_observer(func, "observers");
+        return this;
+      };
+      this.notify = function() {
+        if (!self.muted) {
+          data = data_func();
+          self.log("NOTIFY (" + name + ")", data);
+          call_observers("observers", data);
+        }
+        return this;
+      };
+    });
+    return object2;
   };
-
-  this.resultsObservers = createObservable('results', this.getResults);
-  this.setDataObservers = createObservable('setData', this.getData);
-  this.runDataObservers = createObservable('runData', this.getData);
+  this.resultsObservers = createObservable("results", this.getResults);
+  this.setDataObservers = createObservable("setData", this.getData);
+  this.runDataObservers = createObservable("runData", this.getData);
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.FieldTree = {};
-
-// Factory for creating functions to create various field tree node types.
 Pride.Core.nodeFactory = function(type, child_types, extention) {
   return function(value) {
-           this.children     = Pride.Util.slice(arguments, 1);
-           if (this.children.length === 1 && Array.isArray(this.children[0])) {
-             this.children = this.children[0];
-           }
-           this.type         = type;
-           this.value        = value.trim();
-           this.child_types  = child_types || [];
-           this.validIfEmpty = true;
-
-           // Check to make sure a child is valid for this node.
-           // If it is, add it to the array of children.
-           this.addChild = function(new_child) {
-             if (_.find(
-                   this.child_types,
-                   function(a_type) { return new_child.type === a_type; }
-                 )) {
-               this.children.push(new_child);
-             } else {
-               throw 'Not a valid child for a ' + this.type;
-             }
-
-             return this;
-           };
-
-           // Check to see if this object is, or contains, an object which
-           // which matches the query object.
-           this.contains = function(query) {
-             if (this.matches(query)) {
-               return this;
-             } else if (_.isEmpty(this.children)) {
-               return false;
-             } else {
-               return _.find(this.children, function(possible) {
-                        return possible.contains(query);
-                      });
-             }
-           };
-
-           this.matches = function(query) {
-             var this_node = this;
-             var query_children = query.children || [];
-
-             return _.every(
-                      _.omit(query, 'children'),
-                      function(value, key) { return this_node[key] == value; }
-                    ) &&
-                    _.every(
-                      query_children,
-                      function(query_child) {
-                        return _.any(
-                                 children,
-                                 function(real_child) {
-                                   return query_child.matches(real_child);
-                                 }
-                               );
-                      }
-                    );
-           };
-
-           this.serialize = function() { return value; };
-
-           this.serializedChildren = function() {
-             return _.chain(this.children)
-                     .map(function(child) { return child.serialize(); })
-                     .compact()
-                     .value();
-           };
-
-           this.toJSON = function() {
-             return _.mapObject(
-               _.pick(this, 'value', 'children', 'type'),
-               function(val, key) {
-                 if (key == 'children') {
-                   return _.map(val, function(item) {
-                     return item.toJSON();
-                   });
-                 } else {
-                   return val;
-                 }
-               }
-             );
-           };
-
-           // If an extention function was given, call it with this.
-           if (_.isFunction(extention)) { extention.call(this); }
-         };
+    this.children = Pride.Util.slice(arguments, 1);
+    if (this.children.length === 1 && Array.isArray(this.children[0])) {
+      this.children = this.children[0];
+    }
+    this.type = type;
+    this.value = value.trim();
+    this.child_types = child_types || [];
+    this.validIfEmpty = true;
+    this.addChild = function(new_child) {
+      if (index_default_default.find(
+        this.child_types,
+        function(a_type) {
+          return new_child.type === a_type;
+        }
+      )) {
+        this.children.push(new_child);
+      } else {
+        throw "Not a valid child for a " + this.type;
+      }
+      return this;
+    };
+    this.contains = function(query) {
+      if (this.matches(query)) {
+        return this;
+      } else if (index_default_default.isEmpty(this.children)) {
+        return false;
+      } else {
+        return index_default_default.find(this.children, function(possible) {
+          return possible.contains(query);
+        });
+      }
+    };
+    this.matches = function(query) {
+      var this_node = this;
+      var query_children = query.children || [];
+      return index_default_default.every(
+        index_default_default.omit(query, "children"),
+        function(value2, key) {
+          return this_node[key] == value2;
+        }
+      ) && index_default_default.every(
+        query_children,
+        function(query_child) {
+          return index_default_default.any(
+            children,
+            function(real_child) {
+              return query_child.matches(real_child);
+            }
+          );
+        }
+      );
+    };
+    this.serialize = function() {
+      return value;
+    };
+    this.serializedChildren = function() {
+      return index_default_default.chain(this.children).map(function(child) {
+        return child.serialize();
+      }).compact().value();
+    };
+    this.toJSON = function() {
+      return index_default_default.mapObject(
+        index_default_default.pick(this, "value", "children", "type"),
+        function(val, key) {
+          if (key == "children") {
+            return index_default_default.map(val, function(item) {
+              return item.toJSON();
+            });
+          } else {
+            return val;
+          }
+        }
+      );
+    };
+    if (index_default_default.isFunction(extention)) {
+      extention.call(this);
+    }
+  };
 };
-
-
-// Specialized version of Pride.nodefactory() which produces boolean
-// nodes.
 Pride.Core.boolNodeFactory = function(type, child_types) {
   return Pride.Core.nodeFactory(
-           type,
-           child_types,
-           function () {
-             // Ensure that only valid boolean values are given.
-             if (!(_.contains(['AND', 'OR', 'NOT'], this.value))) {
-               throw 'Not a valid boolean value';
-             }
-
-             this.serialize = function() {
-               return this.serializedChildren()
-                          .join(' ' + this.value + ' ');
-             };
-
-             this.serializedChildren = function() {
-               var this_node = this;
-
-               return _.chain(this_node.children)
-                       .map(function(child) {
-                         if (child.type == this_node.type ||
-                            (child.type == 'literal' && child.value.match(/\s/))) {
-                           return '(' + child.serialize() + ')';
-                         } else {
-                           return child.serialize();
-                         }
-                       })
-                       .compact()
-                       .value();
-             };
-           }
-         );
+    type,
+    child_types,
+    function() {
+      if (!index_default_default.contains(["AND", "OR", "NOT"], this.value)) {
+        throw "Not a valid boolean value";
+      }
+      this.serialize = function() {
+        return this.serializedChildren().join(" " + this.value + " ");
+      };
+      this.serializedChildren = function() {
+        var this_node = this;
+        return index_default_default.chain(this_node.children).map(function(child) {
+          if (child.type == this_node.type || child.type == "literal" && child.value.match(/\s/)) {
+            return "(" + child.serialize() + ")";
+          } else {
+            return child.serialize();
+          }
+        }).compact().value();
+      };
+    }
+  );
 };
-
-// Possible node types.
-var top_level_nodes    = ['field_boolean', 'field'];
-var inside_field_nodes = ['value_boolean', 'literal', 'tag', 'special'];
-
-// Create constructor functions for all the various node types.
-
+var top_level_nodes = ["field_boolean", "field"];
+var inside_field_nodes = ["value_boolean", "literal", "tag", "special"];
 Pride.FieldTree.FieldBoolean = Pride.Core.boolNodeFactory(
-                                 'field_boolean',
-                                 top_level_nodes
-                               );
-
+  "field_boolean",
+  top_level_nodes
+);
 Pride.FieldTree.ValueBoolean = Pride.Core.boolNodeFactory(
-                                 'value_boolean',
-                                 inside_field_nodes
-                               );
-
+  "value_boolean",
+  inside_field_nodes
+);
 Pride.FieldTree.Field = Pride.Core.nodeFactory(
-  'field',
+  "field",
   inside_field_nodes,
   function() {
     this.serialize = function() {
-      return this.value + ': (' +
-               this.serializedChildren().join(' ') +
-             ')';
+      return this.value + ": (" + this.serializedChildren().join(" ") + ")";
     };
   }
 );
-
 Pride.FieldTree.Tag = Pride.Core.nodeFactory(
-  'tag',
+  "tag",
   inside_field_nodes,
   function() {
     this.serialize = function() {
       var serialized_children = this.serializedChildren();
       if (serialized_children.length === 0) {
-        return '';
+        return "";
       } else {
-        return this.value + '(' + serialized_children.join(' ') + ')';
+        return this.value + "(" + serialized_children.join(" ") + ")";
       }
     };
   }
 );
-
-Pride.FieldTree.Literal = Pride.Core.nodeFactory('literal');
-Pride.FieldTree.Special = Pride.Core.nodeFactory('special');
-Pride.FieldTree.Raw = Pride.Core.nodeFactory('raw');
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
+Pride.FieldTree.Literal = Pride.Core.nodeFactory("literal");
+Pride.FieldTree.Special = Pride.Core.nodeFactory("special");
+Pride.FieldTree.Raw = Pride.Core.nodeFactory("raw");
 Pride.Util.FuncBuffer = function(extension) {
   var buffer = {};
-  var self   = this;
-
+  var self2 = this;
   var safeGet = function(name) {
-    if (!_.has(buffer, name)) buffer[name] = [];
-
+    if (!index_default_default.has(buffer, name))
+      buffer[name] = [];
     return buffer[name];
   };
-
   this.add = function(func, name) {
     safeGet(name).push(func);
-
-    return self;
+    return self2;
   };
-
   this.remove = function(func, name) {
-    buffer[name] = _.reject(
-                     safeGet(name),
-                     function(other_func) { return func == other_func; }
-                   );
-
-    return self;
+    buffer[name] = index_default_default.reject(
+      safeGet(name),
+      function(other_func) {
+        return func == other_func;
+      }
+    );
+    return self2;
   };
-
   this.clear = function(name) {
     delete buffer[name];
-
-    return self;
+    return self2;
   };
-
   this.clearAll = function() {
     buffer = {};
-
-    return self;
+    return self2;
   };
-
   this.call = function(name) {
-    self.apply(name, Pride.Util.slice(arguments, 1));
-
-    return self;
+    self2.apply(name, Pride.Util.slice(arguments, 1));
+    return self2;
   };
-
   this.apply = function(name, args) {
-    _.each(safeGet(name), function(func) { Pride.Util.safeApply(func, args); });
-
-    return self;
+    index_default_default.each(safeGet(name), function(func) {
+      Pride.Util.safeApply(func, args);
+    });
+    return self2;
   };
-
-  if (_.isFunction(extension)) extension.call(this);
+  if (index_default_default.isFunction(extension))
+    extension.call(this);
 };
-
-// Copyright (c) 2017, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Albert Bertram (bertrama@umich.edu)
-
-
-
 Pride.Core.GetThis = function(barcode, data) {
   this.barcode = barcode;
   this.data = data;
-
-  var getGetThisUrl = function(data) {
+  var getGetThisUrl = function(data2) {
     var ret;
-    _.each(data.fields, function(field) {
-      if (field.uid === 'get_this_url') {
+    index_default_default.each(data2.fields, function(field) {
+      if (field.uid === "get_this_url") {
         ret = field.value;
       }
     });
     return ret;
   };
-
-  var getLinks = function(data) {
+  var getLinks = function(data2) {
     var ret;
-    _.each(data.fields, function(field) {
-      if (field.uid == 'links') {
+    index_default_default.each(data2.fields, function(field) {
+      if (field.uid == "links") {
         ret = field.value;
       }
     });
     return ret;
   };
-
   var request_buffer = new Pride.Util.RequestBuffer({
-    url: getGetThisUrl(data) + '/' + this.barcode,
+    url: getGetThisUrl(data) + "/" + this.barcode,
     failure_message: Pride.Messenger.preset(
-      'failed_get_this_load',
+      "failed_get_this_load",
       data.names[0]
     ),
     edit_response: function(response) {
@@ -622,254 +2311,154 @@ Pride.Core.GetThis = function(barcode, data) {
       return data;
     }
   });
-
   var translateData = function(input) {
     return input;
   };
-
   this.getData = function(func) {
-    request_buffer.request({success: func});
+    request_buffer.request({ success: func });
   };
-
 };
-
-/*
- * Copyright (c) 2021, Regents of the University of Michigan.
- * All rights reserved. See LICENSE.txt for details.
- */
-
-// Authored by Albert Bertram (bertrama@umich.edu)
-
 Pride.Core.Holdings = function(data) {
   this.data = data;
-
-  const getResourceAccess = function(data) {
-    const dataField = data.fields.find((field) => field.uid === 'resource_access');
+  const getResourceAccess = function(data2) {
+    const dataField = data2.fields.find((field) => field.uid === "resource_access");
     if (dataField && dataField.value) {
-      return dataField.value
-    }
-    else {
+      return dataField.value;
+    } else {
       return dataField;
     }
   };
-
   const translateData = function(input) {
     return [getResourceAccess(data)].concat(input);
   };
-
   this.getData = function(func) {
     Pride.Util.safeCall(func, translateData(this.data.holdings));
   };
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Util.MultiSearch = function(uid, muted, search_array) {
   var query_data = {};
-  var self       = this;
-
+  var self2 = this;
   this.searches = search_array;
-  this.uid      = uid;
-
-  this.set = function(values) {
-    _.extend(query_data, values);
-
-    _.each(
+  this.uid = uid;
+  this.set = function(values2) {
+    index_default_default.extend(query_data, values2);
+    index_default_default.each(
       search_array,
-      function(search) { search.set(values); }
+      function(search) {
+        search.set(values2);
+      }
     );
-
-    return self;
+    return self2;
   };
-
   var funcOnEach = function(func_name, before_func) {
     return function() {
-             var args = Pride.Util.slice(arguments);
-
-             Pride.Util.safeApply(before_func, args);
-
-             _.each(search_array, function(search) {
-               search[func_name].apply(search, args);
-             });
-
-             return self;
-           };
+      var args = Pride.Util.slice(arguments);
+      Pride.Util.safeApply(before_func, args);
+      index_default_default.each(search_array, function(search) {
+        search[func_name].apply(search, args);
+      });
+      return self2;
+    };
   };
-
-  this.run      = funcOnEach('run');
-  this.nextPage = funcOnEach('nextPage');
-  this.prevPage = funcOnEach('prevPage');
-  this.setMute  = funcOnEach('setMute', function(state) { muted = state; });
-
+  this.run = funcOnEach("run");
+  this.nextPage = funcOnEach("nextPage");
+  this.prevPage = funcOnEach("prevPage");
+  this.setMute = funcOnEach("setMute", function(state) {
+    muted = state;
+  });
   this.getMute = function() {
     return muted;
   };
-
   this.setMute(muted);
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Util.Paginater = function(initial_values) {
   this.set = function(new_values) {
-
-    ////////////////////////
-    // Basic error checks //
-    ////////////////////////
-
-    if (_.has(new_values, 'total_pages')) {
-      throw 'Can not set total_pages (it is a calculated value)';
+    if (index_default_default.has(new_values, "total_pages")) {
+      throw "Can not set total_pages (it is a calculated value)";
     }
-
-    if (_.has(new_values, 'index_limit')) {
-      throw 'Can not set index_limit (it is a calculated value)';
+    if (index_default_default.has(new_values, "index_limit")) {
+      throw "Can not set index_limit (it is a calculated value)";
     }
-
-    if (_.intersection(['start', 'end', 'count'], _.keys(new_values)).length > 2) {
-      throw 'Can not set start, end and count all at the same time';
+    if (index_default_default.intersection(["start", "end", "count"], index_default_default.keys(new_values)).length > 2) {
+      throw "Can not set start, end and count all at the same time";
     }
-
-    if (_.has(new_values, 'page') &&
-        (_.has(new_values, 'start') || _.has(new_values, 'end'))
-       ) {
-      throw 'Can not set page as well as the start and/or end';
+    if (index_default_default.has(new_values, "page") && (index_default_default.has(new_values, "start") || index_default_default.has(new_values, "end"))) {
+      throw "Can not set page as well as the start and/or end";
     }
-
-    //////////////////////////////
-    // Set and calculate values //
-    //////////////////////////////
-
-    // We wait to set the new end value until after an exception can be thrown.
-    _.extend(values, _.omit(new_values, 'end'));
-
-    // If the page is being set, we have to update the start.
-    if (_.has(new_values, 'page')) {
-      values.start = (values.count || 0) * (values.page - 1);
+    index_default_default.extend(values2, index_default_default.omit(new_values, "end"));
+    if (index_default_default.has(new_values, "page")) {
+      values2.start = (values2.count || 0) * (values2.page - 1);
     }
-
-    // If the end is being set, we calculate what start or count should now be.
-    if (_.has(new_values, 'end')) {
-      // If we are also setting the count, calculate a new start.
-      if (_.has(new_values, 'count')) {
-        values.start = Math.max(0, new_values.end - (values.count - 1));
-      // If we are not setting the count, calculate a new count.
+    if (index_default_default.has(new_values, "end")) {
+      if (index_default_default.has(new_values, "count")) {
+        values2.start = Math.max(0, new_values.end - (values2.count - 1));
       } else {
-        // Throw an error if the start now comes after the end,
-        // because that makes no sense at all.
-        if (values.start <= new_values.end) {
-          values.count = (new_values.end - values.start) + 1;
+        if (values2.start <= new_values.end) {
+          values2.count = new_values.end - values2.start + 1;
         } else {
-          throw 'The start value can not be greater than the end value';
+          throw "The start value can not be greater than the end value";
         }
       }
-
-      // Now it is safe to set the end
-      values.end = new_values.end;
+      values2.end = new_values.end;
     } else {
-      // Calculate what the new end value should be.
-      var end = values.start + values.count - 1;
-      values.end = (end < values.start) ? undefined : end;
+      var end = values2.start + values2.count - 1;
+      values2.end = end < values2.start ? void 0 : end;
     }
-
-    // Calculate what the last index can be.
-    if (!_.isNumber(values.total_available)) {
-      values.index_limit = Infinity;
-    } else if (values.total_available > 0) {
-      values.index_limit = values.total_available - 1;
+    if (!index_default_default.isNumber(values2.total_available)) {
+      values2.index_limit = Infinity;
+    } else if (values2.total_available > 0) {
+      values2.index_limit = values2.total_available - 1;
     } else {
-      values.index_limit = undefined;
+      values2.index_limit = void 0;
     }
-
-    //////////////////////////
-    // Calculate pagination //
-    //////////////////////////
-
-    if (values.count > 0 && values.start % values.count === 0) {
-      values.page = Math.floor(values.start / values.count) + 1;
-
-      if (_.isNumber(values.total_available)) {
-        values.total_pages = Math.ceil(values.total_available / values.count);
-        values.page_limit  = values.total_pages;
+    if (values2.count > 0 && values2.start % values2.count === 0) {
+      values2.page = Math.floor(values2.start / values2.count) + 1;
+      if (index_default_default.isNumber(values2.total_available)) {
+        values2.total_pages = Math.ceil(values2.total_available / values2.count);
+        values2.page_limit = values2.total_pages;
       } else {
-        values.total_pages = undefined;
-        values.page_limit  = Infinity;
+        values2.total_pages = void 0;
+        values2.page_limit = Infinity;
       }
     } else {
-      values.page        = undefined;
-      values.total_pages = undefined;
-      values.page_limit  = undefined;
+      values2.page = void 0;
+      values2.total_pages = void 0;
+      values2.page_limit = void 0;
     }
-
-    //////////////////////////////////////
-    // Check to make sure enough is set //
-    //////////////////////////////////////
-
-    if (!_.has(values, 'start') || !_.has(values, 'count')) {
-      throw 'Not enough information given to create Paginater';
+    if (!index_default_default.has(values2, "start") || !index_default_default.has(values2, "count")) {
+      throw "Not enough information given to create Paginater";
     }
-
     return this;
   };
-
   this.get = function(name) {
-    return values[name];
+    return values2[name];
   };
-
-  // Set the initial values.
-  var values = {};
+  var values2 = {};
   this.set(initial_values);
 };
-
 Pride.Util.Paginater.getPossibleKeys = function() {
   return [
-           'start',
-           'count',
-           'end',
-           'page',
-           'index_limit',
-           'total_pages',
-           'total_available',
-           'page_limit'
-         ];
+    "start",
+    "count",
+    "end",
+    "page",
+    "index_limit",
+    "total_pages",
+    "total_available",
+    "page_limit"
+  ];
 };
-
 Pride.Util.Paginater.hasKey = function(key) {
   return Pride.Util.Paginater.getPossibleKeys().indexOf(key) > -1;
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Core.Query = function(query_info) {
-  // Setup the paginater to do all pagination calculations.
   var paginater = new Pride.Util.Paginater({
-                    start: query_info.start,
-                    count: query_info.count
-                  });
-
-  // Memoize the paginater keys for future use.
+    start: query_info.start,
+    count: query_info.count
+  });
   var paginater_keys = Pride.Util.Paginater.getPossibleKeys();
-
-  // Remove the pagination info from query_info.
-  query_info = _.omit(Pride.Util.deepClone(query_info), paginater_keys);
-
-  // Set the default request_id if it isn't already set.
+  query_info = index_default_default.omit(Pride.Util.deepClone(query_info), paginater_keys);
   query_info.request_id = query_info.request_id || 0;
-
   this.get = function(key) {
     if (Pride.Util.Paginater.hasKey(key)) {
       return paginater.get(key);
@@ -877,389 +2466,279 @@ Pride.Core.Query = function(query_info) {
       return query_info[key];
     }
   };
-
   this.set = function(new_values) {
-    var new_pagination_values = _.pick(new_values, paginater_keys);
-    var new_query_values      = _.omit(new_values, paginater_keys);
-
-    // If the set of things being searched was altered...
-    if (!_.isEmpty(new_query_values)) {
-      paginater.set({ total_available: undefined });
-
-      if (!_.isNumber(new_query_values.request_id)) {
+    var new_pagination_values = index_default_default.pick(new_values, paginater_keys);
+    var new_query_values = index_default_default.omit(new_values, paginater_keys);
+    if (!index_default_default.isEmpty(new_query_values)) {
+      paginater.set({ total_available: void 0 });
+      if (!index_default_default.isNumber(new_query_values.request_id)) {
         query_info.request_id += 1;
       }
     }
-
     paginater.set(new_pagination_values);
-    _.extend(query_info, new_query_values);
-
+    index_default_default.extend(query_info, new_query_values);
     return this;
   };
-
   this.clone = function() {
-    var full_info   = Pride.Util.deepClone(query_info);
-    full_info.start = paginater.get('start');
-    full_info.count = paginater.get('count');
-
+    var full_info = Pride.Util.deepClone(query_info);
+    full_info.start = paginater.get("start");
+    full_info.count = paginater.get("count");
     return new Pride.Core.Query(full_info);
   };
-
   this.toSection = function() {
-    return new Pride.Util.Section(this.get('start'), this.get('end'));
+    return new Pride.Util.Section(this.get("start"), this.get("end"));
   };
-
   this.toLimitSection = function() {
-    return new Pride.Util.Section(this.get('start'), this.get('index_limit'));
+    return new Pride.Util.Section(this.get("start"), this.get("index_limit"));
   };
-
   this.toJSON = function() {
     return {
-             uid:        this.get('uid'),
-             request_id: this.get('request_id'),
-             start:      this.get('start'),
-             count:      this.get('count'),
-             field_tree: this.get('field_tree'),
-             facets:     this.get('facets'),
-             sort:       this.get('sort'),
-             settings:   this.get('settings'),
-             raw_query:  this.get('raw_query')
-           };
+      uid: this.get("uid"),
+      request_id: this.get("request_id"),
+      start: this.get("start"),
+      count: this.get("count"),
+      field_tree: this.get("field_tree"),
+      facets: this.get("facets"),
+      sort: this.get("sort"),
+      settings: this.get("settings"),
+      raw_query: this.get("raw_query")
+    };
   };
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Core.Record = function(data) {
   var request_buffer = new Pride.Util.RequestBuffer({
-                         url: data.source,
-                         failure_message: Pride.Messenger.preset(
-                                            'failed_record_load',
-                                            data.names[0]
-                                          ),
-                         edit_response: function(response) {
-                           data = translateData(response);
-
-                           return data;
-                         }
-                       });
-
+    url: data.source,
+    failure_message: Pride.Messenger.preset(
+      "failed_record_load",
+      data.names[0]
+    ),
+    edit_response: function(response) {
+      data = translateData(response);
+      return data;
+    }
+  });
   var holdings = null;
   var get_this = {};
-
   this.placeHold = function(item, pickup_location, not_needed_after, callback_function) {
-    this.renderFull(function (data) {
+    this.renderFull(function(data2) {
       var getHoldingsUrl = function() {
         var ret;
-        _.each(data.fields, function(field) {
-          if (field.uid === 'holdings_url') {
+        index_default_default.each(data2.fields, function(field) {
+          if (field.uid === "holdings_url") {
             ret = field.value;
           }
         });
         return ret;
       };
-
       var response = Pride.Util.request({
-        url: [getHoldingsUrl(), item, pickup_location, not_needed_after].join('/'),
+        url: [getHoldingsUrl(), item, pickup_location, not_needed_after].join("/"),
         query: true,
-        failure: function(data) { Pride.Messenger.sendMessage({
-          summary: 'Failed to place hold',
-          class: 'error'
-        });},
+        failure: function(data3) {
+          Pride.Messenger.sendMessage({
+            summary: "Failed to place hold",
+            class: "error"
+          });
+        },
         success: callback_function,
-        failure_message: 'placeHold failed',
-        success_message: 'placeHold succeeded',
+        failure_message: "placeHold failed",
+        success_message: "placeHold succeeded"
       });
     });
   };
-
-
   this.getHoldings = function(func) {
     if (holdings) {
       holdings.getData(func);
-    }
-    else if (data.complete) {
+    } else if (data.complete) {
       holdings = new Pride.Core.Holdings(data);
       holdings.getData(func);
-    }
-    else {
-      request_buffer.request({success: function(data) {
-        holdings = new Pride.Core.Holdings(data);
+    } else {
+      request_buffer.request({ success: function(data2) {
+        holdings = new Pride.Core.Holdings(data2);
         holdings.getData(func);
-      }});
+      } });
     }
   };
-
   this.getGetThis = function(barcode, func) {
     if (get_this[barcode]) {
       get_this[barcode].getData(func);
-    }
-    else if (data.complete) {
+    } else if (data.complete) {
       get_this[barcode] = new Pride.Core.GetThis(barcode, data);
       get_this[barcode].getData(func);
-    }
-    else {
-      request_buffer.request({success: function(data) {
-        get_this[barcode] = new Pride.Core.GetThis(barcode, data);
+    } else {
+      request_buffer.request({ success: function(data2) {
+        get_this[barcode] = new Pride.Core.GetThis(barcode, data2);
         get_this[barcode].getData(func);
-      }});
+      } });
     }
   };
-
   this.renderPart = function(func) {
     callWithData(func);
   };
-
   this.renderPartThenCache = function(func) {
     callWithData(func);
     request_buffer.request();
   };
-
   this.renderFull = function(func) {
     if (data.complete) {
       callWithData(func);
-    }
-    else {
-      request_buffer.request({success: func});
+    } else {
+      request_buffer.request({ success: func });
     }
   };
-
   this.renderCSL = function(func) {
-    this.renderFull(function(data) {
+    this.renderFull(function(data2) {
       var ret;
-      _.each(data.fields, function(field) {
-        if (field.uid === 'csl') {
+      index_default_default.each(data2.fields, function(field) {
+        if (field.uid === "csl") {
           ret = field.value;
         }
       });
-
       func(ret);
     });
   };
-
   var callWithData = function(func) {
-    func(_.omit(data, 'complete', 'source'), data.complete);
+    func(index_default_default.omit(data, "complete", "source"), data.complete);
   };
-
   var translateData = function(new_data) {
-    new_data.fields = _.map(
-                        new_data.fields,
-                        function(field) {
-                          if (!field.value_has_html) {
-                            field.value = Pride.Util.escape(field.value);
-                          }
-
-                          return _.omit(field, 'value_has_html');
-                        }
-                      );
-
+    new_data.fields = index_default_default.map(
+      new_data.fields,
+      function(field) {
+        if (!field.value_has_html) {
+          field.value = Pride.Util.escape(field.value);
+        }
+        return index_default_default.omit(field, "value_has_html");
+      }
+    );
     if (!new_data.names_have_html) {
-      new_data.names = _.map(
-                         new_data.names,
-                         function(name) {
-                           return Pride.Util.escape(name);
-                         }
-                       );
+      new_data.names = index_default_default.map(
+        new_data.names,
+        function(name) {
+          return Pride.Util.escape(name);
+        }
+      );
     }
-
     if (new_data.uid) {
       new_data.status = 200;
     } else {
       new_data.status = 404;
     }
-
     if (Pride.PreferenceEngine.selected(new_data)) {
       new_data.selected = true;
     }
-
-    return _.omit(new_data, 'names_have_html');
+    return index_default_default.omit(new_data, "names_have_html");
   };
-
   data = translateData(data);
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Util.RequestBuffer = function(request_options) {
   request_options = request_options || {};
-
   var func_buffer = new Pride.Util.FuncBuffer();
-
-  var request_issued     = false;
+  var request_issued = false;
   var request_successful = false;
-  var request_failed     = false;
-
+  var request_failed = false;
   var cached_response_data;
-
   this.request = function(func_hash) {
-    func_buffer.add(func_hash.success, 'success')
-               .add(func_hash.failure, 'failure');
-
+    func_buffer.add(func_hash.success, "success").add(func_hash.failure, "failure");
     if (request_issued) {
       callWithResponse();
     } else {
       sendRequest();
     }
-
     return this;
   };
-
   var callWithResponse = function(data) {
     cached_response_data = data || cached_response_data;
-
     if (request_successful) {
-      callThenClear('success');
+      callThenClear("success");
     } else if (request_failed) {
-      callThenClear('failure');
+      callThenClear("failure");
     }
   };
-
   var sendRequest = function() {
     request_issued = true;
-
     Pride.Util.request({
-      url:             Pride.Util.safeCall(request_options.url),
-      attempts:        Pride.Util.safeCall(request_options.attempts) ||
-                       Pride.Settings.connection_attempts,
+      url: Pride.Util.safeCall(request_options.url),
+      attempts: Pride.Util.safeCall(request_options.attempts) || Pride.Settings.connection_attempts,
       failure_message: Pride.Util.safeCall(request_options.failure_message),
-
       failure: function(error) {
         request_failed = true;
-
         Pride.Util.safeCall(request_options.before_failure, error);
-
         callWithResponse(error);
-
         Pride.Util.safeCall(request_options.after_failure, error);
       },
-
       success: function(response) {
         request_successful = true;
-
         Pride.Util.safeCall(request_options.before_success, response);
-
-        if (_.isFunction(request_options.edit_response)) {
+        if (index_default_default.isFunction(request_options.edit_response)) {
           response = request_options.edit_response(response);
         }
-
         callWithResponse(response);
-
         Pride.Util.safeCall(request_options.after_success, response);
       }
     });
   };
-
   var callThenClear = function(name) {
-    func_buffer.call(name, cached_response_data)
-               .clearAll();
+    func_buffer.call(name, cached_response_data).clearAll();
   };
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Core.SearchBase = function(setup, parent) {
   this.datastore = setup.datastore;
-  this.query     = setup.query || this.datastore.baseQuery();
-
-  var self             = this;
-  var requestFunc      = setup.requestFunc || this.datastore.runQuery;
-  var results          = setup.starting_results || [];
-  var defaultCacheSize = setup.cache_size ||
-                         Pride.Settings.cache_size[this.datastore.uid] ||
-                         Pride.Settings.default_cache_size;
-
+  this.query = setup.query || this.datastore.baseQuery();
+  var self2 = this;
+  var requestFunc = setup.requestFunc || this.datastore.runQuery;
+  var results = setup.starting_results || [];
+  var defaultCacheSize = setup.cache_size || Pride.Settings.cache_size[this.datastore.uid] || Pride.Settings.default_cache_size;
   this.log = function() {
     var message = Pride.Util.slice(arguments);
-    message.unshift('Search (' + self.datastore.get('uid') + ')');
-
+    message.unshift("Search (" + self2.datastore.get("uid") + ")");
     Pride.Core.log.apply(window, message);
   };
-
-  /////////////////////////
-  // Performing Searches //
-  /////////////////////////
-
   this.set = function(set_hash) {
-    self.query.set(set_hash);
-    Pride.Util.safeCall(self.setDataChanged);
-
-    if (!_.isEmpty(_.omit(set_hash, Pride.Util.Paginater.getPossibleKeys()))) {
+    self2.query.set(set_hash);
+    Pride.Util.safeCall(self2.setDataChanged);
+    if (!index_default_default.isEmpty(index_default_default.omit(set_hash, Pride.Util.Paginater.getPossibleKeys()))) {
       results = [];
     }
-
-    return self;
+    return self2;
   };
-
   this.run = function(cache_size) {
-    Pride.Util.safeCall(self.resultsChanged);
-
-    if (_.isUndefined(cache_size)) {
+    Pride.Util.safeCall(self2.resultsChanged);
+    if (index_default_default.isUndefined(cache_size)) {
       cache_size = defaultCacheSize;
     }
-
     requestResults(
       getMissingSection(
-        self.query.toSection().expanded(cache_size)
+        self2.query.toSection().expanded(cache_size)
       )
     );
-
-    return self;
+    return self2;
   };
-
   this.results = function() {
     return resultsPiece(new Pride.Util.Section(
-             self.query.get('start'),
-             Math.min(self.query.get('end'), self.query.get('index_limit'))
-           ));
+      self2.query.get("start"),
+      Math.min(self2.query.get("end"), self2.query.get("index_limit"))
+    ));
   };
-
   var requestResults = function(requested_section) {
-    self.log('REQUESTING', requested_section);
-    self.log('TOTAL AVAILABLE (pre-request)', self.query.get('total_available'));
-
-    if (requested_section &&
-        self.query.toLimitSection().overlaps(requested_section)) {
-
-      self.log('Sending query...');
-
-      var new_query = self.query.clone()
-                           .set({
-                             start: requested_section.start,
-                             count: requested_section.calcLength()
-                           });
-
+    self2.log("REQUESTING", requested_section);
+    self2.log("TOTAL AVAILABLE (pre-request)", self2.query.get("total_available"));
+    if (requested_section && self2.query.toLimitSection().overlaps(requested_section)) {
+      self2.log("Sending query...");
+      var new_query = self2.query.clone().set({
+        start: requested_section.start,
+        count: requested_section.calcLength()
+      });
       requestFunc({
         query: new_query,
         failure_message: Pride.Messenger.preset(
-                           'failed_search_run',
-                           self.datastore.get('metadata').name
-                         ),
+          "failed_search_run",
+          self2.datastore.get("metadata").name
+        ),
         success: function(response_data) {
-          // Update things if the response matches the current query.
-          if (response_data.request.request_id == self.query.get('request_id')) {
+          if (response_data.request.request_id == self2.query.get("request_id")) {
             updateData(response_data);
-            addResults(response_data.response, new_query.get('start'));
-
+            addResults(response_data.response, new_query.get("start"));
             var response_length = response_data.response.length;
-
-            // If we are missing results from the initial request...
-            if (response_length !== 0 &&
-                response_length < new_query.get('count')) {
+            if (response_length !== 0 && response_length < new_query.get("count")) {
               requestResults(
                 requested_section.shifted(response_length, 0)
               );
@@ -1268,357 +2747,246 @@ Pride.Core.SearchBase = function(setup, parent) {
         }
       });
     } else {
-      // We don't need to run a search, but should update run observers in case
-      // set() was called since the last run().
-      Pride.Util.safeCall(self.runDataChanged);
+      Pride.Util.safeCall(self2.runDataChanged);
     }
   };
-
   var addResults = function(new_items_array, offset) {
     var query_results_added = false;
-
-    self.log('NEW RECORDS', new_items_array);
-
-    _.each(new_items_array, function(item_data, array_index) {
+    self2.log("NEW RECORDS", new_items_array);
+    index_default_default.each(new_items_array, function(item_data, array_index) {
       var item_index = array_index + offset;
-
-      // Update the results that are not already filled.
-      if (_.isUndefined(results[item_index])) {
-        results[item_index] = Pride.Util.safeCall(self.createItem, item_data);
-
-        if (self.query.toSection().inSection(item_index)) {
+      if (index_default_default.isUndefined(results[item_index])) {
+        results[item_index] = Pride.Util.safeCall(self2.createItem, item_data);
+        if (self2.query.toSection().inSection(item_index)) {
           query_results_added = true;
         }
       }
     });
-
-    self.log('CACHE LENGTH', results.length);
-
-    if (query_results_added || _.isEmpty(new_items_array)) {
-      Pride.Util.safeCall(self.resultsChanged);
+    self2.log("CACHE LENGTH", results.length);
+    if (query_results_added || index_default_default.isEmpty(new_items_array)) {
+      Pride.Util.safeCall(self2.resultsChanged);
     }
   };
-
   var updateData = function(response_data) {
-    self.datastore.update(response_data.datastore);
-
-    var new_query_data = _.omit(response_data.new_request, 'start', 'count');
+    self2.datastore.update(response_data.datastore);
+    var new_query_data = index_default_default.omit(response_data.new_request, "start", "count");
     new_query_data.specialists = response_data.specialists;
     new_query_data.total_available = response_data.total_available;
-    self.query.set(new_query_data);
-
-    Pride.Util.safeCall(self.runDataChanged);
+    self2.query.set(new_query_data);
+    Pride.Util.safeCall(self2.runDataChanged);
   };
-
   var getMissingSection = function(section) {
-    var list  = resultsPiece(section);
-    var start = _.indexOf(list, undefined);
-
-    // If the item is not found, indexOf returns -1.
+    var list = resultsPiece(section);
+    var start = index_default_default.indexOf(list, void 0);
     if (start != -1) {
-      var end = section.start + _.lastIndexOf(list, undefined);
-
-      // Adjust for the offset from the start of the results.
+      var end = section.start + index_default_default.lastIndexOf(list, void 0);
       start += section.start;
-
       return new Pride.Util.Section(start, end);
     }
   };
-
   var resultsPiece = function(section) {
     var output = [];
-
     for (var index = section.start; index <= section.end; index++) {
       output.push(results[index]);
     }
-
     return output;
   };
-
-  ///////////////////
-  // Observerables //
-  ///////////////////
-
-  var muted               = false;
-  var observables         = [];
+  var muted = false;
+  var observables = [];
   var mutable_observables = [];
-
   this.clearAllObservers = function() {
-    _.each(observables, function(observable) {
+    index_default_default.each(observables, function(observable) {
       observable.clearAll();
     });
-
-    Pride.Util.safeCall(self.initialize_observables);
-
-    return self;
+    Pride.Util.safeCall(self2.initialize_observables);
+    return self2;
   };
-
   this.getMute = function() {
     return muted;
   };
-
   this.setMute = function(state) {
     if (state != muted) {
       muted = state;
-      Pride.Util.safeCall(self.muteChanged());
-
+      Pride.Util.safeCall(self2.muteChanged());
       if (!muted) {
-        _.each(mutable_observables, function(observable) {
+        index_default_default.each(mutable_observables, function(observable) {
           observable.notify();
         });
       }
     }
-
-    return self;
+    return self2;
   };
-
   this.createObservable = function(name, data_func, never_mute) {
-    var object = new Pride.Util.FuncBuffer(function() {
-                   var add_observer   = this.add;
-                   var call_observers = this.call;
-
-                   observables.push(this);
-                   if (!never_mute) mutable_observables.push(this);
-
-                   this.add = function(func) {
-                     if (!self.muted || never_mute) func(data_func());
-
-                     add_observer(func, 'observers');
-
-                     return this;
-                   };
-
-                   this.notify = function() {
-                     if (!self.muted || never_mute) {
-                       var data = data_func();
-                       self.log('NOTIFY (' + name + ')', data);
-
-                       call_observers('observers', data);
-                     }
-
-                     return this;
-                   };
-                 });
-
-    self[name + 'Changed']     = object.notify;
-    parent[name + 'Observers'] = object;
-
-    return self;
+    var object2 = new Pride.Util.FuncBuffer(function() {
+      var add_observer = this.add;
+      var call_observers = this.call;
+      observables.push(this);
+      if (!never_mute)
+        mutable_observables.push(this);
+      this.add = function(func) {
+        if (!self2.muted || never_mute)
+          func(data_func());
+        add_observer(func, "observers");
+        return this;
+      };
+      this.notify = function() {
+        if (!self2.muted || never_mute) {
+          var data = data_func();
+          self2.log("NOTIFY (" + name + ")", data);
+          call_observers("observers", data);
+        }
+        return this;
+      };
+    });
+    self2[name + "Changed"] = object2.notify;
+    parent[name + "Observers"] = object2;
+    return self2;
   };
-
-  this.createObservable('mute',    this.getMute, true)
-      .createObservable('setData', function() { parent.getData(); })
-      .createObservable('runData', function() { parent.getData(); })
-      .createObservable('results', this.results);
-
-  ///////////////
-  // UTILITIES //
-  ///////////////
-
+  this.createObservable("mute", this.getMute, true).createObservable("setData", function() {
+    parent.getData();
+  }).createObservable("runData", function() {
+    parent.getData();
+  }).createObservable("results", this.results);
   parent.set = function(set_hash) {
-    self.set(set_hash);
-
+    self2.set(set_hash);
     return parent;
   };
-
   parent.run = function(cache_size) {
-    self.run(cache_size);
-
+    self2.run(cache_size);
     return parent;
   };
-
   parent.nextPage = function(cache_size) {
-    var current_page = self.query.get('page');
-    if (_.isNumber(current_page) && current_page < self.query.get('page_limit')) {
-      parent.set({page: current_page + 1});
+    var current_page = self2.query.get("page");
+    if (index_default_default.isNumber(current_page) && current_page < self2.query.get("page_limit")) {
+      parent.set({ page: current_page + 1 });
       parent.run(cache_size);
     }
-
     return parent;
   };
-
   parent.prevPage = function(cache_size) {
-    var current_page = self.query.get('page');
-    if (_.isNumber(current_page) && current_page > 1) {
-      parent.set({page: current_page - 1});
+    var current_page = self2.query.get("page");
+    if (index_default_default.isNumber(current_page) && current_page > 1) {
+      parent.set({ page: current_page - 1 });
       parent.run(cache_size);
     }
-
     return parent;
   };
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
-  var self         = this;
+  var self2 = this;
   var search_cache = new Pride.Util.MultiSearch(null, true, cached_searches);
-
   current_search.set({ page: 1 }).setMute(false);
   search_cache.set({ page: 1 });
-
   this.uid = current_search.uid;
-
   this.run = function(cache_size) {
     current_search.run(cache_size);
     search_cache.run(0);
-
-    return self;
+    return self2;
   };
-
   this.set = function(settings) {
     current_search.set(settings);
-    search_cache.set(_.omit(settings, 'page', 'facets'));
-
-    return self;
+    search_cache.set(index_default_default.omit(settings, "page", "facets"));
+    return self2;
   };
-
   this.nextPage = function() {
     current_search.nextPage();
-
-    return self;
+    return self2;
   };
-
   this.prevPage = function() {
     current_search.prevPage();
-
-    return self;
+    return self2;
   };
-
   this.switchTo = function(requested_uid) {
     if (requested_uid != current_search) {
       current_search.setMute(true).set({ page: 1 });
       search_cache.searches.push(current_search);
-      current_search = undefined;
-
-      search_cache.searches = _.reject(
-                                  search_cache.searches,
-                                  function(search) {
-                                    if (search.uid == requested_uid) {
-                                      current_search = search;
-                                      return true;
-                                    }
-                                  }
-                                );
-
+      current_search = void 0;
+      search_cache.searches = index_default_default.reject(
+        search_cache.searches,
+        function(search) {
+          if (search.uid == requested_uid) {
+            current_search = search;
+            return true;
+          }
+        }
+      );
       if (!current_search) {
-        throw 'Could not find a search with a UID of: ' + requested_uid;
+        throw "Could not find a search with a UID of: " + requested_uid;
       }
-
-
-      self.uid = current_search.uid;
+      self2.uid = current_search.uid;
       current_search.setMute(false);
     }
-
-    return self;
+    return self2;
   };
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Util.Section = function(start, end) {
   this.start = Math.max(Math.min(start, end), 0);
-  this.end   = Math.max(Math.max(start, end), 0);
-
+  this.end = Math.max(Math.max(start, end), 0);
   this.inSection = function(index) {
-    return index >= this.start &&
-           index <= this.end;
+    return index >= this.start && index <= this.end;
   };
-
   this.overlaps = function(section) {
-    return this.inSection(section.start) ||
-           this.inSection(section.end);
+    return this.inSection(section.start) || this.inSection(section.end);
   };
-
   this.calcLength = function() {
     return this.end - this.start + 1;
   };
-
   this.expanded = function(amount) {
     return this.shifted(-1 * amount, amount);
   };
-
   this.shifted = function(start_amount, end_amount) {
-    if (!_.isNumber(end_amount)) end_amount = start_amount;
-
+    if (!index_default_default.isNumber(end_amount))
+      end_amount = start_amount;
     return new Pride.Util.Section(
-             this.start + start_amount,
-             this.end   + end_amount
-           );
+      this.start + start_amount,
+      this.end + end_amount
+    );
   };
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
-// Perform a deep clone that leaves functions untouched.
 Pride.Util.deepClone = function(original) {
-  if (_.isFunction(original)) {
+  if (index_default_default.isFunction(original)) {
     return original;
   } else {
     var collection_function = false;
-
-    if (_.isArray(original)) {
-      collection_function = 'map';
-    } else if (_.isObject(original)){
-      collection_function = 'mapObject';
+    if (index_default_default.isArray(original)) {
+      collection_function = "map";
+    } else if (index_default_default.isObject(original)) {
+      collection_function = "mapObject";
     }
-
     if (collection_function) {
-      return _[collection_function](
-               original,
-               function(item) { return Pride.Util.deepClone(item); }
-             );
+      return index_default_default[collection_function](
+        original,
+        function(item) {
+          return Pride.Util.deepClone(item);
+        }
+      );
     } else {
-      return _.clone(original);
+      return index_default_default.clone(original);
     }
   }
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
 Pride.Util.escape = function(string) {
-  var temp_element = document.createElement('div');
+  var temp_element = document.createElement("div");
   temp_element.appendChild(document.createTextNode(string));
-
   return temp_element.innerHTML;
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.init = new Pride.Util.RequestBuffer({
-  url:             function() { return Pride.Settings.datastores_url; },
-  attempts:        function() { return Pride.Settings.init_attempts; },
-  failure_message: function() { return Pride.Messenger.preset('failed_init'); },
-
-  edit_response:   function() { return undefined; },
-  before_success:  function(data) {
-    // TODO: Look for a better place for this later.
+  url: function() {
+    return Pride.Settings.datastores_url;
+  },
+  attempts: function() {
+    return Pride.Settings.init_attempts;
+  },
+  failure_message: function() {
+    return Pride.Messenger.preset("failed_init");
+  },
+  edit_response: function() {
+    return void 0;
+  },
+  before_success: function(data) {
     Pride.Settings.default_institution = data.default_institution;
     Pride.Settings.affiliation = data.affiliation;
-    Pride.AllDatastores.array = _.map(
+    Pride.AllDatastores.array = index_default_default.map(
       data.response,
       function(datastore_data) {
         return new Pride.Core.Datastore(datastore_data);
@@ -1626,443 +2994,283 @@ Pride.init = new Pride.Util.RequestBuffer({
     );
   }
 }).request;
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
-Pride.Util.isDeepMatch = function(object, pattern) {
-  var both_arrays  = _.isArray(object)  && _.isArray(pattern);
-  var both_objects = _.isObject(object) && _.isObject(pattern);
-
-  if (both_arrays  && pattern.length != object.length) {
+Pride.Util.isDeepMatch = function(object2, pattern) {
+  var both_arrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
+  var both_objects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
+  if (both_arrays && pattern.length != object2.length) {
     return false;
   }
-
-  if (both_objects && _.keys(pattern).length != _.keys(object).length) {
+  if (both_objects && index_default_default.keys(pattern).length != index_default_default.keys(object2).length) {
     return false;
   }
-
   if (both_arrays || both_objects) {
-    return _.every(pattern, function(value, key) {
-             return Pride.Util.isDeepMatch(object[key], value);
-           });
+    return index_default_default.every(pattern, function(value, key) {
+      return Pride.Util.isDeepMatch(object2[key], value);
+    });
   } else {
-    return object === pattern;
+    return object2 === pattern;
   }
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-// Perform a deep clone that leaves functions untouched.
 Pride.Core.log = function(source, info) {
   if (Pride.Settings.obnoxious) {
     var message = Pride.Util.slice(arguments, 2);
-    message.unshift('[Pride: ' + source + '] ' + info);
-
+    message.unshift("[Pride: " + source + "] " + info);
     console.log.apply(console, message);
   }
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
 Pride.FieldTree.parseField = function(field_name, content) {
   if (!content) {
     return {};
   } else {
     try {
-//      content = content
-//        .replace(/[“”]/g, '"')
-//        .replace(/ [:&]/g, ' ')
-//        .replace(/[:&] /g, ' ')
-//        .replace(/[:&]$/g, '')
-//        .replace(/^[:&]/g, '')
-//        ;
-      return Pride.Parser.parse(content, {defaultFieldName: field_name});
-    }
-    catch (e) {
+      return Pride.Parser.parse(content, { defaultFieldName: field_name });
+    } catch (e) {
       console.log(e);
       return new Pride.FieldTree.Raw(content);
     }
   }
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.FieldTree = Pride.FieldTree || {};
-
-Pride.FieldTree.tokens = [':', 'AND', 'OR', '+', '-', '(', ')', '*', ' ', '\n', '\t', '\r'];
-
+Pride.FieldTree.tokens = [":", "AND", "OR", "+", "-", "(", ")", "*", " ", "\n", "	", "\r"];
 Pride.FieldTree.tokenize = function(string) {
-  var result = [];
-  var index  = 0;
-  var type   = null;
-
+  var result2 = [];
+  var index = 0;
+  var type = null;
   while (index < string.length) {
-    var slice = string.slice(index);
-    var found = _.find(
-                  Pride.FieldTree.tokens,
-                  function(pattern) {
-                    return (new RegExp('^\\' + pattern)).exec(slice);
-                  }
-                );
-
-
-
+    var slice2 = string.slice(index);
+    var found = index_default_default.find(
+      Pride.FieldTree.tokens,
+      function(pattern) {
+        return new RegExp("^\\" + pattern).exec(slice2);
+      }
+    );
     if (found) {
       if (/\s/.exec(found)) {
-        type = 'whitespace';
+        type = "whitespace";
       }
-      type   = found;
+      type = found;
       index += found.length;
     } else {
       found = string.charAt(index);
-      type  = 'string';
+      type = "string";
       index++;
-
-      var last = _.last(result);
-
-      if (last && last.type == 'string') {
-        found = result.pop().content + found;
+      var last2 = index_default_default.last(result2);
+      if (last2 && last2.type == "string") {
+        found = result2.pop().content + found;
       }
     }
-
-    result.push({ type: type, content: found });
+    result2.push({ type, content: found });
   }
-
-  return result;
+  return result2;
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
-
 Pride.Util.request = function(request_info) {
-  Pride.Core.log('Request', 'Sending HTTP request...');
-  Pride.Core.log('Request', 'URL', request_info.url);
-  Pride.Core.log('Request', 'CONTENT', JSON.stringify(request_info.query));
-
-  if (!request_info.url) throw 'No URL given to Pride.Util.request()';
-
-  var request_method = 'get';
-  if (request_info.query) request_method = 'post';
-
-  if (!_.isNumber(request_info.attempts)) {
+  Pride.Core.log("Request", "Sending HTTP request...");
+  Pride.Core.log("Request", "URL", request_info.url);
+  Pride.Core.log("Request", "CONTENT", JSON.stringify(request_info.query));
+  if (!request_info.url)
+    throw "No URL given to Pride.Util.request()";
+  var request_method = "get";
+  if (request_info.query)
+    request_method = "post";
+  if (!index_default_default.isNumber(request_info.attempts)) {
     request_info.attempts = Pride.Settings.connection_attempts;
   }
-
   request_info.attempts -= 1;
-
   reqwest({
-    url:             request_info.url,
-    data:            JSON.stringify(request_info.query),
-    type:            'json',
-    method:          request_method,
-    contentType:     'application/json',
+    url: request_info.url,
+    data: JSON.stringify(request_info.query),
+    type: "json",
+    method: request_method,
+    contentType: "application/json",
     withCredentials: true,
-
-    error: function (error) {
+    error: function(error) {
       if (request_info.attempts <= 0) {
-        Pride.Core.log('Request', 'ERROR', error);
-
+        Pride.Core.log("Request", "ERROR", error);
         Pride.Util.safeCall(request_info.failure, error);
-
         Pride.Messenger.sendMessage({
           summary: request_info.failure_message,
-          class:   'error'
+          class: "error"
         });
       } else {
-        Pride.Core.log('Request', 'Trying request again...');
+        Pride.Core.log("Request", "Trying request again...");
         window.setTimeout(
-          function() { Pride.Util.request(request_info); },
+          function() {
+            Pride.Util.request(request_info);
+          },
           Pride.Settings.ms_between_attempts
         );
       }
     },
-
-    success: function (response) {
-      Pride.Core.log('Request', 'SUCCESS', response);
-
+    success: function(response) {
+      Pride.Core.log("Request", "SUCCESS", response);
       Pride.Util.safeCall(request_info.success, response);
-
       Pride.Messenger.sendMessage({
         summary: request_info.success_message,
-        class:   'success'
+        class: "success"
       });
-
       Pride.Messenger.sendMessageArray(response.messages);
     }
   });
 };
-
-// Copyright (c) 2017, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Albert Bertram (bertrama@umich.edu)
 Pride.requestRecord = function(source, id, func) {
-  if (func === undefined) {
-    func = function(data) {};
+  if (func === void 0) {
+    func = function(data2) {
+    };
   }
   var data = {
     complete: false,
-    source: Pride.AllDatastores.get(source).get('url') + '/record/' + id,
-    names: [ undefined ]
+    source: Pride.AllDatastores.get(source).get("url") + "/record/" + id,
+    names: [void 0]
   };
   var record = new Pride.Core.Record(data);
   record.renderFull(func);
   return record;
 };
-
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Util.safeCall = function(maybe_func) {
-  if (_.isFunction(maybe_func)) {
+  if (index_default_default.isFunction(maybe_func)) {
     return maybe_func.apply(this, Pride.Util.slice(arguments, 1));
   } else {
     return maybe_func;
   }
 };
-
 Pride.Util.safeApply = function(maybe_func, args) {
-  if (_.isFunction(maybe_func)) {
+  if (index_default_default.isFunction(maybe_func)) {
     return maybe_func.apply(this, args);
   } else {
     return maybe_func;
   }
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
 Pride.Util.slice = function(array, begin, end) {
   return Array.prototype.slice.call(array, begin, end);
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.AllDatastores = {
   array: [],
-
   get: function(uid) {
-    return _.find(
+    return index_default_default.find(
       this.array,
-      function(datastore) { return datastore.get('uid') == uid; }
+      function(datastore) {
+        return datastore.get("uid") == uid;
+      }
     );
   },
-
   newSearch: function(uid) {
-    var datastore = _.find(
-                      this.array,
-                      function(datastore) { return datastore.get('uid') == uid; }
-                    );
-
-    return datastore ? datastore.baseSearch() : undefined;
+    var datastore = index_default_default.find(
+      this.array,
+      function(datastore2) {
+        return datastore2.get("uid") == uid;
+      }
+    );
+    return datastore ? datastore.baseSearch() : void 0;
   },
-
   each: function(func) {
-    _.each(this.array, func);
-
+    index_default_default.each(this.array, func);
     return this;
   }
 };
-
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
-
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-
-
 Pride.Messenger = new Pride.Util.FuncBuffer(function() {
   var notifyObservers = this.call;
-
-  this.addObserver    = this.add;
+  this.addObserver = this.add;
   this.removeObserver = this.remove;
   this.clearObservers = this.clear;
-
-  this.call   = undefined;
-  this.add    = undefined;
-  this.remove = undefined;
-  this.clear  = undefined;
-
+  this.call = void 0;
+  this.add = void 0;
+  this.remove = void 0;
+  this.clear = void 0;
   this.sendMessage = function(message) {
     if (message.summary) {
-      message.class   = message.class   || 'info';
-      message.details = message.details || '';
-
+      message.class = message.class || "info";
+      message.details = message.details || "";
       notifyObservers(message.class, message);
-
-      Pride.Core.log('Messenger', 'MESSAGE SENT', message);
+      Pride.Core.log("Messenger", "MESSAGE SENT", message);
     }
-
     return this;
   };
-
   this.sendMessageArray = function(message_array) {
     var messenger = this;
-
-    _.each(
+    index_default_default.each(
       message_array,
-      function(message) { messenger.sendMessage(message); }
+      function(message) {
+        messenger.sendMessage(message);
+      }
     );
-
     return this;
   };
-
-  // Given a type of preset message and some optional arguments, generate a
-  // message string.
   this.preset = function(type) {
-    // var variables = Pride.Util.slice(arguments);
-
-    // return Pride.Settings
-    //             .message_formats[type]
-    //             .replace(
-    //               /(^|[^\\])\$(\d+)/,
-    //               function(match, previous_char, number) {
-    //                 return previous_char + (variables[Number(number)] || '');
-    //               }
-    //             )
-    //             .replace('\\$', '$');
   };
 });
-
-Pride.Parser =
-
-/*
+Pride.Parser = /*
  * Generated by PEG.js 0.10.0.
  *
  * http://pegjs.org/
  */
-(function() {
+function() {
   "use strict";
-
   function peg$subclass(child, parent) {
-    function ctor() { this.constructor = child; }
-    ctor.prototype = parent.prototype;
-    child.prototype = new ctor();
+    function ctor2() {
+      this.constructor = child;
+    }
+    ctor2.prototype = parent.prototype;
+    child.prototype = new ctor2();
   }
-
   function peg$SyntaxError(message, expected, found, location) {
-    this.message  = message;
+    this.message = message;
     this.expected = expected;
-    this.found    = found;
+    this.found = found;
     this.location = location;
-    this.name     = "SyntaxError";
-
+    this.name = "SyntaxError";
     if (typeof Error.captureStackTrace === "function") {
       Error.captureStackTrace(this, peg$SyntaxError);
     }
   }
-
   peg$subclass(peg$SyntaxError, Error);
-
   peg$SyntaxError.buildMessage = function(expected, found) {
     var DESCRIBE_EXPECTATION_FNS = {
-          literal: function(expectation) {
-            return "\"" + literalEscape(expectation.text) + "\"";
-          },
-
-          "class": function(expectation) {
-            var escapedParts = "",
-                i;
-
-            for (i = 0; i < expectation.parts.length; i++) {
-              escapedParts += expectation.parts[i] instanceof Array
-                ? classEscape(expectation.parts[i][0]) + "-" + classEscape(expectation.parts[i][1])
-                : classEscape(expectation.parts[i]);
-            }
-
-            return "[" + (expectation.inverted ? "^" : "") + escapedParts + "]";
-          },
-
-          any: function(expectation) {
-            return "any character";
-          },
-
-          end: function(expectation) {
-            return "end of input";
-          },
-
-          other: function(expectation) {
-            return expectation.description;
-          }
-        };
-
+      literal: function(expectation) {
+        return '"' + literalEscape(expectation.text) + '"';
+      },
+      "class": function(expectation) {
+        var escapedParts = "", i;
+        for (i = 0; i < expectation.parts.length; i++) {
+          escapedParts += expectation.parts[i] instanceof Array ? classEscape(expectation.parts[i][0]) + "-" + classEscape(expectation.parts[i][1]) : classEscape(expectation.parts[i]);
+        }
+        return "[" + (expectation.inverted ? "^" : "") + escapedParts + "]";
+      },
+      any: function(expectation) {
+        return "any character";
+      },
+      end: function(expectation) {
+        return "end of input";
+      },
+      other: function(expectation) {
+        return expectation.description;
+      }
+    };
     function hex(ch) {
       return ch.charCodeAt(0).toString(16).toUpperCase();
     }
-
     function literalEscape(s) {
-      return s
-        .replace(/\\/g, '\\\\')
-        .replace(/"/g,  '\\"')
-        .replace(/\0/g, '\\0')
-        .replace(/\t/g, '\\t')
-        .replace(/\n/g, '\\n')
-        .replace(/\r/g, '\\r')
-        .replace(/[\x00-\x0F]/g,          function(ch) { return '\\x0' + hex(ch); })
-        .replace(/[\x10-\x1F\x7F-\x9F]/g, function(ch) { return '\\x'  + hex(ch); });
+      return s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\0/g, "\\0").replace(/\t/g, "\\t").replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/[\x00-\x0F]/g, function(ch) {
+        return "\\x0" + hex(ch);
+      }).replace(/[\x10-\x1F\x7F-\x9F]/g, function(ch) {
+        return "\\x" + hex(ch);
+      });
     }
-
     function classEscape(s) {
-      return s
-        .replace(/\\/g, '\\\\')
-        .replace(/\]/g, '\\]')
-        .replace(/\^/g, '\\^')
-        .replace(/-/g,  '\\-')
-        .replace(/\0/g, '\\0')
-        .replace(/\t/g, '\\t')
-        .replace(/\n/g, '\\n')
-        .replace(/\r/g, '\\r')
-        .replace(/[\x00-\x0F]/g,          function(ch) { return '\\x0' + hex(ch); })
-        .replace(/[\x10-\x1F\x7F-\x9F]/g, function(ch) { return '\\x'  + hex(ch); });
+      return s.replace(/\\/g, "\\\\").replace(/\]/g, "\\]").replace(/\^/g, "\\^").replace(/-/g, "\\-").replace(/\0/g, "\\0").replace(/\t/g, "\\t").replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/[\x00-\x0F]/g, function(ch) {
+        return "\\x0" + hex(ch);
+      }).replace(/[\x10-\x1F\x7F-\x9F]/g, function(ch) {
+        return "\\x" + hex(ch);
+      });
     }
-
     function describeExpectation(expectation) {
       return DESCRIBE_EXPECTATION_FNS[expectation.type](expectation);
     }
-
-    function describeExpected(expected) {
-      var descriptions = new Array(expected.length),
-          i, j;
-
-      for (i = 0; i < expected.length; i++) {
-        descriptions[i] = describeExpectation(expected[i]);
+    function describeExpected(expected2) {
+      var descriptions = new Array(expected2.length), i, j;
+      for (i = 0; i < expected2.length; i++) {
+        descriptions[i] = describeExpectation(expected2[i]);
       }
-
       descriptions.sort();
-
       if (descriptions.length > 0) {
         for (i = 1, j = 1; i < descriptions.length; i++) {
           if (descriptions[i - 1] !== descriptions[i]) {
@@ -2072,137 +3280,96 @@ Pride.Parser =
         }
         descriptions.length = j;
       }
-
       switch (descriptions.length) {
         case 1:
           return descriptions[0];
-
         case 2:
           return descriptions[0] + " or " + descriptions[1];
-
         default:
-          return descriptions.slice(0, -1).join(", ")
-            + ", or "
-            + descriptions[descriptions.length - 1];
+          return descriptions.slice(0, -1).join(", ") + ", or " + descriptions[descriptions.length - 1];
       }
     }
-
-    function describeFound(found) {
-      return found ? "\"" + literalEscape(found) + "\"" : "end of input";
+    function describeFound(found2) {
+      return found2 ? '"' + literalEscape(found2) + '"' : "end of input";
     }
-
     return "Expected " + describeExpected(expected) + " but " + describeFound(found) + " found.";
   };
-
   function peg$parse(input, options) {
     options = options !== void 0 ? options : {};
-
-    var peg$FAILED = {},
-
-        peg$startRuleFunctions = { start: peg$parsestart },
-        peg$startRuleFunction  = peg$parsestart,
-
-        peg$c0 = function(c) { return c; },
-        peg$c1 = function(cl, con, co) { return new Pride.FieldTree.FieldBoolean(con, cl, co); },
-        peg$c2 = function(first, rest) { if (rest) { return [first, rest]; } else { return first; } },
-        peg$c3 = function(rest) { return rest; },
-        peg$c4 = ":",
-        peg$c5 = peg$literalExpectation(":", false),
-        peg$c6 = function(fieldName, list) { return new Pride.FieldTree.Field(fieldName, list); },
-        peg$c7 = function(list) { return new Pride.FieldTree.Field(defaultFieldName, list); },
-        peg$c8 = function(string) { return string.join(''); },
-        peg$c9 = function(first, rest) { if (rest) { return first.concat( rest ); } else { return first; } },
-        peg$c10 = function(first, rest) { return [new Pride.FieldTree.Literal(first + rest.join(''))]; },
-        peg$c11 = function(string) { return [new Pride.FieldTree.Literal(string.join(''))]; },
-        peg$c12 = function(literal) { return [new Pride.FieldTree.Literal('"' + literal.join('') + '"')]; },
-        peg$c13 = function(conj) { return conj; },
-        peg$c14 = "AND",
-        peg$c15 = peg$literalExpectation("AND", false),
-        peg$c16 = "OR",
-        peg$c17 = peg$literalExpectation("OR", false),
-        peg$c18 = "NOT",
-        peg$c19 = peg$literalExpectation("NOT", false),
-        peg$c20 = "'",
-        peg$c21 = peg$literalExpectation("'", false),
-        peg$c22 = /^[^']/,
-        peg$c23 = peg$classExpectation(["'"], true, false),
-        peg$c24 = "\"",
-        peg$c25 = peg$literalExpectation("\"", false),
-        peg$c26 = /^[^"]/,
-        peg$c27 = peg$classExpectation(["\""], true, false),
-        peg$c28 = /^[^ \t\r\n:'"()]/,
-        peg$c29 = peg$classExpectation([" ", "\t", "\r", "\n", ":", "'", "\"", "(", ")"], true, false),
-        peg$c30 = /^[^ \t\r\n():]/,
-        peg$c31 = peg$classExpectation([" ", "\t", "\r", "\n", "(", ")", ":"], true, false),
-        peg$c32 = /^[^ \t\r\n'"():]/,
-        peg$c33 = peg$classExpectation([" ", "\t", "\r", "\n", "'", "\"", "(", ")", ":"], true, false),
-        peg$c34 = /^[ \t\r\n]/,
-        peg$c35 = peg$classExpectation([" ", "\t", "\r", "\n"], false, false),
-
-        peg$currPos          = 0,
-        peg$savedPos         = 0,
-        peg$posDetailsCache  = [{ line: 1, column: 1 }],
-        peg$maxFailPos       = 0,
-        peg$maxFailExpected  = [],
-        peg$silentFails      = 0,
-
-        peg$result;
-
+    var peg$FAILED = {}, peg$startRuleFunctions = { start: peg$parsestart }, peg$startRuleFunction = peg$parsestart, peg$c0 = function(c) {
+      return c;
+    }, peg$c1 = function(cl, con, co) {
+      return new Pride.FieldTree.FieldBoolean(con, cl, co);
+    }, peg$c2 = function(first2, rest2) {
+      if (rest2) {
+        return [first2, rest2];
+      } else {
+        return first2;
+      }
+    }, peg$c3 = function(rest2) {
+      return rest2;
+    }, peg$c4 = ":", peg$c5 = peg$literalExpectation(":", false), peg$c6 = function(fieldName, list) {
+      return new Pride.FieldTree.Field(fieldName, list);
+    }, peg$c7 = function(list) {
+      return new Pride.FieldTree.Field(defaultFieldName, list);
+    }, peg$c8 = function(string) {
+      return string.join("");
+    }, peg$c9 = function(first2, rest2) {
+      if (rest2) {
+        return first2.concat(rest2);
+      } else {
+        return first2;
+      }
+    }, peg$c10 = function(first2, rest2) {
+      return [new Pride.FieldTree.Literal(first2 + rest2.join(""))];
+    }, peg$c11 = function(string) {
+      return [new Pride.FieldTree.Literal(string.join(""))];
+    }, peg$c12 = function(literal) {
+      return [new Pride.FieldTree.Literal('"' + literal.join("") + '"')];
+    }, peg$c13 = function(conj) {
+      return conj;
+    }, peg$c14 = "AND", peg$c15 = peg$literalExpectation("AND", false), peg$c16 = "OR", peg$c17 = peg$literalExpectation("OR", false), peg$c18 = "NOT", peg$c19 = peg$literalExpectation("NOT", false), peg$c20 = "'", peg$c21 = peg$literalExpectation("'", false), peg$c22 = /^[^']/, peg$c23 = peg$classExpectation(["'"], true, false), peg$c24 = '"', peg$c25 = peg$literalExpectation('"', false), peg$c26 = /^[^"]/, peg$c27 = peg$classExpectation(['"'], true, false), peg$c28 = /^[^ \t\r\n:'"()]/, peg$c29 = peg$classExpectation([" ", "	", "\r", "\n", ":", "'", '"', "(", ")"], true, false), peg$c30 = /^[^ \t\r\n():]/, peg$c31 = peg$classExpectation([" ", "	", "\r", "\n", "(", ")", ":"], true, false), peg$c32 = /^[^ \t\r\n'"():]/, peg$c33 = peg$classExpectation([" ", "	", "\r", "\n", "'", '"', "(", ")", ":"], true, false), peg$c34 = /^[ \t\r\n]/, peg$c35 = peg$classExpectation([" ", "	", "\r", "\n"], false, false), peg$currPos = 0, peg$savedPos = 0, peg$posDetailsCache = [{ line: 1, column: 1 }], peg$maxFailPos = 0, peg$maxFailExpected = [], peg$silentFails = 0, peg$result;
     if ("startRule" in options) {
       if (!(options.startRule in peg$startRuleFunctions)) {
-        throw new Error("Can't start parsing from rule \"" + options.startRule + "\".");
+        throw new Error(`Can't start parsing from rule "` + options.startRule + '".');
       }
-
       peg$startRuleFunction = peg$startRuleFunctions[options.startRule];
     }
-
     function text() {
       return input.substring(peg$savedPos, peg$currPos);
     }
-
     function location() {
       return peg$computeLocation(peg$savedPos, peg$currPos);
     }
-
-    function expected(description, location) {
-      location = location !== void 0 ? location : peg$computeLocation(peg$savedPos, peg$currPos)
-
+    function expected(description, location2) {
+      location2 = location2 !== void 0 ? location2 : peg$computeLocation(peg$savedPos, peg$currPos);
       throw peg$buildStructuredError(
         [peg$otherExpectation(description)],
         input.substring(peg$savedPos, peg$currPos),
-        location
+        location2
       );
     }
-
-    function error(message, location) {
-      location = location !== void 0 ? location : peg$computeLocation(peg$savedPos, peg$currPos)
-
-      throw peg$buildSimpleError(message, location);
+    function error(message, location2) {
+      location2 = location2 !== void 0 ? location2 : peg$computeLocation(peg$savedPos, peg$currPos);
+      throw peg$buildSimpleError(message, location2);
     }
-
-    function peg$literalExpectation(text, ignoreCase) {
-      return { type: "literal", text: text, ignoreCase: ignoreCase };
+    function peg$literalExpectation(text2, ignoreCase) {
+      return { type: "literal", text: text2, ignoreCase };
     }
-
     function peg$classExpectation(parts, inverted, ignoreCase) {
-      return { type: "class", parts: parts, inverted: inverted, ignoreCase: ignoreCase };
+      return { type: "class", parts, inverted, ignoreCase };
     }
-
     function peg$anyExpectation() {
       return { type: "any" };
     }
-
     function peg$endExpectation() {
       return { type: "end" };
     }
-
     function peg$otherExpectation(description) {
-      return { type: "other", description: description };
+      return { type: "other", description };
     }
-
     function peg$computePosDetails(pos) {
       var details = peg$posDetailsCache[pos], p;
-
       if (details) {
         return details;
       } else {
@@ -2210,13 +3377,11 @@ Pride.Parser =
         while (!peg$posDetailsCache[p]) {
           p--;
         }
-
         details = peg$posDetailsCache[p];
         details = {
-          line:   details.line,
+          line: details.line,
           column: details.column
         };
-
         while (p < pos) {
           if (input.charCodeAt(p) === 10) {
             details.line++;
@@ -2224,60 +3389,50 @@ Pride.Parser =
           } else {
             details.column++;
           }
-
           p++;
         }
-
         peg$posDetailsCache[pos] = details;
         return details;
       }
     }
-
     function peg$computeLocation(startPos, endPos) {
-      var startPosDetails = peg$computePosDetails(startPos),
-          endPosDetails   = peg$computePosDetails(endPos);
-
+      var startPosDetails = peg$computePosDetails(startPos), endPosDetails = peg$computePosDetails(endPos);
       return {
         start: {
           offset: startPos,
-          line:   startPosDetails.line,
+          line: startPosDetails.line,
           column: startPosDetails.column
         },
         end: {
           offset: endPos,
-          line:   endPosDetails.line,
+          line: endPosDetails.line,
           column: endPosDetails.column
         }
       };
     }
-
-    function peg$fail(expected) {
-      if (peg$currPos < peg$maxFailPos) { return; }
-
+    function peg$fail(expected2) {
+      if (peg$currPos < peg$maxFailPos) {
+        return;
+      }
       if (peg$currPos > peg$maxFailPos) {
         peg$maxFailPos = peg$currPos;
         peg$maxFailExpected = [];
       }
-
-      peg$maxFailExpected.push(expected);
+      peg$maxFailExpected.push(expected2);
     }
-
-    function peg$buildSimpleError(message, location) {
-      return new peg$SyntaxError(message, null, null, location);
+    function peg$buildSimpleError(message, location2) {
+      return new peg$SyntaxError(message, null, null, location2);
     }
-
-    function peg$buildStructuredError(expected, found, location) {
+    function peg$buildStructuredError(expected2, found, location2) {
       return new peg$SyntaxError(
-        peg$SyntaxError.buildMessage(expected, found),
-        expected,
+        peg$SyntaxError.buildMessage(expected2, found),
+        expected2,
         found,
-        location
+        location2
       );
     }
-
     function peg$parsestart() {
       var s0, s1, s2;
-
       s0 = peg$currPos;
       s1 = peg$parsecoordination();
       if (s1 !== peg$FAILED) {
@@ -2294,13 +3449,10 @@ Pride.Parser =
         peg$currPos = s0;
         s0 = peg$FAILED;
       }
-
       return s0;
     }
-
     function peg$parsecoordination() {
       var s0, s1, s2, s3, s4, s5;
-
       s0 = peg$currPos;
       s1 = peg$parseclause();
       if (s1 !== peg$FAILED) {
@@ -2338,13 +3490,10 @@ Pride.Parser =
       if (s0 === peg$FAILED) {
         s0 = peg$parseclause_list();
       }
-
       return s0;
     }
-
     function peg$parseclause_list() {
       var s0, s1, s2;
-
       s0 = peg$parseclause();
       if (s0 === peg$FAILED) {
         s0 = peg$currPos;
@@ -2367,13 +3516,10 @@ Pride.Parser =
           s0 = peg$FAILED;
         }
       }
-
       return s0;
     }
-
     function peg$parseclause_rest() {
       var s0, s1, s2;
-
       s0 = peg$currPos;
       s1 = peg$parse_();
       if (s1 !== peg$FAILED) {
@@ -2390,13 +3536,10 @@ Pride.Parser =
         peg$currPos = s0;
         s0 = peg$FAILED;
       }
-
       return s0;
     }
-
     function peg$parseclause() {
       var s0, s1, s2, s3;
-
       s0 = peg$currPos;
       s1 = peg$parsefield();
       if (s1 !== peg$FAILED) {
@@ -2405,7 +3548,9 @@ Pride.Parser =
           peg$currPos++;
         } else {
           s2 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$c5); }
+          if (peg$silentFails === 0) {
+            peg$fail(peg$c5);
+          }
         }
         if (s2 !== peg$FAILED) {
           s3 = peg$parseliteral_list();
@@ -2434,13 +3579,10 @@ Pride.Parser =
         }
         s0 = s1;
       }
-
       return s0;
     }
-
     function peg$parsefield() {
       var s0, s1, s2;
-
       s0 = peg$currPos;
       s1 = [];
       s2 = peg$parseFIELDCHAR();
@@ -2457,13 +3599,10 @@ Pride.Parser =
         s1 = peg$c8(s1);
       }
       s0 = s1;
-
       return s0;
     }
-
     function peg$parseliteral_list() {
       var s0, s1, s2;
-
       s0 = peg$currPos;
       s1 = peg$parseliteral();
       if (s1 !== peg$FAILED) {
@@ -2483,13 +3622,10 @@ Pride.Parser =
         peg$currPos = s0;
         s0 = peg$FAILED;
       }
-
       return s0;
     }
-
     function peg$parseliteral_rest() {
       var s0, s1, s2;
-
       s0 = peg$currPos;
       s1 = peg$parse_();
       if (s1 !== peg$FAILED) {
@@ -2506,13 +3642,10 @@ Pride.Parser =
         peg$currPos = s0;
         s0 = peg$FAILED;
       }
-
       return s0;
     }
-
     function peg$parseliteral() {
       var s0, s1, s2, s3, s4;
-
       s0 = peg$currPos;
       s1 = peg$currPos;
       peg$silentFails++;
@@ -2647,13 +3780,10 @@ Pride.Parser =
           }
         }
       }
-
       return s0;
     }
-
     function peg$parseconj() {
       var s0, s1;
-
       s0 = peg$currPos;
       s1 = peg$parseCONJ();
       if (s1 !== peg$FAILED) {
@@ -2661,19 +3791,18 @@ Pride.Parser =
         s1 = peg$c13(s1);
       }
       s0 = s1;
-
       return s0;
     }
-
     function peg$parseCONJ() {
       var s0;
-
       if (input.substr(peg$currPos, 3) === peg$c14) {
         s0 = peg$c14;
         peg$currPos += 3;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c15); }
+        if (peg$silentFails === 0) {
+          peg$fail(peg$c15);
+        }
       }
       if (s0 === peg$FAILED) {
         if (input.substr(peg$currPos, 2) === peg$c16) {
@@ -2681,7 +3810,9 @@ Pride.Parser =
           peg$currPos += 2;
         } else {
           s0 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$c17); }
+          if (peg$silentFails === 0) {
+            peg$fail(peg$c17);
+          }
         }
         if (s0 === peg$FAILED) {
           if (input.substr(peg$currPos, 3) === peg$c18) {
@@ -2689,122 +3820,116 @@ Pride.Parser =
             peg$currPos += 3;
           } else {
             s0 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c19); }
+            if (peg$silentFails === 0) {
+              peg$fail(peg$c19);
+            }
           }
         }
       }
-
       return s0;
     }
-
     function peg$parseSQUOTE() {
       var s0;
-
       if (input.charCodeAt(peg$currPos) === 39) {
         s0 = peg$c20;
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c21); }
+        if (peg$silentFails === 0) {
+          peg$fail(peg$c21);
+        }
       }
-
       return s0;
     }
-
     function peg$parseNONSQUOTE() {
       var s0;
-
       if (peg$c22.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c23); }
+        if (peg$silentFails === 0) {
+          peg$fail(peg$c23);
+        }
       }
-
       return s0;
     }
-
     function peg$parseDQUOTE() {
       var s0;
-
       if (input.charCodeAt(peg$currPos) === 34) {
         s0 = peg$c24;
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c25); }
+        if (peg$silentFails === 0) {
+          peg$fail(peg$c25);
+        }
       }
-
       return s0;
     }
-
     function peg$parseNONDQUOTE() {
       var s0;
-
       if (peg$c26.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c27); }
+        if (peg$silentFails === 0) {
+          peg$fail(peg$c27);
+        }
       }
-
       return s0;
     }
-
     function peg$parseFIELDCHAR() {
       var s0;
-
       if (peg$c28.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c29); }
+        if (peg$silentFails === 0) {
+          peg$fail(peg$c29);
+        }
       }
-
       return s0;
     }
-
     function peg$parseQWORD() {
       var s0;
-
       if (peg$c30.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c31); }
+        if (peg$silentFails === 0) {
+          peg$fail(peg$c31);
+        }
       }
-
       return s0;
     }
-
     function peg$parseWORD() {
       var s0;
-
       if (peg$c32.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c33); }
+        if (peg$silentFails === 0) {
+          peg$fail(peg$c33);
+        }
       }
-
       return s0;
     }
-
     function peg$parse_() {
       var s0, s1;
-
       s0 = [];
       if (peg$c34.test(input.charAt(peg$currPos))) {
         s1 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c35); }
+        if (peg$silentFails === 0) {
+          peg$fail(peg$c35);
+        }
       }
       if (s1 !== peg$FAILED) {
         while (s1 !== peg$FAILED) {
@@ -2814,101 +3939,67 @@ Pride.Parser =
             peg$currPos++;
           } else {
             s1 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c35); }
+            if (peg$silentFails === 0) {
+              peg$fail(peg$c35);
+            }
           }
         }
       } else {
         s0 = peg$FAILED;
       }
-
       return s0;
     }
-
     function peg$parseOPTSPACE() {
       var s0;
-
       s0 = peg$parse_();
       if (s0 === peg$FAILED) {
         s0 = null;
       }
-
       return s0;
     }
-
-
-      var defaultFieldName = options.defaultFieldName || 'all_fields';
-
-      // https://pegjs.org/online
-      //
-      // var Pride = function(){};
-      // Pride.FieldTree = function(){};
-      // Pride.FieldTree.Literal = function(str) {
-      //   this.string =  str;
-      //   function toString() {
-      //     return string;
-      //   }
-      // }
-      // Pride.FieldTree.Field = function(a,lst) {
-      //   this.field = a; this.val = lst.map(function(x){return x.string}).join(" ");
-      //   function toString() {
-      //     return field + ":(" + lst.join(" ") + ")";
-      //   }
-      // }
-      // Pride.FieldTree.FieldBoolean = function(a,b,c) { return [a, b, c];}
-
-
+    var defaultFieldName = options.defaultFieldName || "all_fields";
     peg$result = peg$startRuleFunction();
-
     if (peg$result !== peg$FAILED && peg$currPos === input.length) {
       return peg$result;
     } else {
       if (peg$result !== peg$FAILED && peg$currPos < input.length) {
         peg$fail(peg$endExpectation());
       }
-
       throw peg$buildStructuredError(
         peg$maxFailExpected,
         peg$maxFailPos < input.length ? input.charAt(peg$maxFailPos) : null,
-        peg$maxFailPos < input.length
-          ? peg$computeLocation(peg$maxFailPos, peg$maxFailPos + 1)
-          : peg$computeLocation(peg$maxFailPos, peg$maxFailPos)
+        peg$maxFailPos < input.length ? peg$computeLocation(peg$maxFailPos, peg$maxFailPos + 1) : peg$computeLocation(peg$maxFailPos, peg$maxFailPos)
       );
     }
   }
-
   return {
     SyntaxError: peg$SyntaxError,
-    parse:       peg$parse
+    parse: peg$parse
   };
-})()
+}();
 Pride.PreferenceEngine = {
   selectedRecords: null,
   engine: null,
-
-  selected: function (record) {
+  selected: function(record) {
     if (!this.engine) {
       return false;
     }
     return (this.selectedRecords[record.datastore] || {})[record.uid];
   },
-
-  registerEngine: function (engine) {
+  registerEngine: function(engine) {
     this.engine = engine;
     if (!engine) {
       return this;
     }
-
     this.updateSelectedRecords(this.engine.listRecords());
-
-    this.engine.addObserver((function (preferenceEngine) {
-      return function (data) {
+    this.engine.addObserver(function(preferenceEngine) {
+      return function(data) {
         preferenceEngine.updateSelectedRecords(data);
       };
-    })(this));
+    }(this));
     return this;
   },
-
-  blankList: function () {
+  blankList: function() {
     return {
       mirlyn: {},
       articlesplus: {},
@@ -2917,11 +4008,10 @@ Pride.PreferenceEngine = {
       website: {}
     };
   },
-
-  updateSelectedRecords: function (data) {
+  updateSelectedRecords: function(data) {
     this.selectedRecords = this.selectedRecords || this.blankList();
     if (data.forEach) {
-      data.forEach(function (record) {
+      data.forEach(function(record) {
         this.selectedRecords[record.datastore] = this.selectedRecords[record.datastore] || {};
         this.selectedRecords[record.datastore][record.uid] = true;
       }, this);
@@ -2930,14 +4020,13 @@ Pride.PreferenceEngine = {
     for (var prop in data) {
       if (data.hasOwnProperty(prop)) {
         this.selectedRecords[prop] = {};
-        data[prop].forEach((function (prop) {
-          return function (record) {
-            this.selectedRecords[prop][record.uid] = true;
+        data[prop].forEach(function(prop2) {
+          return function(record) {
+            this.selectedRecords[prop2][record.uid] = true;
           };
-        })(prop), this);
+        }(prop), this);
       }
     }
     return this;
-  },
-
+  }
 };

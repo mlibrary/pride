@@ -29,9 +29,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// (disabled):node_modules/xhr2/lib/browser.js
-var require_browser = __commonJS({
-  "(disabled):node_modules/xhr2/lib/browser.js"() {
+// (disabled):xhr2
+var require_xhr2 = __commonJS({
+  "(disabled):xhr2"() {
   }
 });
 
@@ -52,7 +52,7 @@ var require_reqwest = __commonJS({
       } else {
         var XHR2;
         try {
-          XHR2 = require_browser();
+          XHR2 = require_xhr2();
         } catch (ex) {
           throw new Error("Peer dependency `xhr2` required! Please npm install xhr2");
         }
@@ -2378,6 +2378,119 @@ var import_reqwest = __toESM(require_reqwest());
 var Pride = {};
 Pride.Util = {};
 Pride.Core = {};
+Pride.Settings = {
+  // default_cache_size:  If a cache size isn't set for a datastore, this value
+  //                      is used instead.
+  //
+  // cache_size:          Key-value pairs where each key is the UID of a
+  //                      datastore, and the value gives the cache size for that
+  //                      particular datastore.
+  //
+  // datastores_url:      URL from which Pride can get all the possible
+  //                      datastores.
+  //
+  // connection_attempts: How many times Pride will attempt an HTTP request
+  //                      before giving up (overridden by some things such as
+  //                      Pride.init()).
+  //
+  // init_attempts:       How many times Pride will attempt to initialize before
+  //                      giving up.
+  //
+  // ms_between_attempts: How long Pride will wait to try another HTTP request
+  //                      after one fails.
+  //
+  // message_formats:     Key-value pairs where each key is the ID of a message
+  //                      type and the value is what that message should say. A
+  //                      dollar sign preceded by a number will be replaced when
+  //                      the message is created.
+  //
+  // obnoxious:           If true, debug messages will be logged to the console
+  //                      as Pride runs. WARNING: Pride can send out a lot of
+  //                      debug messages.
+  default_cache_size: 20,
+  cache_size: {},
+  datastores_url: "",
+  connection_attempts: 3,
+  init_attempts: 3,
+  ms_between_attempts: 1500,
+  message_formats: {
+    failed_record_load: "Failed to load $1",
+    failed_search_run: "Failed to search $1",
+    failed_init: "Failed to initialize Pride"
+  },
+  obnoxious: false
+};
+Pride.Core.Datastore = function(datastore_info) {
+  datastore_info = Pride.Util.deepClone(datastore_info);
+  this.baseQuery = function() {
+    return new Pride.Core.Query({
+      uid: datastore_info.uid,
+      sort: datastore_info.default_sort,
+      start: 0,
+      count: 0,
+      settings: {},
+      field_tree: fillFieldTree(),
+      facets: index_default_default.reduce(
+        datastore_info.facets,
+        function(memo, facet) {
+          if (facet.required && !facet.fixed) {
+            memo[facet.uid] = facet.default_value;
+          }
+          return memo;
+        },
+        {}
+      )
+    });
+  };
+  this.baseSearch = function() {
+    return new Pride.Core.DatastoreSearch({ datastore: this });
+  };
+  this.runQuery = function(request_arguments) {
+    request_arguments.url = datastore_info.url;
+    Pride.Util.request(request_arguments);
+    return this;
+  };
+  this.get = function(key) {
+    return datastore_info[key];
+  };
+  this.update = function(new_info) {
+    index_default_default.extend(datastore_info, new_info);
+  };
+  var fillFacets = function(set_facets) {
+    return index_default_default.reduce(
+      datastore_info.facets,
+      function(memo, facet) {
+        memo[facet.uid] = index_default_default.find(set_facets, function(possible_facet) {
+          return possible_facet.uid === facet.uid;
+        }) || facet;
+        return memo;
+      },
+      {}
+    );
+  };
+  var fillFieldTree = function(given_tree) {
+    given_tree = given_tree || new Pride.FieldTree.FieldBoolean("AND");
+    var output = index_default_default.reduce(
+      datastore_info.fields,
+      function(tree, field) {
+        if ((field.required || field.fixed) && !tree.contains({ type: "field", value: field.uid })) {
+          missing_field = new Pride.FieldTree.Field(
+            field.uid,
+            new Pride.FieldTree.Literal(field.default_value)
+          );
+          if (index_default_default.isMatch(tree, { type: "field_boolean", value: "AND" })) {
+            return tree.addChild(missing_field);
+          } else {
+            return new Pride.FieldTree.FieldBoolean("AND", tree, missing_field);
+          }
+        }
+        return tree;
+      },
+      given_tree
+    );
+    return output.matches({ type: "field_boolean", children: [] }) ? {} : output;
+  };
+};
 Pride.Core.DatastoreSearch = function(setup) {
   var self2 = this;
   var base = new Pride.Core.SearchBase(setup, this);
@@ -2440,47 +2553,57 @@ Pride.Core.DatastoreSearch = function(setup) {
   };
   base.createObservable("facets", this.getFacets).initialize_observables();
 };
-Pride.Settings = {
-  // default_cache_size:  If a cache size isn't set for a datastore, this value
-  //                      is used instead.
-  //
-  // cache_size:          Key-value pairs where each key is the UID of a
-  //                      datastore, and the value gives the cache size for that
-  //                      particular datastore.
-  //
-  // datastores_url:      URL from which Pride can get all the possible
-  //                      datastores.
-  //
-  // connection_attempts: How many times Pride will attempt an HTTP request
-  //                      before giving up (overridden by some things such as
-  //                      Pride.init()).
-  //
-  // init_attempts:       How many times Pride will attempt to initialize before
-  //                      giving up.
-  //
-  // ms_between_attempts: How long Pride will wait to try another HTTP request
-  //                      after one fails.
-  //
-  // message_formats:     Key-value pairs where each key is the ID of a message
-  //                      type and the value is what that message should say. A
-  //                      dollar sign preceded by a number will be replaced when
-  //                      the message is created.
-  //
-  // obnoxious:           If true, debug messages will be logged to the console
-  //                      as Pride runs. WARNING: Pride can send out a lot of
-  //                      debug messages.
-  default_cache_size: 20,
-  cache_size: {},
-  datastores_url: "",
-  connection_attempts: 3,
-  init_attempts: 3,
-  ms_between_attempts: 1500,
-  message_formats: {
-    failed_record_load: "Failed to load $1",
-    failed_search_run: "Failed to search $1",
-    failed_init: "Failed to initialize Pride"
-  },
-  obnoxious: false
+Pride.Core.FacetSearch = function(setup) {
+  var example_facet = this;
+  var data = setup.data;
+  var results = setup.results;
+  this.uid = data.uid;
+  this.getData = function() {
+    return data;
+  };
+  this.getResults = function() {
+    return results;
+  };
+  var muted = false;
+  this.getMute = function() {
+    return muted;
+  };
+  this.setMute = function(state) {
+    muted = state;
+    return self;
+  };
+  var observables = [];
+  this.clearAllObservers = function() {
+    index_default_default.each(observables, function(observable) {
+      observable.clearAll();
+    });
+    return self;
+  };
+  var createObservable = function(name, data_func) {
+    var object2 = new Pride.Util.FuncBuffer(function() {
+      var add_observer = this.add;
+      var call_observers = this.call;
+      observables.push(this);
+      this.add = function(func) {
+        if (!self.muted)
+          func(data_func());
+        add_observer(func, "observers");
+        return this;
+      };
+      this.notify = function() {
+        if (!self.muted) {
+          data = data_func();
+          self.log("NOTIFY (" + name + ")", data);
+          call_observers("observers", data);
+        }
+        return this;
+      };
+    });
+    return object2;
+  };
+  this.resultsObservers = createObservable("results", this.getResults);
+  this.setDataObservers = createObservable("setData", this.getData);
+  this.runDataObservers = createObservable("runData", this.getData);
 };
 Pride.FieldTree = {};
 Pride.Core.nodeFactory = function(type2, child_types, extention) {
@@ -2624,77 +2747,6 @@ Pride.FieldTree.Tag = Pride.Core.nodeFactory(
 Pride.FieldTree.Literal = Pride.Core.nodeFactory("literal");
 Pride.FieldTree.Special = Pride.Core.nodeFactory("special");
 Pride.FieldTree.Raw = Pride.Core.nodeFactory("raw");
-Pride.Core.Datastore = function(datastore_info) {
-  datastore_info = Pride.Util.deepClone(datastore_info);
-  this.baseQuery = function() {
-    return new Pride.Core.Query({
-      uid: datastore_info.uid,
-      sort: datastore_info.default_sort,
-      start: 0,
-      count: 0,
-      settings: {},
-      field_tree: fillFieldTree(),
-      facets: index_default_default.reduce(
-        datastore_info.facets,
-        function(memo, facet) {
-          if (facet.required && !facet.fixed) {
-            memo[facet.uid] = facet.default_value;
-          }
-          return memo;
-        },
-        {}
-      )
-    });
-  };
-  this.baseSearch = function() {
-    return new Pride.Core.DatastoreSearch({ datastore: this });
-  };
-  this.runQuery = function(request_arguments) {
-    request_arguments.url = datastore_info.url;
-    Pride.Util.request(request_arguments);
-    return this;
-  };
-  this.get = function(key) {
-    return datastore_info[key];
-  };
-  this.update = function(new_info) {
-    index_default_default.extend(datastore_info, new_info);
-  };
-  var fillFacets = function(set_facets) {
-    return index_default_default.reduce(
-      datastore_info.facets,
-      function(memo, facet) {
-        memo[facet.uid] = index_default_default.find(set_facets, function(possible_facet) {
-          return possible_facet.uid === facet.uid;
-        }) || facet;
-        return memo;
-      },
-      {}
-    );
-  };
-  var fillFieldTree = function(given_tree) {
-    given_tree = given_tree || new Pride.FieldTree.FieldBoolean("AND");
-    var output = index_default_default.reduce(
-      datastore_info.fields,
-      function(tree, field) {
-        if ((field.required || field.fixed) && !tree.contains({ type: "field", value: field.uid })) {
-          missing_field = new Pride.FieldTree.Field(
-            field.uid,
-            new Pride.FieldTree.Literal(field.default_value)
-          );
-          if (index_default_default.isMatch(tree, { type: "field_boolean", value: "AND" })) {
-            return tree.addChild(missing_field);
-          } else {
-            return new Pride.FieldTree.FieldBoolean("AND", tree, missing_field);
-          }
-        }
-        return tree;
-      },
-      given_tree
-    );
-    return output.matches({ type: "field_boolean", children: [] }) ? {} : output;
-  };
-};
 Pride.Util.FuncBuffer = function(extension) {
   var buffer = {};
   var self2 = this;
@@ -2736,58 +2788,6 @@ Pride.Util.FuncBuffer = function(extension) {
   };
   if (index_default_default.isFunction(extension))
     extension.call(this);
-};
-Pride.Core.FacetSearch = function(setup) {
-  var example_facet = this;
-  var data = setup.data;
-  var results = setup.results;
-  this.uid = data.uid;
-  this.getData = function() {
-    return data;
-  };
-  this.getResults = function() {
-    return results;
-  };
-  var muted = false;
-  this.getMute = function() {
-    return muted;
-  };
-  this.setMute = function(state) {
-    muted = state;
-    return self;
-  };
-  var observables = [];
-  this.clearAllObservers = function() {
-    index_default_default.each(observables, function(observable) {
-      observable.clearAll();
-    });
-    return self;
-  };
-  var createObservable = function(name, data_func) {
-    var object2 = new Pride.Util.FuncBuffer(function() {
-      var add_observer = this.add;
-      var call_observers = this.call;
-      observables.push(this);
-      this.add = function(func) {
-        if (!self.muted)
-          func(data_func());
-        add_observer(func, "observers");
-        return this;
-      };
-      this.notify = function() {
-        if (!self.muted) {
-          data = data_func();
-          self.log("NOTIFY (" + name + ")", data);
-          call_observers("observers", data);
-        }
-        return this;
-      };
-    });
-    return object2;
-  };
-  this.resultsObservers = createObservable("results", this.getResults);
-  this.setDataObservers = createObservable("setData", this.getData);
-  this.runDataObservers = createObservable("runData", this.getData);
 };
 Pride.Core.GetThis = function(barcode, data) {
   this.barcode = barcode;
@@ -2881,60 +2881,6 @@ Pride.Util.MultiSearch = function(uid, muted, search_array) {
   };
   this.setMute(muted);
 };
-Pride.Core.Query = function(query_info) {
-  var paginater = new Pride.Util.Paginater({
-    start: query_info.start,
-    count: query_info.count
-  });
-  var paginater_keys = Pride.Util.Paginater.getPossibleKeys();
-  query_info = index_default_default.omit(Pride.Util.deepClone(query_info), paginater_keys);
-  query_info.request_id = query_info.request_id || 0;
-  this.get = function(key) {
-    if (Pride.Util.Paginater.hasKey(key)) {
-      return paginater.get(key);
-    } else {
-      return query_info[key];
-    }
-  };
-  this.set = function(new_values) {
-    var new_pagination_values = index_default_default.pick(new_values, paginater_keys);
-    var new_query_values = index_default_default.omit(new_values, paginater_keys);
-    if (!index_default_default.isEmpty(new_query_values)) {
-      paginater.set({ total_available: void 0 });
-      if (!index_default_default.isNumber(new_query_values.request_id)) {
-        query_info.request_id += 1;
-      }
-    }
-    paginater.set(new_pagination_values);
-    index_default_default.extend(query_info, new_query_values);
-    return this;
-  };
-  this.clone = function() {
-    var full_info = Pride.Util.deepClone(query_info);
-    full_info.start = paginater.get("start");
-    full_info.count = paginater.get("count");
-    return new Pride.Core.Query(full_info);
-  };
-  this.toSection = function() {
-    return new Pride.Util.Section(this.get("start"), this.get("end"));
-  };
-  this.toLimitSection = function() {
-    return new Pride.Util.Section(this.get("start"), this.get("index_limit"));
-  };
-  this.toJSON = function() {
-    return {
-      uid: this.get("uid"),
-      request_id: this.get("request_id"),
-      start: this.get("start"),
-      count: this.get("count"),
-      field_tree: this.get("field_tree"),
-      facets: this.get("facets"),
-      sort: this.get("sort"),
-      settings: this.get("settings"),
-      raw_query: this.get("raw_query")
-    };
-  };
-};
 Pride.Util.Paginater = function(initial_values) {
   this.set = function(new_values) {
     if (index_default_default.has(new_values, "total_pages")) {
@@ -3015,55 +2961,58 @@ Pride.Util.Paginater.getPossibleKeys = function() {
 Pride.Util.Paginater.hasKey = function(key) {
   return Pride.Util.Paginater.getPossibleKeys().indexOf(key) > -1;
 };
-Pride.Util.RequestBuffer = function(request_options) {
-  request_options = request_options || {};
-  var func_buffer = new Pride.Util.FuncBuffer();
-  var request_issued = false;
-  var request_successful = false;
-  var request_failed = false;
-  var cached_response_data;
-  this.request = function(func_hash) {
-    func_buffer.add(func_hash.success, "success").add(func_hash.failure, "failure");
-    if (request_issued) {
-      callWithResponse();
+Pride.Core.Query = function(query_info) {
+  var paginater = new Pride.Util.Paginater({
+    start: query_info.start,
+    count: query_info.count
+  });
+  var paginater_keys = Pride.Util.Paginater.getPossibleKeys();
+  query_info = index_default_default.omit(Pride.Util.deepClone(query_info), paginater_keys);
+  query_info.request_id = query_info.request_id || 0;
+  this.get = function(key) {
+    if (Pride.Util.Paginater.hasKey(key)) {
+      return paginater.get(key);
     } else {
-      sendRequest();
+      return query_info[key];
     }
+  };
+  this.set = function(new_values) {
+    var new_pagination_values = index_default_default.pick(new_values, paginater_keys);
+    var new_query_values = index_default_default.omit(new_values, paginater_keys);
+    if (!index_default_default.isEmpty(new_query_values)) {
+      paginater.set({ total_available: void 0 });
+      if (!index_default_default.isNumber(new_query_values.request_id)) {
+        query_info.request_id += 1;
+      }
+    }
+    paginater.set(new_pagination_values);
+    index_default_default.extend(query_info, new_query_values);
     return this;
   };
-  var callWithResponse = function(data) {
-    cached_response_data = data || cached_response_data;
-    if (request_successful) {
-      callThenClear("success");
-    } else if (request_failed) {
-      callThenClear("failure");
-    }
+  this.clone = function() {
+    var full_info = Pride.Util.deepClone(query_info);
+    full_info.start = paginater.get("start");
+    full_info.count = paginater.get("count");
+    return new Pride.Core.Query(full_info);
   };
-  var sendRequest = function() {
-    request_issued = true;
-    Pride.Util.request({
-      url: Pride.Util.safeCall(request_options.url),
-      attempts: Pride.Util.safeCall(request_options.attempts) || Pride.Settings.connection_attempts,
-      failure_message: Pride.Util.safeCall(request_options.failure_message),
-      failure: function(error2) {
-        request_failed = true;
-        Pride.Util.safeCall(request_options.before_failure, error2);
-        callWithResponse(error2);
-        Pride.Util.safeCall(request_options.after_failure, error2);
-      },
-      success: function(response) {
-        request_successful = true;
-        Pride.Util.safeCall(request_options.before_success, response);
-        if (index_default_default.isFunction(request_options.edit_response)) {
-          response = request_options.edit_response(response);
-        }
-        callWithResponse(response);
-        Pride.Util.safeCall(request_options.after_success, response);
-      }
-    });
+  this.toSection = function() {
+    return new Pride.Util.Section(this.get("start"), this.get("end"));
   };
-  var callThenClear = function(name) {
-    func_buffer.call(name, cached_response_data).clearAll();
+  this.toLimitSection = function() {
+    return new Pride.Util.Section(this.get("start"), this.get("index_limit"));
+  };
+  this.toJSON = function() {
+    return {
+      uid: this.get("uid"),
+      request_id: this.get("request_id"),
+      start: this.get("start"),
+      count: this.get("count"),
+      field_tree: this.get("field_tree"),
+      facets: this.get("facets"),
+      sort: this.get("sort"),
+      settings: this.get("settings"),
+      raw_query: this.get("raw_query")
+    };
   };
 };
 Pride.Core.Record = function(data) {
@@ -3190,249 +3139,56 @@ Pride.Core.Record = function(data) {
   };
   data = translateData(data);
 };
-Pride.Util.escape = function(string) {
-  var temp_element = document.createElement("div");
-  temp_element.appendChild(document.createTextNode(string));
-  return temp_element.innerHTML;
-};
-Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
-  var self2 = this;
-  var search_cache = new Pride.Util.MultiSearch(null, true, cached_searches);
-  current_search.set({ page: 1 }).setMute(false);
-  search_cache.set({ page: 1 });
-  this.uid = current_search.uid;
-  this.run = function(cache_size) {
-    current_search.run(cache_size);
-    search_cache.run(0);
-    return self2;
-  };
-  this.set = function(settings) {
-    current_search.set(settings);
-    search_cache.set(index_default_default.omit(settings, "page", "facets"));
-    return self2;
-  };
-  this.nextPage = function() {
-    current_search.nextPage();
-    return self2;
-  };
-  this.prevPage = function() {
-    current_search.prevPage();
-    return self2;
-  };
-  this.switchTo = function(requested_uid) {
-    if (requested_uid != current_search) {
-      current_search.setMute(true).set({ page: 1 });
-      search_cache.searches.push(current_search);
-      current_search = void 0;
-      search_cache.searches = index_default_default.reject(
-        search_cache.searches,
-        function(search) {
-          if (search.uid == requested_uid) {
-            current_search = search;
-            return true;
-          }
-        }
-      );
-      if (!current_search) {
-        throw "Could not find a search with a UID of: " + requested_uid;
-      }
-      self2.uid = current_search.uid;
-      current_search.setMute(false);
-    }
-    return self2;
-  };
-};
-Pride.Util.deepClone = function(original) {
-  if (index_default_default.isFunction(original)) {
-    return original;
-  } else {
-    var collection_function = false;
-    if (index_default_default.isArray(original)) {
-      collection_function = "map";
-    } else if (index_default_default.isObject(original)) {
-      collection_function = "mapObject";
-    }
-    if (collection_function) {
-      return index_default_default[collection_function](
-        original,
-        function(item) {
-          return Pride.Util.deepClone(item);
-        }
-      );
+Pride.Util.RequestBuffer = function(request_options) {
+  request_options = request_options || {};
+  var func_buffer = new Pride.Util.FuncBuffer();
+  var request_issued = false;
+  var request_successful = false;
+  var request_failed = false;
+  var cached_response_data;
+  this.request = function(func_hash) {
+    func_buffer.add(func_hash.success, "success").add(func_hash.failure, "failure");
+    if (request_issued) {
+      callWithResponse();
     } else {
-      return index_default_default.clone(original);
+      sendRequest();
     }
-  }
-};
-Pride.Util.isDeepMatch = function(object2, pattern) {
-  var both_arrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
-  var both_objects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
-  if (both_arrays && pattern.length != object2.length) {
-    return false;
-  }
-  if (both_objects && index_default_default.keys(pattern).length != index_default_default.keys(object2).length) {
-    return false;
-  }
-  if (both_arrays || both_objects) {
-    return index_default_default.every(pattern, function(value, key) {
-      return Pride.Util.isDeepMatch(object2[key], value);
+    return this;
+  };
+  var callWithResponse = function(data) {
+    cached_response_data = data || cached_response_data;
+    if (request_successful) {
+      callThenClear("success");
+    } else if (request_failed) {
+      callThenClear("failure");
+    }
+  };
+  var sendRequest = function() {
+    request_issued = true;
+    Pride.Util.request({
+      url: Pride.Util.safeCall(request_options.url),
+      attempts: Pride.Util.safeCall(request_options.attempts) || Pride.Settings.connection_attempts,
+      failure_message: Pride.Util.safeCall(request_options.failure_message),
+      failure: function(error2) {
+        request_failed = true;
+        Pride.Util.safeCall(request_options.before_failure, error2);
+        callWithResponse(error2);
+        Pride.Util.safeCall(request_options.after_failure, error2);
+      },
+      success: function(response) {
+        request_successful = true;
+        Pride.Util.safeCall(request_options.before_success, response);
+        if (index_default_default.isFunction(request_options.edit_response)) {
+          response = request_options.edit_response(response);
+        }
+        callWithResponse(response);
+        Pride.Util.safeCall(request_options.after_success, response);
+      }
     });
-  } else {
-    return object2 === pattern;
-  }
-};
-Pride.Core.log = function(source, info) {
-  if (Pride.Settings.obnoxious) {
-    var message = Pride.Util.slice(arguments, 2);
-    message.unshift("[Pride: " + source + "] " + info);
-    console.log.apply(console, message);
-  }
-};
-Pride.FieldTree.parseField = function(field_name, content) {
-  if (!content) {
-    return {};
-  } else {
-    try {
-      return Pride.Parser.parse(content, { defaultFieldName: field_name });
-    } catch (e) {
-      console.log(e);
-      return new Pride.FieldTree.Raw(content);
-    }
-  }
-};
-Pride.init = new Pride.Util.RequestBuffer({
-  url: function() {
-    return Pride.Settings.datastores_url;
-  },
-  attempts: function() {
-    return Pride.Settings.init_attempts;
-  },
-  failure_message: function() {
-    return Pride.Messenger.preset("failed_init");
-  },
-  edit_response: function() {
-    return void 0;
-  },
-  before_success: function(data) {
-    Pride.Settings.default_institution = data.default_institution;
-    Pride.Settings.affiliation = data.affiliation;
-    Pride.AllDatastores.array = index_default_default.map(
-      data.response,
-      function(datastore_data) {
-        return new Pride.Core.Datastore(datastore_data);
-      }
-    );
-  }
-}).request;
-Pride.FieldTree = Pride.FieldTree || {};
-Pride.FieldTree.tokens = [":", "AND", "OR", "+", "-", "(", ")", "*", " ", "\n", "	", "\r"];
-Pride.FieldTree.tokenize = function(string) {
-  var result2 = [];
-  var index = 0;
-  var type2 = null;
-  while (index < string.length) {
-    var slice2 = string.slice(index);
-    var found = index_default_default.find(
-      Pride.FieldTree.tokens,
-      function(pattern) {
-        return new RegExp("^\\" + pattern).exec(slice2);
-      }
-    );
-    if (found) {
-      if (/\s/.exec(found)) {
-        type2 = "whitespace";
-      }
-      type2 = found;
-      index += found.length;
-    } else {
-      found = string.charAt(index);
-      type2 = "string";
-      index++;
-      var last2 = index_default_default.last(result2);
-      if (last2 && last2.type == "string") {
-        found = result2.pop().content + found;
-      }
-    }
-    result2.push({ type: type2, content: found });
-  }
-  return result2;
-};
-Pride.requestRecord = function(source, id, func) {
-  if (func === void 0) {
-    func = function(data2) {
-    };
-  }
-  var data = {
-    complete: false,
-    source: Pride.AllDatastores.get(source).get("url") + "/record/" + id,
-    names: [void 0]
   };
-  var record = new Pride.Core.Record(data);
-  record.renderFull(func);
-  return record;
-};
-Pride.Util.safeCall = function(maybe_func) {
-  if (index_default_default.isFunction(maybe_func)) {
-    return maybe_func.apply(this, Pride.Util.slice(arguments, 1));
-  } else {
-    return maybe_func;
-  }
-};
-Pride.Util.safeApply = function(maybe_func, args) {
-  if (index_default_default.isFunction(maybe_func)) {
-    return maybe_func.apply(this, args);
-  } else {
-    return maybe_func;
-  }
-};
-Pride.Util.request = function(request_info) {
-  Pride.Core.log("Request", "Sending HTTP request...");
-  Pride.Core.log("Request", "URL", request_info.url);
-  Pride.Core.log("Request", "CONTENT", JSON.stringify(request_info.query));
-  if (!request_info.url)
-    throw "No URL given to Pride.Util.request()";
-  var request_method = "get";
-  if (request_info.query)
-    request_method = "post";
-  if (!index_default_default.isNumber(request_info.attempts)) {
-    request_info.attempts = Pride.Settings.connection_attempts;
-  }
-  request_info.attempts -= 1;
-  (0, import_reqwest.default)({
-    url: request_info.url,
-    data: JSON.stringify(request_info.query),
-    type: "json",
-    method: request_method,
-    contentType: "application/json",
-    withCredentials: true,
-    error: function(error2) {
-      if (request_info.attempts <= 0) {
-        Pride.Core.log("Request", "ERROR", error2);
-        Pride.Util.safeCall(request_info.failure, error2);
-        Pride.Messenger.sendMessage({
-          summary: request_info.failure_message,
-          class: "error"
-        });
-      } else {
-        Pride.Core.log("Request", "Trying request again...");
-        window.setTimeout(
-          function() {
-            Pride.Util.request(request_info);
-          },
-          Pride.Settings.ms_between_attempts
-        );
-      }
-    },
-    success: function(response) {
-      Pride.Core.log("Request", "SUCCESS", response);
-      Pride.Util.safeCall(request_info.success, response);
-      Pride.Messenger.sendMessage({
-        summary: request_info.success_message,
-        class: "success"
-      });
-      Pride.Messenger.sendMessageArray(response.messages);
-    }
-  });
+  var callThenClear = function(name) {
+    func_buffer.call(name, cached_response_data).clearAll();
+  };
 };
 Pride.Core.SearchBase = function(setup, parent) {
   this.datastore = setup.datastore;
@@ -3626,6 +3382,53 @@ Pride.Core.SearchBase = function(setup, parent) {
     return parent;
   };
 };
+Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
+  var self2 = this;
+  var search_cache = new Pride.Util.MultiSearch(null, true, cached_searches);
+  current_search.set({ page: 1 }).setMute(false);
+  search_cache.set({ page: 1 });
+  this.uid = current_search.uid;
+  this.run = function(cache_size) {
+    current_search.run(cache_size);
+    search_cache.run(0);
+    return self2;
+  };
+  this.set = function(settings) {
+    current_search.set(settings);
+    search_cache.set(index_default_default.omit(settings, "page", "facets"));
+    return self2;
+  };
+  this.nextPage = function() {
+    current_search.nextPage();
+    return self2;
+  };
+  this.prevPage = function() {
+    current_search.prevPage();
+    return self2;
+  };
+  this.switchTo = function(requested_uid) {
+    if (requested_uid != current_search) {
+      current_search.setMute(true).set({ page: 1 });
+      search_cache.searches.push(current_search);
+      current_search = void 0;
+      search_cache.searches = index_default_default.reject(
+        search_cache.searches,
+        function(search) {
+          if (search.uid == requested_uid) {
+            current_search = search;
+            return true;
+          }
+        }
+      );
+      if (!current_search) {
+        throw "Could not find a search with a UID of: " + requested_uid;
+      }
+      self2.uid = current_search.uid;
+      current_search.setMute(false);
+    }
+    return self2;
+  };
+};
 Pride.Util.Section = function(start, end) {
   this.start = Math.max(Math.min(start, end), 0);
   this.end = Math.max(Math.max(start, end), 0);
@@ -3649,6 +3452,203 @@ Pride.Util.Section = function(start, end) {
       this.end + end_amount
     );
   };
+};
+Pride.Util.deepClone = function(original) {
+  if (index_default_default.isFunction(original)) {
+    return original;
+  } else {
+    var collection_function = false;
+    if (index_default_default.isArray(original)) {
+      collection_function = "map";
+    } else if (index_default_default.isObject(original)) {
+      collection_function = "mapObject";
+    }
+    if (collection_function) {
+      return index_default_default[collection_function](
+        original,
+        function(item) {
+          return Pride.Util.deepClone(item);
+        }
+      );
+    } else {
+      return index_default_default.clone(original);
+    }
+  }
+};
+Pride.Util.escape = function(string) {
+  var temp_element = document.createElement("div");
+  temp_element.appendChild(document.createTextNode(string));
+  return temp_element.innerHTML;
+};
+Pride.init = new Pride.Util.RequestBuffer({
+  url: function() {
+    return Pride.Settings.datastores_url;
+  },
+  attempts: function() {
+    return Pride.Settings.init_attempts;
+  },
+  failure_message: function() {
+    return Pride.Messenger.preset("failed_init");
+  },
+  edit_response: function() {
+    return void 0;
+  },
+  before_success: function(data) {
+    Pride.Settings.default_institution = data.default_institution;
+    Pride.Settings.affiliation = data.affiliation;
+    Pride.AllDatastores.array = index_default_default.map(
+      data.response,
+      function(datastore_data) {
+        return new Pride.Core.Datastore(datastore_data);
+      }
+    );
+  }
+}).request;
+Pride.Util.isDeepMatch = function(object2, pattern) {
+  var both_arrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
+  var both_objects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
+  if (both_arrays && pattern.length != object2.length) {
+    return false;
+  }
+  if (both_objects && index_default_default.keys(pattern).length != index_default_default.keys(object2).length) {
+    return false;
+  }
+  if (both_arrays || both_objects) {
+    return index_default_default.every(pattern, function(value, key) {
+      return Pride.Util.isDeepMatch(object2[key], value);
+    });
+  } else {
+    return object2 === pattern;
+  }
+};
+Pride.Core.log = function(source, info) {
+  if (Pride.Settings.obnoxious) {
+    var message = Pride.Util.slice(arguments, 2);
+    message.unshift("[Pride: " + source + "] " + info);
+    console.log.apply(console, message);
+  }
+};
+Pride.FieldTree.parseField = function(field_name, content) {
+  if (!content) {
+    return {};
+  } else {
+    try {
+      return Pride.Parser.parse(content, { defaultFieldName: field_name });
+    } catch (e) {
+      console.log(e);
+      return new Pride.FieldTree.Raw(content);
+    }
+  }
+};
+Pride.FieldTree = Pride.FieldTree || {};
+Pride.FieldTree.tokens = [":", "AND", "OR", "+", "-", "(", ")", "*", " ", "\n", "	", "\r"];
+Pride.FieldTree.tokenize = function(string) {
+  var result2 = [];
+  var index = 0;
+  var type2 = null;
+  while (index < string.length) {
+    var slice2 = string.slice(index);
+    var found = index_default_default.find(
+      Pride.FieldTree.tokens,
+      function(pattern) {
+        return new RegExp("^\\" + pattern).exec(slice2);
+      }
+    );
+    if (found) {
+      if (/\s/.exec(found)) {
+        type2 = "whitespace";
+      }
+      type2 = found;
+      index += found.length;
+    } else {
+      found = string.charAt(index);
+      type2 = "string";
+      index++;
+      var last2 = index_default_default.last(result2);
+      if (last2 && last2.type == "string") {
+        found = result2.pop().content + found;
+      }
+    }
+    result2.push({ type: type2, content: found });
+  }
+  return result2;
+};
+Pride.Util.request = function(request_info) {
+  Pride.Core.log("Request", "Sending HTTP request...");
+  Pride.Core.log("Request", "URL", request_info.url);
+  Pride.Core.log("Request", "CONTENT", JSON.stringify(request_info.query));
+  if (!request_info.url)
+    throw "No URL given to Pride.Util.request()";
+  var request_method = "get";
+  if (request_info.query)
+    request_method = "post";
+  if (!index_default_default.isNumber(request_info.attempts)) {
+    request_info.attempts = Pride.Settings.connection_attempts;
+  }
+  request_info.attempts -= 1;
+  (0, import_reqwest.default)({
+    url: request_info.url,
+    data: JSON.stringify(request_info.query),
+    type: "json",
+    method: request_method,
+    contentType: "application/json",
+    withCredentials: true,
+    error: function(error2) {
+      if (request_info.attempts <= 0) {
+        Pride.Core.log("Request", "ERROR", error2);
+        Pride.Util.safeCall(request_info.failure, error2);
+        Pride.Messenger.sendMessage({
+          summary: request_info.failure_message,
+          class: "error"
+        });
+      } else {
+        Pride.Core.log("Request", "Trying request again...");
+        window.setTimeout(
+          function() {
+            Pride.Util.request(request_info);
+          },
+          Pride.Settings.ms_between_attempts
+        );
+      }
+    },
+    success: function(response) {
+      Pride.Core.log("Request", "SUCCESS", response);
+      Pride.Util.safeCall(request_info.success, response);
+      Pride.Messenger.sendMessage({
+        summary: request_info.success_message,
+        class: "success"
+      });
+      Pride.Messenger.sendMessageArray(response.messages);
+    }
+  });
+};
+Pride.requestRecord = function(source, id, func) {
+  if (func === void 0) {
+    func = function(data2) {
+    };
+  }
+  var data = {
+    complete: false,
+    source: Pride.AllDatastores.get(source).get("url") + "/record/" + id,
+    names: [void 0]
+  };
+  var record = new Pride.Core.Record(data);
+  record.renderFull(func);
+  return record;
+};
+Pride.Util.safeCall = function(maybe_func) {
+  if (index_default_default.isFunction(maybe_func)) {
+    return maybe_func.apply(this, Pride.Util.slice(arguments, 1));
+  } else {
+    return maybe_func;
+  }
+};
+Pride.Util.safeApply = function(maybe_func, args) {
+  if (index_default_default.isFunction(maybe_func)) {
+    return maybe_func.apply(this, args);
+  } else {
+    return maybe_func;
+  }
 };
 Pride.Util.slice = function(array, begin, end) {
   return Array.prototype.slice.call(array, begin, end);
@@ -3708,59 +3708,6 @@ Pride.Messenger = new Pride.Util.FuncBuffer(function() {
   this.preset = function(type2) {
   };
 });
-Pride.PreferenceEngine = {
-  selectedRecords: null,
-  engine: null,
-  selected: function(record) {
-    if (!this.engine) {
-      return false;
-    }
-    return (this.selectedRecords[record.datastore] || {})[record.uid];
-  },
-  registerEngine: function(engine) {
-    this.engine = engine;
-    if (!engine) {
-      return this;
-    }
-    this.updateSelectedRecords(this.engine.listRecords());
-    this.engine.addObserver(function(preferenceEngine) {
-      return function(data) {
-        preferenceEngine.updateSelectedRecords(data);
-      };
-    }(this));
-    return this;
-  },
-  blankList: function() {
-    return {
-      mirlyn: {},
-      articlesplus: {},
-      databases: {},
-      journals: {},
-      website: {}
-    };
-  },
-  updateSelectedRecords: function(data) {
-    this.selectedRecords = this.selectedRecords || this.blankList();
-    if (data.forEach) {
-      data.forEach(function(record) {
-        this.selectedRecords[record.datastore] = this.selectedRecords[record.datastore] || {};
-        this.selectedRecords[record.datastore][record.uid] = true;
-      }, this);
-      return this;
-    }
-    for (var prop in data) {
-      if (data.hasOwnProperty(prop)) {
-        this.selectedRecords[prop] = {};
-        data[prop].forEach(function(prop2) {
-          return function(record) {
-            this.selectedRecords[prop2][record.uid] = true;
-          };
-        }(prop), this);
-      }
-    }
-    return this;
-  }
-};
 Pride.Parser = /*
  * Generated by PEG.js 0.10.0.
  *
@@ -4540,6 +4487,59 @@ function() {
     parse: peg$parse
   };
 }();
+Pride.PreferenceEngine = {
+  selectedRecords: null,
+  engine: null,
+  selected: function(record) {
+    if (!this.engine) {
+      return false;
+    }
+    return (this.selectedRecords[record.datastore] || {})[record.uid];
+  },
+  registerEngine: function(engine) {
+    this.engine = engine;
+    if (!engine) {
+      return this;
+    }
+    this.updateSelectedRecords(this.engine.listRecords());
+    this.engine.addObserver(function(preferenceEngine) {
+      return function(data) {
+        preferenceEngine.updateSelectedRecords(data);
+      };
+    }(this));
+    return this;
+  },
+  blankList: function() {
+    return {
+      mirlyn: {},
+      articlesplus: {},
+      databases: {},
+      journals: {},
+      website: {}
+    };
+  },
+  updateSelectedRecords: function(data) {
+    this.selectedRecords = this.selectedRecords || this.blankList();
+    if (data.forEach) {
+      data.forEach(function(record) {
+        this.selectedRecords[record.datastore] = this.selectedRecords[record.datastore] || {};
+        this.selectedRecords[record.datastore][record.uid] = true;
+      }, this);
+      return this;
+    }
+    for (var prop in data) {
+      if (data.hasOwnProperty(prop)) {
+        this.selectedRecords[prop] = {};
+        data[prop].forEach(function(prop2) {
+          return function(record) {
+            this.selectedRecords[prop2][record.uid] = true;
+          };
+        }(prop), this);
+      }
+    }
+    return this;
+  }
+};
 /*! Bundled license information:
 
 reqwest/reqwest.js:
