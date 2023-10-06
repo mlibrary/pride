@@ -4,8 +4,9 @@ const execFile = process.env.BUNDLE === 'exec';
 const outputFile = execFile ? 'output-exec.js' : 'output.js';
 
 // Delete the output file
-fs.unlinkSync(outputFile);
-console.log(`${outputFile} has been removed`);
+fs.unlink(outputFile, (() => { 
+  console.log(`${outputFile} has been removed`);
+})); 
 
 let importUnderscore = 0;
 // Grab all file names, excluding files under `./source/parser`
