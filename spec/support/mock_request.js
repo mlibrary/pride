@@ -3,8 +3,6 @@
 
 // Authored by Colin Fulton (fultonis@umich.edu)
 
-if (typeof reqwest !== 'undefined') var originalRequest = reqwest;
-
 function testRequest(request_method, request_info) {
   describe('sends a valid request', function() {
     it('is given the nessesary fields', function() {
