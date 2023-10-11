@@ -1,55 +1,49 @@
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
+describe('deepClone()', function () {
+  it('passes functions straight through', function () {
+    const func = function () {}
+    const cloned = Pride.Util.deepClone(func)
 
-// Authored by Colin Fulton (fultonis@umich.edu)
+    expect(cloned == func).to.be.true
+  })
 
-describe('deepClone()', function() {
-  it('passes functions straight through', function() {
-    var func   = function() {};
-    var cloned = Pride.Util.deepClone(func);
+  it('returns a new instance of objects', function () {
+    const object = {}
+    const cloned = Pride.Util.deepClone(object)
 
-    expect(cloned == func).toBe(true);
-  });
+    expect(typeof (cloned)).to.equal('object')
+    expect(cloned == object).to.be.false
+  })
 
-  it('returns a new instance of objects', function() {
-    var object = {};
-    var cloned = Pride.Util.deepClone(object);
+  it('returns a new instance of arrays', function () {
+    const array = []
+    const cloned = Pride.Util.deepClone(array)
 
-    expect(typeof(cloned)).toEqual('object');
-    expect(cloned == object).toBe(false);
+    expect(array instanceof Array).to.be.true
+    expect(cloned == array).to.be.false
+  })
 
-  });
+  it('clones content of arrays', function () {
+    const array = [1, 'two', null]
+    const cloned = Pride.Util.deepClone(array)
 
-  it('returns a new instance of arrays', function() {
-    var array  = [];
-    var cloned = Pride.Util.deepClone(array);
+    expect(cloned[0]).to.equal(array[0])
+    expect(cloned[1]).to.equal(array[1])
+    expect(cloned[2]).to.equal(array[2])
+  })
 
-    expect(array instanceof Array).toBe(true);
-    expect(cloned == array).toBe(false);
-  });
+  it('clones content of objects', function () {
+    const object = { x: 1, y: 'two', z: null }
+    const cloned = Pride.Util.deepClone(object)
 
-  it('clones content of arrays', function() {
-    var array  = [1, 'two', null];
-    var cloned = Pride.Util.deepClone(array);
+    expect(cloned.x).to.equal(object.x)
+    expect(cloned.y).to.equal(object.y)
+    expect(cloned.z).to.equal(object.z)
+  })
 
-    expect(cloned[0]).toEqual(array[0]);
-    expect(cloned[1]).toEqual(array[1]);
-    expect(cloned[2]).toEqual(array[2]);
-  });
+  it('clones nested content', function () {
+    const object = { x: 1, y: ['one', { q: 'two' }, 3], z: null }
+    const cloned = Pride.Util.deepClone(object)
 
-  it('clones content of objects', function() {
-    var object = {x: 1, y: 'two', z: null};
-    var cloned = Pride.Util.deepClone(object);
-
-    expect(cloned['x']).toEqual(object['x']);
-    expect(cloned['y']).toEqual(object['y']);
-    expect(cloned['z']).toEqual(object['z']);
-  });
-
-  it('clones nested content', function() {
-    var object = {x: 1, y: ['one', {q: 'two'}, 3], z: null};
-    var cloned = Pride.Util.deepClone(object);
-
-    expect(object['y'][1]['q']).toEqual(cloned['y'][1]['q']);
-  });
-});
+    expect(object.y[1].q).to.equal(cloned.y[1].q)
+  })
+})

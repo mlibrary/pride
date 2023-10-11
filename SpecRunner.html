@@ -1,39 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jasmine Spec Runner v5.1.1</title>
-
-  <link rel="shortcut icon" type="image/png" href="lib/jasmine-5.1.1/jasmine_favicon.png">
-  <link rel="stylesheet" href="lib/jasmine-5.1.1/jasmine.css">
-
-  <script src="lib/jasmine-5.1.1/jasmine.js"></script>
-  <script src="lib/jasmine-5.1.1/jasmine-html.js"></script>
-  <script src="lib/jasmine-5.1.1/boot0.js"></script>
-  <!-- optional: include a file here that configures the Jasmine env -->
-  <script src="lib/jasmine-5.1.1/boot1.js"></script>
-
-  <!-- Source -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js"></script>
-  <script src="pride.execjs.js"></script>
-
-  <!-- Support -->
-  <!-- <script src="spec/support/mock_request.js"></script> -->
-
-  <!-- Specs -->
-  <script src="spec/constructors/func_buffer_spec.js"></script>
-  <script src="spec/constructors/paginater_spec.js"></script>
-  <script src="spec/constructors/section_spec.js"></script>
-  <!-- <script src="spec/constructors/request_buffer_spec.js"></script> -->
-
-  <script src="spec/functions/is_deep_match_spec.js"></script>
-  <script src="spec/functions/safe_call_and_apply_spec.js"></script>
-  <script src="spec/functions/slice_spec.js"></script>
-  <script src="spec/functions/deep_clone_spec.js"></script>
-  <script src="spec/functions/escape_spec.js"></script>
-</head>
-<body>
-  
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Mocha Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+    <script src="https://unpkg.com/chai/chai.js"></script>
+    <script src="https://unpkg.com/mocha/mocha.js"></script>
+    <script src="https://unpkg.com/underscore/underscore.js"></script>
+    <script src="pride.execjs.js"></script>
+    <script class="mocha-init">
+      mocha.setup('bdd');
+      mocha.checkLeaks();
+      const expect = chai.expect;
+    </script>
+    <!-- <script src="spec/support/mock_request.js"></script> -->
+    <script src="spec/constructors/func_buffer_spec.js"></script>
+    <script src="spec/constructors/paginater_spec.js"></script>
+    <script src="spec/constructors/section_spec.js"></script>
+    <!-- <script src="spec/constructors/request_buffer_spec.js"></script> -->
+    <script src="spec/functions/is_deep_match_spec.js"></script>
+    <script src="spec/functions/safe_call_and_apply_spec.js"></script>
+    <script src="spec/functions/slice_spec.js"></script>
+    <script src="spec/functions/deep_clone_spec.js"></script>
+    <script src="spec/functions/escape_spec.js"></script>
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <script class="mocha-exec">
+      mocha.run();
+    </script>
+  </body>
 </html>
