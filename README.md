@@ -1,6 +1,18 @@
 # Pride
 Pride is a JavaScript library that handles all communication between the front-end application and the U-M Library Search backend (via [Spectrum](https://github.com/mlibrary/spectrum)).
 
+## Using docker/docker-compose
+```bash
+# If desired, add to your .bashrc / .bash_profile / .env / etc
+#
+export DOCKER_UID="$(id -u)" DOCKER_GID="$(id -g)"
+
+# Then run these commands
+docker-compose build
+docker-compose run --rm web npm run install
+docker-compose run --rm web npm run build
+```
+
 ## Setup
 
 ```bash

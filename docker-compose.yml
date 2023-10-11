@@ -1,0 +1,14 @@
+---
+version: '3'
+services:
+  web:
+    stdin_open: true
+    tty: true
+    build:
+      context: .
+      args:
+        UID: ${DOCKER_UID}
+        GID: ${DOCKER_GID}
+    command: tail -f /dev/null
+    volumes:
+    - .:/app
