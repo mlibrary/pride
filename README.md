@@ -1,7 +1,5 @@
 # Pride
-Pride is a JavaScript library that is currently under development. It handles all communication between your front-end application and the U-M Library searches backend (currently this backend is being developed using Spectrum).
-
-When it is ready for use, we wil add documentation on how to use it. Until then, please contact me with any questions.
+Pride is a JavaScript library that handles all communication between the front-end application and the U-M Library Search backend (via [Spectrum](https://github.com/mlibrary/spectrum)).
 
 ## Setup
 
@@ -47,9 +45,5 @@ source/parser/parser.js: line 877, col 5, Missing semicolon.
 
 1. Edit the javascript files in `source/`.
 2. Build with `npm run build`.
-3. Test as appropriate.
+3. Test as appropriate, and load `SpecRunner.html`.
 4. Add and commit your changes, along with the built `pride.js`, `pride.min.js`, and `pride.execjs.js`.
-
-## Running tests
-
-Colin wrote some Jasmine tests.  They're run in-browser iirc, you'd load `SpecRunner.html`.
