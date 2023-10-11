@@ -3,31 +3,17 @@
   "version": "0.0.1",
   "main": "pride.js",
   "scripts": {
-    "build": "gulp",
-    "gulp": "gulp"
+    "build": "node concat.js && npm run esbuild:regular && npm run esbuild:minify && BUNDLE=exec node concat.js && npm run esbuild:exec",
+    "esbuild": "npx esbuild $1 --bundle --format=cjs $*",
+    "esbuild:exec": "npm run esbuild output-exec.js -- --outfile=pride.execjs.js",
+    "esbuild:minify": "npm run esbuild output.js -- --outfile=pride.min.js --minify --analyze",
+    "esbuild:regular": "npm run esbuild output.js -- --outfile=pride.js"
   },
   "dependencies": {
-    "gulp-clean": "^0.4.0",
-    "gulp-pegjs": "^0.2.0",
+    "esbuild": "^0.19.4",
+    "glob": "^10.3.10",
     "pegjs": "^0.10.0",
     "reqwest": "^2.0.5",
-    "underscore": "^1.13.6",
-    "xhr2": "^0.2.1"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.23.0",
-    "babel-preset-env": "^1.7.0",
-    "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-jshint": "^2.1.0",
-    "gulp-rename": "^2.0.0",
-    "gulp-replace": "^1.1.4",
-    "gulp-uglify": "^3.0.2",
-    "jshint": "^2.13.6"
-  },
-  "overrides": {
-    "chokidar": "^3.5.3",
-    "glob-parent": "^6.0.2"
+    "underscore": "^1.13.6"
   }
 }

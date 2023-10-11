@@ -921,4 +921,4 @@ Pride.Parser =
     SyntaxError: peg$SyntaxError,
     parse:       peg$parse
   };
-})()
+})();

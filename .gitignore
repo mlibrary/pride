@@ -4,3 +4,5 @@ node_modules/
 ._.*
 *~
 *,
+output.js
+output-exec.js
