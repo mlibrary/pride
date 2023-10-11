@@ -7,7 +7,9 @@
     "esbuild": "npx esbuild $1 --bundle --format=cjs $*",
     "esbuild:exec": "npm run esbuild output-exec.js -- --outfile=pride.execjs.js",
     "esbuild:minify": "npm run esbuild output.js -- --outfile=pride.min.js --minify --analyze",
-    "esbuild:regular": "npm run esbuild output.js -- --outfile=pride.js"
+    "esbuild:regular": "npm run esbuild output.js -- --outfile=pride.js",
+    "eslint": "npx eslint $* source/**/*.js spec/**/*.js",
+    "eslint:fix": "npm run eslint -- --fix"
   },
   "dependencies": {
     "esbuild": "^0.19.4",
@@ -15,5 +17,12 @@
     "pegjs": "^0.10.0",
     "reqwest": "^2.0.5",
     "underscore": "^1.13.6"
+  },
+  "devDependencies": {
+    "eslint": "^8.51.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-n": "^16.2.0",
+    "eslint-plugin-promise": "^6.1.1"
   }
 }
