@@ -4,6 +4,11 @@ Monthly dependency update to help maintain Pride.
 ## NPM
 These dependencies have been updated to their latest versions:
 - `esbuild`
+- `eslint`
+- `eslint-config-standard`
+- `eslint-plugin-import`
+- `eslint-plugin-n`
+- `eslint-plugin-promise`
 - `glob`
 - `pegjs`
 - `reqwest`
