@@ -1,4 +1,4 @@
-import nodeFactory from '../Util/nodeFactory';
+import nodeFactory from '../Core/nodeFactory';
 
 var inside_field_nodes = ['value_boolean', 'literal', 'tag', 'special'];
 

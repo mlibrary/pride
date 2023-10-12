@@ -1,4 +1,4 @@
-import parse from '../Parser/parse';
+import Parser from '../Parser';
 import Raw from './Raw';
 
 const parseField = function(field_name, content) {
@@ -13,7 +13,7 @@ const parseField = function(field_name, content) {
 //        .replace(/[:&]$/g, '')
 //        .replace(/^[:&]/g, '')
 //        ;
-      return parse(content, {defaultFieldName: field_name});
+      return Parser.parse(content, {defaultFieldName: field_name});
     }
     catch (e) {
       console.log(e);

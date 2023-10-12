@@ -1,4 +1,4 @@
-import nodeFactory from '../Util/nodeFactory';
+import nodeFactory from '../Core/nodeFactory';
 
 const Raw = nodeFactory('raw');
 
