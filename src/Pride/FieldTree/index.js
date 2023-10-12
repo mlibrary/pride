@@ -9,7 +9,7 @@ import tokenize from './tokenize.js';
 import tokens from './tokens.js';
 import ValueBoolean from './ValueBoolean.js';
 
-const FieldTree = {};
+const FieldTree = {}; // Pride.FieldTree = Pride.FieldTree || {};
 
 Object.defineProperty(FieldTree, 'Field', { value: Field });
 Object.defineProperty(FieldTree, 'FieldBoolean', { value: FieldBoolean });
