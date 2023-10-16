@@ -2,6 +2,7 @@
   "name": "pride",
   "version": "0.0.1",
   "main": "pride.js",
+  "type": "module",
   "scripts": {
     "build": "npm run esbuild:regular && npm run esbuild:minify && npm run esbuild:exec",
     "esbuild": "npx esbuild src/index.js --bundle --format=cjs $*",

@@ -3068,7 +3068,7 @@ var SearchBase = function(setup, parent) {
 var SearchBase_default = SearchBase;
 
 // src/Pride/Util/request.js
-var import_reqwest = __toESM(require_reqwest());
+var import_reqwest = __toESM(require_reqwest(), 1);
 var request = function(request_info) {
   log_default("Request", "Sending HTTP request...");
   log_default("Request", "URL", request_info.url);
@@ -4721,7 +4721,6 @@ Object.defineProperty(Pride, "PreferenceEngine", { value: PreferenceEngine_defau
 Object.defineProperty(Pride, "requestRecord", { value: requestRecord_default });
 Object.defineProperty(Pride, "Settings", { value: Settings_default });
 Object.defineProperty(Pride, "Util", { value: Util_default });
-Object.defineProperty(Pride, "Lipsum", { value: "lorem ipsum dolor sit amet" });
 var Pride_default = Pride;
 
 // src/index.js
