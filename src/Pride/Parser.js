@@ -1,3 +1,5 @@
+import FieldTree from './FieldTree/index';
+
 const Parser = (function() {
   "use strict";
 
@@ -137,18 +139,18 @@ const Parser = (function() {
         peg$startRuleFunction  = peg$parsestart,
 
         peg$c0 = function(c) { return c; },
-        peg$c1 = function(cl, con, co) { return new Pride.FieldTree.FieldBoolean(con, cl, co); },
+        peg$c1 = function(cl, con, co) { return new FieldTree.FieldBoolean(con, cl, co); },
         peg$c2 = function(first, rest) { if (rest) { return [first, rest]; } else { return first; } },
         peg$c3 = function(rest) { return rest; },
         peg$c4 = ":",
         peg$c5 = peg$literalExpectation(":", false),
-        peg$c6 = function(fieldName, list) { return new Pride.FieldTree.Field(fieldName, list); },
-        peg$c7 = function(list) { return new Pride.FieldTree.Field(defaultFieldName, list); },
+        peg$c6 = function(fieldName, list) { return new FieldTree.Field(fieldName, list); },
+        peg$c7 = function(list) { return new FieldTree.Field(defaultFieldName, list); },
         peg$c8 = function(string) { return string.join(''); },
         peg$c9 = function(first, rest) { if (rest) { return first.concat( rest ); } else { return first; } },
-        peg$c10 = function(first, rest) { return [new Pride.FieldTree.Literal(first + rest.join(''))]; },
-        peg$c11 = function(string) { return [new Pride.FieldTree.Literal(string.join(''))]; },
-        peg$c12 = function(literal) { return [new Pride.FieldTree.Literal('"' + literal.join('') + '"')]; },
+        peg$c10 = function(first, rest) { return [new FieldTree.Literal(first + rest.join(''))]; },
+        peg$c11 = function(string) { return [new FieldTree.Literal(string.join(''))]; },
+        peg$c12 = function(literal) { return [new FieldTree.Literal('"' + literal.join('') + '"')]; },
         peg$c13 = function(conj) { return conj; },
         peg$c14 = "AND",
         peg$c15 = peg$literalExpectation("AND", false),

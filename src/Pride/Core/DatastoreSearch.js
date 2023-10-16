@@ -2,6 +2,7 @@ import _ from 'underscore';
 import SearchBase from './SearchBase';
 import Record from './Record';
 import deepClone from '../Util/deepClone';
+import isDeepMatch from '../Util/isDeepMatch';
 import FacetSearch from './FacetSearch';
 
 const DatastoreSearch = function(setup) {
@@ -58,7 +59,7 @@ const DatastoreSearch = function(setup) {
     self.runDataObservers.add(function() {
       var facets = base.datastore.get('facets');
 
-      if (!Pride.Util.isDeepMatch(current_facets, facets)) {
+      if (!isDeepMatch(current_facets, facets)) {
         _.each(facet_searches, function(facet_search) {
           facet_search.clearAllObservers();
         });
