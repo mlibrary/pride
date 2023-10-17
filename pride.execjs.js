@@ -4,14 +4,6 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// src/Pride/Util/escape.js
-var escape = function(string) {
-  var temp_element = document.createElement("div");
-  temp_element.appendChild(document.createTextNode(string));
-  return temp_element.innerHTML;
-};
-var escape_default = escape;
-
 // node_modules/underscore/modules/index.js
 var modules_exports = {};
 __export(modules_exports, {
@@ -43,7 +35,7 @@ __export(modules_exports, {
   difference: () => difference_default,
   drop: () => rest,
   each: () => each,
-  escape: () => escape_default2,
+  escape: () => escape_default,
   every: () => every,
   extend: () => extend_default,
   extendOwn: () => extendOwn_default,
@@ -894,7 +886,7 @@ var escapeMap_default = {
 };
 
 // node_modules/underscore/modules/escape.js
-var escape_default2 = createEscaper(escapeMap_default);
+var escape_default = createEscaper(escapeMap_default);
 
 // node_modules/underscore/modules/_unescapeMap.js
 var unescapeMap_default = invert(escapeMap_default);
@@ -1871,42 +1863,6 @@ var _2 = mixin(modules_exports);
 _2._ = _2;
 var index_default_default = _2;
 
-// src/Pride/Util/isDeepMatch.js
-var isDeepMatch = function(object2, pattern) {
-  var both_arrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
-  var both_objects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
-  if (both_arrays && pattern.length != object2.length) {
-    return false;
-  }
-  if (both_objects && index_default_default.keys(pattern).length != index_default_default.keys(object2).length) {
-    return false;
-  }
-  if (both_arrays || both_objects) {
-    return index_default_default.every(pattern, function(value, key) {
-      return isDeepMatch(object2[key], value);
-    });
-  } else {
-    return object2 === pattern;
-  }
-};
-var isDeepMatch_default = isDeepMatch;
-
-// src/Pride/Util/safeApply.js
-var safeApply = function(maybe_func, args) {
-  if (index_default_default.isFunction(maybe_func)) {
-    return maybe_func.apply(this, args);
-  } else {
-    return maybe_func;
-  }
-};
-var safeApply_default = safeApply;
-
-// src/Pride/Util/slice.js
-var slice2 = function(array, begin, end) {
-  return Array.prototype.slice.call(array, begin, end);
-};
-var slice_default = slice2;
-
 // src/Pride/AllDatastores.js
 var AllDatastores = {
   array: [],
@@ -1990,10 +1946,62 @@ var PreferenceEngine = {
 };
 var PreferenceEngine_default = PreferenceEngine;
 
+// src/Pride/Util/escape.js
+var escape = function(string) {
+  var temp_element = document.createElement("div");
+  temp_element.appendChild(document.createTextNode(string));
+  return temp_element.innerHTML;
+};
+var escape_default2 = escape;
+
+// src/Pride/Util/isDeepMatch.js
+var isDeepMatch = function(object2, pattern) {
+  var both_arrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
+  var both_objects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
+  if (both_arrays && pattern.length != object2.length) {
+    return false;
+  }
+  if (both_objects && index_default_default.keys(pattern).length != index_default_default.keys(object2).length) {
+    return false;
+  }
+  if (both_arrays || both_objects) {
+    return index_default_default.every(pattern, function(value, key) {
+      return isDeepMatch(object2[key], value);
+    });
+  } else {
+    return object2 === pattern;
+  }
+};
+var isDeepMatch_default = isDeepMatch;
+
+// src/Pride/Util/safeApply.js
+var safeApply = function(maybe_func, args) {
+  if (index_default_default.isFunction(maybe_func)) {
+    return maybe_func.apply(this, args);
+  } else {
+    return maybe_func;
+  }
+};
+var safeApply_default = safeApply;
+
+// src/Pride/Util/slice.js
+var slice2 = function(array, begin, end) {
+  return Array.prototype.slice.call(array, begin, end);
+};
+var slice_default = slice2;
+
 // output-exec.js
 var reqwest = {};
-var Pride = {};
-Pride.Util = {};
+var Pride = {
+  AllDatastores: AllDatastores_default,
+  PreferenceEngine: PreferenceEngine_default
+};
+Pride.Util = {
+  escape: escape_default2,
+  isDeepMatch: isDeepMatch_default,
+  safeApply: safeApply_default,
+  slice: slice_default
+};
 Pride.Core = {};
 Pride.Settings = {
   // default_cache_size:  If a cache size isn't set for a datastore, this value
@@ -3092,7 +3100,6 @@ Pride.Util.deepClone = function(original) {
     }
   }
 };
-Pride.Util.escape = escape_default;
 Pride.init = new Pride.Util.RequestBuffer({
   url: function() {
     return Pride.Settings.datastores_url;
@@ -3117,7 +3124,6 @@ Pride.init = new Pride.Util.RequestBuffer({
     );
   }
 }).request;
-Pride.Util.isDeepMatch = isDeepMatch_default;
 Pride.Core.log = function(source, info) {
   if (Pride.Settings.obnoxious) {
     var message = Pride.Util.slice(arguments, 2);
@@ -3240,9 +3246,6 @@ Pride.Util.safeCall = function(maybe_func) {
     return maybe_func;
   }
 };
-Pride.Util.safeApply = safeApply_default;
-Pride.Util.slice = slice_default;
-Pride.AllDatastores = AllDatastores_default;
 Pride.Messenger = new Pride.Util.FuncBuffer(function() {
   var notifyObservers = this.call;
   this.addObserver = this.add;
@@ -4053,4 +4056,3 @@ function() {
     parse: peg$parse
   };
 }();
-Pride.PreferenceEngine = PreferenceEngine_default;
