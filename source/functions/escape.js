@@ -1,11 +1,3 @@
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
+import escape from '../../src/Pride/Util/escape';
 
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-Pride.Util.escape = function(string) {
-  var temp_element = document.createElement('div');
-  temp_element.appendChild(document.createTextNode(string));
-
-  return temp_element.innerHTML;
-};
+Pride.Util.escape = escape;

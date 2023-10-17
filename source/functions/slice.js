@@ -1,8 +1,3 @@
-// Copyright (c) 2015, Regents of the University of Michigan.
-// All rights reserved. See LICENSE.txt for details.
+import slice from '../../src/Pride/Util/slice';
 
-// Authored by Colin Fulton (fultonis@umich.edu)
-
-Pride.Util.slice = function(array, begin, end) {
-  return Array.prototype.slice.call(array, begin, end);
-};
+Pride.Util.slice = slice;
