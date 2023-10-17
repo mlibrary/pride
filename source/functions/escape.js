@@ -1,3 +1,3 @@
-import escape from '../../src/Pride/Util/escape';
+import escape from './src/Pride/Util/escape';
 
 Pride.Util.escape = escape;

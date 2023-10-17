@@ -4,6 +4,14 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
+// src/Pride/Util/escape.js
+var escape = function(string) {
+  var temp_element = document.createElement("div");
+  temp_element.appendChild(document.createTextNode(string));
+  return temp_element.innerHTML;
+};
+var escape_default = escape;
+
 // node_modules/underscore/modules/index.js
 var modules_exports = {};
 __export(modules_exports, {
@@ -35,7 +43,7 @@ __export(modules_exports, {
   difference: () => difference_default,
   drop: () => rest,
   each: () => each,
-  escape: () => escape_default,
+  escape: () => escape_default2,
   every: () => every,
   extend: () => extend_default,
   extendOwn: () => extendOwn_default,
@@ -886,7 +894,7 @@ var escapeMap_default = {
 };
 
 // node_modules/underscore/modules/escape.js
-var escape_default = createEscaper(escapeMap_default);
+var escape_default2 = createEscaper(escapeMap_default);
 
 // node_modules/underscore/modules/_unescapeMap.js
 var unescapeMap_default = invert(escapeMap_default);
@@ -927,11 +935,11 @@ function template(text, settings, oldSettings) {
   ].join("|") + "|$", "g");
   var index = 0;
   var source = "__p+='";
-  text.replace(matcher2, function(match, escape, interpolate, evaluate, offset) {
+  text.replace(matcher2, function(match, escape2, interpolate, evaluate, offset) {
     source += text.slice(index, offset).replace(escapeRegExp, escapeChar);
     index = offset + match.length;
-    if (escape) {
-      source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
+    if (escape2) {
+      source += "'+\n((__t=(" + escape2 + "))==null?'':_.escape(__t))+\n'";
     } else if (interpolate) {
       source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
     } else if (evaluate) {
@@ -1862,6 +1870,125 @@ var underscore_array_methods_default = _;
 var _2 = mixin(modules_exports);
 _2._ = _2;
 var index_default_default = _2;
+
+// src/Pride/Util/isDeepMatch.js
+var isDeepMatch = function(object2, pattern) {
+  var both_arrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
+  var both_objects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
+  if (both_arrays && pattern.length != object2.length) {
+    return false;
+  }
+  if (both_objects && index_default_default.keys(pattern).length != index_default_default.keys(object2).length) {
+    return false;
+  }
+  if (both_arrays || both_objects) {
+    return index_default_default.every(pattern, function(value, key) {
+      return isDeepMatch(object2[key], value);
+    });
+  } else {
+    return object2 === pattern;
+  }
+};
+var isDeepMatch_default = isDeepMatch;
+
+// src/Pride/Util/safeApply.js
+var safeApply = function(maybe_func, args) {
+  if (index_default_default.isFunction(maybe_func)) {
+    return maybe_func.apply(this, args);
+  } else {
+    return maybe_func;
+  }
+};
+var safeApply_default = safeApply;
+
+// src/Pride/Util/slice.js
+var slice2 = function(array, begin, end) {
+  return Array.prototype.slice.call(array, begin, end);
+};
+var slice_default = slice2;
+
+// src/Pride/AllDatastores.js
+var AllDatastores = {
+  array: [],
+  get: function(uid) {
+    return index_default_default.find(
+      this.array,
+      function(datastore) {
+        return datastore.get("uid") == uid;
+      }
+    );
+  },
+  newSearch: function(uid) {
+    var datastore = index_default_default.find(
+      this.array,
+      function(datastore2) {
+        return datastore2.get("uid") == uid;
+      }
+    );
+    return datastore ? datastore.baseSearch() : void 0;
+  },
+  each: function(func) {
+    index_default_default.each(this.array, func);
+    return this;
+  }
+};
+var AllDatastores_default = AllDatastores;
+
+// src/Pride/PreferenceEngine.js
+var PreferenceEngine = {
+  selectedRecords: null,
+  engine: null,
+  selected: function(record) {
+    if (!this.engine) {
+      return false;
+    }
+    return (this.selectedRecords[record.datastore] || {})[record.uid];
+  },
+  registerEngine: function(engine) {
+    this.engine = engine;
+    if (!engine) {
+      return this;
+    }
+    this.updateSelectedRecords(this.engine.listRecords());
+    this.engine.addObserver(function(preferenceEngine) {
+      return function(data) {
+        preferenceEngine.updateSelectedRecords(data);
+      };
+    }(this));
+    return this;
+  },
+  blankList: function() {
+    return {
+      mirlyn: {},
+      articlesplus: {},
+      databases: {},
+      journals: {},
+      website: {}
+    };
+  },
+  updateSelectedRecords: function(data) {
+    this.selectedRecords = this.selectedRecords || this.blankList();
+    if (data.forEach) {
+      data.forEach(function(record) {
+        this.selectedRecords[record.datastore] = this.selectedRecords[record.datastore] || {};
+        this.selectedRecords[record.datastore][record.uid] = true;
+      }, this);
+      return this;
+    }
+    for (var prop in data) {
+      if (data.hasOwnProperty(prop)) {
+        this.selectedRecords[prop] = {};
+        data[prop].forEach(function(prop2) {
+          return function(record) {
+            this.selectedRecords[prop2][record.uid] = true;
+          };
+        }(prop), this);
+      }
+    }
+    return this;
+  }
+};
+var PreferenceEngine_default = PreferenceEngine;
 
 // output-exec.js
 var reqwest = {};
@@ -2965,11 +3092,7 @@ Pride.Util.deepClone = function(original) {
     }
   }
 };
-Pride.Util.escape = function(string) {
-  var temp_element = document.createElement("div");
-  temp_element.appendChild(document.createTextNode(string));
-  return temp_element.innerHTML;
-};
+Pride.Util.escape = escape_default;
 Pride.init = new Pride.Util.RequestBuffer({
   url: function() {
     return Pride.Settings.datastores_url;
@@ -2994,23 +3117,7 @@ Pride.init = new Pride.Util.RequestBuffer({
     );
   }
 }).request;
-Pride.Util.isDeepMatch = function(object2, pattern) {
-  var both_arrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
-  var both_objects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
-  if (both_arrays && pattern.length != object2.length) {
-    return false;
-  }
-  if (both_objects && index_default_default.keys(pattern).length != index_default_default.keys(object2).length) {
-    return false;
-  }
-  if (both_arrays || both_objects) {
-    return index_default_default.every(pattern, function(value, key) {
-      return Pride.Util.isDeepMatch(object2[key], value);
-    });
-  } else {
-    return object2 === pattern;
-  }
-};
+Pride.Util.isDeepMatch = isDeepMatch_default;
 Pride.Core.log = function(source, info) {
   if (Pride.Settings.obnoxious) {
     var message = Pride.Util.slice(arguments, 2);
@@ -3037,11 +3144,11 @@ Pride.FieldTree.tokenize = function(string) {
   var index = 0;
   var type = null;
   while (index < string.length) {
-    var slice2 = string.slice(index);
+    var slice3 = string.slice(index);
     var found = index_default_default.find(
       Pride.FieldTree.tokens,
       function(pattern) {
-        return new RegExp("^\\" + pattern).exec(slice2);
+        return new RegExp("^\\" + pattern).exec(slice3);
       }
     );
     if (found) {
@@ -3133,40 +3240,9 @@ Pride.Util.safeCall = function(maybe_func) {
     return maybe_func;
   }
 };
-Pride.Util.safeApply = function(maybe_func, args) {
-  if (index_default_default.isFunction(maybe_func)) {
-    return maybe_func.apply(this, args);
-  } else {
-    return maybe_func;
-  }
-};
-Pride.Util.slice = function(array, begin, end) {
-  return Array.prototype.slice.call(array, begin, end);
-};
-Pride.AllDatastores = {
-  array: [],
-  get: function(uid) {
-    return index_default_default.find(
-      this.array,
-      function(datastore) {
-        return datastore.get("uid") == uid;
-      }
-    );
-  },
-  newSearch: function(uid) {
-    var datastore = index_default_default.find(
-      this.array,
-      function(datastore2) {
-        return datastore2.get("uid") == uid;
-      }
-    );
-    return datastore ? datastore.baseSearch() : void 0;
-  },
-  each: function(func) {
-    index_default_default.each(this.array, func);
-    return this;
-  }
-};
+Pride.Util.safeApply = safeApply_default;
+Pride.Util.slice = slice_default;
+Pride.AllDatastores = AllDatastores_default;
 Pride.Messenger = new Pride.Util.FuncBuffer(function() {
   var notifyObservers = this.call;
   this.addObserver = this.add;
@@ -3977,56 +4053,4 @@ function() {
     parse: peg$parse
   };
 }();
-Pride.PreferenceEngine = {
-  selectedRecords: null,
-  engine: null,
-  selected: function(record) {
-    if (!this.engine) {
-      return false;
-    }
-    return (this.selectedRecords[record.datastore] || {})[record.uid];
-  },
-  registerEngine: function(engine) {
-    this.engine = engine;
-    if (!engine) {
-      return this;
-    }
-    this.updateSelectedRecords(this.engine.listRecords());
-    this.engine.addObserver(function(preferenceEngine) {
-      return function(data) {
-        preferenceEngine.updateSelectedRecords(data);
-      };
-    }(this));
-    return this;
-  },
-  blankList: function() {
-    return {
-      mirlyn: {},
-      articlesplus: {},
-      databases: {},
-      journals: {},
-      website: {}
-    };
-  },
-  updateSelectedRecords: function(data) {
-    this.selectedRecords = this.selectedRecords || this.blankList();
-    if (data.forEach) {
-      data.forEach(function(record) {
-        this.selectedRecords[record.datastore] = this.selectedRecords[record.datastore] || {};
-        this.selectedRecords[record.datastore][record.uid] = true;
-      }, this);
-      return this;
-    }
-    for (var prop in data) {
-      if (data.hasOwnProperty(prop)) {
-        this.selectedRecords[prop] = {};
-        data[prop].forEach(function(prop2) {
-          return function(record) {
-            this.selectedRecords[prop2][record.uid] = true;
-          };
-        }(prop), this);
-      }
-    }
-    return this;
-  }
-};
+Pride.PreferenceEngine = PreferenceEngine_default;

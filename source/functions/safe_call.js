@@ -4,7 +4,7 @@
 // Authored by Colin Fulton (fultonis@umich.edu)
 
 import _ from 'underscore';
-import safeApply from '../../src/Pride/Util/safeApply';
+import safeApply from './src/Pride/Util/safeApply';
 
 Pride.Util.safeCall = function(maybe_func) {
   if (_.isFunction(maybe_func)) {

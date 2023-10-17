@@ -1,3 +1,3 @@
-import AllDatastores from '../../src/Pride/AllDatastores';
+import AllDatastores from './src/Pride/AllDatastores';
 
 Pride.AllDatastores = AllDatastores;
