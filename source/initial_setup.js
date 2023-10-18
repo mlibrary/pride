@@ -10,7 +10,7 @@ import FieldTree from './src/Pride/FieldTree';
 import Messenger from './src/Pride/Messenger';
 import Parser from './src/Pride/Parser';
 import PreferenceEngine from './src/Pride/PreferenceEngine';
-// import requestRecord from './src/Pride/requestRecord';
+import requestRecord from './src/Pride/requestRecord';
 import Settings from './src/Pride/Settings';
 import Util from './src/Pride/Util';
 
@@ -21,6 +21,7 @@ export const Pride = {
   Messenger,
   Parser,
   PreferenceEngine,
+  requestRecord,
   Settings,
   Util
 };

@@ -4550,6 +4550,23 @@ Object.defineProperty(FieldTree, "tokens", { value: tokens_default });
 Object.defineProperty(FieldTree, "ValueBoolean", { value: ValueBoolean_default });
 var FieldTree_default = FieldTree;
 
+// src/Pride/requestRecord.js
+var requestRecord = function(source, id, func) {
+  if (func === void 0) {
+    func = function(data2) {
+    };
+  }
+  var data = {
+    complete: false,
+    source: AllDatastores_default.get(source).get("url") + "/record/" + id,
+    names: [void 0]
+  };
+  var record = new Record_default(data);
+  record.renderFull(func);
+  return record;
+};
+var requestRecord_default = requestRecord;
+
 // src/Pride/Util/MultiSearch.js
 var MultiSearch = function(uid, muted, search_array) {
   var query_data = {};
@@ -4664,6 +4681,7 @@ var Pride = {
   Messenger: Messenger_default,
   Parser: Parser_default,
   PreferenceEngine: PreferenceEngine_default,
+  requestRecord: requestRecord_default,
   Settings: Settings_default,
   Util: Util_default
 };
@@ -4691,20 +4709,6 @@ Pride.init = new Pride.Util.RequestBuffer({
     );
   }
 }).request;
-Pride.requestRecord = function(source, id, func) {
-  if (func === void 0) {
-    func = function(data2) {
-    };
-  }
-  var data = {
-    complete: false,
-    source: Pride.AllDatastores.get(source).get("url") + "/record/" + id,
-    names: [void 0]
-  };
-  var record = new Pride.Core.Record(data);
-  record.renderFull(func);
-  return record;
-};
 /*! Bundled license information:
 
 reqwest/reqwest.js:
