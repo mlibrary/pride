@@ -4,35 +4,23 @@
 // Authored by Colin Fulton (fultonis@umich.edu)
 
 import AllDatastores from './src/Pride/AllDatastores';
+import Core from './src/Pride/Core';
+import FieldTree from './src/Pride/FieldTree';
+// import init from './src/Pride/init';
+import Messenger from './src/Pride/Messenger';
+import Parser from './src/Pride/Parser';
 import PreferenceEngine from './src/Pride/PreferenceEngine';
+// import requestRecord from './src/Pride/requestRecord';
 import Settings from './src/Pride/Settings';
-
-import deepClone from './src/Pride/Util/deepClone';
-import escape from './src/Pride/Util/escape';
-import FuncBuffer from './src/Pride/Util/FuncBuffer';
-import isDeepMatch from './src/Pride/Util/isDeepMatch';
-import Paginater from './src/Pride/Util/Paginater';
-import safeApply from './src/Pride/Util/safeApply';
-import safeCall from './src/Pride/Util/safeCall';
-import Section from './src/Pride/Util/Section';
-import slice from './src/Pride/Util/slice';
+import Util from './src/Pride/Util';
 
 export const Pride = {
   AllDatastores,
+  Core,
+  FieldTree,
+  Messenger,
+  Parser,
   PreferenceEngine,
-  Settings
+  Settings,
+  Util
 };
-
-Pride.Util = {
-  deepClone,
-  escape,
-  FuncBuffer,
-  isDeepMatch,
-  Paginater,
-  safeApply,
-  safeCall,
-  Section,
-  slice
-};
-
-Pride.Core = {};
