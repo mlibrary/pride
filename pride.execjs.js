@@ -1991,6 +1991,31 @@ var Settings = {
 };
 var Settings_default = Settings;
 
+// src/Pride/Util/deepClone.js
+var deepClone = function(original) {
+  if (index_default_default.isFunction(original)) {
+    return original;
+  } else {
+    var collection_function = false;
+    if (index_default_default.isArray(original)) {
+      collection_function = "map";
+    } else if (index_default_default.isObject(original)) {
+      collection_function = "mapObject";
+    }
+    if (collection_function) {
+      return index_default_default[collection_function](
+        original,
+        function(item) {
+          return deepClone(item);
+        }
+      );
+    } else {
+      return index_default_default.clone(original);
+    }
+  }
+};
+var deepClone_default = deepClone;
+
 // src/Pride/Util/escape.js
 var escape = function(string) {
   var temp_element = document.createElement("div");
@@ -1998,6 +2023,67 @@ var escape = function(string) {
   return temp_element.innerHTML;
 };
 var escape_default2 = escape;
+
+// src/Pride/Util/slice.js
+var slice2 = function(array, begin, end) {
+  return Array.prototype.slice.call(array, begin, end);
+};
+var slice_default = slice2;
+
+// src/Pride/Util/safeApply.js
+var safeApply = function(maybe_func, args) {
+  if (index_default_default.isFunction(maybe_func)) {
+    return maybe_func.apply(this, args);
+  } else {
+    return maybe_func;
+  }
+};
+var safeApply_default = safeApply;
+
+// src/Pride/Util/FuncBuffer.js
+var FuncBuffer = function(extension) {
+  var buffer = {};
+  var self2 = this;
+  var safeGet = function(name) {
+    if (!index_default_default.has(buffer, name))
+      buffer[name] = [];
+    return buffer[name];
+  };
+  this.add = function(func, name) {
+    safeGet(name).push(func);
+    return self2;
+  };
+  this.remove = function(func, name) {
+    buffer[name] = index_default_default.reject(
+      safeGet(name),
+      function(other_func) {
+        return func == other_func;
+      }
+    );
+    return self2;
+  };
+  this.clear = function(name) {
+    delete buffer[name];
+    return self2;
+  };
+  this.clearAll = function() {
+    buffer = {};
+    return self2;
+  };
+  this.call = function(name) {
+    self2.apply(name, slice_default(arguments, 1));
+    return self2;
+  };
+  this.apply = function(name, args) {
+    index_default_default.each(safeGet(name), function(func) {
+      safeApply_default(func, args);
+    });
+    return self2;
+  };
+  if (index_default_default.isFunction(extension))
+    extension.call(this);
+};
+var FuncBuffer_default = FuncBuffer;
 
 // src/Pride/Util/isDeepMatch.js
 var isDeepMatch = function(object2, pattern) {
@@ -2019,21 +2105,133 @@ var isDeepMatch = function(object2, pattern) {
 };
 var isDeepMatch_default = isDeepMatch;
 
-// src/Pride/Util/safeApply.js
-var safeApply = function(maybe_func, args) {
+// src/Pride/Util/Paginater/getPossibleKeys.js
+var getPossibleKeys = function() {
+  return [
+    "start",
+    "count",
+    "end",
+    "page",
+    "index_limit",
+    "total_pages",
+    "total_available",
+    "page_limit"
+  ];
+};
+var getPossibleKeys_default = getPossibleKeys;
+
+// src/Pride/Util/Paginater/hasKey.js
+var hasKey = function(key) {
+  return getPossibleKeys_default().indexOf(key) > -1;
+};
+var hasKey_default = hasKey;
+
+// src/Pride/Util/Paginater/index.js
+var Paginater = function(initial_values) {
+  this.set = function(new_values) {
+    if (index_default_default.has(new_values, "total_pages")) {
+      throw "Can not set total_pages (it is a calculated value)";
+    }
+    if (index_default_default.has(new_values, "index_limit")) {
+      throw "Can not set index_limit (it is a calculated value)";
+    }
+    if (index_default_default.intersection(["start", "end", "count"], index_default_default.keys(new_values)).length > 2) {
+      throw "Can not set start, end and count all at the same time";
+    }
+    if (index_default_default.has(new_values, "page") && (index_default_default.has(new_values, "start") || index_default_default.has(new_values, "end"))) {
+      throw "Can not set page as well as the start and/or end";
+    }
+    index_default_default.extend(values2, index_default_default.omit(new_values, "end"));
+    if (index_default_default.has(new_values, "page")) {
+      values2.start = (values2.count || 0) * (values2.page - 1);
+    }
+    if (index_default_default.has(new_values, "end")) {
+      if (index_default_default.has(new_values, "count")) {
+        values2.start = Math.max(0, new_values.end - (values2.count - 1));
+      } else {
+        if (values2.start <= new_values.end) {
+          values2.count = new_values.end - values2.start + 1;
+        } else {
+          throw "The start value can not be greater than the end value";
+        }
+      }
+      values2.end = new_values.end;
+    } else {
+      var end = values2.start + values2.count - 1;
+      values2.end = end < values2.start ? void 0 : end;
+    }
+    if (!index_default_default.isNumber(values2.total_available)) {
+      values2.index_limit = Infinity;
+    } else if (values2.total_available > 0) {
+      values2.index_limit = values2.total_available - 1;
+    } else {
+      values2.index_limit = void 0;
+    }
+    if (values2.count > 0 && values2.start % values2.count === 0) {
+      values2.page = Math.floor(values2.start / values2.count) + 1;
+      if (index_default_default.isNumber(values2.total_available)) {
+        values2.total_pages = Math.ceil(values2.total_available / values2.count);
+        values2.page_limit = values2.total_pages;
+      } else {
+        values2.total_pages = void 0;
+        values2.page_limit = Infinity;
+      }
+    } else {
+      values2.page = void 0;
+      values2.total_pages = void 0;
+      values2.page_limit = void 0;
+    }
+    if (!index_default_default.has(values2, "start") || !index_default_default.has(values2, "count")) {
+      throw "Not enough information given to create Paginater";
+    }
+    return this;
+  };
+  this.get = function(name) {
+    return values2[name];
+  };
+  var values2 = {};
+  this.set(initial_values);
+};
+Object.defineProperty(Paginater, "getPossibleKeys", { value: getPossibleKeys_default });
+Object.defineProperty(Paginater, "hasKey", { value: hasKey_default });
+var Paginater_default = Paginater;
+
+// src/Pride/Util/safeCall.js
+var safeCall = function(maybe_func) {
   if (index_default_default.isFunction(maybe_func)) {
-    return maybe_func.apply(this, args);
+    return maybe_func.apply(this, slice_default(arguments, 1));
   } else {
     return maybe_func;
   }
 };
-var safeApply_default = safeApply;
+var safeCall_default = safeCall;
 
-// src/Pride/Util/slice.js
-var slice2 = function(array, begin, end) {
-  return Array.prototype.slice.call(array, begin, end);
+// src/Pride/Util/Section.js
+var Section = function(start, end) {
+  this.start = Math.max(Math.min(start, end), 0);
+  this.end = Math.max(Math.max(start, end), 0);
+  this.inSection = function(index) {
+    return index >= this.start && index <= this.end;
+  };
+  this.overlaps = function(section) {
+    return this.inSection(section.start) || this.inSection(section.end);
+  };
+  this.calcLength = function() {
+    return this.end - this.start + 1;
+  };
+  this.expanded = function(amount) {
+    return this.shifted(-1 * amount, amount);
+  };
+  this.shifted = function(start_amount, end_amount) {
+    if (!index_default_default.isNumber(end_amount))
+      end_amount = start_amount;
+    return new Section(
+      this.start + start_amount,
+      this.end + end_amount
+    );
+  };
 };
-var slice_default = slice2;
+var Section_default = Section;
 
 // output-exec.js
 var reqwest = {};
@@ -2043,9 +2241,14 @@ var Pride = {
   Settings: Settings_default
 };
 Pride.Util = {
+  deepClone: deepClone_default,
   escape: escape_default2,
+  FuncBuffer: FuncBuffer_default,
   isDeepMatch: isDeepMatch_default,
+  Paginater: Paginater_default,
   safeApply: safeApply_default,
+  safeCall: safeCall_default,
+  Section: Section_default,
   slice: slice_default
 };
 Pride.Core = {};
@@ -2376,48 +2579,6 @@ Pride.FieldTree.Tag = Pride.Core.nodeFactory(
 Pride.FieldTree.Literal = Pride.Core.nodeFactory("literal");
 Pride.FieldTree.Special = Pride.Core.nodeFactory("special");
 Pride.FieldTree.Raw = Pride.Core.nodeFactory("raw");
-Pride.Util.FuncBuffer = function(extension) {
-  var buffer = {};
-  var self2 = this;
-  var safeGet = function(name) {
-    if (!index_default_default.has(buffer, name))
-      buffer[name] = [];
-    return buffer[name];
-  };
-  this.add = function(func, name) {
-    safeGet(name).push(func);
-    return self2;
-  };
-  this.remove = function(func, name) {
-    buffer[name] = index_default_default.reject(
-      safeGet(name),
-      function(other_func) {
-        return func == other_func;
-      }
-    );
-    return self2;
-  };
-  this.clear = function(name) {
-    delete buffer[name];
-    return self2;
-  };
-  this.clearAll = function() {
-    buffer = {};
-    return self2;
-  };
-  this.call = function(name) {
-    self2.apply(name, Pride.Util.slice(arguments, 1));
-    return self2;
-  };
-  this.apply = function(name, args) {
-    index_default_default.each(safeGet(name), function(func) {
-      Pride.Util.safeApply(func, args);
-    });
-    return self2;
-  };
-  if (index_default_default.isFunction(extension))
-    extension.call(this);
-};
 Pride.Core.GetThis = function(barcode, data) {
   this.barcode = barcode;
   this.data = data;
@@ -2509,86 +2670,6 @@ Pride.Util.MultiSearch = function(uid, muted, search_array) {
     return muted;
   };
   this.setMute(muted);
-};
-Pride.Util.Paginater = function(initial_values) {
-  this.set = function(new_values) {
-    if (index_default_default.has(new_values, "total_pages")) {
-      throw "Can not set total_pages (it is a calculated value)";
-    }
-    if (index_default_default.has(new_values, "index_limit")) {
-      throw "Can not set index_limit (it is a calculated value)";
-    }
-    if (index_default_default.intersection(["start", "end", "count"], index_default_default.keys(new_values)).length > 2) {
-      throw "Can not set start, end and count all at the same time";
-    }
-    if (index_default_default.has(new_values, "page") && (index_default_default.has(new_values, "start") || index_default_default.has(new_values, "end"))) {
-      throw "Can not set page as well as the start and/or end";
-    }
-    index_default_default.extend(values2, index_default_default.omit(new_values, "end"));
-    if (index_default_default.has(new_values, "page")) {
-      values2.start = (values2.count || 0) * (values2.page - 1);
-    }
-    if (index_default_default.has(new_values, "end")) {
-      if (index_default_default.has(new_values, "count")) {
-        values2.start = Math.max(0, new_values.end - (values2.count - 1));
-      } else {
-        if (values2.start <= new_values.end) {
-          values2.count = new_values.end - values2.start + 1;
-        } else {
-          throw "The start value can not be greater than the end value";
-        }
-      }
-      values2.end = new_values.end;
-    } else {
-      var end = values2.start + values2.count - 1;
-      values2.end = end < values2.start ? void 0 : end;
-    }
-    if (!index_default_default.isNumber(values2.total_available)) {
-      values2.index_limit = Infinity;
-    } else if (values2.total_available > 0) {
-      values2.index_limit = values2.total_available - 1;
-    } else {
-      values2.index_limit = void 0;
-    }
-    if (values2.count > 0 && values2.start % values2.count === 0) {
-      values2.page = Math.floor(values2.start / values2.count) + 1;
-      if (index_default_default.isNumber(values2.total_available)) {
-        values2.total_pages = Math.ceil(values2.total_available / values2.count);
-        values2.page_limit = values2.total_pages;
-      } else {
-        values2.total_pages = void 0;
-        values2.page_limit = Infinity;
-      }
-    } else {
-      values2.page = void 0;
-      values2.total_pages = void 0;
-      values2.page_limit = void 0;
-    }
-    if (!index_default_default.has(values2, "start") || !index_default_default.has(values2, "count")) {
-      throw "Not enough information given to create Paginater";
-    }
-    return this;
-  };
-  this.get = function(name) {
-    return values2[name];
-  };
-  var values2 = {};
-  this.set(initial_values);
-};
-Pride.Util.Paginater.getPossibleKeys = function() {
-  return [
-    "start",
-    "count",
-    "end",
-    "page",
-    "index_limit",
-    "total_pages",
-    "total_available",
-    "page_limit"
-  ];
-};
-Pride.Util.Paginater.hasKey = function(key) {
-  return Pride.Util.Paginater.getPossibleKeys().indexOf(key) > -1;
 };
 Pride.Core.Query = function(query_info) {
   var paginater = new Pride.Util.Paginater({
@@ -3058,52 +3139,6 @@ Pride.Util.SearchSwitcher = function(current_search, cached_searches) {
     return self2;
   };
 };
-Pride.Util.Section = function(start, end) {
-  this.start = Math.max(Math.min(start, end), 0);
-  this.end = Math.max(Math.max(start, end), 0);
-  this.inSection = function(index) {
-    return index >= this.start && index <= this.end;
-  };
-  this.overlaps = function(section) {
-    return this.inSection(section.start) || this.inSection(section.end);
-  };
-  this.calcLength = function() {
-    return this.end - this.start + 1;
-  };
-  this.expanded = function(amount) {
-    return this.shifted(-1 * amount, amount);
-  };
-  this.shifted = function(start_amount, end_amount) {
-    if (!index_default_default.isNumber(end_amount))
-      end_amount = start_amount;
-    return new Pride.Util.Section(
-      this.start + start_amount,
-      this.end + end_amount
-    );
-  };
-};
-Pride.Util.deepClone = function(original) {
-  if (index_default_default.isFunction(original)) {
-    return original;
-  } else {
-    var collection_function = false;
-    if (index_default_default.isArray(original)) {
-      collection_function = "map";
-    } else if (index_default_default.isObject(original)) {
-      collection_function = "mapObject";
-    }
-    if (collection_function) {
-      return index_default_default[collection_function](
-        original,
-        function(item) {
-          return Pride.Util.deepClone(item);
-        }
-      );
-    } else {
-      return index_default_default.clone(original);
-    }
-  }
-};
 Pride.init = new Pride.Util.RequestBuffer({
   url: function() {
     return Pride.Settings.datastores_url;
@@ -3242,13 +3277,6 @@ Pride.requestRecord = function(source, id, func) {
   var record = new Pride.Core.Record(data);
   record.renderFull(func);
   return record;
-};
-Pride.Util.safeCall = function(maybe_func) {
-  if (index_default_default.isFunction(maybe_func)) {
-    return maybe_func.apply(this, Pride.Util.slice(arguments, 1));
-  } else {
-    return maybe_func;
-  }
 };
 Pride.Messenger = new Pride.Util.FuncBuffer(function() {
   var notifyObservers = this.call;
