@@ -4,17 +4,17 @@ const execFile = process.env.BUNDLE === 'exec';
 const outputFile = execFile ? 'output-exec.js' : 'output.js';
 
 // Delete the output file
-fs.unlink(outputFile, (() => { 
+fs.unlink(outputFile, () => {
   console.log(`${outputFile} has been removed`);
-})); 
+});
 
 let importUnderscore = 0;
 // Grab all file names, excluding files under `./source/parser`
 const files = globSync('source/*/**/*.js', { ignore: ['source/parser/**/*.js'] });
-// Sort in alphabetical order 
+// Sort in alphabetical order
 files.sort();
 // Concatenate all `./source` JavaScript files in a certain order
-['source/initial_setup.js', 'source/settings.js', ...files].forEach((file) => {
+['source/initial_setup.js', ...files].forEach((file) => {
   const data = fs.readFileSync(file, { encoding: 'utf8' });
   let editedDate = data;
   if (data.includes("import _ from 'underscore';")) {
