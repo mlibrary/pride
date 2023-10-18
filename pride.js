@@ -4558,6 +4558,33 @@ Object.defineProperty(FieldTree, "tokens", { value: tokens_default });
 Object.defineProperty(FieldTree, "ValueBoolean", { value: ValueBoolean_default });
 var FieldTree_default = FieldTree;
 
+// src/Pride/init.js
+var init2 = new RequestBuffer_default({
+  url: function() {
+    return Settings_default.datastores_url;
+  },
+  attempts: function() {
+    return Settings_default.init_attempts;
+  },
+  failure_message: function() {
+    return Messenger_default.preset("failed_init");
+  },
+  edit_response: function() {
+    return void 0;
+  },
+  before_success: function(data) {
+    Settings_default.default_institution = data.default_institution;
+    Settings_default.affiliation = data.affiliation;
+    AllDatastores_default.array = index_default_default.map(
+      data.response,
+      function(datastore_data) {
+        return new Datastore_default(datastore_data);
+      }
+    );
+  }
+}).request;
+var init_default = init2;
+
 // src/Pride/requestRecord.js
 var requestRecord = function(source, id, func) {
   if (func === void 0) {
@@ -4693,30 +4720,7 @@ var Pride = {
   Settings: Settings_default,
   Util: Util_default
 };
-Pride.init = new Pride.Util.RequestBuffer({
-  url: function() {
-    return Pride.Settings.datastores_url;
-  },
-  attempts: function() {
-    return Pride.Settings.init_attempts;
-  },
-  failure_message: function() {
-    return Pride.Messenger.preset("failed_init");
-  },
-  edit_response: function() {
-    return void 0;
-  },
-  before_success: function(data) {
-    Pride.Settings.default_institution = data.default_institution;
-    Pride.Settings.affiliation = data.affiliation;
-    Pride.AllDatastores.array = index_default_default.map(
-      data.response,
-      function(datastore_data) {
-        return new Pride.Core.Datastore(datastore_data);
-      }
-    );
-  }
-}).request;
+Pride.init = init_default;
 /*! Bundled license information:
 
 reqwest/reqwest.js:

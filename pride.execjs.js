@@ -928,19 +928,19 @@ function isMatch(object2, attrs) {
 }
 
 // node_modules/underscore/modules/underscore.js
-function _2(obj) {
-  if (obj instanceof _2)
+function _(obj) {
+  if (obj instanceof _)
     return obj;
-  if (!(this instanceof _2))
-    return new _2(obj);
+  if (!(this instanceof _))
+    return new _(obj);
   this._wrapped = obj;
 }
-_2.VERSION = VERSION;
-_2.prototype.value = function() {
+_.VERSION = VERSION;
+_.prototype.value = function() {
   return this._wrapped;
 };
-_2.prototype.valueOf = _2.prototype.toJSON = _2.prototype.value;
-_2.prototype.toString = function() {
+_.prototype.valueOf = _.prototype.toJSON = _.prototype.value;
+_.prototype.toString = function() {
   return String(this._wrapped);
 };
 
@@ -968,9 +968,9 @@ function eq(a, b, aStack, bStack) {
   return deepEq(a, b, aStack, bStack);
 }
 function deepEq(a, b, aStack, bStack) {
-  if (a instanceof _2)
+  if (a instanceof _)
     a = a._wrapped;
-  if (b instanceof _2)
+  if (b instanceof _)
     b = b._wrapped;
   var className = toString.call(a);
   if (className !== toString.call(b))
@@ -1211,11 +1211,11 @@ function tap(obj, interceptor) {
 function toPath(path) {
   return isArray_default(path) ? path : [path];
 }
-_2.toPath = toPath;
+_.toPath = toPath;
 
 // node_modules/underscore/modules/_toPath.js
 function toPath2(path) {
-  return _2.toPath(path);
+  return _.toPath(path);
 }
 
 // node_modules/underscore/modules/_deepGet.js
@@ -1307,12 +1307,12 @@ function baseIteratee(value, context2, argCount) {
 function iteratee(value, context2) {
   return baseIteratee(value, context2, Infinity);
 }
-_2.iteratee = iteratee;
+_.iteratee = iteratee;
 
 // node_modules/underscore/modules/_cb.js
 function cb(value, context2, argCount) {
-  if (_2.iteratee !== iteratee)
-    return _2.iteratee(value, context2);
+  if (_.iteratee !== iteratee)
+    return _.iteratee(value, context2);
   return baseIteratee(value, context2, argCount);
 }
 
@@ -1397,7 +1397,7 @@ var unescapeMap_default = invert(escapeMap_default);
 var unescape_default = createEscaper(unescapeMap_default);
 
 // node_modules/underscore/modules/templateSettings.js
-var templateSettings_default = _2.templateSettings = {
+var templateSettings_default = _.templateSettings = {
   evaluate: /<%([\s\S]+?)%>/g,
   interpolate: /<%=([\s\S]+?)%>/g,
   escape: /<%-([\s\S]+?)%>/g
@@ -1421,7 +1421,7 @@ var bareIdentifier = /^\s*(\w|\$)+\s*$/;
 function template(text, settings, oldSettings) {
   if (!settings && oldSettings)
     settings = oldSettings;
-  settings = defaults_default({}, settings, _2.templateSettings);
+  settings = defaults_default({}, settings, _.templateSettings);
   var matcher2 = RegExp([
     (settings.escape || noMatch).source,
     (settings.interpolate || noMatch).source,
@@ -1461,7 +1461,7 @@ function template(text, settings, oldSettings) {
     throw e;
   }
   var template2 = function(data) {
-    return render.call(this, data, _2);
+    return render.call(this, data, _);
   };
   template2.source = "function(" + argument + "){\n" + source + "}";
   return template2;
@@ -1494,7 +1494,7 @@ function uniqueId(prefix) {
 
 // node_modules/underscore/modules/chain.js
 function chain(obj) {
-  var instance = _2(obj);
+  var instance = _(obj);
   instance._chain = true;
   return instance;
 }
@@ -1525,7 +1525,7 @@ var partial = restArguments(function(func, boundArgs) {
   };
   return bound;
 });
-partial.placeholder = _2;
+partial.placeholder = _;
 var partial_default = partial;
 
 // node_modules/underscore/modules/bind.js
@@ -1602,7 +1602,7 @@ var delay_default = restArguments(function(func, wait, args) {
 });
 
 // node_modules/underscore/modules/defer.js
-var defer_default = partial_default(delay_default, _2, 1);
+var defer_default = partial_default(delay_default, _, 1);
 
 // node_modules/underscore/modules/throttle.js
 function throttle(func, wait, options) {
@@ -2319,26 +2319,26 @@ function chunk(array, count) {
 
 // node_modules/underscore/modules/_chainResult.js
 function chainResult(instance, obj) {
-  return instance._chain ? _2(obj).chain() : obj;
+  return instance._chain ? _(obj).chain() : obj;
 }
 
 // node_modules/underscore/modules/mixin.js
 function mixin(obj) {
   each(functions(obj), function(name) {
-    var func = _2[name] = obj[name];
-    _2.prototype[name] = function() {
+    var func = _[name] = obj[name];
+    _.prototype[name] = function() {
       var args = [this._wrapped];
       push.apply(args, arguments);
-      return chainResult(this, func.apply(_2, args));
+      return chainResult(this, func.apply(_, args));
     };
   });
-  return _2;
+  return _;
 }
 
 // node_modules/underscore/modules/underscore-array-methods.js
 each(["pop", "push", "reverse", "shift", "sort", "splice", "unshift"], function(name) {
   var method = ArrayProto[name];
-  _2.prototype[name] = function() {
+  _.prototype[name] = function() {
     var obj = this._wrapped;
     if (obj != null) {
       method.apply(obj, arguments);
@@ -2351,19 +2351,19 @@ each(["pop", "push", "reverse", "shift", "sort", "splice", "unshift"], function(
 });
 each(["concat", "join", "slice"], function(name) {
   var method = ArrayProto[name];
-  _2.prototype[name] = function() {
+  _.prototype[name] = function() {
     var obj = this._wrapped;
     if (obj != null)
       obj = method.apply(obj, arguments);
     return chainResult(this, obj);
   };
 });
-var underscore_array_methods_default = _2;
+var underscore_array_methods_default = _;
 
 // node_modules/underscore/modules/index-default.js
-var _3 = mixin(modules_exports);
-_3._ = _3;
-var index_default_default = _3;
+var _2 = mixin(modules_exports);
+_2._ = _2;
+var index_default_default = _2;
 
 // src/Pride/AllDatastores.js
 var AllDatastores = {
@@ -4550,6 +4550,33 @@ Object.defineProperty(FieldTree, "tokens", { value: tokens_default });
 Object.defineProperty(FieldTree, "ValueBoolean", { value: ValueBoolean_default });
 var FieldTree_default = FieldTree;
 
+// src/Pride/init.js
+var init2 = new RequestBuffer_default({
+  url: function() {
+    return Settings_default.datastores_url;
+  },
+  attempts: function() {
+    return Settings_default.init_attempts;
+  },
+  failure_message: function() {
+    return Messenger_default.preset("failed_init");
+  },
+  edit_response: function() {
+    return void 0;
+  },
+  before_success: function(data) {
+    Settings_default.default_institution = data.default_institution;
+    Settings_default.affiliation = data.affiliation;
+    AllDatastores_default.array = index_default_default.map(
+      data.response,
+      function(datastore_data) {
+        return new Datastore_default(datastore_data);
+      }
+    );
+  }
+}).request;
+var init_default = init2;
+
 // src/Pride/requestRecord.js
 var requestRecord = function(source, id, func) {
   if (func === void 0) {
@@ -4685,30 +4712,7 @@ var Pride = {
   Settings: Settings_default,
   Util: Util_default
 };
-Pride.init = new Pride.Util.RequestBuffer({
-  url: function() {
-    return Pride.Settings.datastores_url;
-  },
-  attempts: function() {
-    return Pride.Settings.init_attempts;
-  },
-  failure_message: function() {
-    return Pride.Messenger.preset("failed_init");
-  },
-  edit_response: function() {
-    return void 0;
-  },
-  before_success: function(data) {
-    Pride.Settings.default_institution = data.default_institution;
-    Pride.Settings.affiliation = data.affiliation;
-    Pride.AllDatastores.array = _.map(
-      data.response,
-      function(datastore_data) {
-        return new Pride.Core.Datastore(datastore_data);
-      }
-    );
-  }
-}).request;
+Pride.init = init_default;
 /*! Bundled license information:
 
 reqwest/reqwest.js:

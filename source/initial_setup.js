@@ -6,7 +6,7 @@
 import AllDatastores from './src/Pride/AllDatastores';
 import Core from './src/Pride/Core';
 import FieldTree from './src/Pride/FieldTree';
-// import init from './src/Pride/init';
+import init from './src/Pride/init';
 import Messenger from './src/Pride/Messenger';
 import Parser from './src/Pride/Parser';
 import PreferenceEngine from './src/Pride/PreferenceEngine';
@@ -25,3 +25,5 @@ export const Pride = {
   Settings,
   Util
 };
+
+Pride.init = init;
