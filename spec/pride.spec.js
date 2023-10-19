@@ -4700,19 +4700,23 @@ Object.defineProperty(Util, "Section", { value: Section_default });
 Object.defineProperty(Util, "slice", { value: slice_default });
 var Util_default = Util;
 
-// output-exec.js
-var Pride = {
-  AllDatastores: AllDatastores_default,
-  Core: Core_default,
-  FieldTree: FieldTree_default,
-  Messenger: Messenger_default,
-  Parser: Parser_default,
-  PreferenceEngine: PreferenceEngine_default,
-  requestRecord: requestRecord_default,
-  Settings: Settings_default,
-  Util: Util_default
-};
-Pride.init = init_default;
+// src/Pride/index.js
+var Pride = {};
+Object.defineProperty(Pride, "AllDatastores", { value: AllDatastores_default });
+Object.defineProperty(Pride, "Core", { value: Core_default });
+Object.defineProperty(Pride, "FieldTree", { value: FieldTree_default });
+Object.defineProperty(Pride, "init", { value: init_default });
+Object.defineProperty(Pride, "Messenger", { value: Messenger_default });
+Object.defineProperty(Pride, "Parser", { value: Parser_default });
+Object.defineProperty(Pride, "PreferenceEngine", { value: PreferenceEngine_default });
+Object.defineProperty(Pride, "requestRecord", { value: requestRecord_default });
+Object.defineProperty(Pride, "Settings", { value: Settings_default });
+Object.defineProperty(Pride, "Util", { value: Util_default });
+var Pride_default = Pride;
+
+// spec/index.js
+var Pride2 = Pride_default;
+console.log(Pride2);
 /*! Bundled license information:
 
 reqwest/reqwest.js:

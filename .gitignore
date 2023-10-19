@@ -1,8 +1,2 @@
-example/
 node_modules/
 .DS_Store
-._.*
-*~
-*,
-output.js
-output-exec.js

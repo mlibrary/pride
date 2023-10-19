@@ -1,3 +1,4 @@
+"use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -507,12 +508,12 @@ var require_reqwest = __commonJS({
   }
 });
 
-// output.js
-var output_exports = {};
-__export(output_exports, {
-  Pride: () => Pride
+// src/index.js
+var src_exports = {};
+__export(src_exports, {
+  Pride: () => Pride_default
 });
-module.exports = __toCommonJS(output_exports);
+module.exports = __toCommonJS(src_exports);
 
 // node_modules/underscore/modules/index.js
 var modules_exports = {};
@@ -4708,19 +4709,19 @@ Object.defineProperty(Util, "Section", { value: Section_default });
 Object.defineProperty(Util, "slice", { value: slice_default });
 var Util_default = Util;
 
-// output.js
-var Pride = {
-  AllDatastores: AllDatastores_default,
-  Core: Core_default,
-  FieldTree: FieldTree_default,
-  Messenger: Messenger_default,
-  Parser: Parser_default,
-  PreferenceEngine: PreferenceEngine_default,
-  requestRecord: requestRecord_default,
-  Settings: Settings_default,
-  Util: Util_default
-};
-Pride.init = init_default;
+// src/Pride/index.js
+var Pride = {};
+Object.defineProperty(Pride, "AllDatastores", { value: AllDatastores_default });
+Object.defineProperty(Pride, "Core", { value: Core_default });
+Object.defineProperty(Pride, "FieldTree", { value: FieldTree_default });
+Object.defineProperty(Pride, "init", { value: init_default });
+Object.defineProperty(Pride, "Messenger", { value: Messenger_default });
+Object.defineProperty(Pride, "Parser", { value: Parser_default });
+Object.defineProperty(Pride, "PreferenceEngine", { value: PreferenceEngine_default });
+Object.defineProperty(Pride, "requestRecord", { value: requestRecord_default });
+Object.defineProperty(Pride, "Settings", { value: Settings_default });
+Object.defineProperty(Pride, "Util", { value: Util_default });
+var Pride_default = Pride;
 /*! Bundled license information:
 
 reqwest/reqwest.js:

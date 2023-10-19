@@ -1,19 +1,18 @@
 {
   "name": "pride",
   "version": "0.0.1",
-  "main": "pride.js",
+  "main": "pride.min.js",
   "scripts": {
-    "build": "node concat.js && npm run esbuild:regular && npm run esbuild:minify && BUNDLE=exec node concat.js && npm run esbuild:exec",
-    "esbuild": "npx esbuild $1 --bundle --format=cjs $*",
-    "esbuild:exec": "npm run esbuild output-exec.js -- --outfile=pride.execjs.js",
-    "esbuild:minify": "npm run esbuild output.js -- --outfile=pride.min.js --minify --analyze",
-    "esbuild:regular": "npm run esbuild output.js -- --outfile=pride.js",
+    "build": "npm run esbuild:regular && npm run esbuild:minify && npm run esbuild:spec",
+    "esbuild": "npx esbuild ${DIRECTORY-src}/index.js --bundle --format=cjs $*",
+    "esbuild:minify": "npm run esbuild -- --outfile=pride.min.js --minify",
+    "esbuild:regular": "npm run esbuild -- --outfile=pride.js",
+    "esbuild:spec": "DIRECTORY=spec npm run esbuild -- --outfile=spec/pride.spec.js",
     "eslint": "npx eslint $* source/**/*.js spec/**/*.js",
     "eslint:fix": "npm run eslint -- --fix"
   },
   "dependencies": {
     "esbuild": "^0.19.4",
-    "glob": "^10.3.10",
     "pegjs": "^0.10.0",
     "reqwest": "^2.0.5",
     "underscore": "^1.13.6"
