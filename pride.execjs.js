@@ -4700,7 +4700,7 @@ Object.defineProperty(Util, "Section", { value: Section_default });
 Object.defineProperty(Util, "slice", { value: slice_default });
 var Util_default = Util;
 
-// output-exec.js
+// source/initial_setup.js
 var Pride = {
   AllDatastores: AllDatastores_default,
   Core: Core_default,
@@ -4713,6 +4713,10 @@ var Pride = {
   Util: Util_default
 };
 Pride.init = init_default;
+
+// source/exec.js
+var Pride2 = Pride;
+console.log(Pride2);
 /*! Bundled license information:
 
 reqwest/reqwest.js:

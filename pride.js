@@ -507,12 +507,12 @@ var require_reqwest = __commonJS({
   }
 });
 
-// output.js
-var output_exports = {};
-__export(output_exports, {
+// source/initial_setup.js
+var initial_setup_exports = {};
+__export(initial_setup_exports, {
   Pride: () => Pride
 });
-module.exports = __toCommonJS(output_exports);
+module.exports = __toCommonJS(initial_setup_exports);
 
 // node_modules/underscore/modules/index.js
 var modules_exports = {};
@@ -4708,7 +4708,7 @@ Object.defineProperty(Util, "Section", { value: Section_default });
 Object.defineProperty(Util, "slice", { value: slice_default });
 var Util_default = Util;
 
-// output.js
+// source/initial_setup.js
 var Pride = {
   AllDatastores: AllDatastores_default,
   Core: Core_default,
