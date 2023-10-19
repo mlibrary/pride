@@ -146,7 +146,7 @@ function testFuncBufferMethods (name) {
   })
 }
 
-describe('FuncBuffer', function () {
+describe('Pride.Util.FuncBuffer', function () {
   it('can be extended', function () {
     let this_value = null
     const example = new Pride.Util.FuncBuffer(function () {

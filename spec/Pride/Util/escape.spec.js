@@ -9,7 +9,7 @@ function testEscaping (original, possible_1, possible_2) {
   })
 }
 
-describe('escape()', function () {
+describe('Pride.Util.escape()', function () {
   testEscaping('&', '&amp;', '&#38;')
   testEscaping('<', '&lt;', '&#60;')
 })

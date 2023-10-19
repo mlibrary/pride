@@ -1,4 +1,4 @@
-describe('deepClone()', function () {
+describe('Pride.Util.deepClone()', function () {
   it('passes functions straight through', function () {
     const func = function () {}
     const cloned = Pride.Util.deepClone(func)
