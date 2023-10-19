@@ -23,8 +23,22 @@ Add links to any documentation or issues that can help give more background info
 _Optional_. If appropriate, provide additional notes the reviewers should be made aware of. They can be about any "gotchas" or even changes that are expected to be made in the future, but are not applied to this pull request.
 
 ## Testing
-List instructions on how to test the pull request. Some examples:
-
-- Build the repository (`npm run build`).
-- Make sure the PR is consistent in repositories that use `pride`.
+1. Build the repository (`npm run build`).
+2. Open `./spec/index.html` in the browser to see if all tests pass.
+   * Break the new/updated unit tests to make sure they are working properly.
+3. Navigate to your local [Search repository](https://github.com/mlibrary/search) and apply the newly generated files:
+   1. Open `./package.json` and add `#branch-name-of-pull-request` at the end of the `pride` dependency URL:
+      ```bash
+      "pride": "git+https://github.com/mlibrary/pride.git#branch-name-of-pull-request"
+      ``` 
+   2. Do a clean install of Search:
+      ```bash
+      rm -rf node_modules && rm package-lock.json && npm install
+      ``` 
+   3. Start Search (`npm start`) and look around [the site](http://localhost:3000/everything). Check to see if there are any console errors, and everything still works as expected.
 - _How to use the feature_.
+- Make sure the PR is consistent in these browsers:
+  - [x] Chrome
+  - [x] Firefox
+  - [x] Safari
+  - [x] Edge
