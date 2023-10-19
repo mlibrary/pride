@@ -1,13 +1,13 @@
 {
   "name": "pride",
   "version": "0.0.1",
-  "main": "pride.js",
+  "main": "pride.min.js",
   "scripts": {
     "build": "npm run esbuild:regular && npm run esbuild:minify && npm run esbuild:spec",
     "esbuild": "npx esbuild src/${SOURCE_FILE-index}.js --bundle --format=cjs $*",
-    "esbuild:minify": "npm run esbuild -- --outfile=pride.min.js --minify --analyze",
+    "esbuild:minify": "npm run esbuild -- --outfile=pride.min.js --minify",
     "esbuild:regular": "npm run esbuild -- --outfile=pride.js",
-    "esbuild:spec": "SOURCE_FILE=spec npm run esbuild -- --outfile=pride.spec.js",
+    "esbuild:spec": "SOURCE_FILE=spec npm run esbuild -- --outfile=spec/pride.spec.js",
     "eslint": "npx eslint $* source/**/*.js spec/**/*.js",
     "eslint:fix": "npm run eslint -- --fix"
   },
