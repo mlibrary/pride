@@ -9,7 +9,6 @@ These dependencies have been updated to their latest versions:
 - `eslint-plugin-import`
 - `eslint-plugin-n`
 - `eslint-plugin-promise`
-- `glob`
 - `pegjs`
 - `reqwest`
 - `underscore`
