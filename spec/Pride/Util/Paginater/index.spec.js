@@ -69,7 +69,7 @@ function testPaginatorUnsettable (invalid_settings, basic_settings) {
   )
 }
 
-describe('Paginater', function () {
+describe('Pride.Util.Paginater', function () {
   testPaginatorBasics('start', 'count')
   testPaginatorBasics('start', 'end')
   testPaginatorBasics('count', 'end')

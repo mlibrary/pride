@@ -1,4 +1,4 @@
-describe('Section', function () {
+describe('Pride.Util.Section', function () {
   before(function () {
     this.start = 7
     this.end = 10

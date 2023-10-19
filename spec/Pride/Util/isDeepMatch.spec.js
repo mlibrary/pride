@@ -1,4 +1,4 @@
-describe('isDeepMatch()', function () {
+describe('Pride.Util.isDeepMatch()', function () {
   describe('returning false', function () {
     it('treats strings as not equal to numbers', function () {
       expect(Pride.Util.isDeepMatch('7', 7)).to.be.false
