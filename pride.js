@@ -2386,7 +2386,7 @@ var AllDatastores = {
     );
   },
   newSearch: function(uid) {
-    var datastore = index_default_default.find(
+    const datastore = index_default_default.find(
       this.array,
       function(datastore2) {
         return datastore2.get("uid") == uid;
@@ -2443,8 +2443,8 @@ var nodeFactory = function(type2, child_types, extention) {
       }
     };
     this.matches = function(query) {
-      var this_node = this;
-      var query_children = query.children || [];
+      const this_node = this;
+      const query_children = query.children || [];
       return index_default_default.every(
         index_default_default.omit(query, "children"),
         function(value2, key) {
@@ -2504,7 +2504,7 @@ var boolNodeFactory = function(type2, child_types) {
         return this.serializedChildren().join(" " + this.value + " ");
       };
       this.serializedChildren = function() {
-        var this_node = this;
+        const this_node = this;
         return index_default_default.chain(this_node.children).map(function(child) {
           if (child.type == this_node.type || child.type == "literal" && child.value.match(/\s/)) {
             return "(" + child.serialize() + ")";
@@ -2523,7 +2523,7 @@ var deepClone = function(original) {
   if (index_default_default.isFunction(original)) {
     return original;
   } else {
-    var collection_function = false;
+    let collection_function = false;
     if (index_default_default.isArray(original)) {
       collection_function = "map";
     } else if (index_default_default.isObject(original)) {
@@ -2595,7 +2595,7 @@ var Paginater = function(initial_values) {
       }
       values2.end = new_values.end;
     } else {
-      var end = values2.start + values2.count - 1;
+      const end = values2.start + values2.count - 1;
       values2.end = end < values2.start ? void 0 : end;
     }
     if (!index_default_default.isNumber(values2.total_available)) {
@@ -2663,11 +2663,11 @@ var Section_default = Section;
 
 // src/Pride/Core/Query.js
 var Query = function(query_info) {
-  var paginater = new Paginater_default({
+  const paginater = new Paginater_default({
     start: query_info.start,
     count: query_info.count
   });
-  var paginater_keys = Paginater_default.getPossibleKeys();
+  const paginater_keys = Paginater_default.getPossibleKeys();
   query_info = index_default_default.omit(deepClone_default(query_info), paginater_keys);
   query_info.request_id = query_info.request_id || 0;
   this.get = function(key) {
@@ -2678,8 +2678,8 @@ var Query = function(query_info) {
     }
   };
   this.set = function(new_values) {
-    var new_pagination_values = index_default_default.pick(new_values, paginater_keys);
-    var new_query_values = index_default_default.omit(new_values, paginater_keys);
+    const new_pagination_values = index_default_default.pick(new_values, paginater_keys);
+    const new_query_values = index_default_default.omit(new_values, paginater_keys);
     if (!index_default_default.isEmpty(new_query_values)) {
       paginater.set({ total_available: void 0 });
       if (!index_default_default.isNumber(new_query_values.request_id)) {
@@ -2691,7 +2691,7 @@ var Query = function(query_info) {
     return this;
   };
   this.clone = function() {
-    var full_info = deepClone_default(query_info);
+    const full_info = deepClone_default(query_info);
     full_info.start = paginater.get("start");
     full_info.count = paginater.get("count");
     return new Query(full_info);
@@ -2766,7 +2766,7 @@ var Settings_default = Settings;
 // src/Pride/Core/log.js
 var log = function(source, info) {
   if (Settings_default.obnoxious) {
-    var message = slice_default(arguments, 2);
+    const message = slice_default(arguments, 2);
     message.unshift("[Pride: " + source + "] " + info);
     console.log.apply(console, message);
   }
@@ -2795,9 +2795,9 @@ var safeApply_default = safeApply;
 
 // src/Pride/Util/FuncBuffer.js
 var FuncBuffer = function(extension) {
-  var buffer = {};
-  var self2 = this;
-  var safeGet = function(name) {
+  let buffer = {};
+  const self2 = this;
+  const safeGet = function(name) {
     if (!index_default_default.has(buffer, name))
       buffer[name] = [];
     return buffer[name];
@@ -2840,7 +2840,7 @@ var FuncBuffer_default = FuncBuffer;
 
 // src/Pride/Messenger.js
 var Messenger = new FuncBuffer_default(function() {
-  var notifyObservers = this.call;
+  const notifyObservers = this.call;
   this.addObserver = this.add;
   this.removeObserver = this.remove;
   this.clearObservers = this.clear;
@@ -2858,7 +2858,7 @@ var Messenger = new FuncBuffer_default(function() {
     return this;
   };
   this.sendMessageArray = function(message_array) {
-    var messenger = this;
+    const messenger = this;
     index_default_default.each(
       message_array,
       function(message) {
@@ -2876,12 +2876,12 @@ var Messenger_default = Messenger;
 var SearchBase = function(setup, parent) {
   this.datastore = setup.datastore;
   this.query = setup.query || this.datastore.baseQuery();
-  var self2 = this;
-  var requestFunc = setup.requestFunc || this.datastore.runQuery;
-  var results = setup.starting_results || [];
-  var defaultCacheSize = setup.cache_size || Settings_default.cache_size[this.datastore.uid] || Settings_default.default_cache_size;
+  const self2 = this;
+  const requestFunc = setup.requestFunc || this.datastore.runQuery;
+  let results = setup.starting_results || [];
+  const defaultCacheSize = setup.cache_size || Settings_default.cache_size[this.datastore.uid] || Settings_default.default_cache_size;
   this.log = function() {
-    var message = slice_default(arguments);
+    const message = slice_default(arguments);
     message.unshift("Search (" + self2.datastore.get("uid") + ")");
     log_default.apply(window, message);
   };
@@ -2916,7 +2916,7 @@ var SearchBase = function(setup, parent) {
     self2.log("TOTAL AVAILABLE (pre-request)", self2.query.get("total_available"));
     if (requested_section && self2.query.toLimitSection().overlaps(requested_section)) {
       self2.log("Sending query...");
-      var new_query = self2.query.clone().set({
+      const new_query = self2.query.clone().set({
         start: requested_section.start,
         count: requested_section.calcLength()
       });
@@ -2930,7 +2930,7 @@ var SearchBase = function(setup, parent) {
           if (response_data.request.request_id == self2.query.get("request_id")) {
             updateData(response_data);
             addResults(response_data.response, new_query.get("start"));
-            var response_length = response_data.response.length;
+            const response_length = response_data.response.length;
             if (response_length !== 0 && response_length < new_query.get("count")) {
               requestResults(
                 requested_section.shifted(response_length, 0)
@@ -2944,10 +2944,10 @@ var SearchBase = function(setup, parent) {
     }
   };
   var addResults = function(new_items_array, offset) {
-    var query_results_added = false;
+    let query_results_added = false;
     self2.log("NEW RECORDS", new_items_array);
     index_default_default.each(new_items_array, function(item_data, array_index) {
-      var item_index = array_index + offset;
+      const item_index = array_index + offset;
       if (index_default_default.isUndefined(results[item_index])) {
         results[item_index] = safeCall_default(self2.createItem, item_data);
         if (self2.query.toSection().inSection(item_index)) {
@@ -2962,31 +2962,31 @@ var SearchBase = function(setup, parent) {
   };
   var updateData = function(response_data) {
     self2.datastore.update(response_data.datastore);
-    var new_query_data = index_default_default.omit(response_data.new_request, "start", "count");
+    const new_query_data = index_default_default.omit(response_data.new_request, "start", "count");
     new_query_data.specialists = response_data.specialists;
     new_query_data.total_available = response_data.total_available;
     self2.query.set(new_query_data);
     safeCall_default(self2.runDataChanged);
   };
   var getMissingSection = function(section) {
-    var list = resultsPiece(section);
-    var start = index_default_default.indexOf(list, void 0);
+    const list = resultsPiece(section);
+    let start = index_default_default.indexOf(list, void 0);
     if (start != -1) {
-      var end = section.start + index_default_default.lastIndexOf(list, void 0);
+      const end = section.start + index_default_default.lastIndexOf(list, void 0);
       start += section.start;
       return new Section_default(start, end);
     }
   };
   var resultsPiece = function(section) {
-    var output = [];
-    for (var index = section.start; index <= section.end; index++) {
+    const output = [];
+    for (let index = section.start; index <= section.end; index++) {
       output.push(results[index]);
     }
     return output;
   };
-  var muted = false;
-  var observables = [];
-  var mutable_observables = [];
+  let muted = false;
+  const observables = [];
+  const mutable_observables = [];
   this.clearAllObservers = function() {
     index_default_default.each(observables, function(observable) {
       observable.clearAll();
@@ -3010,9 +3010,9 @@ var SearchBase = function(setup, parent) {
     return self2;
   };
   this.createObservable = function(name, data_func, never_mute) {
-    var object2 = new FuncBuffer_default(function() {
-      var add_observer = this.add;
-      var call_observers = this.call;
+    const object2 = new FuncBuffer_default(function() {
+      const add_observer = this.add;
+      const call_observers = this.call;
       observables.push(this);
       if (!never_mute)
         mutable_observables.push(this);
@@ -3024,7 +3024,7 @@ var SearchBase = function(setup, parent) {
       };
       this.notify = function() {
         if (!self2.muted || never_mute) {
-          var data = data_func();
+          const data = data_func();
           self2.log("NOTIFY (" + name + ")", data);
           call_observers("observers", data);
         }
@@ -3049,7 +3049,7 @@ var SearchBase = function(setup, parent) {
     return parent;
   };
   parent.nextPage = function(cache_size) {
-    var current_page = self2.query.get("page");
+    const current_page = self2.query.get("page");
     if (index_default_default.isNumber(current_page) && current_page < self2.query.get("page_limit")) {
       parent.set({ page: current_page + 1 });
       parent.run(cache_size);
@@ -3057,7 +3057,7 @@ var SearchBase = function(setup, parent) {
     return parent;
   };
   parent.prevPage = function(cache_size) {
-    var current_page = self2.query.get("page");
+    const current_page = self2.query.get("page");
     if (index_default_default.isNumber(current_page) && current_page > 1) {
       parent.set({ page: current_page - 1 });
       parent.run(cache_size);
@@ -3075,7 +3075,7 @@ var request = function(request_info) {
   log_default("Request", "CONTENT", JSON.stringify(request_info.query));
   if (!request_info.url)
     throw "No URL given to Pride.Util.request()";
-  var request_method = "get";
+  let request_method = "get";
   if (request_info.query)
     request_method = "post";
   if (!index_default_default.isNumber(request_info.attempts)) {
@@ -3123,11 +3123,11 @@ var request_default = request;
 // src/Pride/Util/RequestBuffer.js
 var RequestBuffer = function(request_options) {
   request_options = request_options || {};
-  var func_buffer = new FuncBuffer_default();
-  var request_issued = false;
-  var request_successful = false;
-  var request_failed = false;
-  var cached_response_data;
+  const func_buffer = new FuncBuffer_default();
+  let request_issued = false;
+  let request_successful = false;
+  let request_failed = false;
+  let cached_response_data;
   this.request = function(func_hash) {
     func_buffer.add(func_hash.success, "success").add(func_hash.failure, "failure");
     if (request_issued) {
@@ -3178,7 +3178,9 @@ var RequestBuffer_default = RequestBuffer;
 var Holdings = function(data) {
   this.data = data;
   const getResourceAccess = function(data2) {
-    const dataField = data2.fields.find((field) => field.uid === "resource_access");
+    const dataField = data2.fields.find((field) => {
+      return field.uid === "resource_access";
+    });
     if (dataField && dataField.value) {
       return dataField.value;
     } else {
@@ -3198,8 +3200,8 @@ var Holdings_default = Holdings;
 var GetThis = function(barcode, data) {
   this.barcode = barcode;
   this.data = data;
-  var getGetThisUrl = function(data2) {
-    var ret;
+  const getGetThisUrl = function(data2) {
+    let ret;
     index_default_default.each(data2.fields, function(field) {
       if (field.uid === "get_this_url") {
         ret = field.value;
@@ -3207,8 +3209,8 @@ var GetThis = function(barcode, data) {
     });
     return ret;
   };
-  var getLinks = function(data2) {
-    var ret;
+  const getLinks = function(data2) {
+    let ret;
     index_default_default.each(data2.fields, function(field) {
       if (field.uid == "links") {
         ret = field.value;
@@ -3216,7 +3218,7 @@ var GetThis = function(barcode, data) {
     });
     return ret;
   };
-  var request_buffer = new RequestBuffer_default({
+  const request_buffer = new RequestBuffer_default({
     url: getGetThisUrl(data) + "/" + this.barcode,
     failure_message: Messenger_default.preset(
       "failed_get_this_load",
@@ -3238,7 +3240,7 @@ var GetThis_default = GetThis;
 
 // src/Pride/Util/escape.js
 var escape = function(string) {
-  var temp_element = document.createElement("div");
+  const temp_element = document.createElement("div");
   temp_element.appendChild(document.createTextNode(string));
   return temp_element.innerHTML;
 };
@@ -3285,7 +3287,7 @@ var PreferenceEngine = {
       }, this);
       return this;
     }
-    for (var prop in data) {
+    for (const prop in data) {
       if (data.hasOwnProperty(prop)) {
         this.selectedRecords[prop] = {};
         data[prop].forEach(function(prop2) {
@@ -3302,7 +3304,7 @@ var PreferenceEngine_default = PreferenceEngine;
 
 // src/Pride/Core/Record.js
 var Record = function(data) {
-  var request_buffer = new RequestBuffer_default({
+  const request_buffer = new RequestBuffer_default({
     url: data.source,
     failure_message: Messenger_default.preset(
       "failed_record_load",
@@ -3313,12 +3315,12 @@ var Record = function(data) {
       return data;
     }
   });
-  var holdings = null;
-  var get_this = {};
+  let holdings = null;
+  const get_this = {};
   this.placeHold = function(item, pickup_location, not_needed_after, callback_function) {
     this.renderFull(function(data2) {
-      var getHoldingsUrl = function() {
-        var ret;
+      const getHoldingsUrl = function() {
+        let ret;
         index_default_default.each(data2.fields, function(field) {
           if (field.uid === "holdings_url") {
             ret = field.value;
@@ -3326,7 +3328,7 @@ var Record = function(data) {
         });
         return ret;
       };
-      var response = request_default({
+      const response = request_default({
         url: [getHoldingsUrl(), item, pickup_location, not_needed_after].join("/"),
         query: true,
         failure: function(data3) {
@@ -3348,10 +3350,12 @@ var Record = function(data) {
       holdings = new Holdings_default(data);
       holdings.getData(func);
     } else {
-      request_buffer.request({ success: function(data2) {
-        holdings = new Holdings_default(data2);
-        holdings.getData(func);
-      } });
+      request_buffer.request({
+        success: function(data2) {
+          holdings = new Holdings_default(data2);
+          holdings.getData(func);
+        }
+      });
     }
   };
   this.getGetThis = function(barcode, func) {
@@ -3361,10 +3365,12 @@ var Record = function(data) {
       get_this[barcode] = new GetThis_default(barcode, data);
       get_this[barcode].getData(func);
     } else {
-      request_buffer.request({ success: function(data2) {
-        get_this[barcode] = new GetThis_default(barcode, data2);
-        get_this[barcode].getData(func);
-      } });
+      request_buffer.request({
+        success: function(data2) {
+          get_this[barcode] = new GetThis_default(barcode, data2);
+          get_this[barcode].getData(func);
+        }
+      });
     }
   };
   this.renderPart = function(func) {
@@ -3383,7 +3389,7 @@ var Record = function(data) {
   };
   this.renderCSL = function(func) {
     this.renderFull(function(data2) {
-      var ret;
+      let ret;
       index_default_default.each(data2.fields, function(field) {
         if (field.uid === "csl") {
           ret = field.value;
@@ -3429,8 +3435,8 @@ var Record_default = Record;
 
 // src/Pride/Util/isDeepMatch.js
 var isDeepMatch = function(object2, pattern) {
-  var both_arrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
-  var both_objects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
+  const both_arrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
+  const both_objects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
   if (both_arrays && pattern.length != object2.length) {
     return false;
   }
@@ -3449,9 +3455,9 @@ var isDeepMatch_default = isDeepMatch;
 
 // src/Pride/Core/FacetSearch.js
 var FacetSearch = function(setup) {
-  var example_facet = this;
-  var data = setup.data;
-  var results = setup.results;
+  const example_facet = this;
+  let data = setup.data;
+  const results = setup.results;
   this.uid = data.uid;
   this.getData = function() {
     return data;
@@ -3459,7 +3465,7 @@ var FacetSearch = function(setup) {
   this.getResults = function() {
     return results;
   };
-  var muted = false;
+  let muted = false;
   this.getMute = function() {
     return muted;
   };
@@ -3467,17 +3473,17 @@ var FacetSearch = function(setup) {
     muted = state;
     return self;
   };
-  var observables = [];
+  const observables = [];
   this.clearAllObservers = function() {
     index_default_default.each(observables, function(observable) {
       observable.clearAll();
     });
     return self;
   };
-  var createObservable = function(name, data_func) {
-    var object2 = new FuncBuffer_default(function() {
-      var add_observer = this.add;
-      var call_observers = this.call;
+  const createObservable = function(name, data_func) {
+    const object2 = new FuncBuffer_default(function() {
+      const add_observer = this.add;
+      const call_observers = this.call;
       observables.push(this);
       this.add = function(func) {
         if (!self.muted)
@@ -3504,13 +3510,13 @@ var FacetSearch_default = FacetSearch;
 
 // src/Pride/Core/DatastoreSearch.js
 var DatastoreSearch = function(setup) {
-  var self2 = this;
-  var base = new SearchBase_default(setup, this);
+  const self2 = this;
+  const base = new SearchBase_default(setup, this);
   base.createItem = function(item_data) {
     return new Record_default(item_data);
   };
-  var facet_searches = [];
-  var current_facets = [];
+  let facet_searches = [];
+  let current_facets = [];
   this.getFacets = function() {
     return facet_searches;
   };
@@ -3536,7 +3542,7 @@ var DatastoreSearch = function(setup) {
   this.getResults = base.results;
   base.initialize_observables = function() {
     self2.runDataObservers.add(function() {
-      var facets = base.datastore.get("facets");
+      const facets = base.datastore.get("facets");
       if (!isDeepMatch_default(current_facets, facets)) {
         index_default_default.each(facet_searches, function(facet_search) {
           facet_search.clearAllObservers();
@@ -3629,7 +3635,7 @@ var Datastore = function(datastore_info) {
   this.update = function(new_info) {
     index_default_default.extend(datastore_info, new_info);
   };
-  var fillFacets = function(set_facets) {
+  const fillFacets = function(set_facets) {
     return index_default_default.reduce(
       datastore_info.facets,
       function(memo, facet) {
@@ -3643,7 +3649,7 @@ var Datastore = function(datastore_info) {
   };
   var fillFieldTree = function(given_tree) {
     given_tree = given_tree || new FieldBoolean_default("AND");
-    var output = index_default_default.reduce(
+    const output = index_default_default.reduce(
       datastore_info.fields,
       function(tree, field) {
         if ((field.required || field.fixed) && !tree.contains({ type: "field", value: field.uid })) {
@@ -3703,12 +3709,13 @@ var Parser = function() {
   }
   peg$subclass(peg$SyntaxError, Error);
   peg$SyntaxError.buildMessage = function(expected, found) {
-    var DESCRIBE_EXPECTATION_FNS = {
+    const DESCRIBE_EXPECTATION_FNS = {
       literal: function(expectation) {
         return '"' + literalEscape(expectation.text) + '"';
       },
-      "class": function(expectation) {
-        var escapedParts = "", i;
+      class: function(expectation) {
+        let escapedParts = "";
+        let i;
         for (i = 0; i < expectation.parts.length; i++) {
           escapedParts += expectation.parts[i] instanceof Array ? classEscape(expectation.parts[i][0]) + "-" + classEscape(expectation.parts[i][1]) : classEscape(expectation.parts[i]);
         }
@@ -3745,7 +3752,9 @@ var Parser = function() {
       return DESCRIBE_EXPECTATION_FNS[expectation.type](expectation);
     }
     function describeExpected(expected2) {
-      var descriptions = new Array(expected2.length), i, j;
+      const descriptions = new Array(expected2.length);
+      let i;
+      let j;
       for (i = 0; i < expected2.length; i++) {
         descriptions[i] = describeExpectation(expected2[i]);
       }
@@ -3775,39 +3784,84 @@ var Parser = function() {
   };
   function peg$parse(input, options) {
     options = options !== void 0 ? options : {};
-    var peg$FAILED = {}, peg$startRuleFunctions = { start: peg$parsestart }, peg$startRuleFunction = peg$parsestart, peg$c0 = function(c) {
+    const peg$FAILED = {};
+    const peg$startRuleFunctions = { start: peg$parsestart };
+    let peg$startRuleFunction = peg$parsestart;
+    const peg$c0 = function(c) {
       return c;
-    }, peg$c1 = function(cl, con, co) {
+    };
+    const peg$c1 = function(cl, con, co) {
       return new FieldTree_default.FieldBoolean(con, cl, co);
-    }, peg$c2 = function(first2, rest2) {
+    };
+    const peg$c2 = function(first2, rest2) {
       if (rest2) {
         return [first2, rest2];
       } else {
         return first2;
       }
-    }, peg$c3 = function(rest2) {
+    };
+    const peg$c3 = function(rest2) {
       return rest2;
-    }, peg$c4 = ":", peg$c5 = peg$literalExpectation(":", false), peg$c6 = function(fieldName, list) {
+    };
+    const peg$c4 = ":";
+    const peg$c5 = peg$literalExpectation(":", false);
+    const peg$c6 = function(fieldName, list) {
       return new FieldTree_default.Field(fieldName, list);
-    }, peg$c7 = function(list) {
+    };
+    const peg$c7 = function(list) {
       return new FieldTree_default.Field(defaultFieldName, list);
-    }, peg$c8 = function(string) {
+    };
+    const peg$c8 = function(string) {
       return string.join("");
-    }, peg$c9 = function(first2, rest2) {
+    };
+    const peg$c9 = function(first2, rest2) {
       if (rest2) {
         return first2.concat(rest2);
       } else {
         return first2;
       }
-    }, peg$c10 = function(first2, rest2) {
+    };
+    const peg$c10 = function(first2, rest2) {
       return [new FieldTree_default.Literal(first2 + rest2.join(""))];
-    }, peg$c11 = function(string) {
+    };
+    const peg$c11 = function(string) {
       return [new FieldTree_default.Literal(string.join(""))];
-    }, peg$c12 = function(literal) {
+    };
+    const peg$c12 = function(literal) {
       return [new FieldTree_default.Literal('"' + literal.join("") + '"')];
-    }, peg$c13 = function(conj) {
+    };
+    const peg$c13 = function(conj) {
       return conj;
-    }, peg$c14 = "AND", peg$c15 = peg$literalExpectation("AND", false), peg$c16 = "OR", peg$c17 = peg$literalExpectation("OR", false), peg$c18 = "NOT", peg$c19 = peg$literalExpectation("NOT", false), peg$c20 = "'", peg$c21 = peg$literalExpectation("'", false), peg$c22 = /^[^']/, peg$c23 = peg$classExpectation(["'"], true, false), peg$c24 = '"', peg$c25 = peg$literalExpectation('"', false), peg$c26 = /^[^"]/, peg$c27 = peg$classExpectation(['"'], true, false), peg$c28 = /^[^ \t\r\n:'"()]/, peg$c29 = peg$classExpectation([" ", "	", "\r", "\n", ":", "'", '"', "(", ")"], true, false), peg$c30 = /^[^ \t\r\n():]/, peg$c31 = peg$classExpectation([" ", "	", "\r", "\n", "(", ")", ":"], true, false), peg$c32 = /^[^ \t\r\n'"():]/, peg$c33 = peg$classExpectation([" ", "	", "\r", "\n", "'", '"', "(", ")", ":"], true, false), peg$c34 = /^[ \t\r\n]/, peg$c35 = peg$classExpectation([" ", "	", "\r", "\n"], false, false), peg$currPos = 0, peg$savedPos = 0, peg$posDetailsCache = [{ line: 1, column: 1 }], peg$maxFailPos = 0, peg$maxFailExpected = [], peg$silentFails = 0, peg$result;
+    };
+    const peg$c14 = "AND";
+    const peg$c15 = peg$literalExpectation("AND", false);
+    const peg$c16 = "OR";
+    const peg$c17 = peg$literalExpectation("OR", false);
+    const peg$c18 = "NOT";
+    const peg$c19 = peg$literalExpectation("NOT", false);
+    const peg$c20 = "'";
+    const peg$c21 = peg$literalExpectation("'", false);
+    const peg$c22 = /^[^']/;
+    const peg$c23 = peg$classExpectation(["'"], true, false);
+    const peg$c24 = '"';
+    const peg$c25 = peg$literalExpectation('"', false);
+    const peg$c26 = /^[^"]/;
+    const peg$c27 = peg$classExpectation(['"'], true, false);
+    const peg$c28 = /^[^ \t\r\n:'"()]/;
+    const peg$c29 = peg$classExpectation([" ", "	", "\r", "\n", ":", "'", '"', "(", ")"], true, false);
+    const peg$c30 = /^[^ \t\r\n():]/;
+    const peg$c31 = peg$classExpectation([" ", "	", "\r", "\n", "(", ")", ":"], true, false);
+    const peg$c32 = /^[^ \t\r\n'"():]/;
+    const peg$c33 = peg$classExpectation([" ", "	", "\r", "\n", "'", '"', "(", ")", ":"], true, false);
+    const peg$c34 = /^[ \t\r\n]/;
+    const peg$c35 = peg$classExpectation([" ", "	", "\r", "\n"], false, false);
+    let peg$currPos = 0;
+    let peg$savedPos = 0;
+    const peg$posDetailsCache = [{ line: 1, column: 1 }];
+    let peg$maxFailPos = 0;
+    let peg$maxFailExpected = [];
+    let peg$silentFails = 0;
+    let peg$result;
     if ("startRule" in options) {
       if (!(options.startRule in peg$startRuleFunctions)) {
         throw new Error(`Can't start parsing from rule "` + options.startRule + '".');
@@ -3848,7 +3902,8 @@ var Parser = function() {
       return { type: "other", description };
     }
     function peg$computePosDetails(pos) {
-      var details = peg$posDetailsCache[pos], p;
+      let details = peg$posDetailsCache[pos];
+      let p;
       if (details) {
         return details;
       } else {
@@ -3875,7 +3930,8 @@ var Parser = function() {
       }
     }
     function peg$computeLocation(startPos, endPos) {
-      var startPosDetails = peg$computePosDetails(startPos), endPosDetails = peg$computePosDetails(endPos);
+      const startPosDetails = peg$computePosDetails(startPos);
+      const endPosDetails = peg$computePosDetails(endPos);
       return {
         start: {
           offset: startPos,
@@ -3911,7 +3967,7 @@ var Parser = function() {
       );
     }
     function peg$parsestart() {
-      var s0, s1, s2;
+      let s0, s1, s2;
       s0 = peg$currPos;
       s1 = peg$parsecoordination();
       if (s1 !== peg$FAILED) {
@@ -3931,7 +3987,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parsecoordination() {
-      var s0, s1, s2, s3, s4, s5;
+      let s0, s1, s2, s3, s4, s5;
       s0 = peg$currPos;
       s1 = peg$parseclause();
       if (s1 !== peg$FAILED) {
@@ -3972,7 +4028,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseclause_list() {
-      var s0, s1, s2;
+      let s0, s1, s2;
       s0 = peg$parseclause();
       if (s0 === peg$FAILED) {
         s0 = peg$currPos;
@@ -3998,7 +4054,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseclause_rest() {
-      var s0, s1, s2;
+      let s0, s1, s2;
       s0 = peg$currPos;
       s1 = peg$parse_();
       if (s1 !== peg$FAILED) {
@@ -4018,7 +4074,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseclause() {
-      var s0, s1, s2, s3;
+      let s0, s1, s2, s3;
       s0 = peg$currPos;
       s1 = peg$parsefield();
       if (s1 !== peg$FAILED) {
@@ -4061,7 +4117,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parsefield() {
-      var s0, s1, s2;
+      let s0, s1, s2;
       s0 = peg$currPos;
       s1 = [];
       s2 = peg$parseFIELDCHAR();
@@ -4081,7 +4137,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseliteral_list() {
-      var s0, s1, s2;
+      let s0, s1, s2;
       s0 = peg$currPos;
       s1 = peg$parseliteral();
       if (s1 !== peg$FAILED) {
@@ -4104,7 +4160,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseliteral_rest() {
-      var s0, s1, s2;
+      let s0, s1, s2;
       s0 = peg$currPos;
       s1 = peg$parse_();
       if (s1 !== peg$FAILED) {
@@ -4124,7 +4180,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseliteral() {
-      var s0, s1, s2, s3, s4;
+      let s0, s1, s2, s3, s4;
       s0 = peg$currPos;
       s1 = peg$currPos;
       peg$silentFails++;
@@ -4262,7 +4318,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseconj() {
-      var s0, s1;
+      let s0, s1;
       s0 = peg$currPos;
       s1 = peg$parseCONJ();
       if (s1 !== peg$FAILED) {
@@ -4273,7 +4329,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseCONJ() {
-      var s0;
+      let s0;
       if (input.substr(peg$currPos, 3) === peg$c14) {
         s0 = peg$c14;
         peg$currPos += 3;
@@ -4308,7 +4364,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseSQUOTE() {
-      var s0;
+      let s0;
       if (input.charCodeAt(peg$currPos) === 39) {
         s0 = peg$c20;
         peg$currPos++;
@@ -4321,7 +4377,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseNONSQUOTE() {
-      var s0;
+      let s0;
       if (peg$c22.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
@@ -4334,7 +4390,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseDQUOTE() {
-      var s0;
+      let s0;
       if (input.charCodeAt(peg$currPos) === 34) {
         s0 = peg$c24;
         peg$currPos++;
@@ -4347,7 +4403,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseNONDQUOTE() {
-      var s0;
+      let s0;
       if (peg$c26.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
@@ -4360,7 +4416,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseFIELDCHAR() {
-      var s0;
+      let s0;
       if (peg$c28.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
@@ -4373,7 +4429,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseQWORD() {
-      var s0;
+      let s0;
       if (peg$c30.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
@@ -4386,7 +4442,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseWORD() {
-      var s0;
+      let s0;
       if (peg$c32.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
@@ -4399,7 +4455,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parse_() {
-      var s0, s1;
+      let s0, s1;
       s0 = [];
       if (peg$c34.test(input.charAt(peg$currPos))) {
         s1 = input.charAt(peg$currPos);
@@ -4429,7 +4485,7 @@ var Parser = function() {
       return s0;
     }
     function peg$parseOPTSPACE() {
-      var s0;
+      let s0;
       s0 = peg$parse_();
       if (s0 === peg$FAILED) {
         s0 = null;
@@ -4488,7 +4544,7 @@ var Tag = nodeFactory_default(
   inside_field_nodes2,
   function() {
     this.serialize = function() {
-      var serialized_children = this.serializedChildren();
+      const serialized_children = this.serializedChildren();
       if (serialized_children.length === 0) {
         return "";
       } else {
@@ -4505,12 +4561,12 @@ var tokens_default = tokens;
 
 // src/Pride/FieldTree/tokenize.js
 var tokenize = function(string) {
-  var result2 = [];
-  var index = 0;
-  var type2 = null;
+  const result2 = [];
+  let index = 0;
+  let type2 = null;
   while (index < string.length) {
     var slice3 = string.slice(index);
-    var found = index_default_default.find(
+    let found = index_default_default.find(
       tokens_default,
       function(pattern) {
         return new RegExp("^\\" + pattern).exec(slice3);
@@ -4526,7 +4582,7 @@ var tokenize = function(string) {
       found = string.charAt(index);
       type2 = "string";
       index++;
-      var last2 = index_default_default.last(result2);
+      const last2 = index_default_default.last(result2);
       if (last2 && last2.type == "string") {
         found = result2.pop().content + found;
       }
@@ -4592,12 +4648,12 @@ var requestRecord = function(source, id, func) {
     func = function(data2) {
     };
   }
-  var data = {
+  const data = {
     complete: false,
     source: AllDatastores_default.get(source).get("url") + "/record/" + id,
     names: [void 0]
   };
-  var record = new Record_default(data);
+  const record = new Record_default(data);
   record.renderFull(func);
   return record;
 };
@@ -4605,8 +4661,8 @@ var requestRecord_default = requestRecord;
 
 // src/Pride/Util/MultiSearch.js
 var MultiSearch = function(uid, muted, search_array) {
-  var query_data = {};
-  var self2 = this;
+  const query_data = {};
+  const self2 = this;
   this.searches = search_array;
   this.uid = uid;
   this.set = function(values2) {
@@ -4619,9 +4675,9 @@ var MultiSearch = function(uid, muted, search_array) {
     );
     return self2;
   };
-  var funcOnEach = function(func_name, before_func) {
+  const funcOnEach = function(func_name, before_func) {
     return function() {
-      var args = slice_default(arguments);
+      const args = slice_default(arguments);
       safeApply_default(before_func, args);
       index_default_default.each(search_array, function(search) {
         search[func_name].apply(search, args);
@@ -4644,8 +4700,8 @@ var MultiSearch_default = MultiSearch;
 
 // src/Pride/Util/SearchSwitcher.js
 var SearchSwitcher = function(current_search, cached_searches) {
-  var self2 = this;
-  var search_cache = new MultiSearch_default(null, true, cached_searches);
+  const self2 = this;
+  const search_cache = new MultiSearch_default(null, true, cached_searches);
   current_search.set({ page: 1 }).setMute(false);
   search_cache.set({ page: 1 });
   this.uid = current_search.uid;

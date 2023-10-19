@@ -1,10 +1,10 @@
 import _ from 'underscore';
 
-const isDeepMatch = function(object, pattern) {
-  var both_arrays  = _.isArray(object)  && _.isArray(pattern);
-  var both_objects = _.isObject(object) && _.isObject(pattern);
+const isDeepMatch = function (object, pattern) {
+  const both_arrays = _.isArray(object) && _.isArray(pattern);
+  const both_objects = _.isObject(object) && _.isObject(pattern);
 
-  if (both_arrays  && pattern.length != object.length) {
+  if (both_arrays && pattern.length != object.length) {
     return false;
   }
 
@@ -13,9 +13,9 @@ const isDeepMatch = function(object, pattern) {
   }
 
   if (both_arrays || both_objects) {
-    return _.every(pattern, function(value, key) {
-             return isDeepMatch(object[key], value);
-           });
+    return _.every(pattern, function (value, key) {
+      return isDeepMatch(object[key], value);
+    });
   } else {
     return object === pattern;
   }

@@ -1,6 +1,6 @@
 import getPossibleKeys from './getPossibleKeys';
 
-const hasKey = function(key) {
+const hasKey = function (key) {
   return getPossibleKeys().indexOf(key) > -1;
 };
 

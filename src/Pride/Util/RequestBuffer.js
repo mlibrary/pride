@@ -4,20 +4,20 @@ import request from './request';
 import safeCall from './safeCall';
 import Settings from '../Settings';
 
-const RequestBuffer = function(request_options) {
+const RequestBuffer = function (request_options) {
   request_options = request_options || {};
 
-  var func_buffer = new FuncBuffer();
+  const func_buffer = new FuncBuffer();
 
-  var request_issued     = false;
-  var request_successful = false;
-  var request_failed     = false;
+  let request_issued = false;
+  let request_successful = false;
+  let request_failed = false;
 
-  var cached_response_data;
+  let cached_response_data;
 
-  this.request = function(func_hash) {
+  this.request = function (func_hash) {
     func_buffer.add(func_hash.success, 'success')
-               .add(func_hash.failure, 'failure');
+      .add(func_hash.failure, 'failure');
 
     if (request_issued) {
       callWithResponse();
@@ -28,7 +28,7 @@ const RequestBuffer = function(request_options) {
     return this;
   };
 
-  var callWithResponse = function(data) {
+  var callWithResponse = function (data) {
     cached_response_data = data || cached_response_data;
 
     if (request_successful) {
@@ -38,16 +38,16 @@ const RequestBuffer = function(request_options) {
     }
   };
 
-  var sendRequest = function() {
+  var sendRequest = function () {
     request_issued = true;
 
     request({
-      url:             safeCall(request_options.url),
-      attempts:        safeCall(request_options.attempts) ||
+      url: safeCall(request_options.url),
+      attempts: safeCall(request_options.attempts) ||
                        Settings.connection_attempts,
       failure_message: safeCall(request_options.failure_message),
 
-      failure: function(error) {
+      failure: function (error) {
         request_failed = true;
 
         safeCall(request_options.before_failure, error);
@@ -57,7 +57,7 @@ const RequestBuffer = function(request_options) {
         safeCall(request_options.after_failure, error);
       },
 
-      success: function(response) {
+      success: function (response) {
         request_successful = true;
 
         safeCall(request_options.before_success, response);
@@ -73,9 +73,9 @@ const RequestBuffer = function(request_options) {
     });
   };
 
-  var callThenClear = function(name) {
+  var callThenClear = function (name) {
     func_buffer.call(name, cached_response_data)
-               .clearAll();
+      .clearAll();
   };
 };
 

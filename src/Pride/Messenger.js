@@ -2,21 +2,21 @@ import _ from 'underscore';
 import FuncBuffer from './Util/FuncBuffer';
 import log from './Core/log';
 
-const Messenger = new FuncBuffer(function() {
-  var notifyObservers = this.call;
+const Messenger = new FuncBuffer(function () {
+  const notifyObservers = this.call;
 
-  this.addObserver    = this.add;
+  this.addObserver = this.add;
   this.removeObserver = this.remove;
   this.clearObservers = this.clear;
 
-  this.call   = undefined;
-  this.add    = undefined;
+  this.call = undefined;
+  this.add = undefined;
   this.remove = undefined;
-  this.clear  = undefined;
+  this.clear = undefined;
 
-  this.sendMessage = function(message) {
+  this.sendMessage = function (message) {
     if (message.summary) {
-      message.class   = message.class   || 'info';
+      message.class = message.class || 'info';
       message.details = message.details || '';
 
       notifyObservers(message.class, message);
@@ -27,12 +27,14 @@ const Messenger = new FuncBuffer(function() {
     return this;
   };
 
-  this.sendMessageArray = function(message_array) {
-    var messenger = this;
+  this.sendMessageArray = function (message_array) {
+    const messenger = this;
 
     _.each(
       message_array,
-      function(message) { messenger.sendMessage(message); }
+      function (message) {
+        messenger.sendMessage(message);
+      }
     );
 
     return this;
@@ -40,7 +42,7 @@ const Messenger = new FuncBuffer(function() {
 
   // Given a type of preset message and some optional arguments, generate a
   // message string.
-  this.preset = function(type) {
+  this.preset = function (type) {
     // var variables = Pride.Util.slice(arguments);
 
     // return Pride.Settings

@@ -36,13 +36,13 @@ const Settings = {
   datastores_url: '',
 
   connection_attempts: 3,
-  init_attempts:       3,
+  init_attempts: 3,
   ms_between_attempts: 1500,
 
   message_formats: {
     failed_record_load: 'Failed to load $1',
-    failed_search_run:  'Failed to search $1',
-    failed_init:        'Failed to initialize Pride'
+    failed_search_run: 'Failed to search $1',
+    failed_init: 'Failed to initialize Pride'
   },
 
   obnoxious: false

@@ -2,12 +2,11 @@ import _ from 'underscore';
 import getPossibleKeys from './getPossibleKeys.js';
 import hasKey from './hasKey.js';
 
-const Paginater = function(initial_values) {
-  this.set = function(new_values) {
-
-    ////////////////////////
+const Paginater = function (initial_values) {
+  this.set = function (new_values) {
+    /// /////////////////////
     // Basic error checks //
-    ////////////////////////
+    /// /////////////////////
 
     if (_.has(new_values, 'total_pages')) {
       throw 'Can not set total_pages (it is a calculated value)';
@@ -23,13 +22,13 @@ const Paginater = function(initial_values) {
 
     if (_.has(new_values, 'page') &&
         (_.has(new_values, 'start') || _.has(new_values, 'end'))
-       ) {
+    ) {
       throw 'Can not set page as well as the start and/or end';
     }
 
-    //////////////////////////////
+    /// ///////////////////////////
     // Set and calculate values //
-    //////////////////////////////
+    /// ///////////////////////////
 
     // We wait to set the new end value until after an exception can be thrown.
     _.extend(values, _.omit(new_values, 'end'));
@@ -59,7 +58,7 @@ const Paginater = function(initial_values) {
       values.end = new_values.end;
     } else {
       // Calculate what the new end value should be.
-      var end = values.start + values.count - 1;
+      const end = values.start + values.count - 1;
       values.end = (end < values.start) ? undefined : end;
     }
 
@@ -72,29 +71,29 @@ const Paginater = function(initial_values) {
       values.index_limit = undefined;
     }
 
-    //////////////////////////
+    /// ///////////////////////
     // Calculate pagination //
-    //////////////////////////
+    /// ///////////////////////
 
     if (values.count > 0 && values.start % values.count === 0) {
       values.page = Math.floor(values.start / values.count) + 1;
 
       if (_.isNumber(values.total_available)) {
         values.total_pages = Math.ceil(values.total_available / values.count);
-        values.page_limit  = values.total_pages;
+        values.page_limit = values.total_pages;
       } else {
         values.total_pages = undefined;
-        values.page_limit  = Infinity;
+        values.page_limit = Infinity;
       }
     } else {
-      values.page        = undefined;
+      values.page = undefined;
       values.total_pages = undefined;
-      values.page_limit  = undefined;
+      values.page_limit = undefined;
     }
 
-    //////////////////////////////////////
+    /// ///////////////////////////////////
     // Check to make sure enough is set //
-    //////////////////////////////////////
+    /// ///////////////////////////////////
 
     if (!_.has(values, 'start') || !_.has(values, 'count')) {
       throw 'Not enough information given to create Paginater';
@@ -103,7 +102,7 @@ const Paginater = function(initial_values) {
     return this;
   };
 
-  this.get = function(name) {
+  this.get = function (name) {
     return values[name];
   };
 

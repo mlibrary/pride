@@ -2,51 +2,55 @@ import _ from 'underscore';
 import slice from './slice';
 import safeApply from './safeApply';
 
-const FuncBuffer = function(extension) {
-  var buffer = {};
-  var self   = this;
+const FuncBuffer = function (extension) {
+  let buffer = {};
+  const self = this;
 
-  var safeGet = function(name) {
+  const safeGet = function (name) {
     if (!_.has(buffer, name)) buffer[name] = [];
 
     return buffer[name];
   };
 
-  this.add = function(func, name) {
+  this.add = function (func, name) {
     safeGet(name).push(func);
 
     return self;
   };
 
-  this.remove = function(func, name) {
+  this.remove = function (func, name) {
     buffer[name] = _.reject(
-                     safeGet(name),
-                     function(other_func) { return func == other_func; }
-                   );
+      safeGet(name),
+      function (other_func) {
+        return func == other_func;
+      }
+    );
 
     return self;
   };
 
-  this.clear = function(name) {
+  this.clear = function (name) {
     delete buffer[name];
 
     return self;
   };
 
-  this.clearAll = function() {
+  this.clearAll = function () {
     buffer = {};
 
     return self;
   };
 
-  this.call = function(name) {
+  this.call = function (name) {
     self.apply(name, slice(arguments, 1));
 
     return self;
   };
 
-  this.apply = function(name, args) {
-    _.each(safeGet(name), function(func) { safeApply(func, args); });
+  this.apply = function (name, args) {
+    _.each(safeGet(name), function (func) {
+      safeApply(func, args);
+    });
 
     return self;
   };
