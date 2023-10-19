@@ -4714,7 +4714,7 @@ Object.defineProperty(Pride, "Settings", { value: Settings_default });
 Object.defineProperty(Pride, "Util", { value: Util_default });
 var Pride_default = Pride;
 
-// src/spec.js
+// spec/index.js
 var Pride2 = Pride_default;
 console.log(Pride2);
 /*! Bundled license information:

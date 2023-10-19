@@ -4,10 +4,10 @@
   "main": "pride.min.js",
   "scripts": {
     "build": "npm run esbuild:regular && npm run esbuild:minify && npm run esbuild:spec",
-    "esbuild": "npx esbuild src/${SOURCE_FILE-index}.js --bundle --format=cjs $*",
+    "esbuild": "npx esbuild ${DIRECTORY-src}/index.js --bundle --format=cjs $*",
     "esbuild:minify": "npm run esbuild -- --outfile=pride.min.js --minify",
     "esbuild:regular": "npm run esbuild -- --outfile=pride.js",
-    "esbuild:spec": "SOURCE_FILE=spec npm run esbuild -- --outfile=spec/pride.spec.js",
+    "esbuild:spec": "DIRECTORY=spec npm run esbuild -- --outfile=spec/pride.spec.js",
     "eslint": "npx eslint $* source/**/*.js spec/**/*.js",
     "eslint:fix": "npm run eslint -- --fix"
   },

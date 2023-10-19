@@ -1,4 +1,4 @@
-import { Pride as pride } from './index';
+import { Pride as pride } from '../src';
 
 const Pride = pride;
 
