@@ -2,7 +2,6 @@ import _ from 'underscore';
 import FuncBuffer from '../Util/FuncBuffer';
 
 const FacetSearch = function (setup) {
-  const example_facet = this;
   let data = setup.data;
   const results = setup.results;
 
@@ -48,27 +47,27 @@ const FacetSearch = function (setup) {
     return self;
   };
 
-  const createObservable = function (name, data_func) {
+  const createObservable = function (name, dataFunc) {
     const object = new FuncBuffer(function () {
-      const add_observer = this.add;
-      const call_observers = this.call;
+      const addObserver = this.add;
+      const callObservers = this.call;
 
       observables.push(this);
 
       this.add = function (func) {
-        if (!self.muted) func(data_func());
+        if (!self.muted) func(dataFunc());
 
-        add_observer(func, 'observers');
+        addObserver(func, 'observers');
 
         return this;
       };
 
       this.notify = function () {
         if (!self.muted) {
-          data = data_func();
+          data = dataFunc();
           self.log('NOTIFY (' + name + ')', data);
 
-          call_observers('observers', data);
+          callObservers('observers', data);
         }
 
         return this;

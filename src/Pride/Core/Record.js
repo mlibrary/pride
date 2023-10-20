@@ -8,7 +8,7 @@ import escape from '../Util/escape';
 import PreferenceEngine from '../PreferenceEngine';
 
 const Record = function (data) {
-  const request_buffer = new RequestBuffer({
+  const requestBuffer = new RequestBuffer({
     url: data.source,
     failure_message: Messenger.preset(
       'failed_record_load',
@@ -22,9 +22,9 @@ const Record = function (data) {
   });
 
   let holdings = null;
-  const get_this = {};
+  const getThis = {};
 
-  this.placeHold = function (item, pickup_location, not_needed_after, callback_function) {
+  this.placeHold = function (item, pickupLocation, notNeededAfter, callbackFunction) {
     this.renderFull(function (data) {
       const getHoldingsUrl = function () {
         let ret;
@@ -37,7 +37,7 @@ const Record = function (data) {
       };
 
       const response = request({
-        url: [getHoldingsUrl(), item, pickup_location, not_needed_after].join('/'),
+        url: [getHoldingsUrl(), item, pickupLocation, notNeededAfter].join('/'),
         query: true,
         failure: function (data) {
           Messenger.sendMessage({
@@ -45,10 +45,12 @@ const Record = function (data) {
             class: 'error'
           });
         },
-        success: callback_function,
+        success: callbackFunction,
         failure_message: 'placeHold failed',
         success_message: 'placeHold succeeded'
       });
+
+      console.log(response);
     });
   };
 
@@ -59,7 +61,7 @@ const Record = function (data) {
       holdings = new Holdings(data);
       holdings.getData(func);
     } else {
-      request_buffer.request({
+      requestBuffer.request({
         success: function (data) {
           holdings = new Holdings(data);
           holdings.getData(func);
@@ -69,16 +71,16 @@ const Record = function (data) {
   };
 
   this.getGetThis = function (barcode, func) {
-    if (get_this[barcode]) {
-      get_this[barcode].getData(func);
+    if (getThis[barcode]) {
+      getThis[barcode].getData(func);
     } else if (data.complete) {
-      get_this[barcode] = new GetThis(barcode, data);
-      get_this[barcode].getData(func);
+      getThis[barcode] = new GetThis(barcode, data);
+      getThis[barcode].getData(func);
     } else {
-      request_buffer.request({
+      requestBuffer.request({
         success: function (data) {
-          get_this[barcode] = new GetThis(barcode, data);
-          get_this[barcode].getData(func);
+          getThis[barcode] = new GetThis(barcode, data);
+          getThis[barcode].getData(func);
         }
       });
     }
@@ -90,14 +92,14 @@ const Record = function (data) {
 
   this.renderPartThenCache = function (func) {
     callWithData(func);
-    request_buffer.request();
+    requestBuffer.request();
   };
 
   this.renderFull = function (func) {
     if (data.complete) {
       callWithData(func);
     } else {
-      request_buffer.request({ success: func });
+      requestBuffer.request({ success: func });
     }
   };
 
@@ -114,13 +116,13 @@ const Record = function (data) {
     });
   };
 
-  var callWithData = function (func) {
+  const callWithData = function (func) {
     func(_.omit(data, 'complete', 'source'), data.complete);
   };
 
-  var translateData = function (new_data) {
-    new_data.fields = _.map(
-      new_data.fields,
+  const translateData = function (newData) {
+    newData.fields = _.map(
+      newData.fields,
       function (field) {
         if (!field.value_has_html) {
           field.value = escape(field.value);
@@ -130,26 +132,26 @@ const Record = function (data) {
       }
     );
 
-    if (!new_data.names_have_html) {
-      new_data.names = _.map(
-        new_data.names,
+    if (!newData.names_have_html) {
+      newData.names = _.map(
+        newData.names,
         function (name) {
           return escape(name);
         }
       );
     }
 
-    if (new_data.uid) {
-      new_data.status = 200;
+    if (newData.uid) {
+      newData.status = 200;
     } else {
-      new_data.status = 404;
+      newData.status = 404;
     }
 
-    if (PreferenceEngine.selected(new_data)) {
-      new_data.selected = true;
+    if (PreferenceEngine.selected(newData)) {
+      newData.selected = true;
     }
 
-    return _.omit(new_data, 'names_have_html');
+    return _.omit(newData, 'names_have_html');
   };
 
   data = translateData(data);

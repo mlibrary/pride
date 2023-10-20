@@ -1,7 +1,7 @@
 import Parser from '../Parser';
 import Raw from './Raw';
 
-const parseField = function (field_name, content) {
+const parseField = function (fieldName, content) {
   if (!content) {
     return {};
   } else {
@@ -13,9 +13,9 @@ const parseField = function (field_name, content) {
       //        .replace(/[:&]$/g, '')
       //        .replace(/^[:&]/g, '')
       //        ;
-      return Parser.parse(content, { defaultFieldName: field_name });
+      return Parser.parse(content, { defaultFieldName: fieldName });
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       return new Raw(content);
     }
   }

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": "pride.min.js",
   "scripts": {
-    "build": "npm run esbuild:regular && npm run esbuild:minify && npm run esbuild:spec",
+    "build": "npm run eslint && npm run esbuild:regular && npm run esbuild:minify && npm run esbuild:spec",
     "esbuild": "npx esbuild ${DIRECTORY-src}/index.js --bundle --format=cjs $*",
     "esbuild:minify": "npm run esbuild -- --outfile=pride.min.js --minify",
     "esbuild:regular": "npm run esbuild -- --outfile=pride.js",

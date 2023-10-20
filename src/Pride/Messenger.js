@@ -27,11 +27,11 @@ const Messenger = new FuncBuffer(function () {
     return this;
   };
 
-  this.sendMessageArray = function (message_array) {
+  this.sendMessageArray = function (messageArray) {
     const messenger = this;
 
     _.each(
-      message_array,
+      messageArray,
       function (message) {
         messenger.sendMessage(message);
       }

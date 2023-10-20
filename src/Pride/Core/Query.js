@@ -3,55 +3,55 @@ import Paginater from '../Util/Paginater/index';
 import deepClone from '../Util/deepClone';
 import Section from '../Util/Section';
 
-const Query = function (query_info) {
+const Query = function (queryInfo) {
   // Setup the paginater to do all pagination calculations.
   const paginater = new Paginater({
-    start: query_info.start,
-    count: query_info.count
+    start: queryInfo.start,
+    count: queryInfo.count
   });
 
   // Memoize the paginater keys for future use.
-  const paginater_keys = Paginater.getPossibleKeys();
+  const paginaterKeys = Paginater.getPossibleKeys();
 
-  // Remove the pagination info from query_info.
-  query_info = _.omit(deepClone(query_info), paginater_keys);
+  // Remove the pagination info from queryInfo.
+  queryInfo = _.omit(deepClone(queryInfo), paginaterKeys);
 
   // Set the default request_id if it isn't already set.
-  query_info.request_id = query_info.request_id || 0;
+  queryInfo.request_id = queryInfo.request_id || 0;
 
   this.get = function (key) {
     if (Paginater.hasKey(key)) {
       return paginater.get(key);
     } else {
-      return query_info[key];
+      return queryInfo[key];
     }
   };
 
-  this.set = function (new_values) {
-    const new_pagination_values = _.pick(new_values, paginater_keys);
-    const new_query_values = _.omit(new_values, paginater_keys);
+  this.set = function (newValues) {
+    const newPaginationValues = _.pick(newValues, paginaterKeys);
+    const newQueryValues = _.omit(newValues, paginaterKeys);
 
     // If the set of things being searched was altered...
-    if (!_.isEmpty(new_query_values)) {
+    if (!_.isEmpty(newQueryValues)) {
       paginater.set({ total_available: undefined });
 
-      if (!_.isNumber(new_query_values.request_id)) {
-        query_info.request_id += 1;
+      if (!_.isNumber(newQueryValues.request_id)) {
+        queryInfo.request_id += 1;
       }
     }
 
-    paginater.set(new_pagination_values);
-    _.extend(query_info, new_query_values);
+    paginater.set(newPaginationValues);
+    _.extend(queryInfo, newQueryValues);
 
     return this;
   };
 
   this.clone = function () {
-    const full_info = deepClone(query_info);
-    full_info.start = paginater.get('start');
-    full_info.count = paginater.get('count');
+    const fullInfo = deepClone(queryInfo);
+    fullInfo.start = paginater.get('start');
+    fullInfo.count = paginater.get('count');
 
-    return new Query(full_info);
+    return new Query(fullInfo);
   };
 
   this.toSection = function () {

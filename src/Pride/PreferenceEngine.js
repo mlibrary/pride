@@ -45,7 +45,7 @@ const PreferenceEngine = {
       return this;
     }
     for (const prop in data) {
-      if (data.hasOwnProperty(prop)) {
+      if (Object.prototype.hasOwnProperty.call(data, prop)) {
         this.selectedRecords[prop] = {};
         data[prop].forEach((function (prop) {
           return function (record) {

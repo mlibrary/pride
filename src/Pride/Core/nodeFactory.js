@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import slice from '../Util/slice';
 
-const nodeFactory = function (type, child_types, extention) {
+const nodeFactory = function (type, childTypes, extention) {
   return function (value) {
     this.children = slice(arguments, 1);
     if (this.children.length === 1 && Array.isArray(this.children[0])) {
@@ -9,21 +9,21 @@ const nodeFactory = function (type, child_types, extention) {
     }
     this.type = type;
     this.value = value.trim();
-    this.child_types = child_types || [];
+    this.childTypes = childTypes || [];
     this.validIfEmpty = true;
 
     // Check to make sure a child is valid for this node.
     // If it is, add it to the array of children.
-    this.addChild = function (new_child) {
+    this.addChild = function (newChild) {
       if (_.find(
-        this.child_types,
-        function (a_type) {
-          return new_child.type === a_type;
+        this.childTypes,
+        function (aType) {
+          return newChild.type === aType;
         }
       )) {
-        this.children.push(new_child);
+        this.children.push(newChild);
       } else {
-        throw 'Not a valid child for a ' + this.type;
+        throw new Error('Not a valid child for a ' + this.type);
       }
 
       return this;
@@ -44,26 +44,26 @@ const nodeFactory = function (type, child_types, extention) {
     };
 
     this.matches = function (query) {
-      const this_node = this;
-      const query_children = query.children || [];
+      const thisNode = this;
+      const queryChildren = query.children || [];
 
       return _.every(
         _.omit(query, 'children'),
         function (value, key) {
-          return this_node[key] == value;
+          return thisNode[key] === value;
         }
       ) &&
-                    _.every(
-                      query_children,
-                      function (query_child) {
-                        return _.any(
-                          children,
-                          function (real_child) {
-                            return query_child.matches(real_child);
-                          }
-                        );
-                      }
-                    );
+        _.every(
+          queryChildren,
+          function (queryChild) {
+            return _.some(
+              queryChildren,
+              function (realChild) {
+                return queryChild.matches(realChild);
+              }
+            );
+          }
+        );
     };
 
     this.serialize = function () {
@@ -83,7 +83,7 @@ const nodeFactory = function (type, child_types, extention) {
       return _.mapObject(
         _.pick(this, 'value', 'children', 'type'),
         function (val, key) {
-          if (key == 'children') {
+          if (key === 'children') {
             return _.map(val, function (item) {
               return item.toJSON();
             });

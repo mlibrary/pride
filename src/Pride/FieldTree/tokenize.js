@@ -7,7 +7,7 @@ const tokenize = function (string) {
   let type = null;
 
   while (index < string.length) {
-    var slice = string.slice(index);
+    const slice = string.slice(index);
     let found = _.find(
       tokens,
       function (pattern) {
@@ -28,7 +28,7 @@ const tokenize = function (string) {
 
       const last = _.last(result);
 
-      if (last && last.type == 'string') {
+      if (last && last.type === 'string') {
         found = result.pop().content + found;
       }
     }
