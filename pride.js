@@ -3069,39 +3069,39 @@ var SearchBase_default = SearchBase;
 
 // src/Pride/Util/request.js
 var import_reqwest = __toESM(require_reqwest());
-var request = function(request_info) {
+var request = function(requestInfo) {
   log_default("Request", "Sending HTTP request...");
-  log_default("Request", "URL", request_info.url);
-  log_default("Request", "CONTENT", JSON.stringify(request_info.query));
-  if (!request_info.url)
-    throw "No URL given to Pride.Util.request()";
-  let request_method = "get";
-  if (request_info.query)
-    request_method = "post";
-  if (!index_default_default.isNumber(request_info.attempts)) {
-    request_info.attempts = Settings_default.connection_attempts;
+  log_default("Request", "URL", requestInfo.url);
+  log_default("Request", "CONTENT", JSON.stringify(requestInfo.query));
+  if (!requestInfo.url)
+    throw new Error("No URL given to Pride.Util.request()");
+  let requestMethod = "get";
+  if (requestInfo.query)
+    requestMethod = "post";
+  if (!index_default_default.isNumber(requestInfo.attempts)) {
+    requestInfo.attempts = Settings_default.connection_attempts;
   }
-  request_info.attempts -= 1;
+  requestInfo.attempts -= 1;
   (0, import_reqwest.default)({
-    url: request_info.url,
-    data: JSON.stringify(request_info.query),
+    url: requestInfo.url,
+    data: JSON.stringify(requestInfo.query),
     type: "json",
-    method: request_method,
+    method: requestMethod,
     contentType: "application/json",
     withCredentials: true,
     error: function(error2) {
-      if (request_info.attempts <= 0) {
+      if (requestInfo.attempts <= 0) {
         log_default("Request", "ERROR", error2);
-        safeCall_default(request_info.failure, error2);
+        safeCall_default(requestInfo.failure, error2);
         Messenger_default.sendMessage({
-          summary: request_info.failure_message,
+          summary: requestInfo.failure_message,
           class: "error"
         });
       } else {
         log_default("Request", "Trying request again...");
         window.setTimeout(
           function() {
-            request(request_info);
+            request(requestInfo);
           },
           Settings_default.ms_between_attempts
         );
@@ -3109,9 +3109,9 @@ var request = function(request_info) {
     },
     success: function(response) {
       log_default("Request", "SUCCESS", response);
-      safeCall_default(request_info.success, response);
+      safeCall_default(requestInfo.success, response);
       Messenger_default.sendMessage({
-        summary: request_info.success_message,
+        summary: requestInfo.success_message,
         class: "success"
       });
       Messenger_default.sendMessageArray(response.messages);
@@ -4617,27 +4617,27 @@ var requestRecord = function(source, id, func) {
 var requestRecord_default = requestRecord;
 
 // src/Pride/Util/MultiSearch.js
-var MultiSearch = function(uid, muted, search_array) {
-  const query_data = {};
+var MultiSearch = function(uid, muted, searchArray) {
+  const queryData = {};
   const self2 = this;
-  this.searches = search_array;
+  this.searches = searchArray;
   this.uid = uid;
   this.set = function(values2) {
-    index_default_default.extend(query_data, values2);
+    index_default_default.extend(queryData, values2);
     index_default_default.each(
-      search_array,
+      searchArray,
       function(search) {
         search.set(values2);
       }
     );
     return self2;
   };
-  const funcOnEach = function(func_name, before_func) {
+  const funcOnEach = function(funcName, beforeFunc) {
     return function() {
       const args = slice_default(arguments);
-      safeApply_default(before_func, args);
-      index_default_default.each(search_array, function(search) {
-        search[func_name].apply(search, args);
+      safeApply_default(beforeFunc, args);
+      index_default_default.each(searchArray, function(search) {
+        search[funcName].apply(search, args);
       });
       return self2;
     };
@@ -4656,49 +4656,49 @@ var MultiSearch = function(uid, muted, search_array) {
 var MultiSearch_default = MultiSearch;
 
 // src/Pride/Util/SearchSwitcher.js
-var SearchSwitcher = function(current_search, cached_searches) {
+var SearchSwitcher = function(currentSearch, cachedSearches) {
   const self2 = this;
-  const search_cache = new MultiSearch_default(null, true, cached_searches);
-  current_search.set({ page: 1 }).setMute(false);
-  search_cache.set({ page: 1 });
-  this.uid = current_search.uid;
-  this.run = function(cache_size) {
-    current_search.run(cache_size);
-    search_cache.run(0);
+  const searchCache = new MultiSearch_default(null, true, cachedSearches);
+  currentSearch.set({ page: 1 }).setMute(false);
+  searchCache.set({ page: 1 });
+  this.uid = currentSearch.uid;
+  this.run = function(cacheSize) {
+    currentSearch.run(cacheSize);
+    searchCache.run(0);
     return self2;
   };
   this.set = function(settings) {
-    current_search.set(settings);
-    search_cache.set(index_default_default.omit(settings, "page", "facets"));
+    currentSearch.set(settings);
+    searchCache.set(index_default_default.omit(settings, "page", "facets"));
     return self2;
   };
   this.nextPage = function() {
-    current_search.nextPage();
+    currentSearch.nextPage();
     return self2;
   };
   this.prevPage = function() {
-    current_search.prevPage();
+    currentSearch.prevPage();
     return self2;
   };
-  this.switchTo = function(requested_uid) {
-    if (requested_uid != current_search) {
-      current_search.setMute(true).set({ page: 1 });
-      search_cache.searches.push(current_search);
-      current_search = void 0;
-      search_cache.searches = index_default_default.reject(
-        search_cache.searches,
+  this.switchTo = function(requestedUid) {
+    if (requestedUid !== currentSearch) {
+      currentSearch.setMute(true).set({ page: 1 });
+      searchCache.searches.push(currentSearch);
+      currentSearch = void 0;
+      searchCache.searches = index_default_default.reject(
+        searchCache.searches,
         function(search) {
-          if (search.uid == requested_uid) {
-            current_search = search;
+          if (search.uid === requestedUid) {
+            currentSearch = search;
             return true;
           }
         }
       );
-      if (!current_search) {
-        throw "Could not find a search with a UID of: " + requested_uid;
+      if (!currentSearch) {
+        throw new Error("Could not find a search with a UID of: " + requestedUid);
       }
-      self2.uid = current_search.uid;
-      current_search.setMute(false);
+      self2.uid = currentSearch.uid;
+      currentSearch.setMute(false);
     }
     return self2;
   };

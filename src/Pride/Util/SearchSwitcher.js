@@ -1,63 +1,63 @@
 import _ from 'underscore';
 import MultiSearch from './MultiSearch';
 
-const SearchSwitcher = function (current_search, cached_searches) {
+const SearchSwitcher = function (currentSearch, cachedSearches) {
   const self = this;
-  const search_cache = new MultiSearch(null, true, cached_searches);
+  const searchCache = new MultiSearch(null, true, cachedSearches);
 
-  current_search.set({ page: 1 }).setMute(false);
-  search_cache.set({ page: 1 });
+  currentSearch.set({ page: 1 }).setMute(false);
+  searchCache.set({ page: 1 });
 
-  this.uid = current_search.uid;
+  this.uid = currentSearch.uid;
 
-  this.run = function (cache_size) {
-    current_search.run(cache_size);
-    search_cache.run(0);
+  this.run = function (cacheSize) {
+    currentSearch.run(cacheSize);
+    searchCache.run(0);
 
     return self;
   };
 
   this.set = function (settings) {
-    current_search.set(settings);
-    search_cache.set(_.omit(settings, 'page', 'facets'));
+    currentSearch.set(settings);
+    searchCache.set(_.omit(settings, 'page', 'facets'));
 
     return self;
   };
 
   this.nextPage = function () {
-    current_search.nextPage();
+    currentSearch.nextPage();
 
     return self;
   };
 
   this.prevPage = function () {
-    current_search.prevPage();
+    currentSearch.prevPage();
 
     return self;
   };
 
-  this.switchTo = function (requested_uid) {
-    if (requested_uid != current_search) {
-      current_search.setMute(true).set({ page: 1 });
-      search_cache.searches.push(current_search);
-      current_search = undefined;
+  this.switchTo = function (requestedUid) {
+    if (requestedUid !== currentSearch) {
+      currentSearch.setMute(true).set({ page: 1 });
+      searchCache.searches.push(currentSearch);
+      currentSearch = undefined;
 
-      search_cache.searches = _.reject(
-        search_cache.searches,
+      searchCache.searches = _.reject(
+        searchCache.searches,
         function (search) {
-          if (search.uid == requested_uid) {
-            current_search = search;
+          if (search.uid === requestedUid) {
+            currentSearch = search;
             return true;
           }
         }
       );
 
-      if (!current_search) {
-        throw 'Could not find a search with a UID of: ' + requested_uid;
+      if (!currentSearch) {
+        throw new Error('Could not find a search with a UID of: ' + requestedUid);
       }
 
-      self.uid = current_search.uid;
-      current_search.setMute(false);
+      self.uid = currentSearch.uid;
+      currentSearch.setMute(false);
     }
 
     return self;

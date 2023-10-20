@@ -5,45 +5,45 @@ import Settings from '../Settings';
 import safeCall from './safeCall';
 import Messenger from '../Messenger';
 
-const request = function (request_info) {
+const request = function (requestInfo) {
   log('Request', 'Sending HTTP request...');
-  log('Request', 'URL', request_info.url);
-  log('Request', 'CONTENT', JSON.stringify(request_info.query));
+  log('Request', 'URL', requestInfo.url);
+  log('Request', 'CONTENT', JSON.stringify(requestInfo.query));
 
-  if (!request_info.url) throw 'No URL given to Pride.Util.request()';
+  if (!requestInfo.url) throw new Error('No URL given to Pride.Util.request()');
 
-  let request_method = 'get';
-  if (request_info.query) request_method = 'post';
+  let requestMethod = 'get';
+  if (requestInfo.query) requestMethod = 'post';
 
-  if (!_.isNumber(request_info.attempts)) {
-    request_info.attempts = Settings.connection_attempts;
+  if (!_.isNumber(requestInfo.attempts)) {
+    requestInfo.attempts = Settings.connection_attempts;
   }
 
-  request_info.attempts -= 1;
+  requestInfo.attempts -= 1;
 
   reqwest({
-    url: request_info.url,
-    data: JSON.stringify(request_info.query),
+    url: requestInfo.url,
+    data: JSON.stringify(requestInfo.query),
     type: 'json',
-    method: request_method,
+    method: requestMethod,
     contentType: 'application/json',
     withCredentials: true,
 
     error: function (error) {
-      if (request_info.attempts <= 0) {
+      if (requestInfo.attempts <= 0) {
         log('Request', 'ERROR', error);
 
-        safeCall(request_info.failure, error);
+        safeCall(requestInfo.failure, error);
 
         Messenger.sendMessage({
-          summary: request_info.failure_message,
+          summary: requestInfo.failure_message,
           class: 'error'
         });
       } else {
         log('Request', 'Trying request again...');
         window.setTimeout(
           function () {
-            request(request_info);
+            request(requestInfo);
           },
           Settings.ms_between_attempts
         );
@@ -53,10 +53,10 @@ const request = function (request_info) {
     success: function (response) {
       log('Request', 'SUCCESS', response);
 
-      safeCall(request_info.success, response);
+      safeCall(requestInfo.success, response);
 
       Messenger.sendMessage({
-        summary: request_info.success_message,
+        summary: requestInfo.success_message,
         class: 'success'
       });
 
