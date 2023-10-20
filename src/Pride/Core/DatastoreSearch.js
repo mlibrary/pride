@@ -9,19 +9,19 @@ const DatastoreSearch = function (setup) {
   const self = this;
   const base = new SearchBase(setup, this);
 
-  base.createItem = function (item_data) {
-    return new Record(item_data);
+  base.createItem = function (itemData) {
+    return new Record(itemData);
   };
 
   /// /////////////////
   // Facet Searches //
   /// /////////////////
 
-  let facet_searches = [];
-  let current_facets = [];
+  let facetSearches = [];
+  let currentFacets = [];
 
   this.getFacets = function () {
-    return facet_searches;
+    return facetSearches;
   };
 
   /// ///////////////
@@ -59,22 +59,22 @@ const DatastoreSearch = function (setup) {
     self.runDataObservers.add(function () {
       const facets = base.datastore.get('facets');
 
-      if (!isDeepMatch(current_facets, facets)) {
-        _.each(facet_searches, function (facet_search) {
-          facet_search.clearAllObservers();
+      if (!isDeepMatch(currentFacets, facets)) {
+        _.each(facetSearches, function (facetSearch) {
+          facetSearch.clearAllObservers();
         });
 
-        facet_searches = _.map(
+        facetSearches = _.map(
           facets,
-          function (facet_data) {
+          function (facetData) {
             return new FacetSearch({
-              data: _.omit(facet_data, 'values'),
-              results: facet_data.values
+              data: _.omit(facetData, 'values'),
+              results: facetData.values
             });
           }
         );
 
-        current_facets = facets;
+        currentFacets = facets;
 
         self.facetsObservers.notify();
       }
@@ -84,7 +84,7 @@ const DatastoreSearch = function (setup) {
   this.getMute = base.getMute;
 
   this.setMute = function (state) {
-    _.each(facet_searches, function (facet) {
+    _.each(facetSearches, function (facet) {
       facet.setMute(state);
     });
     base.setMute(state);

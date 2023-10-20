@@ -16,17 +16,7 @@ const GetThis = function (barcode, data) {
     return ret;
   };
 
-  const getLinks = function (data) {
-    let ret;
-    _.each(data.fields, function (field) {
-      if (field.uid == 'links') {
-        ret = field.value;
-      }
-    });
-    return ret;
-  };
-
-  const request_buffer = new RequestBuffer({
+  const requestBuffer = new RequestBuffer({
     url: getGetThisUrl(data) + '/' + this.barcode,
     failure_message: Messenger.preset(
       'failed_get_this_load',
@@ -38,12 +28,12 @@ const GetThis = function (barcode, data) {
     }
   });
 
-  var translateData = function (input) {
+  const translateData = function (input) {
     return input;
   };
 
   this.getData = function (func) {
-    request_buffer.request({ success: func });
+    requestBuffer.request({ success: func });
   };
 };
 

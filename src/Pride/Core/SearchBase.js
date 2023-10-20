@@ -30,27 +30,27 @@ const SearchBase = function (setup, parent) {
   // Performing Searches //
   /// //////////////////////
 
-  this.set = function (set_hash) {
-    self.query.set(set_hash);
+  this.set = function (setHash) {
+    self.query.set(setHash);
     safeCall(self.setDataChanged);
 
-    if (!_.isEmpty(_.omit(set_hash, getPossibleKeys()))) {
+    if (!_.isEmpty(_.omit(setHash, getPossibleKeys()))) {
       results = [];
     }
 
     return self;
   };
 
-  this.run = function (cache_size) {
+  this.run = function (cacheSize) {
     safeCall(self.resultsChanged);
 
-    if (_.isUndefined(cache_size)) {
-      cache_size = defaultCacheSize;
+    if (_.isUndefined(cacheSize)) {
+      cacheSize = defaultCacheSize;
     }
 
     requestResults(
       getMissingSection(
-        self.query.toSection().expanded(cache_size)
+        self.query.toSection().expanded(cacheSize)
       )
     );
 
@@ -64,39 +64,39 @@ const SearchBase = function (setup, parent) {
     ));
   };
 
-  var requestResults = function (requested_section) {
-    self.log('REQUESTING', requested_section);
+  const requestResults = function (requestedSection) {
+    self.log('REQUESTING', requestedSection);
     self.log('TOTAL AVAILABLE (pre-request)', self.query.get('total_available'));
 
-    if (requested_section &&
-        self.query.toLimitSection().overlaps(requested_section)) {
+    if (requestedSection &&
+        self.query.toLimitSection().overlaps(requestedSection)) {
       self.log('Sending query...');
 
-      const new_query = self.query.clone()
+      const newQuery = self.query.clone()
         .set({
-          start: requested_section.start,
-          count: requested_section.calcLength()
+          start: requestedSection.start,
+          count: requestedSection.calcLength()
         });
 
       requestFunc({
-        query: new_query,
+        query: newQuery,
         failure_message: Messenger.preset(
           'failed_search_run',
           self.datastore.get('metadata').name
         ),
-        success: function (response_data) {
+        success: function (responseData) {
           // Update things if the response matches the current query.
-          if (response_data.request.request_id == self.query.get('request_id')) {
-            updateData(response_data);
-            addResults(response_data.response, new_query.get('start'));
+          if (responseData.request.request_id === self.query.get('request_id')) {
+            updateData(responseData);
+            addResults(responseData.response, newQuery.get('start'));
 
-            const response_length = response_data.response.length;
+            const responseLength = responseData.response.length;
 
             // If we are missing results from the initial request...
-            if (response_length !== 0 &&
-                response_length < new_query.get('count')) {
+            if (responseLength !== 0 &&
+                responseLength < newQuery.get('count')) {
               requestResults(
-                requested_section.shifted(response_length, 0)
+                requestedSection.shifted(responseLength, 0)
               );
             }
           }
@@ -109,48 +109,48 @@ const SearchBase = function (setup, parent) {
     }
   };
 
-  var addResults = function (new_items_array, offset) {
-    let query_results_added = false;
+  const addResults = function (newItemsArray, offset) {
+    let queryResultsAdded = false;
 
-    self.log('NEW RECORDS', new_items_array);
+    self.log('NEW RECORDS', newItemsArray);
 
-    _.each(new_items_array, function (item_data, array_index) {
-      const item_index = array_index + offset;
+    _.each(newItemsArray, function (itemData, arrayIndex) {
+      const itemIndex = arrayIndex + offset;
 
       // Update the results that are not already filled.
-      if (_.isUndefined(results[item_index])) {
-        results[item_index] = safeCall(self.createItem, item_data);
+      if (_.isUndefined(results[itemIndex])) {
+        results[itemIndex] = safeCall(self.createItem, itemData);
 
-        if (self.query.toSection().inSection(item_index)) {
-          query_results_added = true;
+        if (self.query.toSection().inSection(itemIndex)) {
+          queryResultsAdded = true;
         }
       }
     });
 
     self.log('CACHE LENGTH', results.length);
 
-    if (query_results_added || _.isEmpty(new_items_array)) {
+    if (queryResultsAdded || _.isEmpty(newItemsArray)) {
       safeCall(self.resultsChanged);
     }
   };
 
-  var updateData = function (response_data) {
-    self.datastore.update(response_data.datastore);
+  const updateData = function (responseData) {
+    self.datastore.update(responseData.datastore);
 
-    const new_query_data = _.omit(response_data.new_request, 'start', 'count');
-    new_query_data.specialists = response_data.specialists;
-    new_query_data.total_available = response_data.total_available;
-    self.query.set(new_query_data);
+    const newQueryData = _.omit(responseData.new_request, 'start', 'count');
+    newQueryData.specialists = responseData.specialists;
+    newQueryData.total_available = responseData.total_available;
+    self.query.set(newQueryData);
 
     safeCall(self.runDataChanged);
   };
 
-  var getMissingSection = function (section) {
+  const getMissingSection = function (section) {
     const list = resultsPiece(section);
     let start = _.indexOf(list, undefined);
 
     // If the item is not found, indexOf returns -1.
-    if (start != -1) {
+    if (start !== -1) {
       const end = section.start + _.lastIndexOf(list, undefined);
 
       // Adjust for the offset from the start of the results.
@@ -160,7 +160,7 @@ const SearchBase = function (setup, parent) {
     }
   };
 
-  var resultsPiece = function (section) {
+  const resultsPiece = function (section) {
     const output = [];
 
     for (let index = section.start; index <= section.end; index++) {
@@ -176,7 +176,7 @@ const SearchBase = function (setup, parent) {
 
   let muted = false;
   const observables = [];
-  const mutable_observables = [];
+  const mutableObservables = [];
 
   this.clearAllObservers = function () {
     _.each(observables, function (observable) {
@@ -193,12 +193,12 @@ const SearchBase = function (setup, parent) {
   };
 
   this.setMute = function (state) {
-    if (state != muted) {
+    if (state !== muted) {
       muted = state;
       safeCall(self.muteChanged());
 
       if (!muted) {
-        _.each(mutable_observables, function (observable) {
+        _.each(mutableObservables, function (observable) {
           observable.notify();
         });
       }
@@ -207,28 +207,28 @@ const SearchBase = function (setup, parent) {
     return self;
   };
 
-  this.createObservable = function (name, data_func, never_mute) {
+  this.createObservable = function (name, dataFunc, neverMute) {
     const object = new FuncBuffer(function () {
-      const add_observer = this.add;
-      const call_observers = this.call;
+      const addObserver = this.add;
+      const callObservers = this.call;
 
       observables.push(this);
-      if (!never_mute) mutable_observables.push(this);
+      if (!neverMute) mutableObservables.push(this);
 
       this.add = function (func) {
-        if (!self.muted || never_mute) func(data_func());
+        if (!self.muted || neverMute) func(dataFunc());
 
-        add_observer(func, 'observers');
+        addObserver(func, 'observers');
 
         return this;
       };
 
       this.notify = function () {
-        if (!self.muted || never_mute) {
-          const data = data_func();
+        if (!self.muted || neverMute) {
+          const data = dataFunc();
           self.log('NOTIFY (' + name + ')', data);
 
-          call_observers('observers', data);
+          callObservers('observers', data);
         }
 
         return this;
@@ -254,33 +254,33 @@ const SearchBase = function (setup, parent) {
   // UTILITIES //
   /// ////////////
 
-  parent.set = function (set_hash) {
-    self.set(set_hash);
+  parent.set = function (setHash) {
+    self.set(setHash);
 
     return parent;
   };
 
-  parent.run = function (cache_size) {
-    self.run(cache_size);
+  parent.run = function (cacheSize) {
+    self.run(cacheSize);
 
     return parent;
   };
 
-  parent.nextPage = function (cache_size) {
-    const current_page = self.query.get('page');
-    if (_.isNumber(current_page) && current_page < self.query.get('page_limit')) {
-      parent.set({ page: current_page + 1 });
-      parent.run(cache_size);
+  parent.nextPage = function (cacheSize) {
+    const currentPage = self.query.get('page');
+    if (_.isNumber(currentPage) && currentPage < self.query.get('page_limit')) {
+      parent.set({ page: currentPage + 1 });
+      parent.run(cacheSize);
     }
 
     return parent;
   };
 
-  parent.prevPage = function (cache_size) {
-    const current_page = self.query.get('page');
-    if (_.isNumber(current_page) && current_page > 1) {
-      parent.set({ page: current_page - 1 });
-      parent.run(cache_size);
+  parent.prevPage = function (cacheSize) {
+    const currentPage = self.query.get('page');
+    if (_.isNumber(currentPage) && currentPage > 1) {
+      parent.set({ page: currentPage - 1 });
+      parent.run(cacheSize);
     }
 
     return parent;

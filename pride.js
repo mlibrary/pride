@@ -2408,7 +2408,7 @@ var slice2 = function(array, begin, end) {
 var slice_default = slice2;
 
 // src/Pride/Core/nodeFactory.js
-var nodeFactory = function(type2, child_types, extention) {
+var nodeFactory = function(type2, childTypes, extention) {
   return function(value) {
     this.children = slice_default(arguments, 1);
     if (this.children.length === 1 && Array.isArray(this.children[0])) {
@@ -2416,18 +2416,18 @@ var nodeFactory = function(type2, child_types, extention) {
     }
     this.type = type2;
     this.value = value.trim();
-    this.child_types = child_types || [];
+    this.childTypes = childTypes || [];
     this.validIfEmpty = true;
-    this.addChild = function(new_child) {
+    this.addChild = function(newChild) {
       if (index_default_default.find(
-        this.child_types,
-        function(a_type) {
-          return new_child.type === a_type;
+        this.childTypes,
+        function(aType) {
+          return newChild.type === aType;
         }
       )) {
-        this.children.push(new_child);
+        this.children.push(newChild);
       } else {
-        throw "Not a valid child for a " + this.type;
+        throw new Error("Not a valid child for a " + this.type);
       }
       return this;
     };
@@ -2443,20 +2443,20 @@ var nodeFactory = function(type2, child_types, extention) {
       }
     };
     this.matches = function(query) {
-      const this_node = this;
-      const query_children = query.children || [];
+      const thisNode = this;
+      const queryChildren = query.children || [];
       return index_default_default.every(
         index_default_default.omit(query, "children"),
         function(value2, key) {
-          return this_node[key] == value2;
+          return thisNode[key] === value2;
         }
       ) && index_default_default.every(
-        query_children,
-        function(query_child) {
-          return index_default_default.any(
-            children,
-            function(real_child) {
-              return query_child.matches(real_child);
+        queryChildren,
+        function(queryChild) {
+          return index_default_default.some(
+            queryChildren,
+            function(realChild) {
+              return queryChild.matches(realChild);
             }
           );
         }
@@ -2474,7 +2474,7 @@ var nodeFactory = function(type2, child_types, extention) {
       return index_default_default.mapObject(
         index_default_default.pick(this, "value", "children", "type"),
         function(val, key) {
-          if (key == "children") {
+          if (key === "children") {
             return index_default_default.map(val, function(item) {
               return item.toJSON();
             });
@@ -2492,21 +2492,21 @@ var nodeFactory = function(type2, child_types, extention) {
 var nodeFactory_default = nodeFactory;
 
 // src/Pride/Core/boolNodeFactory.js
-var boolNodeFactory = function(type2, child_types) {
+var boolNodeFactory = function(type2, childTypes) {
   return nodeFactory_default(
     type2,
-    child_types,
+    childTypes,
     function() {
       if (!index_default_default.contains(["AND", "OR", "NOT"], this.value)) {
-        throw "Not a valid boolean value";
+        throw new Error("Not a valid boolean value");
       }
       this.serialize = function() {
         return this.serializedChildren().join(" " + this.value + " ");
       };
       this.serializedChildren = function() {
-        const this_node = this;
-        return index_default_default.chain(this_node.children).map(function(child) {
-          if (child.type == this_node.type || child.type == "literal" && child.value.match(/\s/)) {
+        const thisNode = this;
+        return index_default_default.chain(thisNode.children).map(function(child) {
+          if (child.type === thisNode.type || child.type === "literal" && child.value.match(/\s/)) {
             return "(" + child.serialize() + ")";
           } else {
             return child.serialize();
@@ -2662,39 +2662,39 @@ var Section = function(start, end) {
 var Section_default = Section;
 
 // src/Pride/Core/Query.js
-var Query = function(query_info) {
+var Query = function(queryInfo) {
   const paginater = new Paginater_default({
-    start: query_info.start,
-    count: query_info.count
+    start: queryInfo.start,
+    count: queryInfo.count
   });
-  const paginater_keys = Paginater_default.getPossibleKeys();
-  query_info = index_default_default.omit(deepClone_default(query_info), paginater_keys);
-  query_info.request_id = query_info.request_id || 0;
+  const paginaterKeys = Paginater_default.getPossibleKeys();
+  queryInfo = index_default_default.omit(deepClone_default(queryInfo), paginaterKeys);
+  queryInfo.request_id = queryInfo.request_id || 0;
   this.get = function(key) {
     if (Paginater_default.hasKey(key)) {
       return paginater.get(key);
     } else {
-      return query_info[key];
+      return queryInfo[key];
     }
   };
-  this.set = function(new_values) {
-    const new_pagination_values = index_default_default.pick(new_values, paginater_keys);
-    const new_query_values = index_default_default.omit(new_values, paginater_keys);
-    if (!index_default_default.isEmpty(new_query_values)) {
+  this.set = function(newValues) {
+    const newPaginationValues = index_default_default.pick(newValues, paginaterKeys);
+    const newQueryValues = index_default_default.omit(newValues, paginaterKeys);
+    if (!index_default_default.isEmpty(newQueryValues)) {
       paginater.set({ total_available: void 0 });
-      if (!index_default_default.isNumber(new_query_values.request_id)) {
-        query_info.request_id += 1;
+      if (!index_default_default.isNumber(newQueryValues.request_id)) {
+        queryInfo.request_id += 1;
       }
     }
-    paginater.set(new_pagination_values);
-    index_default_default.extend(query_info, new_query_values);
+    paginater.set(newPaginationValues);
+    index_default_default.extend(queryInfo, newQueryValues);
     return this;
   };
   this.clone = function() {
-    const full_info = deepClone_default(query_info);
-    full_info.start = paginater.get("start");
-    full_info.count = paginater.get("count");
-    return new Query(full_info);
+    const fullInfo = deepClone_default(queryInfo);
+    fullInfo.start = paginater.get("start");
+    fullInfo.count = paginater.get("count");
+    return new Query(fullInfo);
   };
   this.toSection = function() {
     return new Section_default(this.get("start"), this.get("end"));
@@ -2885,22 +2885,22 @@ var SearchBase = function(setup, parent) {
     message.unshift("Search (" + self2.datastore.get("uid") + ")");
     log_default.apply(window, message);
   };
-  this.set = function(set_hash) {
-    self2.query.set(set_hash);
+  this.set = function(setHash) {
+    self2.query.set(setHash);
     safeCall_default(self2.setDataChanged);
-    if (!index_default_default.isEmpty(index_default_default.omit(set_hash, getPossibleKeys_default()))) {
+    if (!index_default_default.isEmpty(index_default_default.omit(setHash, getPossibleKeys_default()))) {
       results = [];
     }
     return self2;
   };
-  this.run = function(cache_size) {
+  this.run = function(cacheSize) {
     safeCall_default(self2.resultsChanged);
-    if (index_default_default.isUndefined(cache_size)) {
-      cache_size = defaultCacheSize;
+    if (index_default_default.isUndefined(cacheSize)) {
+      cacheSize = defaultCacheSize;
     }
     requestResults(
       getMissingSection(
-        self2.query.toSection().expanded(cache_size)
+        self2.query.toSection().expanded(cacheSize)
       )
     );
     return self2;
@@ -2911,29 +2911,29 @@ var SearchBase = function(setup, parent) {
       Math.min(self2.query.get("end"), self2.query.get("index_limit"))
     ));
   };
-  var requestResults = function(requested_section) {
-    self2.log("REQUESTING", requested_section);
+  const requestResults = function(requestedSection) {
+    self2.log("REQUESTING", requestedSection);
     self2.log("TOTAL AVAILABLE (pre-request)", self2.query.get("total_available"));
-    if (requested_section && self2.query.toLimitSection().overlaps(requested_section)) {
+    if (requestedSection && self2.query.toLimitSection().overlaps(requestedSection)) {
       self2.log("Sending query...");
-      const new_query = self2.query.clone().set({
-        start: requested_section.start,
-        count: requested_section.calcLength()
+      const newQuery = self2.query.clone().set({
+        start: requestedSection.start,
+        count: requestedSection.calcLength()
       });
       requestFunc({
-        query: new_query,
+        query: newQuery,
         failure_message: Messenger_default.preset(
           "failed_search_run",
           self2.datastore.get("metadata").name
         ),
-        success: function(response_data) {
-          if (response_data.request.request_id == self2.query.get("request_id")) {
-            updateData(response_data);
-            addResults(response_data.response, new_query.get("start"));
-            const response_length = response_data.response.length;
-            if (response_length !== 0 && response_length < new_query.get("count")) {
+        success: function(responseData) {
+          if (responseData.request.request_id === self2.query.get("request_id")) {
+            updateData(responseData);
+            addResults(responseData.response, newQuery.get("start"));
+            const responseLength = responseData.response.length;
+            if (responseLength !== 0 && responseLength < newQuery.get("count")) {
               requestResults(
-                requested_section.shifted(response_length, 0)
+                requestedSection.shifted(responseLength, 0)
               );
             }
           }
@@ -2943,41 +2943,41 @@ var SearchBase = function(setup, parent) {
       safeCall_default(self2.runDataChanged);
     }
   };
-  var addResults = function(new_items_array, offset) {
-    let query_results_added = false;
-    self2.log("NEW RECORDS", new_items_array);
-    index_default_default.each(new_items_array, function(item_data, array_index) {
-      const item_index = array_index + offset;
-      if (index_default_default.isUndefined(results[item_index])) {
-        results[item_index] = safeCall_default(self2.createItem, item_data);
-        if (self2.query.toSection().inSection(item_index)) {
-          query_results_added = true;
+  const addResults = function(newItemsArray, offset) {
+    let queryResultsAdded = false;
+    self2.log("NEW RECORDS", newItemsArray);
+    index_default_default.each(newItemsArray, function(itemData, arrayIndex) {
+      const itemIndex = arrayIndex + offset;
+      if (index_default_default.isUndefined(results[itemIndex])) {
+        results[itemIndex] = safeCall_default(self2.createItem, itemData);
+        if (self2.query.toSection().inSection(itemIndex)) {
+          queryResultsAdded = true;
         }
       }
     });
     self2.log("CACHE LENGTH", results.length);
-    if (query_results_added || index_default_default.isEmpty(new_items_array)) {
+    if (queryResultsAdded || index_default_default.isEmpty(newItemsArray)) {
       safeCall_default(self2.resultsChanged);
     }
   };
-  var updateData = function(response_data) {
-    self2.datastore.update(response_data.datastore);
-    const new_query_data = index_default_default.omit(response_data.new_request, "start", "count");
-    new_query_data.specialists = response_data.specialists;
-    new_query_data.total_available = response_data.total_available;
-    self2.query.set(new_query_data);
+  const updateData = function(responseData) {
+    self2.datastore.update(responseData.datastore);
+    const newQueryData = index_default_default.omit(responseData.new_request, "start", "count");
+    newQueryData.specialists = responseData.specialists;
+    newQueryData.total_available = responseData.total_available;
+    self2.query.set(newQueryData);
     safeCall_default(self2.runDataChanged);
   };
-  var getMissingSection = function(section) {
+  const getMissingSection = function(section) {
     const list = resultsPiece(section);
     let start = index_default_default.indexOf(list, void 0);
-    if (start != -1) {
+    if (start !== -1) {
       const end = section.start + index_default_default.lastIndexOf(list, void 0);
       start += section.start;
       return new Section_default(start, end);
     }
   };
-  var resultsPiece = function(section) {
+  const resultsPiece = function(section) {
     const output = [];
     for (let index = section.start; index <= section.end; index++) {
       output.push(results[index]);
@@ -2986,7 +2986,7 @@ var SearchBase = function(setup, parent) {
   };
   let muted = false;
   const observables = [];
-  const mutable_observables = [];
+  const mutableObservables = [];
   this.clearAllObservers = function() {
     index_default_default.each(observables, function(observable) {
       observable.clearAll();
@@ -2998,35 +2998,35 @@ var SearchBase = function(setup, parent) {
     return muted;
   };
   this.setMute = function(state) {
-    if (state != muted) {
+    if (state !== muted) {
       muted = state;
       safeCall_default(self2.muteChanged());
       if (!muted) {
-        index_default_default.each(mutable_observables, function(observable) {
+        index_default_default.each(mutableObservables, function(observable) {
           observable.notify();
         });
       }
     }
     return self2;
   };
-  this.createObservable = function(name, data_func, never_mute) {
+  this.createObservable = function(name, dataFunc, neverMute) {
     const object2 = new FuncBuffer_default(function() {
-      const add_observer = this.add;
-      const call_observers = this.call;
+      const addObserver = this.add;
+      const callObservers = this.call;
       observables.push(this);
-      if (!never_mute)
-        mutable_observables.push(this);
+      if (!neverMute)
+        mutableObservables.push(this);
       this.add = function(func) {
-        if (!self2.muted || never_mute)
-          func(data_func());
-        add_observer(func, "observers");
+        if (!self2.muted || neverMute)
+          func(dataFunc());
+        addObserver(func, "observers");
         return this;
       };
       this.notify = function() {
-        if (!self2.muted || never_mute) {
-          const data = data_func();
+        if (!self2.muted || neverMute) {
+          const data = dataFunc();
           self2.log("NOTIFY (" + name + ")", data);
-          call_observers("observers", data);
+          callObservers("observers", data);
         }
         return this;
       };
@@ -3040,27 +3040,27 @@ var SearchBase = function(setup, parent) {
   }).createObservable("runData", function() {
     parent.getData();
   }).createObservable("results", this.results);
-  parent.set = function(set_hash) {
-    self2.set(set_hash);
+  parent.set = function(setHash) {
+    self2.set(setHash);
     return parent;
   };
-  parent.run = function(cache_size) {
-    self2.run(cache_size);
+  parent.run = function(cacheSize) {
+    self2.run(cacheSize);
     return parent;
   };
-  parent.nextPage = function(cache_size) {
-    const current_page = self2.query.get("page");
-    if (index_default_default.isNumber(current_page) && current_page < self2.query.get("page_limit")) {
-      parent.set({ page: current_page + 1 });
-      parent.run(cache_size);
+  parent.nextPage = function(cacheSize) {
+    const currentPage = self2.query.get("page");
+    if (index_default_default.isNumber(currentPage) && currentPage < self2.query.get("page_limit")) {
+      parent.set({ page: currentPage + 1 });
+      parent.run(cacheSize);
     }
     return parent;
   };
-  parent.prevPage = function(cache_size) {
-    const current_page = self2.query.get("page");
-    if (index_default_default.isNumber(current_page) && current_page > 1) {
-      parent.set({ page: current_page - 1 });
-      parent.run(cache_size);
+  parent.prevPage = function(cacheSize) {
+    const currentPage = self2.query.get("page");
+    if (index_default_default.isNumber(currentPage) && currentPage > 1) {
+      parent.set({ page: currentPage - 1 });
+      parent.run(cacheSize);
     }
     return parent;
   };
@@ -3209,16 +3209,7 @@ var GetThis = function(barcode, data) {
     });
     return ret;
   };
-  const getLinks = function(data2) {
-    let ret;
-    index_default_default.each(data2.fields, function(field) {
-      if (field.uid == "links") {
-        ret = field.value;
-      }
-    });
-    return ret;
-  };
-  const request_buffer = new RequestBuffer_default({
+  const requestBuffer = new RequestBuffer_default({
     url: getGetThisUrl(data) + "/" + this.barcode,
     failure_message: Messenger_default.preset(
       "failed_get_this_load",
@@ -3229,11 +3220,11 @@ var GetThis = function(barcode, data) {
       return data;
     }
   });
-  var translateData = function(input) {
+  const translateData = function(input) {
     return input;
   };
   this.getData = function(func) {
-    request_buffer.request({ success: func });
+    requestBuffer.request({ success: func });
   };
 };
 var GetThis_default = GetThis;
@@ -3304,7 +3295,7 @@ var PreferenceEngine_default = PreferenceEngine;
 
 // src/Pride/Core/Record.js
 var Record = function(data) {
-  const request_buffer = new RequestBuffer_default({
+  const requestBuffer = new RequestBuffer_default({
     url: data.source,
     failure_message: Messenger_default.preset(
       "failed_record_load",
@@ -3316,8 +3307,8 @@ var Record = function(data) {
     }
   });
   let holdings = null;
-  const get_this = {};
-  this.placeHold = function(item, pickup_location, not_needed_after, callback_function) {
+  const getThis = {};
+  this.placeHold = function(item, pickupLocation, notNeededAfter, callbackFunction) {
     this.renderFull(function(data2) {
       const getHoldingsUrl = function() {
         let ret;
@@ -3329,7 +3320,7 @@ var Record = function(data) {
         return ret;
       };
       const response = request_default({
-        url: [getHoldingsUrl(), item, pickup_location, not_needed_after].join("/"),
+        url: [getHoldingsUrl(), item, pickupLocation, notNeededAfter].join("/"),
         query: true,
         failure: function(data3) {
           Messenger_default.sendMessage({
@@ -3337,10 +3328,11 @@ var Record = function(data) {
             class: "error"
           });
         },
-        success: callback_function,
+        success: callbackFunction,
         failure_message: "placeHold failed",
         success_message: "placeHold succeeded"
       });
+      console.log(response);
     });
   };
   this.getHoldings = function(func) {
@@ -3350,7 +3342,7 @@ var Record = function(data) {
       holdings = new Holdings_default(data);
       holdings.getData(func);
     } else {
-      request_buffer.request({
+      requestBuffer.request({
         success: function(data2) {
           holdings = new Holdings_default(data2);
           holdings.getData(func);
@@ -3359,16 +3351,16 @@ var Record = function(data) {
     }
   };
   this.getGetThis = function(barcode, func) {
-    if (get_this[barcode]) {
-      get_this[barcode].getData(func);
+    if (getThis[barcode]) {
+      getThis[barcode].getData(func);
     } else if (data.complete) {
-      get_this[barcode] = new GetThis_default(barcode, data);
-      get_this[barcode].getData(func);
+      getThis[barcode] = new GetThis_default(barcode, data);
+      getThis[barcode].getData(func);
     } else {
-      request_buffer.request({
+      requestBuffer.request({
         success: function(data2) {
-          get_this[barcode] = new GetThis_default(barcode, data2);
-          get_this[barcode].getData(func);
+          getThis[barcode] = new GetThis_default(barcode, data2);
+          getThis[barcode].getData(func);
         }
       });
     }
@@ -3378,13 +3370,13 @@ var Record = function(data) {
   };
   this.renderPartThenCache = function(func) {
     callWithData(func);
-    request_buffer.request();
+    requestBuffer.request();
   };
   this.renderFull = function(func) {
     if (data.complete) {
       callWithData(func);
     } else {
-      request_buffer.request({ success: func });
+      requestBuffer.request({ success: func });
     }
   };
   this.renderCSL = function(func) {
@@ -3398,12 +3390,12 @@ var Record = function(data) {
       func(ret);
     });
   };
-  var callWithData = function(func) {
+  const callWithData = function(func) {
     func(index_default_default.omit(data, "complete", "source"), data.complete);
   };
-  var translateData = function(new_data) {
-    new_data.fields = index_default_default.map(
-      new_data.fields,
+  const translateData = function(newData) {
+    newData.fields = index_default_default.map(
+      newData.fields,
       function(field) {
         if (!field.value_has_html) {
           field.value = escape_default2(field.value);
@@ -3411,23 +3403,23 @@ var Record = function(data) {
         return index_default_default.omit(field, "value_has_html");
       }
     );
-    if (!new_data.names_have_html) {
-      new_data.names = index_default_default.map(
-        new_data.names,
+    if (!newData.names_have_html) {
+      newData.names = index_default_default.map(
+        newData.names,
         function(name) {
           return escape_default2(name);
         }
       );
     }
-    if (new_data.uid) {
-      new_data.status = 200;
+    if (newData.uid) {
+      newData.status = 200;
     } else {
-      new_data.status = 404;
+      newData.status = 404;
     }
-    if (PreferenceEngine_default.selected(new_data)) {
-      new_data.selected = true;
+    if (PreferenceEngine_default.selected(newData)) {
+      newData.selected = true;
     }
-    return index_default_default.omit(new_data, "names_have_html");
+    return index_default_default.omit(newData, "names_have_html");
   };
   data = translateData(data);
 };
@@ -3455,7 +3447,6 @@ var isDeepMatch_default = isDeepMatch;
 
 // src/Pride/Core/FacetSearch.js
 var FacetSearch = function(setup) {
-  const example_facet = this;
   let data = setup.data;
   const results = setup.results;
   this.uid = data.uid;
@@ -3480,22 +3471,22 @@ var FacetSearch = function(setup) {
     });
     return self;
   };
-  const createObservable = function(name, data_func) {
+  const createObservable = function(name, dataFunc) {
     const object2 = new FuncBuffer_default(function() {
-      const add_observer = this.add;
-      const call_observers = this.call;
+      const addObserver = this.add;
+      const callObservers = this.call;
       observables.push(this);
       this.add = function(func) {
         if (!self.muted)
-          func(data_func());
-        add_observer(func, "observers");
+          func(dataFunc());
+        addObserver(func, "observers");
         return this;
       };
       this.notify = function() {
         if (!self.muted) {
-          data = data_func();
+          data = dataFunc();
           self.log("NOTIFY (" + name + ")", data);
-          call_observers("observers", data);
+          callObservers("observers", data);
         }
         return this;
       };
@@ -3512,13 +3503,13 @@ var FacetSearch_default = FacetSearch;
 var DatastoreSearch = function(setup) {
   const self2 = this;
   const base = new SearchBase_default(setup, this);
-  base.createItem = function(item_data) {
-    return new Record_default(item_data);
+  base.createItem = function(itemData) {
+    return new Record_default(itemData);
   };
-  let facet_searches = [];
-  let current_facets = [];
+  let facetSearches = [];
+  let currentFacets = [];
   this.getFacets = function() {
-    return facet_searches;
+    return facetSearches;
   };
   this.uid = base.datastore.get("uid");
   this.getData = function() {
@@ -3543,27 +3534,27 @@ var DatastoreSearch = function(setup) {
   base.initialize_observables = function() {
     self2.runDataObservers.add(function() {
       const facets = base.datastore.get("facets");
-      if (!isDeepMatch_default(current_facets, facets)) {
-        index_default_default.each(facet_searches, function(facet_search) {
-          facet_search.clearAllObservers();
+      if (!isDeepMatch_default(currentFacets, facets)) {
+        index_default_default.each(facetSearches, function(facetSearch) {
+          facetSearch.clearAllObservers();
         });
-        facet_searches = index_default_default.map(
+        facetSearches = index_default_default.map(
           facets,
-          function(facet_data) {
+          function(facetData) {
             return new FacetSearch_default({
-              data: index_default_default.omit(facet_data, "values"),
-              results: facet_data.values
+              data: index_default_default.omit(facetData, "values"),
+              results: facetData.values
             });
           }
         );
-        current_facets = facets;
+        currentFacets = facets;
         self2.facetsObservers.notify();
       }
     });
   };
   this.getMute = base.getMute;
   this.setMute = function(state) {
-    index_default_default.each(facet_searches, function(facet) {
+    index_default_default.each(facetSearches, function(facet) {
       facet.setMute(state);
     });
     base.setMute(state);
@@ -3599,18 +3590,18 @@ var Literal = nodeFactory_default("literal");
 var Literal_default = Literal;
 
 // src/Pride/Core/Datastore.js
-var Datastore = function(datastore_info) {
-  datastore_info = deepClone_default(datastore_info);
+var Datastore = function(datastoreInfo) {
+  datastoreInfo = deepClone_default(datastoreInfo);
   this.baseQuery = function() {
     return new Query_default({
-      uid: datastore_info.uid,
-      sort: datastore_info.default_sort,
+      uid: datastoreInfo.uid,
+      sort: datastoreInfo.default_sort,
       start: 0,
       count: 0,
       settings: {},
       field_tree: fillFieldTree(),
       facets: index_default_default.reduce(
-        datastore_info.facets,
+        datastoreInfo.facets,
         function(memo, facet) {
           if (facet.required && !facet.fixed) {
             memo[facet.uid] = facet.default_value;
@@ -3624,48 +3615,36 @@ var Datastore = function(datastore_info) {
   this.baseSearch = function() {
     return new DatastoreSearch_default({ datastore: this });
   };
-  this.runQuery = function(request_arguments) {
-    request_arguments.url = datastore_info.url;
-    request_default(request_arguments);
+  this.runQuery = function(requestArguments) {
+    requestArguments.url = datastoreInfo.url;
+    request_default(requestArguments);
     return this;
   };
   this.get = function(key) {
-    return datastore_info[key];
+    return datastoreInfo[key];
   };
-  this.update = function(new_info) {
-    index_default_default.extend(datastore_info, new_info);
+  this.update = function(newInfo) {
+    index_default_default.extend(datastoreInfo, newInfo);
   };
-  const fillFacets = function(set_facets) {
-    return index_default_default.reduce(
-      datastore_info.facets,
-      function(memo, facet) {
-        memo[facet.uid] = index_default_default.find(set_facets, function(possible_facet) {
-          return possible_facet.uid === facet.uid;
-        }) || facet;
-        return memo;
-      },
-      {}
-    );
-  };
-  var fillFieldTree = function(given_tree) {
-    given_tree = given_tree || new FieldBoolean_default("AND");
+  const fillFieldTree = function(givenTree) {
+    givenTree = givenTree || new FieldBoolean_default("AND");
     const output = index_default_default.reduce(
-      datastore_info.fields,
+      datastoreInfo.fields,
       function(tree, field) {
         if ((field.required || field.fixed) && !tree.contains({ type: "field", value: field.uid })) {
-          missing_field = new Field_default(
+          const missingField = new Field_default(
             field.uid,
             new Literal_default(field.default_value)
           );
           if (index_default_default.isMatch(tree, { type: "field_boolean", value: "AND" })) {
-            return tree.addChild(missing_field);
+            return tree.addChild(missingField);
           } else {
-            return new FieldBoolean_default("AND", tree, missing_field);
+            return new FieldBoolean_default("AND", tree, missingField);
           }
         }
         return tree;
       },
-      given_tree
+      givenTree
     );
     return output.matches({ type: "field_boolean", children: [] }) ? {} : output;
   };
