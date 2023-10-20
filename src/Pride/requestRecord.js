@@ -3,7 +3,7 @@ import Record from './Core/Record';
 
 const requestRecord = function (source, id, func) {
   if (func === undefined) {
-    func = function (data) {};
+    func = function (data) { /** */ };
   }
   const data = {
     complete: false,

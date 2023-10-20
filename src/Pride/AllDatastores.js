@@ -7,7 +7,7 @@ const AllDatastores = {
     return _.find(
       this.array,
       function (datastore) {
-        return datastore.get('uid') == uid;
+        return datastore.get('uid') === uid;
       }
     );
   },
@@ -16,7 +16,7 @@ const AllDatastores = {
     const datastore = _.find(
       this.array,
       function (datastore) {
-        return datastore.get('uid') == uid;
+        return datastore.get('uid') === uid;
       }
     );
 

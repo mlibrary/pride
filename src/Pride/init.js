@@ -25,8 +25,8 @@ const init = new RequestBuffer({
     Settings.affiliation = data.affiliation;
     AllDatastores.array = _.map(
       data.response,
-      function (datastore_data) {
-        return new Datastore(datastore_data);
+      function (datastoreData) {
+        return new Datastore(datastoreData);
       }
     );
   }
