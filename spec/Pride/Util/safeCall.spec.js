@@ -1,25 +1,5 @@
-// Given a safeCall like function, check that it has the correct basic behavior
-function test_safe_func_caller (caller) {
-  describe("given something that isn't a function", function () {
-    it('returns the given object', function () {
-      const object = {};
-      expect(caller(object)).to.equal(object);
-    });
-  });
-
-  describe('given a function, calls the function', function () {
-    it('returns the result of calling the function', function () {
-      const returned = 8435;
-      const example = function () {
-        return returned;
-      };
-      expect(caller(example)).to.equal(returned);
-    });
-  });
-}
-
 describe('Pride.Util.safeCall()', function () {
-  test_safe_func_caller(Pride.Util.safeCall);
+  testSafeFuncCaller(Pride.Util.safeCall);
 
   describe('given additional arguments', function () {
     beforeEach(function () {

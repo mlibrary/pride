@@ -2,7 +2,7 @@ function testFuncBufferMethods (name) {
   describe('add()', function () {
     it('returns self', function () {
       const buffer = new Pride.Util.FuncBuffer();
-      expect(buffer.add(function () {})).to.equal(buffer);
+      expect(buffer.add(function () { /** */ })).to.equal(buffer);
     });
   });
 
@@ -158,12 +158,12 @@ function testFuncBufferMethods (name) {
 
 describe('Pride.Util.FuncBuffer', function () {
   it('can be extended', function () {
-    let this_value = null;
+    let thisValue = null;
     const example = new Pride.Util.FuncBuffer(function () {
-      this_value = this;
+      thisValue = this;
     });
 
-    expect(example).to.equal(this_value);
+    expect(example).to.equal(thisValue);
   });
 
   describe('without a name', function () {

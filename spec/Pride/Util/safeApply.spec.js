@@ -1,5 +1,5 @@
-// Given a safeCall like function, check that it has the correct basic behavior
-function test_safe_func_caller (caller) {
+// Given a safeApply/safeCall like function, check that it has the correct basic behavior
+function testSafeFuncCaller (caller) {
   describe("given something that isn't a function", function () {
     it('returns the given object', function () {
       const object = {};
@@ -19,7 +19,7 @@ function test_safe_func_caller (caller) {
 }
 
 describe('Pride.Util.safeApply()', function () {
-  test_safe_func_caller(Pride.Util.safeApply);
+  testSafeFuncCaller(Pride.Util.safeApply);
 
   describe('given additional arguments', function () {
     beforeEach(function () {

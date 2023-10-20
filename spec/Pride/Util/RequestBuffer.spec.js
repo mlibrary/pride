@@ -1,44 +1,49 @@
-function testRequest (request_method, request_info) {
+const defaultObject = {
+  success: () => { /** */ },
+  failure: () => { /** */ }
+};
+
+function testRequest (requestMethod, requestInfo) {
   describe('sends a valid request', function () {
     it('is given the nessesary fields', function () {
       _.each(['url', 'data', 'method', 'contentType'], function (field) {
-        expect(typeof request_info[field]).to.equal('string');
+        expect(typeof requestInfo[field]).to.equal('string');
       });
 
-      expect(typeof request_info.url).to.equal('string');
-      expect(typeof request_info.method).to.equal('string');
-      expect(typeof request_info.content_type).to.equal('string');
+      expect(typeof requestInfo.url).to.equal('string');
+      expect(typeof requestInfo.method).to.equal('string');
+      expect(typeof requestInfo.content_type).to.equal('string');
     });
 
     it('is given the expected method', function () {
-      expect(request_info.method).to.equal(request_method);
+      expect(requestInfo.method).to.equal(requestMethod);
     });
 
-    if (request_info.type == 'json') {
+    if (requestInfo.type === 'json') {
       describe('when type is "json"', function () {
         it('expects contentType to be application/json', function () {
-          expect(request_info.contentType).to.equal('application/json');
+          expect(requestInfo.contentType).to.equal('application/json');
         });
 
         it('gives a valid JSON encoded string', function () {
-          expect(JSON.parse(request_info.data)).not.to.throw();
+          expect(JSON.parse(requestInfo.data)).not.to.throw();
         });
       });
     }
   });
 }
 
-function mockRequestSuccess (request_method, result) {
-  reqwest = function (request_info) {
-    testRequest(request_method, request_info);
-    request_info.success(Pride.Util.safeCall(result) || {});
+function mockRequestSuccess (requestMethod, result) {
+  reqwest = function (requestInfo) {
+    testRequest(requestMethod, requestInfo);
+    requestInfo.success(Pride.Util.safeCall(result) || {});
   };
 }
 
-function mockRequestFailure (request_method, result) {
-  reqwest = function (request_info) {
-    testRequest(request_method, request_info);
-    request_info.error(Pride.Util.safeCall(result) || {});
+function mockRequestFailure (requestMethod, result) {
+  reqwest = function (requestInfo) {
+    testRequest(requestMethod, requestInfo);
+    requestInfo.error(Pride.Util.safeCall(result) || {});
   };
 }
 
@@ -66,14 +71,14 @@ describe('Pride.Util.RequestBuffer', function () {
 
   describe('request()', function () {
     it('sends the request if this is the first time request() was called', function () {
-      this.buffer.request({ success: function () {}, failure: function () {} });
+      this.buffer.request(defaultObject);
 
       expect(this.request_count).to.equal(1);
     });
 
     it('does not send the request repeatedly if called more than once', function () {
-      this.buffer.request({ success: function () {}, failure: function () {} })
-        .request({ success: function () {}, failure: function () {} });
+      this.buffer.request(defaultObject)
+        .request(defaultObject);
 
       expect(this.request_count).to.equal(1);
     });
@@ -125,21 +130,21 @@ describe('Pride.Util.RequestBuffer', function () {
         });
 
         it('passes response data into given function', function () {
-          let given_first;
-          let given_second;
+          let givenFirst;
+          let givenSecond;
           this.buffer.request({
             success: function (data) {
-              given_first = data;
+              givenFirst = data;
             }
           })
             .request({
               success: function (data) {
-                given_second = data;
+                givenSecond = data;
               }
             });
 
-          expect(given_first).to.equal(this.result);
-          expect(given_second).to.equal(this.result);
+          expect(givenFirst).to.equal(this.result);
+          expect(givenSecond).to.equal(this.result);
         });
       });
 

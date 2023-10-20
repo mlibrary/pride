@@ -1,8 +1,8 @@
-function paginatorBasicExpectations (key_1, key_2, valid) {
+function paginatorBasicExpectations (key1, key2, valid) {
   beforeEach(function () {
     const settings = {};
-    settings[key_1] = valid[key_1];
-    settings[key_2] = valid[key_2];
+    settings[key1] = valid[key1];
+    settings[key2] = valid[key2];
     this.example = new Pride.Util.Paginater(settings);
   });
 
@@ -30,40 +30,41 @@ function paginatorBasicExpectations (key_1, key_2, valid) {
 }
 
 // Test setting basic values
-function testPaginatorBasics (key_1, key_2) {
-  describe('given a valid ' + key_1 + ' and ' + key_2, function () {
+function testPaginatorBasics (key1, key2) {
+  describe('given a valid ' + key1 + ' and ' + key2, function () {
     beforeEach(function () {
       this.valid = { start: 10, count: 5, end: 14, page: 3 };
     });
 
-    paginatorBasicExpectations(key_1, key_2, { start: 10, count: 5, end: 14, page: 3 });
+    paginatorBasicExpectations(key1, key2, { start: 10, count: 5, end: 14, page: 3 });
 
     beforeEach(function () {
       this.valid = { start: 500, count: 100, end: 599, page: 6 };
     });
 
-    paginatorBasicExpectations(key_1, key_2, { start: 500, count: 100, end: 599, page: 6 });
+    paginatorBasicExpectations(key1, key2, { start: 500, count: 100, end: 599, page: 6 });
   }
   );
 }
 
-function testPaginatorUnsettable (invalid_settings, basic_settings) {
-  basic_settings = basic_settings || { start: 10, count: 5 };
+function testPaginatorUnsettable (invalidSettings, basicSettings) {
+  basicSettings = basicSettings || { start: 10, count: 5 };
 
   it(
-    "can't set " + _.keys(invalid_settings).join(' and ') + ' together after initializaion',
+    "can't set " + _.keys(invalidSettings).join(' and ') + ' together after initializaion',
     function () {
       expect(function () {
-        (new Pride.Util.Paginater(basic_settings)).set(invalid_settings);
+        (new Pride.Util.Paginater(basicSettings)).set(invalidSettings);
       }).to.throw();
     }
   );
 
   it(
-    "can't set " + _.keys(invalid_settings).join(' and ') + ' together on initializaion',
+    "can't set " + _.keys(invalidSettings).join(' and ') + ' together on initializaion',
     function () {
       expect(function () {
-        new Pride.Util.Paginater(_.extend(basic_settings, invalid_settings));
+        const initializeInvalidSettings = new Pride.Util.Paginater(_.extend(basicSettings, invalidSettings));
+        return initializeInvalidSettings;
       }).to.throw();
     }
   );
@@ -85,7 +86,8 @@ describe('Pride.Util.Paginater', function () {
     it("can't set the start greater than the end", function () {
       expect(
         function () {
-          new Pride.Util.Paginater({ start: 10, end: 5 });
+          const startGreaterThanEnd = new Pride.Util.Paginater({ start: 10, end: 5 });
+          return startGreaterThanEnd;
         }
       ).to.throw();
     });
