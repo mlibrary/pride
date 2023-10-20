@@ -11,17 +11,17 @@ describe('Pride.Util.slice()', function () {
 
   describe('slicing arring array like objects', function () {
     beforeEach(function () {
-      this.array_like = (function () {
+      this.arrayLike = (function () {
         return arguments;
       }(1, 2, 3, 4));
     });
 
     it('slices from start', function () {
-      expect(Pride.Util.slice(this.array_like, 1)).to.deep.equal([2, 3, 4]);
+      expect(Pride.Util.slice(this.arrayLike, 1)).to.deep.equal([2, 3, 4]);
     });
 
     it('slices to end', function () {
-      expect(Pride.Util.slice(this.array_like, 1, 3)).to.deep.equal([2, 3]);
+      expect(Pride.Util.slice(this.arrayLike, 1, 3)).to.deep.equal([2, 3]);
     });
   });
 });

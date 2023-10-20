@@ -53,10 +53,10 @@ describe('Pride.Util.RequestBuffer', function () {
 
   beforeEach(function () {
     const self = this;
-    this.request_count = 0;
+    this.requestCount = 0;
 
     mockRequestSuccess('get', function () {
-      self.request_count++;
+      self.requestCount++;
     });
 
     this.buffer = new Pride.Util.RequestBuffer({
@@ -66,21 +66,21 @@ describe('Pride.Util.RequestBuffer', function () {
   });
 
   it('does not send the request when it is first created', function () {
-    expect(this.request_count).to.equal(0);
+    expect(this.requestCount).to.equal(0);
   });
 
   describe('request()', function () {
     it('sends the request if this is the first time request() was called', function () {
       this.buffer.request(defaultObject);
 
-      expect(this.request_count).to.equal(1);
+      expect(this.requestCount).to.equal(1);
     });
 
     it('does not send the request repeatedly if called more than once', function () {
       this.buffer.request(defaultObject)
         .request(defaultObject);
 
-      expect(this.request_count).to.equal(1);
+      expect(this.requestCount).to.equal(1);
     });
 
     describe('calling callbacks', function () {
@@ -88,15 +88,15 @@ describe('Pride.Util.RequestBuffer', function () {
         const self = this;
 
         this.called = false;
-        this.not_called = true;
+        this.notCalled = true;
         this.count = 0;
         this.result = { some: 'data' };
 
-        this.called_checker = function () {
+        this.calledChecker = function () {
           self.called = true;
         };
-        this.not_called_checker = function () {
-          self.not_called = false;
+        this.notCalledChecker = function () {
+          self.notCalled = false;
         };
         this.increment = function () {
           self.count++;
@@ -113,12 +113,12 @@ describe('Pride.Util.RequestBuffer', function () {
 
         it('calls the success function, does not call the failure function', function () {
           this.buffer.request({
-            success: this.called_checker,
-            failure: this.not_called_checker
+            success: this.calledChecker,
+            failure: this.notCalledChecker
           });
 
           expect(this.called).to.be.true;
-          expect(this.not_called).to.be.true;
+          expect(this.notCalled).to.be.true;
         });
 
         it('can chain calls', function () {
@@ -158,11 +158,11 @@ describe('Pride.Util.RequestBuffer', function () {
 
         it('calls the failure function, does not call the success function', function () {
           this.buffer.request({
-            success: this.not_called_checker,
-            failure: this.called_checker
+            success: this.notCalledChecker,
+            failure: this.calledChecker
           });
 
-          expect(this.not_called).to.be.true;
+          expect(this.notCalled).to.be.true;
           expect(this.called).to.be.true;
         });
 

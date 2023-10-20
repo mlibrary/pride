@@ -21,8 +21,8 @@ const FuncBuffer = function (extension) {
   this.remove = function (func, name) {
     buffer[name] = _.reject(
       safeGet(name),
-      function (other_func) {
-        return func == other_func;
+      function (otherFunc) {
+        return func === otherFunc;
       }
     );
 

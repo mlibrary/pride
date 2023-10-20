@@ -22,12 +22,12 @@ const Section = function (start, end) {
     return this.shifted(-1 * amount, amount);
   };
 
-  this.shifted = function (start_amount, end_amount) {
-    if (!_.isNumber(end_amount)) end_amount = start_amount;
+  this.shifted = function (startAmount, endAmount) {
+    if (!_.isNumber(endAmount)) endAmount = startAmount;
 
     return new Section(
-      this.start + start_amount,
-      this.end + end_amount
+      this.start + startAmount,
+      this.end + endAmount
     );
   };
 };

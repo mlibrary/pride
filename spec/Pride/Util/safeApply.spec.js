@@ -25,26 +25,26 @@ describe('Pride.Util.safeApply()', function () {
     beforeEach(function () {
       const self = this;
 
-      this.given_first = 'first!';
-      this.given_second = 'not first!';
+      this.givenFirst = 'first!';
+      this.givenSecond = 'not first!';
 
-      this.returned_first = null;
-      this.returned_second = null;
+      this.returnedFirst = null;
+      this.returnedSecond = null;
 
       this.example = function (first, second) {
-        self.returned_first = first;
-        self.returned_second = second;
+        self.returnedFirst = first;
+        self.returnedSecond = second;
       };
 
-      Pride.Util.safeApply(this.example, [this.given_first, this.given_second]);
+      Pride.Util.safeApply(this.example, [this.givenFirst, this.givenSecond]);
     });
 
     it('passes given argument into the fuction', function () {
-      expect(this.returned_first).to.equal(this.given_first);
+      expect(this.returnedFirst).to.equal(this.givenFirst);
     });
 
     it('can pass multiple arguments', function () {
-      expect(this.returned_second).to.equal(this.given_second);
+      expect(this.returnedSecond).to.equal(this.givenSecond);
     });
   });
 });

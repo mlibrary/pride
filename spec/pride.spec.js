@@ -2514,14 +2514,14 @@ var deepClone = function(original) {
   if (index_default_default.isFunction(original)) {
     return original;
   } else {
-    let collection_function = false;
+    let collectionFunction = false;
     if (index_default_default.isArray(original)) {
-      collection_function = "map";
+      collectionFunction = "map";
     } else if (index_default_default.isObject(original)) {
-      collection_function = "mapObject";
+      collectionFunction = "mapObject";
     }
-    if (collection_function) {
-      return index_default_default[collection_function](
+    if (collectionFunction) {
+      return index_default_default[collectionFunction](
         original,
         function(item) {
           return deepClone(item);
@@ -2556,35 +2556,35 @@ var hasKey = function(key) {
 var hasKey_default = hasKey;
 
 // src/Pride/Util/Paginater/index.js
-var Paginater = function(initial_values) {
-  this.set = function(new_values) {
-    if (index_default_default.has(new_values, "total_pages")) {
-      throw "Can not set total_pages (it is a calculated value)";
+var Paginater = function(initialValues) {
+  this.set = function(newValues) {
+    if (index_default_default.has(newValues, "total_pages")) {
+      throw new Error("Can not set total_pages (it is a calculated value)");
     }
-    if (index_default_default.has(new_values, "index_limit")) {
-      throw "Can not set index_limit (it is a calculated value)";
+    if (index_default_default.has(newValues, "index_limit")) {
+      throw new Error("Can not set index_limit (it is a calculated value)");
     }
-    if (index_default_default.intersection(["start", "end", "count"], index_default_default.keys(new_values)).length > 2) {
-      throw "Can not set start, end and count all at the same time";
+    if (index_default_default.intersection(["start", "end", "count"], index_default_default.keys(newValues)).length > 2) {
+      throw new Error("Can not set start, end and count all at the same time");
     }
-    if (index_default_default.has(new_values, "page") && (index_default_default.has(new_values, "start") || index_default_default.has(new_values, "end"))) {
-      throw "Can not set page as well as the start and/or end";
+    if (index_default_default.has(newValues, "page") && (index_default_default.has(newValues, "start") || index_default_default.has(newValues, "end"))) {
+      throw new Error("Can not set page as well as the start and/or end");
     }
-    index_default_default.extend(values2, index_default_default.omit(new_values, "end"));
-    if (index_default_default.has(new_values, "page")) {
+    index_default_default.extend(values2, index_default_default.omit(newValues, "end"));
+    if (index_default_default.has(newValues, "page")) {
       values2.start = (values2.count || 0) * (values2.page - 1);
     }
-    if (index_default_default.has(new_values, "end")) {
-      if (index_default_default.has(new_values, "count")) {
-        values2.start = Math.max(0, new_values.end - (values2.count - 1));
+    if (index_default_default.has(newValues, "end")) {
+      if (index_default_default.has(newValues, "count")) {
+        values2.start = Math.max(0, newValues.end - (values2.count - 1));
       } else {
-        if (values2.start <= new_values.end) {
-          values2.count = new_values.end - values2.start + 1;
+        if (values2.start <= newValues.end) {
+          values2.count = newValues.end - values2.start + 1;
         } else {
-          throw "The start value can not be greater than the end value";
+          throw new Error("The start value can not be greater than the end value");
         }
       }
-      values2.end = new_values.end;
+      values2.end = newValues.end;
     } else {
       const end = values2.start + values2.count - 1;
       values2.end = end < values2.start ? void 0 : end;
@@ -2611,15 +2611,15 @@ var Paginater = function(initial_values) {
       values2.page_limit = void 0;
     }
     if (!index_default_default.has(values2, "start") || !index_default_default.has(values2, "count")) {
-      throw "Not enough information given to create Paginater";
+      throw new Error("Not enough information given to create Paginater");
     }
     return this;
   };
   this.get = function(name) {
     return values2[name];
   };
-  var values2 = {};
-  this.set(initial_values);
+  const values2 = {};
+  this.set(initialValues);
 };
 Object.defineProperty(Paginater, "getPossibleKeys", { value: getPossibleKeys_default });
 Object.defineProperty(Paginater, "hasKey", { value: hasKey_default });
@@ -2641,12 +2641,12 @@ var Section = function(start, end) {
   this.expanded = function(amount) {
     return this.shifted(-1 * amount, amount);
   };
-  this.shifted = function(start_amount, end_amount) {
-    if (!index_default_default.isNumber(end_amount))
-      end_amount = start_amount;
+  this.shifted = function(startAmount, endAmount) {
+    if (!index_default_default.isNumber(endAmount))
+      endAmount = startAmount;
     return new Section(
-      this.start + start_amount,
-      this.end + end_amount
+      this.start + startAmount,
+      this.end + endAmount
     );
   };
 };
@@ -2765,21 +2765,21 @@ var log = function(source, info) {
 var log_default = log;
 
 // src/Pride/Util/safeCall.js
-var safeCall = function(maybe_func) {
-  if (index_default_default.isFunction(maybe_func)) {
-    return maybe_func.apply(this, slice_default(arguments, 1));
+var safeCall = function(maybeFunc) {
+  if (index_default_default.isFunction(maybeFunc)) {
+    return maybeFunc.apply(this, slice_default(arguments, 1));
   } else {
-    return maybe_func;
+    return maybeFunc;
   }
 };
 var safeCall_default = safeCall;
 
 // src/Pride/Util/safeApply.js
-var safeApply = function(maybe_func, args) {
-  if (index_default_default.isFunction(maybe_func)) {
-    return maybe_func.apply(this, args);
+var safeApply = function(maybeFunc, args) {
+  if (index_default_default.isFunction(maybeFunc)) {
+    return maybeFunc.apply(this, args);
   } else {
-    return maybe_func;
+    return maybeFunc;
   }
 };
 var safeApply_default = safeApply;
@@ -2800,8 +2800,8 @@ var FuncBuffer = function(extension) {
   this.remove = function(func, name) {
     buffer[name] = index_default_default.reject(
       safeGet(name),
-      function(other_func) {
-        return func == other_func;
+      function(otherFunc) {
+        return func === otherFunc;
       }
     );
     return self2;
@@ -3112,55 +3112,55 @@ var request = function(request_info) {
 var request_default = request;
 
 // src/Pride/Util/RequestBuffer.js
-var RequestBuffer = function(request_options) {
-  request_options = request_options || {};
-  const func_buffer = new FuncBuffer_default();
-  let request_issued = false;
-  let request_successful = false;
-  let request_failed = false;
-  let cached_response_data;
-  this.request = function(func_hash) {
-    func_buffer.add(func_hash.success, "success").add(func_hash.failure, "failure");
-    if (request_issued) {
+var RequestBuffer = function(requestOptions) {
+  requestOptions = requestOptions || {};
+  const funcBuffer = new FuncBuffer_default();
+  let requestIssued = false;
+  let requestSuccessful = false;
+  let requestFailed = false;
+  let cachedResponseData;
+  this.request = function(funcHash) {
+    funcBuffer.add(funcHash.success, "success").add(funcHash.failure, "failure");
+    if (requestIssued) {
       callWithResponse();
     } else {
       sendRequest();
     }
     return this;
   };
-  var callWithResponse = function(data) {
-    cached_response_data = data || cached_response_data;
-    if (request_successful) {
+  const callWithResponse = function(data) {
+    cachedResponseData = data || cachedResponseData;
+    if (requestSuccessful) {
       callThenClear("success");
-    } else if (request_failed) {
+    } else if (requestFailed) {
       callThenClear("failure");
     }
   };
-  var sendRequest = function() {
-    request_issued = true;
+  const sendRequest = function() {
+    requestIssued = true;
     request_default({
-      url: safeCall_default(request_options.url),
-      attempts: safeCall_default(request_options.attempts) || Settings_default.connection_attempts,
-      failure_message: safeCall_default(request_options.failure_message),
+      url: safeCall_default(requestOptions.url),
+      attempts: safeCall_default(requestOptions.attempts) || Settings_default.connection_attempts,
+      failure_message: safeCall_default(requestOptions.failure_message),
       failure: function(error2) {
-        request_failed = true;
-        safeCall_default(request_options.before_failure, error2);
+        requestFailed = true;
+        safeCall_default(requestOptions.before_failure, error2);
         callWithResponse(error2);
-        safeCall_default(request_options.after_failure, error2);
+        safeCall_default(requestOptions.after_failure, error2);
       },
       success: function(response) {
-        request_successful = true;
-        safeCall_default(request_options.before_success, response);
-        if (index_default_default.isFunction(request_options.edit_response)) {
-          response = request_options.edit_response(response);
+        requestSuccessful = true;
+        safeCall_default(requestOptions.before_success, response);
+        if (index_default_default.isFunction(requestOptions.edit_response)) {
+          response = requestOptions.edit_response(response);
         }
         callWithResponse(response);
-        safeCall_default(request_options.after_success, response);
+        safeCall_default(requestOptions.after_success, response);
       }
     });
   };
-  var callThenClear = function(name) {
-    func_buffer.call(name, cached_response_data).clearAll();
+  const callThenClear = function(name) {
+    funcBuffer.call(name, cachedResponseData).clearAll();
   };
 };
 var RequestBuffer_default = RequestBuffer;
@@ -3231,9 +3231,9 @@ var GetThis_default = GetThis;
 
 // src/Pride/Util/escape.js
 var escape = function(string) {
-  const temp_element = document.createElement("div");
-  temp_element.appendChild(document.createTextNode(string));
-  return temp_element.innerHTML;
+  const tempElement = document.createElement("div");
+  tempElement.appendChild(document.createTextNode(string));
+  return tempElement.innerHTML;
 };
 var escape_default2 = escape;
 
@@ -3426,15 +3426,15 @@ var Record_default = Record;
 
 // src/Pride/Util/isDeepMatch.js
 var isDeepMatch = function(object2, pattern) {
-  const both_arrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
-  const both_objects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
-  if (both_arrays && pattern.length != object2.length) {
+  const bothArrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
+  const bothObjects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
+  if (bothArrays && pattern.length !== object2.length) {
     return false;
   }
-  if (both_objects && index_default_default.keys(pattern).length != index_default_default.keys(object2).length) {
+  if (bothObjects && index_default_default.keys(pattern).length !== index_default_default.keys(object2).length) {
     return false;
   }
-  if (both_arrays || both_objects) {
+  if (bothArrays || bothObjects) {
     return index_default_default.every(pattern, function(value, key) {
       return isDeepMatch(object2[key], value);
     });

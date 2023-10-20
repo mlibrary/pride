@@ -78,7 +78,7 @@ describe('Pride.Util.Section', function () {
       this.start = 500;
       this.end = 600;
       this.example = new Pride.Util.Section(this.start, this.end);
-      this.inner_section = new Pride.Util.Section(this.start + 3, this.end - 3);
+      this.innerSection = new Pride.Util.Section(this.start + 3, this.end - 3);
     });
 
     it('returns true if the two sections overlap by one at the end', function () {
@@ -107,13 +107,13 @@ describe('Pride.Util.Section', function () {
 
     it('returns true if one section is inside of the other section', function () {
       expect(
-        this.example.overlaps(this.inner_section)
+        this.example.overlaps(this.innerSection)
       ).to.be.true;
     });
 
     it('returns true if one section contains the other section', function () {
       expect(
-        this.example.overlaps(this.inner_section)
+        this.example.overlaps(this.innerSection)
       ).to.be.true;
     });
 
@@ -170,11 +170,9 @@ describe('Pride.Util.Section', function () {
       this.end = 978;
       this.amount = 11;
       this.example = new Pride.Util.Section(this.start, this.end);
-
-      this.shifted_together = this.example.shifted(this.amount);
-
-      this.another_amount = this.amount + 4;
-      this.shifted_separately = this.example.shifted(this.amount, this.another_amount);
+      this.shiftedTogether = this.example.shifted(this.amount);
+      this.anotherAmount = this.amount + 4;
+      this.shiftedSeparately = this.example.shifted(this.amount, this.anotherAmount);
     });
 
     it('returns a new object', function () {
@@ -182,19 +180,19 @@ describe('Pride.Util.Section', function () {
     });
 
     it('given one number, moves the start forward by that amount', function () {
-      expect(this.shifted_together.start).to.equal(this.start + this.amount);
+      expect(this.shiftedTogether.start).to.equal(this.start + this.amount);
     });
 
     it('given one number, moves the end forward by that amount', function () {
-      expect(this.shifted_together.end).to.equal(this.end + this.amount);
+      expect(this.shiftedTogether.end).to.equal(this.end + this.amount);
     });
 
     it('can move the start seperatly from the end', function () {
-      expect(this.shifted_separately.start).to.equal(this.start + this.amount);
+      expect(this.shiftedSeparately.start).to.equal(this.start + this.amount);
     });
 
     it('can move the end seperatly from the start', function () {
-      expect(this.shifted_separately.end).to.equal(this.end + this.another_amount);
+      expect(this.shiftedSeparately.end).to.equal(this.end + this.anotherAmount);
     });
   });
 });
