@@ -8,7 +8,7 @@
     "esbuild:minify": "npm run esbuild -- --outfile=pride.min.js --minify",
     "esbuild:regular": "npm run esbuild -- --outfile=pride.js",
     "esbuild:spec": "DIRECTORY=spec npm run esbuild -- --outfile=spec/pride.spec.js",
-    "eslint": "npx eslint $* source/**/*.js spec/**/*.js",
+    "eslint": "npx eslint --ignore-pattern '**/pride.spec.js' $* './src/**/*.js' './spec/**/*.js'",
     "eslint:fix": "npm run eslint -- --fix"
   },
   "dependencies": {

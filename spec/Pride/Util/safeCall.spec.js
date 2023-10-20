@@ -1,48 +1,30 @@
-// Given a safeCall like function, check that it has the correct basic behavior
-function test_safe_func_caller (caller) {
-  describe("given something that isn't a function", function () {
-    it('returns the given object', function () {
-      const object = {}
-      expect(caller(object)).to.equal(object)
-    })
-  })
-
-  describe('given a function, calls the function', function () {
-    it('returns the result of calling the function', function () {
-      const returned = 8435
-      const example = function () { return returned }
-      expect(caller(example)).to.equal(returned)
-    })
-  })
-}
-
 describe('Pride.Util.safeCall()', function () {
-  test_safe_func_caller(Pride.Util.safeCall)
+  testSafeFuncCaller(Pride.Util.safeCall);
 
   describe('given additional arguments', function () {
     beforeEach(function () {
-      const self = this
+      const self = this;
 
-      this.given_first = 'first!'
-      this.given_second = 'not first!'
+      this.givenFirst = 'first!';
+      this.givenSecond = 'not first!';
 
-      this.returned_first = null
-      this.returned_second = null
+      this.returnedFirst = null;
+      this.returnedSecond = null;
 
       this.example = function (first, second) {
-        self.returned_first = first
-        self.returned_second = second
-      }
+        self.returnedFirst = first;
+        self.returnedSecond = second;
+      };
 
-      Pride.Util.safeCall(this.example, this.given_first, this.given_second)
-    })
+      Pride.Util.safeCall(this.example, this.givenFirst, this.givenSecond);
+    });
 
     it('passes given argument into the fuction', function () {
-      expect(this.returned_first).to.equal(this.given_first)
-    })
+      expect(this.returnedFirst).to.equal(this.givenFirst);
+    });
 
     it('can pass multiple arguments', function () {
-      expect(this.returned_second).to.equal(this.given_second)
-    })
-  })
-})
+      expect(this.returnedSecond).to.equal(this.givenSecond);
+    });
+  });
+});
