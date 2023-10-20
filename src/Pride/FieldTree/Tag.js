@@ -1,17 +1,17 @@
 import nodeFactory from '../Core/nodeFactory';
 
-const inside_field_nodes = ['value_boolean', 'literal', 'tag', 'special'];
+const insideFieldNodes = ['value_boolean', 'literal', 'tag', 'special'];
 
 const Tag = nodeFactory(
   'tag',
-  inside_field_nodes,
+  insideFieldNodes,
   function () {
     this.serialize = function () {
-      const serialized_children = this.serializedChildren();
-      if (serialized_children.length === 0) {
+      const serializedChildren = this.serializedChildren();
+      if (serializedChildren.length === 0) {
         return '';
       } else {
-        return this.value + '(' + serialized_children.join(' ') + ')';
+        return this.value + '(' + serializedChildren.join(' ') + ')';
       }
     };
   }

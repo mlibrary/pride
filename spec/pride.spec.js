@@ -3565,18 +3565,18 @@ var DatastoreSearch = function(setup) {
 var DatastoreSearch_default = DatastoreSearch;
 
 // src/Pride/FieldTree/FieldBoolean.js
-var top_level_nodes = ["field_boolean", "field"];
+var topLevelNodes = ["field_boolean", "field"];
 var FieldBoolean = boolNodeFactory_default(
   "field_boolean",
-  top_level_nodes
+  topLevelNodes
 );
 var FieldBoolean_default = FieldBoolean;
 
 // src/Pride/FieldTree/Field.js
-var inside_field_nodes = ["value_boolean", "literal", "tag", "special"];
+var insideFieldNodes = ["value_boolean", "literal", "tag", "special"];
 var Field = nodeFactory_default(
   "field",
-  inside_field_nodes,
+  insideFieldNodes,
   function() {
     this.serialize = function() {
       return this.value + ": (" + this.serializedChildren().join(" ") + ")";
@@ -4467,14 +4467,13 @@ var Raw = nodeFactory_default("raw");
 var Raw_default = Raw;
 
 // src/Pride/FieldTree/parseField.js
-var parseField = function(field_name, content) {
+var parseField = function(fieldName, content) {
   if (!content) {
     return {};
   } else {
     try {
-      return Parser_default.parse(content, { defaultFieldName: field_name });
+      return Parser_default.parse(content, { defaultFieldName: fieldName });
     } catch (e) {
-      console.log(e);
       return new Raw_default(content);
     }
   }
@@ -4486,17 +4485,17 @@ var Special = nodeFactory_default("special");
 var Special_default = Special;
 
 // src/Pride/FieldTree/Tag.js
-var inside_field_nodes2 = ["value_boolean", "literal", "tag", "special"];
+var insideFieldNodes2 = ["value_boolean", "literal", "tag", "special"];
 var Tag = nodeFactory_default(
   "tag",
-  inside_field_nodes2,
+  insideFieldNodes2,
   function() {
     this.serialize = function() {
-      const serialized_children = this.serializedChildren();
-      if (serialized_children.length === 0) {
+      const serializedChildren = this.serializedChildren();
+      if (serializedChildren.length === 0) {
         return "";
       } else {
-        return this.value + "(" + serialized_children.join(" ") + ")";
+        return this.value + "(" + serializedChildren.join(" ") + ")";
       }
     };
   }
@@ -4513,7 +4512,7 @@ var tokenize = function(string) {
   let index = 0;
   let type2 = null;
   while (index < string.length) {
-    var slice3 = string.slice(index);
+    const slice3 = string.slice(index);
     let found = index_default_default.find(
       tokens_default,
       function(pattern) {
@@ -4531,7 +4530,7 @@ var tokenize = function(string) {
       type2 = "string";
       index++;
       const last2 = index_default_default.last(result2);
-      if (last2 && last2.type == "string") {
+      if (last2 && last2.type === "string") {
         found = result2.pop().content + found;
       }
     }
@@ -4542,10 +4541,10 @@ var tokenize = function(string) {
 var tokenize_default = tokenize;
 
 // src/Pride/FieldTree/ValueBoolean.js
-var inside_field_nodes3 = ["value_boolean", "literal", "tag", "special"];
+var insideFieldNodes3 = ["value_boolean", "literal", "tag", "special"];
 var ValueBoolean = boolNodeFactory_default(
   "value_boolean",
-  inside_field_nodes3
+  insideFieldNodes3
 );
 var ValueBoolean_default = ValueBoolean;
 
