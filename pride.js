@@ -4707,6 +4707,7 @@ var Pride = {
   AllDatastores: AllDatastores_default,
   Core: Core_default,
   FieldTree: FieldTree_default,
+  // Pride.FieldTree = Pride.FieldTree || {};
   init: init_default,
   Messenger: Messenger_default,
   Parser: Parser_default,

@@ -9,6 +9,9 @@ function testEscaping (original, possible1, possible2) {
   });
 }
 
+const { expect } = require('chai');
+const Pride = require('../../../pride').Pride;
+
 describe('Pride.Util.escape()', function () {
   testEscaping('&', '&amp;', '&#38;');
   testEscaping('<', '&lt;', '&#60;');

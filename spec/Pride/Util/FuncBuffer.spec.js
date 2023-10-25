@@ -156,6 +156,9 @@ function testFuncBufferMethods (name) {
   });
 }
 
+const { expect } = require('chai');
+const Pride = require('../../../pride').Pride;
+
 describe('Pride.Util.FuncBuffer', function () {
   it('can be extended', function () {
     let thisValue = null;

@@ -1,3 +1,6 @@
+const { expect } = require('chai');
+const Pride = require('../../../pride').Pride;
+
 // Given a safeApply/safeCall like function, check that it has the correct basic behavior
 function testSafeFuncCaller (caller) {
   describe("given something that isn't a function", function () {

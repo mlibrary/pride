@@ -9,7 +9,6 @@ import tokenize from './tokenize.js';
 import tokens from './tokens.js';
 import ValueBoolean from './ValueBoolean.js';
 
-// Pride.FieldTree = Pride.FieldTree || {};
 const FieldTree = {
   Field,
   FieldBoolean,

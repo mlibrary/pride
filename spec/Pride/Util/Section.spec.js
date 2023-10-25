@@ -1,3 +1,6 @@
+const { expect } = require('chai');
+const Pride = require('../../../pride').Pride;
+
 describe('Pride.Util.Section', function () {
   before(function () {
     this.start = 7;

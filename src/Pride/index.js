@@ -12,7 +12,7 @@ import Util from './Util/index.js';
 const Pride = {
   AllDatastores,
   Core,
-  FieldTree,
+  FieldTree, // Pride.FieldTree = Pride.FieldTree || {};
   init,
   Messenger,
   Parser,

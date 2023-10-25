@@ -1,3 +1,6 @@
+const { expect } = require('chai');
+const Pride = require('../../../pride').Pride;
+
 describe('Pride.Util.deepClone()', function () {
   it('passes functions straight through', function () {
     const func = () => { /** */ };

@@ -1,3 +1,7 @@
+const { expect } = require('chai');
+const _ = require('underscore');
+const Pride = require('../../../../pride').Pride;
+
 function paginatorBasicExpectations (key1, key2, valid) {
   beforeEach(function () {
     const settings = {};

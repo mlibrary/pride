@@ -1,3 +1,6 @@
+const { expect } = require('chai');
+const Pride = require('../../../pride').Pride;
+
 describe('Pride.Util.isDeepMatch()', function () {
   describe('returning false', function () {
     it('treats strings as not equal to numbers', function () {
