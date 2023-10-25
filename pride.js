@@ -1,4 +1,3 @@
-"use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -2630,8 +2629,8 @@ var Paginater = function(initialValues) {
   const values2 = {};
   this.set(initialValues);
 };
-Object.defineProperty(Paginater, "getPossibleKeys", { value: getPossibleKeys_default });
-Object.defineProperty(Paginater, "hasKey", { value: hasKey_default });
+Paginater.getPossibleKeys = getPossibleKeys_default;
+Paginater.hasKey = hasKey_default;
 var Paginater_default = Paginater;
 
 // src/Pride/Util/Section.js
@@ -3652,18 +3651,19 @@ var Datastore = function(datastoreInfo) {
 var Datastore_default = Datastore;
 
 // src/Pride/Core/index.js
-var Core = {};
-Object.defineProperty(Core, "boolNodeFactory", { value: boolNodeFactory_default });
-Object.defineProperty(Core, "Datastore", { value: Datastore_default });
-Object.defineProperty(Core, "DatastoreSearch", { value: DatastoreSearch_default });
-Object.defineProperty(Core, "FacetSearch", { value: FacetSearch_default });
-Object.defineProperty(Core, "GetThis", { value: GetThis_default });
-Object.defineProperty(Core, "Holdings", { value: Holdings_default });
-Object.defineProperty(Core, "log", { value: log_default });
-Object.defineProperty(Core, "nodeFactory", { value: nodeFactory_default });
-Object.defineProperty(Core, "Query", { value: Query_default });
-Object.defineProperty(Core, "Record", { value: Record_default });
-Object.defineProperty(Core, "SearchBase", { value: SearchBase_default });
+var Core = {
+  boolNodeFactory: boolNodeFactory_default,
+  Datastore: Datastore_default,
+  DatastoreSearch: DatastoreSearch_default,
+  FacetSearch: FacetSearch_default,
+  GetThis: GetThis_default,
+  Holdings: Holdings_default,
+  log: log_default,
+  nodeFactory: nodeFactory_default,
+  Query: Query_default,
+  Record: Record_default,
+  SearchBase: SearchBase_default
+};
 var Core_default = Core;
 
 // src/Pride/Parser.js
@@ -4537,17 +4537,18 @@ var ValueBoolean = boolNodeFactory_default(
 var ValueBoolean_default = ValueBoolean;
 
 // src/Pride/FieldTree/index.js
-var FieldTree = {};
-Object.defineProperty(FieldTree, "Field", { value: Field_default });
-Object.defineProperty(FieldTree, "FieldBoolean", { value: FieldBoolean_default });
-Object.defineProperty(FieldTree, "Literal", { value: Literal_default });
-Object.defineProperty(FieldTree, "parseField", { value: parseField_default });
-Object.defineProperty(FieldTree, "Raw", { value: Raw_default });
-Object.defineProperty(FieldTree, "Special", { value: Special_default });
-Object.defineProperty(FieldTree, "Tag", { value: Tag_default });
-Object.defineProperty(FieldTree, "tokenize", { value: tokenize_default });
-Object.defineProperty(FieldTree, "tokens", { value: tokens_default });
-Object.defineProperty(FieldTree, "ValueBoolean", { value: ValueBoolean_default });
+var FieldTree = {
+  Field: Field_default,
+  FieldBoolean: FieldBoolean_default,
+  Literal: Literal_default,
+  parseField: parseField_default,
+  Raw: Raw_default,
+  Special: Special_default,
+  Tag: Tag_default,
+  tokenize: tokenize_default,
+  tokens: tokens_default,
+  ValueBoolean: ValueBoolean_default
+};
 var FieldTree_default = FieldTree;
 
 // src/Pride/init.js
@@ -4684,34 +4685,37 @@ var SearchSwitcher = function(currentSearch, cachedSearches) {
 var SearchSwitcher_default = SearchSwitcher;
 
 // src/Pride/Util/index.js
-var Util = {};
-Object.defineProperty(Util, "deepClone", { value: deepClone_default });
-Object.defineProperty(Util, "escape", { value: escape_default2 });
-Object.defineProperty(Util, "FuncBuffer", { value: FuncBuffer_default });
-Object.defineProperty(Util, "isDeepMatch", { value: isDeepMatch_default });
-Object.defineProperty(Util, "MultiSearch", { value: MultiSearch_default });
-Object.defineProperty(Util, "Paginater", { value: Paginater_default });
-Object.defineProperty(Util, "request", { value: request_default });
-Object.defineProperty(Util, "RequestBuffer", { value: RequestBuffer_default });
-Object.defineProperty(Util, "safeApply", { value: safeApply_default });
-Object.defineProperty(Util, "safeCall", { value: safeCall_default });
-Object.defineProperty(Util, "SearchSwitcher", { value: SearchSwitcher_default });
-Object.defineProperty(Util, "Section", { value: Section_default });
-Object.defineProperty(Util, "slice", { value: slice_default });
+var Util = {
+  deepClone: deepClone_default,
+  escape: escape_default2,
+  FuncBuffer: FuncBuffer_default,
+  isDeepMatch: isDeepMatch_default,
+  MultiSearch: MultiSearch_default,
+  Paginater: Paginater_default,
+  request: request_default,
+  RequestBuffer: RequestBuffer_default,
+  safeApply: safeApply_default,
+  safeCall: safeCall_default,
+  SearchSwitcher: SearchSwitcher_default,
+  Section: Section_default,
+  slice: slice_default
+};
 var Util_default = Util;
 
 // src/Pride/index.js
-var Pride = {};
-Object.defineProperty(Pride, "AllDatastores", { value: AllDatastores_default });
-Object.defineProperty(Pride, "Core", { value: Core_default });
-Object.defineProperty(Pride, "FieldTree", { value: FieldTree_default });
-Object.defineProperty(Pride, "init", { value: init_default });
-Object.defineProperty(Pride, "Messenger", { value: Messenger_default });
-Object.defineProperty(Pride, "Parser", { value: Parser_default });
-Object.defineProperty(Pride, "PreferenceEngine", { value: PreferenceEngine_default });
-Object.defineProperty(Pride, "requestRecord", { value: requestRecord_default });
-Object.defineProperty(Pride, "Settings", { value: Settings_default });
-Object.defineProperty(Pride, "Util", { value: Util_default });
+var Pride = {
+  AllDatastores: AllDatastores_default,
+  Core: Core_default,
+  FieldTree: FieldTree_default,
+  // Pride.FieldTree = Pride.FieldTree || {};
+  init: init_default,
+  Messenger: Messenger_default,
+  Parser: Parser_default,
+  PreferenceEngine: PreferenceEngine_default,
+  requestRecord: requestRecord_default,
+  Settings: Settings_default,
+  Util: Util_default
+};
 var Pride_default = Pride;
 /*! Bundled license information:
 

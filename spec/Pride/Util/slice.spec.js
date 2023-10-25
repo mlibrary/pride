@@ -1,3 +1,6 @@
+const { expect } = require('chai');
+const Pride = require('../../../pride').Pride;
+
 describe('Pride.Util.slice()', function () {
   describe('slicing arrays', function () {
     it('slices from start', function () {

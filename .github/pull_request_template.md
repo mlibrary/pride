@@ -24,8 +24,8 @@ _Optional_. If appropriate, provide additional notes the reviewers should be mad
 
 ## Testing
 1. Build the repository (`npm run build`).
-2. Open `./spec/index.html` in the browser to see if all tests pass.
-   * Break the new/updated unit tests to make sure they are working properly.
+2. Run the tests to make sure they pass (`npm run test`).
+   * Break the new/updated unit tests to make sure they're working properly.
 3. Navigate to your local [Search repository](https://github.com/mlibrary/search) and apply the newly generated files:
    1. Open `./package.json` and add `#branch-name-of-pull-request` at the end of the `pride` dependency URL:
       ```bash

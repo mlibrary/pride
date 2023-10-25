@@ -12,20 +12,20 @@ import SearchSwitcher from './SearchSwitcher.js';
 import Section from './Section.js';
 import slice from './slice.js';
 
-const Util = {};
-
-Object.defineProperty(Util, 'deepClone', { value: deepClone });
-Object.defineProperty(Util, 'escape', { value: escape });
-Object.defineProperty(Util, 'FuncBuffer', { value: FuncBuffer });
-Object.defineProperty(Util, 'isDeepMatch', { value: isDeepMatch });
-Object.defineProperty(Util, 'MultiSearch', { value: MultiSearch });
-Object.defineProperty(Util, 'Paginater', { value: Paginater });
-Object.defineProperty(Util, 'request', { value: request });
-Object.defineProperty(Util, 'RequestBuffer', { value: RequestBuffer });
-Object.defineProperty(Util, 'safeApply', { value: safeApply });
-Object.defineProperty(Util, 'safeCall', { value: safeCall });
-Object.defineProperty(Util, 'SearchSwitcher', { value: SearchSwitcher });
-Object.defineProperty(Util, 'Section', { value: Section });
-Object.defineProperty(Util, 'slice', { value: slice });
+const Util = {
+  deepClone,
+  escape,
+  FuncBuffer,
+  isDeepMatch,
+  MultiSearch,
+  Paginater,
+  request,
+  RequestBuffer,
+  safeApply,
+  safeCall,
+  SearchSwitcher,
+  Section,
+  slice
+};
 
 export default Util;
