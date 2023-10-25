@@ -3,12 +3,15 @@ Monthly dependency update to help maintain Pride.
 
 ## NPM
 These dependencies have been updated to their latest versions:
+- `chai`
 - `esbuild`
 - `eslint`
 - `eslint-config-standard`
 - `eslint-plugin-import`
 - `eslint-plugin-n`
 - `eslint-plugin-promise`
+- `jsdom`
+- `mocha`
 - `pegjs`
 - `reqwest`
 - `underscore`
