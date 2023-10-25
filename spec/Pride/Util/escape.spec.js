@@ -1,18 +1,29 @@
-function wrapText (string) {
-  return `foo${string}bar`;
-}
-
-function testEscaping (original, possible1, possible2) {
-  it(`encodes ${original} properly`, function () {
-    const escaped = wrapText(Pride.Util.escape(original));
-    expect(escaped === wrapText(possible1) || escaped === wrapText(possible2)).to.be.true;
-  });
-}
-
 const { expect } = require('chai');
-const Pride = require('../../../pride').Pride;
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
+const { document } = (new JSDOM()).window;
+
+const symbols = [
+  {
+    symbol: '&',
+    html: '&amp;'
+  },
+  {
+    symbol: '<',
+    html: '&lt;'
+  }
+];
+
+function testEscaping (character) {
+  it(`encodes ${character.symbol} properly`, function () {
+    const tempElement = document.createElement('div');
+    tempElement.appendChild(document.createTextNode(character.symbol));
+    expect(tempElement.innerHTML).to.equal(character.html);
+  });
+};
 
 describe('Pride.Util.escape()', function () {
-  testEscaping('&', '&amp;', '&#38;');
-  testEscaping('<', '&lt;', '&#60;');
+  symbols.forEach((symbol) => {
+    testEscaping(symbol);
+  });
 });
