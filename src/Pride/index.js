@@ -9,17 +9,17 @@ import requestRecord from './requestRecord.js';
 import Settings from './Settings.js';
 import Util from './Util/index.js';
 
-const Pride = {};
-
-Object.defineProperty(Pride, 'AllDatastores', { value: AllDatastores });
-Object.defineProperty(Pride, 'Core', { value: Core });
-Object.defineProperty(Pride, 'FieldTree', { value: FieldTree });
-Object.defineProperty(Pride, 'init', { value: init });
-Object.defineProperty(Pride, 'Messenger', { value: Messenger });
-Object.defineProperty(Pride, 'Parser', { value: Parser });
-Object.defineProperty(Pride, 'PreferenceEngine', { value: PreferenceEngine });
-Object.defineProperty(Pride, 'requestRecord', { value: requestRecord });
-Object.defineProperty(Pride, 'Settings', { value: Settings });
-Object.defineProperty(Pride, 'Util', { value: Util });
+const Pride = {
+  AllDatastores,
+  Core,
+  FieldTree,
+  init,
+  Messenger,
+  Parser,
+  PreferenceEngine,
+  requestRecord,
+  Settings,
+  Util
+};
 
 export default Pride;

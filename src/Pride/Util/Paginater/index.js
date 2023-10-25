@@ -111,7 +111,7 @@ const Paginater = function (initialValues) {
   this.set(initialValues);
 };
 
-Object.defineProperty(Paginater, 'getPossibleKeys', { value: getPossibleKeys });
-Object.defineProperty(Paginater, 'hasKey', { value: hasKey });
+Paginater.getPossibleKeys = getPossibleKeys;
+Paginater.hasKey = hasKey;
 
 export default Paginater;

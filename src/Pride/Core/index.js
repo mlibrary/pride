@@ -10,18 +10,18 @@ import Query from './Query.js';
 import Record from './Record.js';
 import SearchBase from './SearchBase.js';
 
-const Core = {};
-
-Object.defineProperty(Core, 'boolNodeFactory', { value: boolNodeFactory });
-Object.defineProperty(Core, 'Datastore', { value: Datastore });
-Object.defineProperty(Core, 'DatastoreSearch', { value: DatastoreSearch });
-Object.defineProperty(Core, 'FacetSearch', { value: FacetSearch });
-Object.defineProperty(Core, 'GetThis', { value: GetThis });
-Object.defineProperty(Core, 'Holdings', { value: Holdings });
-Object.defineProperty(Core, 'log', { value: log });
-Object.defineProperty(Core, 'nodeFactory', { value: nodeFactory });
-Object.defineProperty(Core, 'Query', { value: Query });
-Object.defineProperty(Core, 'Record', { value: Record });
-Object.defineProperty(Core, 'SearchBase', { value: SearchBase });
+const Core = {
+  boolNodeFactory,
+  Datastore,
+  DatastoreSearch,
+  FacetSearch,
+  GetThis,
+  Holdings,
+  log,
+  nodeFactory,
+  Query,
+  Record,
+  SearchBase
+};
 
 export default Core;
