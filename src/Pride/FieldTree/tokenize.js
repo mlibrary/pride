@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import tokens from './tokens';
 
 const tokenize = function (string) {
   const result = [];
@@ -9,7 +8,7 @@ const tokenize = function (string) {
   while (index < string.length) {
     const slice = string.slice(index);
     let found = _.find(
-      tokens,
+      [':', 'AND', 'OR', '+', '-', '(', ')', '*', ' ', '\n', '\t', '\r'],
       function (pattern) {
         return (new RegExp('^\\' + pattern)).exec(slice);
       }
