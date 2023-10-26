@@ -6,7 +6,6 @@ import Raw from './Raw.js';
 import Special from './Special.js';
 import Tag from './Tag.js';
 import tokenize from './tokenize.js';
-import tokens from './tokens.js';
 import ValueBoolean from './ValueBoolean.js';
 
 const FieldTree = {
@@ -18,7 +17,6 @@ const FieldTree = {
   Special,
   Tag,
   tokenize,
-  tokens,
   ValueBoolean
 };
 

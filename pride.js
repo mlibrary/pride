@@ -4490,10 +4490,6 @@ var Tag = nodeFactory_default(
 );
 var Tag_default = Tag;
 
-// src/Pride/FieldTree/tokens.js
-var tokens = [":", "AND", "OR", "+", "-", "(", ")", "*", " ", "\n", "	", "\r"];
-var tokens_default = tokens;
-
 // src/Pride/FieldTree/tokenize.js
 var tokenize = function(string) {
   const result2 = [];
@@ -4502,7 +4498,7 @@ var tokenize = function(string) {
   while (index < string.length) {
     const slice3 = string.slice(index);
     let found = index_default_default.find(
-      tokens_default,
+      [":", "AND", "OR", "+", "-", "(", ")", "*", " ", "\n", "	", "\r"],
       function(pattern) {
         return new RegExp("^\\" + pattern).exec(slice3);
       }
@@ -4546,7 +4542,6 @@ var FieldTree = {
   Special: Special_default,
   Tag: Tag_default,
   tokenize: tokenize_default,
-  tokens: tokens_default,
   ValueBoolean: ValueBoolean_default
 };
 var FieldTree_default = FieldTree;
