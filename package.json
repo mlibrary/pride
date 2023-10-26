@@ -7,7 +7,7 @@
     "esbuild": "npx esbuild src/index.js --bundle --format=cjs $*",
     "esbuild:minify": "npm run esbuild -- --outfile=pride.min.js --minify",
     "esbuild:regular": "npm run esbuild -- --outfile=pride.js",
-    "eslint": "npx eslint --ignore-pattern '**/pride.spec.js' $* './src/**/*.js' './spec/**/*.js'",
+    "eslint": "npx eslint $* './src/**/*.js' './spec/**/*.js'",
     "eslint:fix": "npm run eslint -- --fix",
     "test": "npx mocha --recursive './spec/**/*.spec.js'"
   },
