@@ -11,6 +11,10 @@ describe('Pride.Util.sliceCall()', function () {
     it('slices to end', function () {
       expect(sliceCall(array, 1, 3)).to.deep.equal([2, 3]);
     });
+
+    it('slices from end', function () {
+      expect(sliceCall(array, -2)).to.deep.equal([3, 4]);
+    });
   };
 
   describe('slicing arrays', function () {
