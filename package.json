@@ -1,6 +1,6 @@
 {
   "name": "pride",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "pride.min.js",
   "scripts": {
     "build": "npm run eslint && npm run esbuild:minify && npm run esbuild:regular",
