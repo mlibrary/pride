@@ -34,7 +34,7 @@ const SearchBase = function (setup, parent) {
     self.query.set(setHash);
     safeCall(self.setDataChanged);
 
-    if (!_.isEmpty(_.omit(setHash, getPossibleKeys()))) {
+    if (!_.isEmpty(_.omit(setHash, getPossibleKeys))) {
       results = [];
     }
 

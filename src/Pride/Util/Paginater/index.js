@@ -1,6 +1,5 @@
 import _ from 'underscore';
 import getPossibleKeys from './getPossibleKeys.js';
-import hasKey from './hasKey.js';
 
 const Paginater = function (initialValues) {
   this.set = function (newValues) {
@@ -112,6 +111,5 @@ const Paginater = function (initialValues) {
 };
 
 Paginater.getPossibleKeys = getPossibleKeys;
-Paginater.hasKey = hasKey;
 
 export default Paginater;

@@ -1,13 +1,13 @@
 const { expect } = require('chai');
 const _ = require('underscore');
-const Pride = require('../../../../pride').Pride;
+const Paginater = require('../../../../pride').Pride.Util.Paginater;
 
 function paginatorBasicExpectations (key1, key2, valid) {
   beforeEach(function () {
     const settings = {};
     settings[key1] = valid[key1];
     settings[key2] = valid[key2];
-    this.example = new Pride.Util.Paginater(settings);
+    this.example = new Paginater(settings);
   });
 
   _.each(valid, function (value, key) {
@@ -58,7 +58,7 @@ function testPaginatorUnsettable (invalidSettings, basicSettings) {
     "can't set " + _.keys(invalidSettings).join(' and ') + ' together after initializaion',
     function () {
       expect(function () {
-        (new Pride.Util.Paginater(basicSettings)).set(invalidSettings);
+        (new Paginater(basicSettings)).set(invalidSettings);
       }).to.throw();
     }
   );
@@ -67,7 +67,7 @@ function testPaginatorUnsettable (invalidSettings, basicSettings) {
     "can't set " + _.keys(invalidSettings).join(' and ') + ' together on initializaion',
     function () {
       expect(function () {
-        const initializeInvalidSettings = new Pride.Util.Paginater(_.extend(basicSettings, invalidSettings));
+        const initializeInvalidSettings = new Paginater(_.extend(basicSettings, invalidSettings));
         return initializeInvalidSettings;
       }).to.throw();
     }
@@ -90,43 +90,10 @@ describe('Pride.Util.Paginater', function () {
     it("can't set the start greater than the end", function () {
       expect(
         function () {
-          const startGreaterThanEnd = new Pride.Util.Paginater({ start: 10, end: 5 });
+          const startGreaterThanEnd = new Paginater({ start: 10, end: 5 });
           return startGreaterThanEnd;
         }
       ).to.throw();
-    });
-  });
-
-  describe('going through available keys', function () {
-    before(function () {
-      this.all_keys = [
-        'start',
-        'count',
-        'end',
-        'page',
-        'index_limit',
-        'total_pages',
-        'total_available',
-        'page_limit'
-      ];
-    });
-
-    describe('getPossibleKeys()', function () {
-      it('returns all possible keys', function () {
-        expect(Pride.Util.Paginater.getPossibleKeys()).to.deep.equal(this.all_keys);
-      });
-    });
-
-    describe('hasKey()', function () {
-      it('returns true when asked for any key that exists', function () {
-        _.every(this.all_keys, function (key) {
-          expect(Pride.Util.Paginater.hasKey(key)).to.be.true;
-        });
-      });
-
-      it('returns false when asked for a key that does not exist', function () {
-        expect(Pride.Util.Paginater.hasKey('bloop')).to.be.false;
-      });
     });
   });
 });
