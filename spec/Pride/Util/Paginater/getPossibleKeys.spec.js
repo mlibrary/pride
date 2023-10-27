@@ -1,8 +1,12 @@
 const { expect } = require('chai');
-const Pride = require('../../../../pride').Pride;
+const getPossibleKeys = require('../../../../pride').Pride.Util.Paginater.getPossibleKeys;
 
-describe('Pride.Util.Paginater.getPossibleKeys()', function () {
+describe('Pride.Util.Paginater.getPossibleKeys', function () {
   it('works', function () {
-    expect(Pride.Util.Paginater.getPossibleKeys()).to.not.be.null;
+    expect(getPossibleKeys).to.not.be.null;
+  });
+  it('returns a non-empty array', function () {
+    expect(Array.isArray(getPossibleKeys)).to.be.true;
+    expect(getPossibleKeys).to.not.be.empty;
   });
 });

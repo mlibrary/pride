@@ -11,7 +11,7 @@ const Query = function (queryInfo) {
   });
 
   // Memoize the paginater keys for future use.
-  const paginaterKeys = Paginater.getPossibleKeys();
+  const paginaterKeys = Paginater.getPossibleKeys;
 
   // Remove the pagination info from queryInfo.
   queryInfo = _.omit(deepClone(queryInfo), paginaterKeys);
@@ -20,7 +20,7 @@ const Query = function (queryInfo) {
   queryInfo.request_id = queryInfo.request_id || 0;
 
   this.get = function (key) {
-    if (Paginater.hasKey(key)) {
+    if (Paginater.getPossibleKeys.includes(key)) {
       return paginater.get(key);
     } else {
       return queryInfo[key];

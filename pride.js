@@ -2543,25 +2543,17 @@ var deepClone = function(original) {
 var deepClone_default = deepClone;
 
 // src/Pride/Util/Paginater/getPossibleKeys.js
-var getPossibleKeys = function() {
-  return [
-    "start",
-    "count",
-    "end",
-    "page",
-    "index_limit",
-    "total_pages",
-    "total_available",
-    "page_limit"
-  ];
-};
+var getPossibleKeys = [
+  "start",
+  "count",
+  "end",
+  "page",
+  "index_limit",
+  "total_pages",
+  "total_available",
+  "page_limit"
+];
 var getPossibleKeys_default = getPossibleKeys;
-
-// src/Pride/Util/Paginater/hasKey.js
-var hasKey = function(key) {
-  return getPossibleKeys_default().indexOf(key) > -1;
-};
-var hasKey_default = hasKey;
 
 // src/Pride/Util/Paginater/index.js
 var Paginater = function(initialValues) {
@@ -2630,7 +2622,6 @@ var Paginater = function(initialValues) {
   this.set(initialValues);
 };
 Paginater.getPossibleKeys = getPossibleKeys_default;
-Paginater.hasKey = hasKey_default;
 var Paginater_default = Paginater;
 
 // src/Pride/Util/Section.js
@@ -2666,11 +2657,11 @@ var Query = function(queryInfo) {
     start: queryInfo.start,
     count: queryInfo.count
   });
-  const paginaterKeys = Paginater_default.getPossibleKeys();
+  const paginaterKeys = Paginater_default.getPossibleKeys;
   queryInfo = index_default_default.omit(deepClone_default(queryInfo), paginaterKeys);
   queryInfo.request_id = queryInfo.request_id || 0;
   this.get = function(key) {
-    if (Paginater_default.hasKey(key)) {
+    if (Paginater_default.getPossibleKeys.includes(key)) {
       return paginater.get(key);
     } else {
       return queryInfo[key];
@@ -2887,7 +2878,7 @@ var SearchBase = function(setup, parent) {
   this.set = function(setHash) {
     self2.query.set(setHash);
     safeCall_default(self2.setDataChanged);
-    if (!index_default_default.isEmpty(index_default_default.omit(setHash, getPossibleKeys_default()))) {
+    if (!index_default_default.isEmpty(index_default_default.omit(setHash, getPossibleKeys_default))) {
       results = [];
     }
     return self2;
