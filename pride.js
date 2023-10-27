@@ -2400,16 +2400,16 @@ var AllDatastores = {
 };
 var AllDatastores_default = AllDatastores;
 
-// src/Pride/Util/slice.js
-var slice2 = function(array, begin, end) {
+// src/Pride/Util/sliceCall.js
+var sliceCall = function(array, begin, end) {
   return Array.prototype.slice.call(array, begin, end);
 };
-var slice_default = slice2;
+var sliceCall_default = sliceCall;
 
 // src/Pride/Core/nodeFactory.js
 var nodeFactory = function(type2, childTypes, extention) {
   return function(value) {
-    this.children = slice_default(arguments, 1);
+    this.children = sliceCall_default(arguments, 1);
     if (this.children.length === 1 && Array.isArray(this.children[0])) {
       this.children = this.children[0];
     }
@@ -2756,7 +2756,7 @@ var Settings_default = Settings;
 // src/Pride/Core/log.js
 var log = function(source, info) {
   if (Settings_default.obnoxious) {
-    const message = slice_default(arguments, 2);
+    const message = sliceCall_default(arguments, 2);
     message.unshift("[Pride: " + source + "] " + info);
     console.log.apply(console, message);
   }
@@ -2766,7 +2766,7 @@ var log_default = log;
 // src/Pride/Util/safeCall.js
 var safeCall = function(maybeFunc) {
   if (index_default_default.isFunction(maybeFunc)) {
-    return maybeFunc.apply(this, slice_default(arguments, 1));
+    return maybeFunc.apply(this, sliceCall_default(arguments, 1));
   } else {
     return maybeFunc;
   }
@@ -2814,7 +2814,7 @@ var FuncBuffer = function(extension) {
     return self2;
   };
   this.call = function(name) {
-    self2.apply(name, slice_default(arguments, 1));
+    self2.apply(name, sliceCall_default(arguments, 1));
     return self2;
   };
   this.apply = function(name, args) {
@@ -2871,7 +2871,7 @@ var SearchBase = function(setup, parent) {
   let results = setup.starting_results || [];
   const defaultCacheSize = setup.cache_size || Settings_default.cache_size[this.datastore.uid] || Settings_default.default_cache_size;
   this.log = function() {
-    const message = slice_default(arguments);
+    const message = sliceCall_default(arguments);
     message.unshift("Search (" + self2.datastore.get("uid") + ")");
     log_default.apply(window, message);
   };
@@ -4487,11 +4487,11 @@ var tokenize = function(string) {
   let index = 0;
   let type2 = null;
   while (index < string.length) {
-    const slice3 = string.slice(index);
+    const slice2 = string.slice(index);
     let found = index_default_default.find(
       [":", "AND", "OR", "+", "-", "(", ")", "*", " ", "\n", "	", "\r"],
       function(pattern) {
-        return new RegExp("^\\" + pattern).exec(slice3);
+        return new RegExp("^\\" + pattern).exec(slice2);
       }
     );
     if (found) {
@@ -4599,7 +4599,7 @@ var MultiSearch = function(uid, muted, searchArray) {
   };
   const funcOnEach = function(funcName, beforeFunc) {
     return function() {
-      const args = slice_default(arguments);
+      const args = sliceCall_default(arguments);
       safeApply_default(beforeFunc, args);
       index_default_default.each(searchArray, function(search) {
         search[funcName].apply(search, args);
@@ -4684,7 +4684,7 @@ var Util = {
   safeCall: safeCall_default,
   SearchSwitcher: SearchSwitcher_default,
   Section: Section_default,
-  slice: slice_default
+  sliceCall: sliceCall_default
 };
 var Util_default = Util;
 

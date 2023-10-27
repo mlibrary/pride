@@ -10,7 +10,7 @@ import safeApply from './safeApply.js';
 import safeCall from './safeCall.js';
 import SearchSwitcher from './SearchSwitcher.js';
 import Section from './Section.js';
-import slice from './slice.js';
+import sliceCall from './sliceCall.js';
 
 const Util = {
   deepClone,
@@ -25,7 +25,7 @@ const Util = {
   safeCall,
   SearchSwitcher,
   Section,
-  slice
+  sliceCall
 };
 
 export default Util;

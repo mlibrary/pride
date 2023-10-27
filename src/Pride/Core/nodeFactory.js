@@ -1,9 +1,9 @@
 import _ from 'underscore';
-import slice from '../Util/slice';
+import sliceCall from '../Util/sliceCall';
 
 const nodeFactory = function (type, childTypes, extention) {
   return function (value) {
-    this.children = slice(arguments, 1);
+    this.children = sliceCall(arguments, 1);
     if (this.children.length === 1 && Array.isArray(this.children[0])) {
       this.children = this.children[0];
     }

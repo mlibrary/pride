@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import slice from './slice';
+import sliceCall from './sliceCall';
 import safeApply from './safeApply';
 
 const FuncBuffer = function (extension) {
@@ -42,7 +42,7 @@ const FuncBuffer = function (extension) {
   };
 
   this.call = function (name) {
-    self.apply(name, slice(arguments, 1));
+    self.apply(name, sliceCall(arguments, 1));
 
     return self;
   };

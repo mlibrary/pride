@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import slice from './slice';
+import sliceCall from './sliceCall';
 import safeApply from './safeApply';
 
 const MultiSearch = function (uid, muted, searchArray) {
@@ -24,7 +24,7 @@ const MultiSearch = function (uid, muted, searchArray) {
 
   const funcOnEach = function (funcName, beforeFunc) {
     return function () {
-      const args = slice(arguments);
+      const args = sliceCall(arguments);
 
       safeApply(beforeFunc, args);
 

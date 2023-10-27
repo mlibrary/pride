@@ -1,9 +1,9 @@
 import Settings from '../Settings';
-import slice from '../Util/slice';
+import sliceCall from '../Util/sliceCall';
 
 const log = function (source, info) {
   if (Settings.obnoxious) {
-    const message = slice(arguments, 2);
+    const message = sliceCall(arguments, 2);
     message.unshift('[Pride: ' + source + '] ' + info);
 
     console.log.apply(console, message);
