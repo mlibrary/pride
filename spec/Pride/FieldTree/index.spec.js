@@ -1,8 +1,16 @@
 const { expect } = require('chai');
-const Pride = require('../../../pride').Pride;
+const FieldTree = require('../../../pride').Pride.FieldTree;
+const { siblingFileIsProperty } = require('../index.spec');
 
 describe('Pride.FieldTree', function () {
   it('works', function () {
-    expect(Pride.FieldTree).to.not.be.null;
+    expect(FieldTree).to.not.be.null;
+  });
+  it('is a non-empty object', function () {
+    expect(FieldTree).to.be.an('object');
+    expect(FieldTree).to.not.be.empty;
+  });
+  describe('sibling files are defined as properties', () => {
+    siblingFileIsProperty('Pride.FieldTree', FieldTree);
   });
 });
