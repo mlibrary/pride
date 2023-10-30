@@ -1,6 +1,7 @@
 const { expect } = require('chai');
 const _ = require('underscore');
 const Paginater = require('../../../../pride').Pride.Util.Paginater;
+const { siblingFileIsProperty } = require('../../index.spec');
 
 function paginatorBasicExpectations (key1, key2, valid) {
   beforeEach(function () {
@@ -95,5 +96,8 @@ describe('Pride.Util.Paginater', function () {
         }
       ).to.throw();
     });
+  });
+  describe('sibling files are defined as properties', () => {
+    siblingFileIsProperty('Pride.Util.Paginater', Paginater);
   });
 });
