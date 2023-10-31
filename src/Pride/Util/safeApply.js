@@ -1,11 +1,11 @@
-import _ from 'underscore';
+import isFunction from './isFunction';
 
 const safeApply = function (maybeFunc, args) {
-  if (_.isFunction(maybeFunc)) {
+  if (isFunction(maybeFunc)) {
     return maybeFunc.apply(this, args);
-  } else {
-    return maybeFunc;
   }
+
+  return maybeFunc;
 };
 
 export default safeApply;

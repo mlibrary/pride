@@ -2745,13 +2745,18 @@ var safeCall = function(maybeFunc) {
 };
 var safeCall_default = safeCall;
 
+// src/Pride/Util/isFunction.js
+var isFunction2 = function(value) {
+  return !!value && (Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function" || value instanceof Function);
+};
+var isFunction_default2 = isFunction2;
+
 // src/Pride/Util/safeApply.js
 var safeApply = function(maybeFunc, args) {
-  if (index_default_default.isFunction(maybeFunc)) {
+  if (isFunction_default2(maybeFunc)) {
     return maybeFunc.apply(this, args);
-  } else {
-    return maybeFunc;
   }
+  return maybeFunc;
 };
 var safeApply_default = safeApply;
 
@@ -4648,6 +4653,7 @@ var Util = {
   escape: escape_default2,
   FuncBuffer: FuncBuffer_default,
   isDeepMatch: isDeepMatch_default,
+  isFunction: isFunction_default2,
   MultiSearch: MultiSearch_default,
   Paginater: Paginater_default,
   request: request_default,

@@ -1,12 +1,12 @@
-import Field from './Field.js';
-import FieldBoolean from './FieldBoolean.js';
-import Literal from './Literal.js';
-import parseField from './parseField.js';
-import Raw from './Raw.js';
-import Special from './Special.js';
-import Tag from './Tag.js';
-import tokenize from './tokenize.js';
-import ValueBoolean from './ValueBoolean.js';
+import Field from './Field';
+import FieldBoolean from './FieldBoolean';
+import Literal from './Literal';
+import parseField from './parseField';
+import Raw from './Raw';
+import Special from './Special';
+import Tag from './Tag';
+import tokenize from './tokenize';
+import ValueBoolean from './ValueBoolean';
 
 const FieldTree = {
   Field,
