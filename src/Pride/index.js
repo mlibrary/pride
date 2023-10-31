@@ -1,13 +1,13 @@
-import AllDatastores from './AllDatastores.js';
-import Core from './Core/index.js';
-import FieldTree from './FieldTree/index.js';
-import init from './init.js';
-import Messenger from './Messenger.js';
-import Parser from './Parser.js';
-import PreferenceEngine from './PreferenceEngine.js';
-import requestRecord from './requestRecord.js';
-import Settings from './Settings.js';
-import Util from './Util/index.js';
+import AllDatastores from './AllDatastores';
+import Core from './Core/index';
+import FieldTree from './FieldTree/index';
+import init from './init';
+import Messenger from './Messenger';
+import Parser from './Parser';
+import PreferenceEngine from './PreferenceEngine';
+import requestRecord from './requestRecord';
+import Settings from './Settings';
+import Util from './Util/index';
 
 const Pride = {
   AllDatastores,

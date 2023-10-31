@@ -13,7 +13,7 @@ const siblingFileIsProperty = (callProperty, property) => {
       const propertyName = listing.replace('.js', '');
       // Return test to see if the file exists as a property
       it(`'${propertyName}' is a property of '${propertyPath.slice(-1)}'`, () => {
-        expect(Object.keys(property).includes(propertyName)).to.be.true;
+        expect(property).to.have.property(propertyName);
       });
     }
   });
