@@ -2735,21 +2735,20 @@ var log = function(source, info) {
 };
 var log_default = log;
 
-// src/Pride/Util/safeCall.js
-var safeCall = function(maybeFunc) {
-  if (index_default_default.isFunction(maybeFunc)) {
-    return maybeFunc.apply(this, sliceCall_default(arguments, 1));
-  } else {
-    return maybeFunc;
-  }
-};
-var safeCall_default = safeCall;
-
 // src/Pride/Util/isFunction.js
 var isFunction2 = function(value) {
   return !!value && (Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function" || value instanceof Function);
 };
 var isFunction_default2 = isFunction2;
+
+// src/Pride/Util/safeCall.js
+var safeCall = function(maybeFunc) {
+  if (isFunction_default2(maybeFunc)) {
+    return maybeFunc.apply(this, sliceCall_default(arguments, 1));
+  }
+  return maybeFunc;
+};
+var safeCall_default = safeCall;
 
 // src/Pride/Util/safeApply.js
 var safeApply = function(maybeFunc, args) {

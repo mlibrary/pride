@@ -1,12 +1,12 @@
-import _ from 'underscore';
 import sliceCall from './sliceCall';
+import isFunction from './isFunction';
 
 const safeCall = function (maybeFunc) {
-  if (_.isFunction(maybeFunc)) {
+  if (isFunction(maybeFunc)) {
     return maybeFunc.apply(this, sliceCall(arguments, 1));
-  } else {
-    return maybeFunc;
   }
+
+  return maybeFunc;
 };
 
 export default safeCall;
