@@ -1,8 +1,8 @@
 const { expect } = require('chai');
 const Pride = require('../../../pride').Pride;
 
-describe('Pride.Util.deepClone()', function () {
-  it('passes functions straight through', function () {
+describe.only('Pride.Util.deepClone()', function () {
+  it('passes values that are functions or are undefined straight through', function () {
     const func = () => { /** */ };
     const cloned = Pride.Util.deepClone(func);
 
@@ -44,5 +44,12 @@ describe('Pride.Util.deepClone()', function () {
     const cloned = Pride.Util.deepClone(object);
 
     expect(cloned).to.deep.equal(object);
+  });
+
+  it('clones strings', function () {
+    const string = 'string';
+    const cloned = Pride.Util.deepClone(string);
+
+    expect(cloned).to.equal(string);
   });
 });
