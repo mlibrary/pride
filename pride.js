@@ -3377,21 +3377,7 @@ var Record_default = Record;
 
 // src/Pride/Util/isDeepMatch.js
 var isDeepMatch = function(object2, pattern) {
-  const bothArrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
-  const bothObjects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
-  if (bothArrays && pattern.length !== object2.length) {
-    return false;
-  }
-  if (bothObjects && index_default_default.keys(pattern).length !== index_default_default.keys(object2).length) {
-    return false;
-  }
-  if (bothArrays || bothObjects) {
-    return index_default_default.every(pattern, function(value, key) {
-      return isDeepMatch(object2[key], value);
-    });
-  } else {
-    return object2 === pattern;
-  }
+  return JSON.stringify(object2) === JSON.stringify(pattern);
 };
 var isDeepMatch_default = isDeepMatch;
 
