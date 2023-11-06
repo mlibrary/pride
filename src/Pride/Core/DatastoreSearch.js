@@ -2,7 +2,6 @@ import _ from 'underscore';
 import SearchBase from './SearchBase';
 import Record from './Record';
 import deepClone from '../Util/deepClone';
-import isDeepMatch from '../Util/isDeepMatch';
 import FacetSearch from './FacetSearch';
 
 const DatastoreSearch = function (setup) {
@@ -59,7 +58,7 @@ const DatastoreSearch = function (setup) {
     self.runDataObservers.add(function () {
       const facets = base.datastore.get('facets');
 
-      if (!isDeepMatch(currentFacets, facets)) {
+      if (JSON.stringify(currentFacets) !== JSON.stringify(facets)) {
         _.each(facetSearches, function (facetSearch) {
           facetSearch.clearAllObservers();
         });

@@ -3375,26 +3375,6 @@ var Record = function(data) {
 };
 var Record_default = Record;
 
-// src/Pride/Util/isDeepMatch.js
-var isDeepMatch = function(object2, pattern) {
-  const bothArrays = index_default_default.isArray(object2) && index_default_default.isArray(pattern);
-  const bothObjects = index_default_default.isObject(object2) && index_default_default.isObject(pattern);
-  if (bothArrays && pattern.length !== object2.length) {
-    return false;
-  }
-  if (bothObjects && index_default_default.keys(pattern).length !== index_default_default.keys(object2).length) {
-    return false;
-  }
-  if (bothArrays || bothObjects) {
-    return index_default_default.every(pattern, function(value, key) {
-      return isDeepMatch(object2[key], value);
-    });
-  } else {
-    return object2 === pattern;
-  }
-};
-var isDeepMatch_default = isDeepMatch;
-
 // src/Pride/Core/FacetSearch.js
 var FacetSearch = function(setup) {
   let data = setup.data;
@@ -3484,7 +3464,7 @@ var DatastoreSearch = function(setup) {
   base.initialize_observables = function() {
     self2.runDataObservers.add(function() {
       const facets = base.datastore.get("facets");
-      if (!isDeepMatch_default(currentFacets, facets)) {
+      if (JSON.stringify(currentFacets) !== JSON.stringify(facets)) {
         index_default_default.each(facetSearches, function(facetSearch) {
           facetSearch.clearAllObservers();
         });
@@ -4635,7 +4615,6 @@ var Util = {
   deepClone: deepClone_default,
   escape: escape_default2,
   FuncBuffer: FuncBuffer_default,
-  isDeepMatch: isDeepMatch_default,
   isFunction: isFunction_default2,
   MultiSearch: MultiSearch_default,
   Paginater: Paginater_default,
