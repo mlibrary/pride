@@ -2517,28 +2517,18 @@ var boolNodeFactory = function(type2, childTypes) {
 };
 var boolNodeFactory_default = boolNodeFactory;
 
+// src/Pride/Util/isFunction.js
+var isFunction2 = function(value) {
+  return !!value && (Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function" || value instanceof Function);
+};
+var isFunction_default2 = isFunction2;
+
 // src/Pride/Util/deepClone.js
 var deepClone = function(original) {
-  if (index_default_default.isFunction(original)) {
+  if (!original || isFunction_default2(original)) {
     return original;
-  } else {
-    let collectionFunction = false;
-    if (index_default_default.isArray(original)) {
-      collectionFunction = "map";
-    } else if (index_default_default.isObject(original)) {
-      collectionFunction = "mapObject";
-    }
-    if (collectionFunction) {
-      return index_default_default[collectionFunction](
-        original,
-        function(item) {
-          return deepClone(item);
-        }
-      );
-    } else {
-      return index_default_default.clone(original);
-    }
   }
+  return JSON.parse(JSON.stringify(original));
 };
 var deepClone_default = deepClone;
 
@@ -2734,12 +2724,6 @@ var log = function(source, info) {
   }
 };
 var log_default = log;
-
-// src/Pride/Util/isFunction.js
-var isFunction2 = function(value) {
-  return !!value && (Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function" || value instanceof Function);
-};
-var isFunction_default2 = isFunction2;
 
 // src/Pride/Util/safeCall.js
 var safeCall = function(maybeFunc) {
