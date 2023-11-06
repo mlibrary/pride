@@ -71,7 +71,7 @@ describe('Pride.Util.deepClone()', function () {
 
   it('clones strings', function () {
     const string = 'string';
-    const cloned = Pride.Util.deepClone(string);
+    const cloned = deepClone(string);
 
     expect(cloned).to.equal(string);
   });
