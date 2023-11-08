@@ -2719,7 +2719,7 @@ var Settings_default = Settings;
 var log = function(source, info) {
   if (Settings_default.obnoxious) {
     const message = sliceCall_default(arguments, 2);
-    message.unshift("[Pride: " + source + "] " + info);
+    message.unshift(`[Pride: ${source}] ${info}`);
     console.log.apply(console, message);
   }
 };
