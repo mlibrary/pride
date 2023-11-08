@@ -1,5 +1,4 @@
 const { expect } = require('chai');
-const _ = require('underscore');
 const Paginater = require('../../../../pride').Pride.Util.Paginater;
 const { siblingFileIsProperty } = require('../../index.spec');
 
@@ -11,11 +10,11 @@ function paginatorBasicExpectations (key1, key2, valid) {
     this.example = new Paginater(settings);
   });
 
-  _.each(valid, function (value, key) {
-    it('sets ' + key + ' correctly', function () {
+  for (const [key, value] of Object.entries(valid)) {
+    it(`sets ${key} correctly`, function () {
       expect(valid[key]).to.equal(value);
     });
-  });
+  }
 
   it('sets page_limit to Infinity', function () {
     expect(this.example.get('page_limit')).to.equal(Infinity);
@@ -55,24 +54,18 @@ function testPaginatorBasics (key1, key2) {
 function testPaginatorUnsettable (invalidSettings, basicSettings) {
   basicSettings = basicSettings || { start: 10, count: 5 };
 
-  it(
-    "can't set " + _.keys(invalidSettings).join(' and ') + ' together after initializaion',
-    function () {
-      expect(function () {
-        (new Paginater(basicSettings)).set(invalidSettings);
-      }).to.throw();
-    }
-  );
+  it(`can't set ${Object.keys(invalidSettings).join(' and ')} together after initialization`, function () {
+    expect(function () {
+      (new Paginater(basicSettings)).set(invalidSettings);
+    }).to.throw();
+  });
 
-  it(
-    "can't set " + _.keys(invalidSettings).join(' and ') + ' together on initializaion',
-    function () {
-      expect(function () {
-        const initializeInvalidSettings = new Paginater(_.extend(basicSettings, invalidSettings));
-        return initializeInvalidSettings;
-      }).to.throw();
-    }
-  );
+  it(`can't set ${Object.keys(invalidSettings).join(' and ')} together on initialization`, function () {
+    expect(function () {
+      const initializeInvalidSettings = new Paginater({ ...basicSettings, ...invalidSettings });
+      return initializeInvalidSettings;
+    }).to.throw();
+  });
 }
 
 describe('Pride.Util.Paginater', function () {
@@ -89,12 +82,10 @@ describe('Pride.Util.Paginater', function () {
     testPaginatorUnsettable({ page: 3, end: 14 }, {});
 
     it("can't set the start greater than the end", function () {
-      expect(
-        function () {
-          const startGreaterThanEnd = new Paginater({ start: 10, end: 5 });
-          return startGreaterThanEnd;
-        }
-      ).to.throw();
+      expect(function () {
+        const startGreaterThanEnd = new Paginater({ start: 10, end: 5 });
+        return startGreaterThanEnd;
+      }).to.throw();
     });
   });
   describe('sibling files are defined as properties', () => {
