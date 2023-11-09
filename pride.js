@@ -2567,43 +2567,31 @@ var Paginater = function(initialValues) {
       }
     });
     if (newValueKeys.includes("page")) {
-      values2.start = (values2.count || 0) * (values2.page - 1);
+      values2.start = values2.count * (values2.page - 1);
     }
     if (newValueKeys.includes("end")) {
+      if (values2.start >= newValues.end) {
+        throw new Error("The start value can not be greater than the end value");
+      }
       if (newValueKeys.includes("count")) {
         values2.start = Math.max(0, newValues.end - (values2.count - 1));
       } else {
-        if (values2.start <= newValues.end) {
-          values2.count = newValues.end - values2.start + 1;
-        } else {
-          throw new Error("The start value can not be greater than the end value");
-        }
+        values2.count = newValues.end - values2.start + 1;
       }
       values2.end = newValues.end;
     } else {
       const end = values2.start + values2.count - 1;
-      values2.end = end < values2.start ? void 0 : end;
+      values2.end = end < values2.start ? values2.end : end;
     }
-    if (typeof values2.total_available !== "number") {
-      values2.index_limit = Infinity;
-    } else if (values2.total_available > 0) {
+    if (typeof values2.total_available === "number" && values2.total_available > 0) {
       values2.index_limit = values2.total_available - 1;
-    } else {
-      values2.index_limit = void 0;
     }
     if (values2.count > 0 && values2.start % values2.count === 0) {
       values2.page = Math.floor(values2.start / values2.count) + 1;
       if (typeof values2.total_available === "number") {
         values2.total_pages = Math.ceil(values2.total_available / values2.count);
         values2.page_limit = values2.total_pages;
-      } else {
-        values2.total_pages = void 0;
-        values2.page_limit = Infinity;
       }
-    } else {
-      values2.page = void 0;
-      values2.total_pages = void 0;
-      values2.page_limit = void 0;
     }
     const valuesKeys = Object.keys(values2);
     if (!valuesKeys.includes("start") || !valuesKeys.includes("count")) {
@@ -2614,7 +2602,16 @@ var Paginater = function(initialValues) {
   this.get = function(name) {
     return values2[name];
   };
-  const values2 = {};
+  const values2 = {
+    count: 0,
+    end: 0,
+    index_limit: Infinity,
+    page: 0,
+    page_limit: Infinity,
+    start: 0,
+    total_available: void 0,
+    total_pages: void 0
+  };
   this.set(initialValues);
 };
 Paginater.getPossibleKeys = getPossibleKeys_default;
