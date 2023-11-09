@@ -2548,24 +2548,29 @@ var getPossibleKeys_default = getPossibleKeys;
 // src/Pride/Util/Paginater/index.js
 var Paginater = function(initialValues) {
   this.set = function(newValues) {
-    if (index_default_default.has(newValues, "total_pages")) {
+    const newValueKeys = Object.keys(newValues);
+    if (newValueKeys.includes("total_pages")) {
       throw new Error("Can not set total_pages (it is a calculated value)");
     }
-    if (index_default_default.has(newValues, "index_limit")) {
+    if (newValueKeys.includes("index_limit")) {
       throw new Error("Can not set index_limit (it is a calculated value)");
     }
-    if (index_default_default.intersection(["start", "end", "count"], index_default_default.keys(newValues)).length > 2) {
+    if (newValueKeys.includes("start") && newValueKeys.includes("end") && newValueKeys.includes("count")) {
       throw new Error("Can not set start, end and count all at the same time");
     }
-    if (index_default_default.has(newValues, "page") && (index_default_default.has(newValues, "start") || index_default_default.has(newValues, "end"))) {
+    if (newValueKeys.includes("page") && (newValueKeys.includes("start") || newValueKeys.includes("end"))) {
       throw new Error("Can not set page as well as the start and/or end");
     }
-    index_default_default.extend(values2, index_default_default.omit(newValues, "end"));
-    if (index_default_default.has(newValues, "page")) {
+    newValueKeys.forEach((property2) => {
+      if (property2 !== "end") {
+        values2[property2] = newValues[property2];
+      }
+    });
+    if (newValueKeys.includes("page")) {
       values2.start = (values2.count || 0) * (values2.page - 1);
     }
-    if (index_default_default.has(newValues, "end")) {
-      if (index_default_default.has(newValues, "count")) {
+    if (newValueKeys.includes("end")) {
+      if (newValueKeys.includes("count")) {
         values2.start = Math.max(0, newValues.end - (values2.count - 1));
       } else {
         if (values2.start <= newValues.end) {
@@ -2579,7 +2584,7 @@ var Paginater = function(initialValues) {
       const end = values2.start + values2.count - 1;
       values2.end = end < values2.start ? void 0 : end;
     }
-    if (!index_default_default.isNumber(values2.total_available)) {
+    if (typeof values2.total_available !== "number") {
       values2.index_limit = Infinity;
     } else if (values2.total_available > 0) {
       values2.index_limit = values2.total_available - 1;
@@ -2588,7 +2593,7 @@ var Paginater = function(initialValues) {
     }
     if (values2.count > 0 && values2.start % values2.count === 0) {
       values2.page = Math.floor(values2.start / values2.count) + 1;
-      if (index_default_default.isNumber(values2.total_available)) {
+      if (typeof values2.total_available === "number") {
         values2.total_pages = Math.ceil(values2.total_available / values2.count);
         values2.page_limit = values2.total_pages;
       } else {
@@ -2600,7 +2605,8 @@ var Paginater = function(initialValues) {
       values2.total_pages = void 0;
       values2.page_limit = void 0;
     }
-    if (!index_default_default.has(values2, "start") || !index_default_default.has(values2, "count")) {
+    const valuesKeys = Object.keys(values2);
+    if (!valuesKeys.includes("start") || !valuesKeys.includes("count")) {
       throw new Error("Not enough information given to create Paginater");
     }
     return this;

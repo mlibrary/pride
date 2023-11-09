@@ -1,46 +1,49 @@
-import _ from 'underscore';
 import getPossibleKeys from './getPossibleKeys';
 
 const Paginater = function (initialValues) {
   this.set = function (newValues) {
-    /// /////////////////////
+    // ////////////////// //
     // Basic error checks //
-    /// /////////////////////
+    // ////////////////// //
 
-    if (_.has(newValues, 'total_pages')) {
+    const newValueKeys = Object.keys(newValues);
+
+    if (newValueKeys.includes('total_pages')) {
       throw new Error('Can not set total_pages (it is a calculated value)');
     }
 
-    if (_.has(newValues, 'index_limit')) {
+    if (newValueKeys.includes('index_limit')) {
       throw new Error('Can not set index_limit (it is a calculated value)');
     }
 
-    if (_.intersection(['start', 'end', 'count'], _.keys(newValues)).length > 2) {
+    if (newValueKeys.includes('start') && newValueKeys.includes('end') && newValueKeys.includes('count')) {
       throw new Error('Can not set start, end and count all at the same time');
     }
 
-    if (_.has(newValues, 'page') &&
-        (_.has(newValues, 'start') || _.has(newValues, 'end'))
-    ) {
+    if (newValueKeys.includes('page') && (newValueKeys.includes('start') || newValueKeys.includes('end'))) {
       throw new Error('Can not set page as well as the start and/or end');
     }
 
-    /// ///////////////////////////
+    // //////////////////////// //
     // Set and calculate values //
-    /// ///////////////////////////
+    // //////////////////////// //
 
     // We wait to set the new end value until after an exception can be thrown.
-    _.extend(values, _.omit(newValues, 'end'));
+    newValueKeys.forEach((property) => {
+      if (property !== 'end') {
+        values[property] = newValues[property];
+      }
+    });
 
     // If the page is being set, we have to update the start.
-    if (_.has(newValues, 'page')) {
+    if (newValueKeys.includes('page')) {
       values.start = (values.count || 0) * (values.page - 1);
     }
 
     // If the end is being set, we calculate what start or count should now be.
-    if (_.has(newValues, 'end')) {
+    if (newValueKeys.includes('end')) {
       // If we are also setting the count, calculate a new start.
-      if (_.has(newValues, 'count')) {
+      if (newValueKeys.includes('count')) {
         values.start = Math.max(0, newValues.end - (values.count - 1));
       // If we are not setting the count, calculate a new count.
       } else {
@@ -62,7 +65,7 @@ const Paginater = function (initialValues) {
     }
 
     // Calculate what the last index can be.
-    if (!_.isNumber(values.total_available)) {
+    if (typeof values.total_available !== 'number') {
       values.index_limit = Infinity;
     } else if (values.total_available > 0) {
       values.index_limit = values.total_available - 1;
@@ -70,14 +73,14 @@ const Paginater = function (initialValues) {
       values.index_limit = undefined;
     }
 
-    /// ///////////////////////
+    // //////////////////// //
     // Calculate pagination //
-    /// ///////////////////////
+    // //////////////////// //
 
     if (values.count > 0 && values.start % values.count === 0) {
       values.page = Math.floor(values.start / values.count) + 1;
 
-      if (_.isNumber(values.total_available)) {
+      if (typeof values.total_available === 'number') {
         values.total_pages = Math.ceil(values.total_available / values.count);
         values.page_limit = values.total_pages;
       } else {
@@ -90,11 +93,13 @@ const Paginater = function (initialValues) {
       values.page_limit = undefined;
     }
 
-    /// ///////////////////////////////////
+    // //////////////////////////////// //
     // Check to make sure enough is set //
-    /// ///////////////////////////////////
+    // //////////////////////////////// //
 
-    if (!_.has(values, 'start') || !_.has(values, 'count')) {
+    const valuesKeys = Object.keys(values);
+
+    if (!valuesKeys.includes('start') || !valuesKeys.includes('count')) {
       throw new Error('Not enough information given to create Paginater');
     }
 
