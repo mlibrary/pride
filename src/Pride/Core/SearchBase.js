@@ -3,7 +3,7 @@ import Settings from '../Settings';
 import sliceCall from '../Util/sliceCall';
 import log from './log';
 import safeCall from '../Util/safeCall';
-import getPossibleKeys from '../Util/Paginater/getPossibleKeys';
+import getPossibleKeys from '../Util/Paginator/getPossibleKeys';
 import Section from '../Util/Section';
 import Messenger from '../Messenger';
 import FuncBuffer from '../Util/FuncBuffer';

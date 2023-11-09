@@ -1,6 +1,6 @@
 import getPossibleKeys from './getPossibleKeys';
 
-const Paginater = function (initialValues) {
+const Paginator = function (initialValues) {
   this.set = function (newValues) {
     // ////////////////// //
     // Basic error checks //
@@ -88,7 +88,7 @@ const Paginater = function (initialValues) {
     const valuesKeys = Object.keys(values);
 
     if (!valuesKeys.includes('start') || !valuesKeys.includes('count')) {
-      throw new Error('Not enough information given to create Paginater');
+      throw new Error('Not enough information given to create Paginator');
     }
 
     return this;
@@ -112,6 +112,6 @@ const Paginater = function (initialValues) {
   this.set(initialValues);
 };
 
-Paginater.getPossibleKeys = getPossibleKeys;
+Paginator.getPossibleKeys = getPossibleKeys;
 
-export default Paginater;
+export default Paginator;

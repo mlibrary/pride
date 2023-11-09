@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const Paginater = require('../../../../pride').Pride.Util.Paginater;
+const Paginator = require('../../../../pride').Pride.Util.Paginator;
 const { siblingFileIsProperty } = require('../../index.spec');
 
 function paginatorBasicExpectations (key1, key2, valid) {
@@ -7,7 +7,7 @@ function paginatorBasicExpectations (key1, key2, valid) {
     const settings = {};
     settings[key1] = valid[key1];
     settings[key2] = valid[key2];
-    this.example = new Paginater(settings);
+    this.example = new Paginator(settings);
   });
 
   for (const [key, value] of Object.entries(valid)) {
@@ -56,19 +56,19 @@ function testPaginatorUnsettable (invalidSettings, basicSettings) {
 
   it(`can't set ${Object.keys(invalidSettings).join(' and ')} together after initialization`, function () {
     expect(function () {
-      (new Paginater(basicSettings)).set(invalidSettings);
+      (new Paginator(basicSettings)).set(invalidSettings);
     }).to.throw();
   });
 
   it(`can't set ${Object.keys(invalidSettings).join(' and ')} together on initialization`, function () {
     expect(function () {
-      const initializeInvalidSettings = new Paginater({ ...basicSettings, ...invalidSettings });
+      const initializeInvalidSettings = new Paginator({ ...basicSettings, ...invalidSettings });
       return initializeInvalidSettings;
     }).to.throw();
   });
 }
 
-describe('Pride.Util.Paginater', function () {
+describe('Pride.Util.Paginator', function () {
   testPaginatorBasics('start', 'count');
   testPaginatorBasics('start', 'end');
   testPaginatorBasics('count', 'end');
@@ -83,12 +83,12 @@ describe('Pride.Util.Paginater', function () {
 
     it("can't set the start greater than the end", function () {
       expect(function () {
-        const startGreaterThanEnd = new Paginater({ start: 10, end: 5 });
+        const startGreaterThanEnd = new Paginator({ start: 10, end: 5 });
         return startGreaterThanEnd;
       }).to.throw();
     });
   });
   describe('sibling files are defined as properties', () => {
-    siblingFileIsProperty('Pride.Util.Paginater', Paginater);
+    siblingFileIsProperty('Pride.Util.Paginator', Paginator);
   });
 });

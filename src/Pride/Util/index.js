@@ -3,7 +3,7 @@ import escape from './escape';
 import FuncBuffer from './FuncBuffer';
 import isFunction from './isFunction';
 import MultiSearch from './MultiSearch';
-import Paginater from './Paginater/index';
+import Paginator from './Paginator/index';
 import request from './request';
 import RequestBuffer from './RequestBuffer';
 import safeApply from './safeApply';
@@ -18,7 +18,7 @@ const Util = {
   FuncBuffer,
   isFunction,
   MultiSearch,
-  Paginater,
+  Paginator,
   request,
   RequestBuffer,
   safeApply,

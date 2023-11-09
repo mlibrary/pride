@@ -2532,7 +2532,7 @@ var deepClone = function(original) {
 };
 var deepClone_default = deepClone;
 
-// src/Pride/Util/Paginater/getPossibleKeys.js
+// src/Pride/Util/Paginator/getPossibleKeys.js
 var getPossibleKeys = [
   "start",
   "count",
@@ -2545,8 +2545,8 @@ var getPossibleKeys = [
 ];
 var getPossibleKeys_default = getPossibleKeys;
 
-// src/Pride/Util/Paginater/index.js
-var Paginater = function(initialValues) {
+// src/Pride/Util/Paginator/index.js
+var Paginator = function(initialValues) {
   this.set = function(newValues) {
     const newValueKeys = Object.keys(newValues);
     if (newValueKeys.includes("total_pages")) {
@@ -2595,7 +2595,7 @@ var Paginater = function(initialValues) {
     }
     const valuesKeys = Object.keys(values2);
     if (!valuesKeys.includes("start") || !valuesKeys.includes("count")) {
-      throw new Error("Not enough information given to create Paginater");
+      throw new Error("Not enough information given to create Paginator");
     }
     return this;
   };
@@ -2614,8 +2614,8 @@ var Paginater = function(initialValues) {
   };
   this.set(initialValues);
 };
-Paginater.getPossibleKeys = getPossibleKeys_default;
-var Paginater_default = Paginater;
+Paginator.getPossibleKeys = getPossibleKeys_default;
+var Paginator_default = Paginator;
 
 // src/Pride/Util/Section.js
 var Section = function(start, end) {
@@ -2646,15 +2646,15 @@ var Section_default = Section;
 
 // src/Pride/Core/Query.js
 var Query = function(queryInfo) {
-  const paginater = new Paginater_default({
+  const paginater = new Paginator_default({
     start: queryInfo.start,
     count: queryInfo.count
   });
-  const paginaterKeys = Paginater_default.getPossibleKeys;
+  const paginaterKeys = Paginator_default.getPossibleKeys;
   queryInfo = index_default_default.omit(deepClone_default(queryInfo), paginaterKeys);
   queryInfo.request_id = queryInfo.request_id || 0;
   this.get = function(key) {
-    if (Paginater_default.getPossibleKeys.includes(key)) {
+    if (Paginator_default.getPossibleKeys.includes(key)) {
       return paginater.get(key);
     } else {
       return queryInfo[key];
@@ -4620,7 +4620,7 @@ var Util = {
   FuncBuffer: FuncBuffer_default,
   isFunction: isFunction_default2,
   MultiSearch: MultiSearch_default,
-  Paginater: Paginater_default,
+  Paginator: Paginator_default,
   request: request_default,
   RequestBuffer: RequestBuffer_default,
   safeApply: safeApply_default,

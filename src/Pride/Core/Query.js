@@ -1,17 +1,17 @@
 import _ from 'underscore';
-import Paginater from '../Util/Paginater/index';
+import Paginator from '../Util/Paginator/index';
 import deepClone from '../Util/deepClone';
 import Section from '../Util/Section';
 
 const Query = function (queryInfo) {
   // Setup the paginater to do all pagination calculations.
-  const paginater = new Paginater({
+  const paginater = new Paginator({
     start: queryInfo.start,
     count: queryInfo.count
   });
 
   // Memoize the paginater keys for future use.
-  const paginaterKeys = Paginater.getPossibleKeys;
+  const paginaterKeys = Paginator.getPossibleKeys;
 
   // Remove the pagination info from queryInfo.
   queryInfo = _.omit(deepClone(queryInfo), paginaterKeys);
@@ -20,7 +20,7 @@ const Query = function (queryInfo) {
   queryInfo.request_id = queryInfo.request_id || 0;
 
   this.get = function (key) {
-    if (Paginater.getPossibleKeys.includes(key)) {
+    if (Paginator.getPossibleKeys.includes(key)) {
       return paginater.get(key);
     } else {
       return queryInfo[key];

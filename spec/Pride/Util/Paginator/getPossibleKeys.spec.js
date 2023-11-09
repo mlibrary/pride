@@ -1,7 +1,7 @@
 const { expect } = require('chai');
-const getPossibleKeys = require('../../../../pride').Pride.Util.Paginater.getPossibleKeys;
+const getPossibleKeys = require('../../../../pride').Pride.Util.Paginator.getPossibleKeys;
 
-describe('Pride.Util.Paginater.getPossibleKeys', function () {
+describe('Pride.Util.Paginator.getPossibleKeys', function () {
   it('works', function () {
     expect(getPossibleKeys).to.not.be.null;
   });
