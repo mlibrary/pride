@@ -3,49 +3,37 @@ const Paginator = require('../../../../pride').Pride.Util.Paginator;
 const { siblingFileIsProperty } = require('../../index.spec');
 
 function paginatorBasicExpectations (key1, key2, valid) {
-  beforeEach(function () {
-    const settings = {};
-    settings[key1] = valid[key1];
-    settings[key2] = valid[key2];
-    this.example = new Paginator(settings);
+  const example = new Paginator({
+    [`${key1}`]: valid[key1],
+    [`${key2}`]: valid[key2]
   });
 
+  console.log(valid);
+
   for (const [key, value] of Object.entries(valid)) {
-    it(`sets ${key} correctly`, function () {
+    it(`sets the number in ${key} correctly`, function () {
+      expect(value).to.be.a('number');
       expect(valid[key]).to.equal(value);
     });
   }
 
-  it('sets page_limit to Infinity', function () {
-    expect(this.example.get('page_limit')).to.equal(Infinity);
+  ['index_limit', 'page_limit'].forEach((property) => {
+    it(`sets ${property} to Infinity`, function () {
+      expect(example.get(property)).to.equal(Infinity);
+    });
   });
 
-  it('sets index_limit to Infinity', function () {
-    expect(this.example.get('index_limit')).to.equal(Infinity);
-  });
-
-  it('sets total_pages to undefined', function () {
-    expect(this.example.get('total_pages')).to.equal(undefined);
-  });
-
-  it('sets total_available to undefined', function () {
-    expect(this.example.get('total_available')).to.equal(undefined);
+  ['total_available', 'total_pages'].forEach((property) => {
+    it(`sets ${property} to undefined`, function () {
+      expect(example.get(property)).to.be.undefined;
+    });
   });
 }
 
 // Test setting basic values
 function testPaginatorBasics (key1, key2) {
-  describe('given a valid ' + key1 + ' and ' + key2, function () {
-    beforeEach(function () {
-      this.valid = { start: 10, count: 5, end: 14, page: 3 };
-    });
-
+  describe(`given a valid ${key1} and ${key2}`, function () {
     paginatorBasicExpectations(key1, key2, { start: 10, count: 5, end: 14, page: 3 });
-
-    beforeEach(function () {
-      this.valid = { start: 500, count: 100, end: 599, page: 6 };
-    });
-
     paginatorBasicExpectations(key1, key2, { start: 500, count: 100, end: 599, page: 6 });
   }
   );
@@ -88,6 +76,7 @@ describe('Pride.Util.Paginator', function () {
       }).to.throw();
     });
   });
+
   describe('sibling files are defined as properties', () => {
     siblingFileIsProperty('Pride.Util.Paginator', Paginator);
   });

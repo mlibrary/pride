@@ -8,13 +8,11 @@ const Paginator = function (initialValues) {
 
     const newValueKeys = Object.keys(newValues);
 
-    if (newValueKeys.includes('total_pages')) {
-      throw new Error('Can not set total_pages (it is a calculated value)');
-    }
-
-    if (newValueKeys.includes('index_limit')) {
-      throw new Error('Can not set index_limit (it is a calculated value)');
-    }
+    ['index_limit', 'total_pages'].forEach((property) => {
+      if (newValueKeys.includes(property)) {
+        throw new Error(`Can not set ${property} (it is a calculated value)`);
+      }
+    });
 
     if (newValueKeys.includes('start') && newValueKeys.includes('end') && newValueKeys.includes('count')) {
       throw new Error('Can not set start, end and count all at the same time');
@@ -109,6 +107,7 @@ const Paginator = function (initialValues) {
     total_available: undefined,
     total_pages: undefined
   };
+
   this.set(initialValues);
 };
 

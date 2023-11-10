@@ -2549,12 +2549,11 @@ var getPossibleKeys_default = getPossibleKeys;
 var Paginator = function(initialValues) {
   this.set = function(newValues) {
     const newValueKeys = Object.keys(newValues);
-    if (newValueKeys.includes("total_pages")) {
-      throw new Error("Can not set total_pages (it is a calculated value)");
-    }
-    if (newValueKeys.includes("index_limit")) {
-      throw new Error("Can not set index_limit (it is a calculated value)");
-    }
+    ["index_limit", "total_pages"].forEach((property2) => {
+      if (newValueKeys.includes(property2)) {
+        throw new Error(`Can not set ${property2} (it is a calculated value)`);
+      }
+    });
     if (newValueKeys.includes("start") && newValueKeys.includes("end") && newValueKeys.includes("count")) {
       throw new Error("Can not set start, end and count all at the same time");
     }
@@ -2646,37 +2645,37 @@ var Section_default = Section;
 
 // src/Pride/Core/Query.js
 var Query = function(queryInfo) {
-  const paginater = new Paginator_default({
+  const paginator = new Paginator_default({
     start: queryInfo.start,
     count: queryInfo.count
   });
-  const paginaterKeys = Paginator_default.getPossibleKeys;
-  queryInfo = index_default_default.omit(deepClone_default(queryInfo), paginaterKeys);
+  const paginatorKeys = Paginator_default.getPossibleKeys;
+  queryInfo = index_default_default.omit(deepClone_default(queryInfo), paginatorKeys);
   queryInfo.request_id = queryInfo.request_id || 0;
   this.get = function(key) {
     if (Paginator_default.getPossibleKeys.includes(key)) {
-      return paginater.get(key);
+      return paginator.get(key);
     } else {
       return queryInfo[key];
     }
   };
   this.set = function(newValues) {
-    const newPaginationValues = index_default_default.pick(newValues, paginaterKeys);
-    const newQueryValues = index_default_default.omit(newValues, paginaterKeys);
+    const newPaginationValues = index_default_default.pick(newValues, paginatorKeys);
+    const newQueryValues = index_default_default.omit(newValues, paginatorKeys);
     if (!index_default_default.isEmpty(newQueryValues)) {
-      paginater.set({ total_available: void 0 });
+      paginator.set({ total_available: void 0 });
       if (!index_default_default.isNumber(newQueryValues.request_id)) {
         queryInfo.request_id += 1;
       }
     }
-    paginater.set(newPaginationValues);
+    paginator.set(newPaginationValues);
     index_default_default.extend(queryInfo, newQueryValues);
     return this;
   };
   this.clone = function() {
     const fullInfo = deepClone_default(queryInfo);
-    fullInfo.start = paginater.get("start");
-    fullInfo.count = paginater.get("count");
+    fullInfo.start = paginator.get("start");
+    fullInfo.count = paginator.get("count");
     return new Query(fullInfo);
   };
   this.toSection = function() {
