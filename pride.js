@@ -2629,16 +2629,14 @@ var Section = function(start, end) {
   this.calcLength = function() {
     return this.end - this.start + 1;
   };
+  this.shifted = function(startAmount, endAmount) {
+    if (typeof endAmount !== "number") {
+      endAmount = startAmount;
+    }
+    return new Section(this.start + startAmount, this.end + endAmount);
+  };
   this.expanded = function(amount) {
     return this.shifted(-1 * amount, amount);
-  };
-  this.shifted = function(startAmount, endAmount) {
-    if (!index_default_default.isNumber(endAmount))
-      endAmount = startAmount;
-    return new Section(
-      this.start + startAmount,
-      this.end + endAmount
-    );
   };
 };
 var Section_default = Section;
