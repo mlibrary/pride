@@ -1,46 +1,46 @@
 import _ from 'underscore';
-import Paginater from '../Util/Paginater/index';
+import Paginator from '../Util/Paginator/index';
 import deepClone from '../Util/deepClone';
 import Section from '../Util/Section';
 
 const Query = function (queryInfo) {
-  // Setup the paginater to do all pagination calculations.
-  const paginater = new Paginater({
+  // Setup the paginator to do all pagination calculations.
+  const paginator = new Paginator({
     start: queryInfo.start,
     count: queryInfo.count
   });
 
-  // Memoize the paginater keys for future use.
-  const paginaterKeys = Paginater.getPossibleKeys;
+  // Memoize the paginator keys for future use.
+  const paginatorKeys = Paginator.getPossibleKeys;
 
   // Remove the pagination info from queryInfo.
-  queryInfo = _.omit(deepClone(queryInfo), paginaterKeys);
+  queryInfo = _.omit(deepClone(queryInfo), paginatorKeys);
 
   // Set the default request_id if it isn't already set.
   queryInfo.request_id = queryInfo.request_id || 0;
 
   this.get = function (key) {
-    if (Paginater.getPossibleKeys.includes(key)) {
-      return paginater.get(key);
+    if (Paginator.getPossibleKeys.includes(key)) {
+      return paginator.get(key);
     } else {
       return queryInfo[key];
     }
   };
 
   this.set = function (newValues) {
-    const newPaginationValues = _.pick(newValues, paginaterKeys);
-    const newQueryValues = _.omit(newValues, paginaterKeys);
+    const newPaginationValues = _.pick(newValues, paginatorKeys);
+    const newQueryValues = _.omit(newValues, paginatorKeys);
 
     // If the set of things being searched was altered...
     if (!_.isEmpty(newQueryValues)) {
-      paginater.set({ total_available: undefined });
+      paginator.set({ total_available: undefined });
 
       if (!_.isNumber(newQueryValues.request_id)) {
         queryInfo.request_id += 1;
       }
     }
 
-    paginater.set(newPaginationValues);
+    paginator.set(newPaginationValues);
     _.extend(queryInfo, newQueryValues);
 
     return this;
@@ -48,8 +48,8 @@ const Query = function (queryInfo) {
 
   this.clone = function () {
     const fullInfo = deepClone(queryInfo);
-    fullInfo.start = paginater.get('start');
-    fullInfo.count = paginater.get('count');
+    fullInfo.start = paginator.get('start');
+    fullInfo.count = paginator.get('count');
 
     return new Query(fullInfo);
   };
