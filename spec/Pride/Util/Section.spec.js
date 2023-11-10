@@ -107,8 +107,7 @@ describe('Pride.Util.Section', function () {
     it('gives the length of the section, even when given the start and end out of order', function () {
       expect((new Section(100, 27)).calcLength()).to.equal(74);
     });
-  }
-  );
+  });
 
   describe('shifted()', function () {
     const shiftedTogether = example.shifted(amount);
@@ -150,6 +149,5 @@ describe('Pride.Util.Section', function () {
     it('moves the end forwards', function () {
       expect(expanded.end).to.equal(end + amount);
     });
-  }
-  );
+  });
 });
