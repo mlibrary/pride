@@ -8,8 +8,6 @@ function paginatorBasicExpectations (key1, key2, valid) {
     [`${key2}`]: valid[key2]
   });
 
-  console.log(valid);
-
   for (const [key, value] of Object.entries(valid)) {
     it(`sets the number in ${key} correctly`, function () {
       expect(value).to.be.a('number');
