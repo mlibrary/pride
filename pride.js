@@ -2747,41 +2747,41 @@ var safeApply_default = safeApply;
 var FuncBuffer = function(extension) {
   let buffer = {};
   const self2 = this;
-  const safeGet = function(name) {
+  const safeGet = (name) => {
     if (!index_default_default.has(buffer, name))
       buffer[name] = [];
     return buffer[name];
   };
-  this.add = function(func, name) {
+  this.add = (func, name) => {
     safeGet(name).push(func);
-    return self2;
+    return this;
   };
-  this.remove = function(func, name) {
+  this.remove = (func, name) => {
     buffer[name] = index_default_default.reject(
       safeGet(name),
-      function(otherFunc) {
+      (otherFunc) => {
         return func === otherFunc;
       }
     );
-    return self2;
+    return this;
   };
-  this.clear = function(name) {
+  this.clear = (name) => {
     delete buffer[name];
-    return self2;
+    return this;
   };
-  this.clearAll = function() {
+  this.clearAll = () => {
     buffer = {};
-    return self2;
+    return this;
   };
   this.call = function(name) {
     self2.apply(name, sliceCall_default(arguments, 1));
     return self2;
   };
-  this.apply = function(name, args) {
-    index_default_default.each(safeGet(name), function(func) {
+  this.apply = (name, args) => {
+    index_default_default.each(safeGet(name), (func) => {
       safeApply_default(func, args);
     });
-    return self2;
+    return this;
   };
   if (index_default_default.isFunction(extension))
     extension.call(this);

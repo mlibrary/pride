@@ -6,39 +6,39 @@ const FuncBuffer = function (extension) {
   let buffer = {};
   const self = this;
 
-  const safeGet = function (name) {
+  const safeGet = (name) => {
     if (!_.has(buffer, name)) buffer[name] = [];
 
     return buffer[name];
   };
 
-  this.add = function (func, name) {
+  this.add = (func, name) => {
     safeGet(name).push(func);
 
-    return self;
+    return this;
   };
 
-  this.remove = function (func, name) {
+  this.remove = (func, name) => {
     buffer[name] = _.reject(
       safeGet(name),
-      function (otherFunc) {
+      (otherFunc) => {
         return func === otherFunc;
       }
     );
 
-    return self;
+    return this;
   };
 
-  this.clear = function (name) {
+  this.clear = (name) => {
     delete buffer[name];
 
-    return self;
+    return this;
   };
 
-  this.clearAll = function () {
+  this.clearAll = () => {
     buffer = {};
 
-    return self;
+    return this;
   };
 
   this.call = function (name) {
@@ -47,12 +47,12 @@ const FuncBuffer = function (extension) {
     return self;
   };
 
-  this.apply = function (name, args) {
-    _.each(safeGet(name), function (func) {
+  this.apply = (name, args) => {
+    _.each(safeGet(name), (func) => {
       safeApply(func, args);
     });
 
-    return self;
+    return this;
   };
 
   if (_.isFunction(extension)) extension.call(this);
