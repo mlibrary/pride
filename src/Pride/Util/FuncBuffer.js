@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import safeApply from './safeApply';
 import isFunction from './isFunction';
 
@@ -16,7 +15,9 @@ const FuncBuffer = function (extension) {
   };
 
   const safeGet = (name) => {
-    if (!_.has(buffer, name)) buffer[name] = [];
+    if (!(!!buffer && hasOwnProperty.call(buffer, name))) {
+      buffer[name] = [];
+    }
     return buffer[name];
   };
 
@@ -26,17 +27,14 @@ const FuncBuffer = function (extension) {
   };
 
   this.remove = (func, name) => {
-    buffer[name] = _.reject(
-      safeGet(name),
-      (otherFunc) => {
-        return func === otherFunc;
-      }
-    );
+    buffer[name] = safeGet(name).filter((otherFunc) => {
+      return func !== otherFunc;
+    });
     return this;
   };
 
   this.apply = (name, args) => {
-    _.each(safeGet(name), (func) => {
+    safeGet(name).forEach((func) => {
       safeApply(func, args);
     });
     return this;
