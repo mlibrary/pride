@@ -2746,7 +2746,14 @@ var safeApply_default = safeApply;
 // src/Pride/Util/FuncBuffer.js
 var FuncBuffer = function(extension) {
   let buffer = {};
-  const self2 = this;
+  this.clear = (name) => {
+    delete buffer[name];
+    return this;
+  };
+  this.clearAll = () => {
+    buffer = {};
+    return this;
+  };
   const safeGet = (name) => {
     if (!index_default_default.has(buffer, name))
       buffer[name] = [];
@@ -2765,25 +2772,17 @@ var FuncBuffer = function(extension) {
     );
     return this;
   };
-  this.clear = (name) => {
-    delete buffer[name];
-    return this;
-  };
-  this.clearAll = () => {
-    buffer = {};
-    return this;
-  };
-  this.call = function(name) {
-    self2.apply(name, sliceCall_default(arguments, 1));
-    return self2;
-  };
   this.apply = (name, args) => {
     index_default_default.each(safeGet(name), (func) => {
       safeApply_default(func, args);
     });
     return this;
   };
-  if (index_default_default.isFunction(extension))
+  this.call = (name, ...args) => {
+    this.apply(name, args);
+    return this;
+  };
+  if (isFunction_default2(extension))
     extension.call(this);
 };
 var FuncBuffer_default = FuncBuffer;
