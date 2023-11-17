@@ -674,7 +674,7 @@ var SymbolProto = typeof Symbol !== "undefined" ? Symbol.prototype : null;
 var push = ArrayProto.push;
 var slice = ArrayProto.slice;
 var toString = ObjProto.toString;
-var hasOwnProperty = ObjProto.hasOwnProperty;
+var hasOwnProperty2 = ObjProto.hasOwnProperty;
 var supportsArrayBuffer = typeof ArrayBuffer !== "undefined";
 var supportsDataView = typeof DataView !== "undefined";
 var nativeIsArray = Array.isArray;
@@ -803,7 +803,7 @@ var isArray_default = nativeIsArray || tagTester("Array");
 
 // node_modules/underscore/modules/_has.js
 function has(obj, key) {
-  return obj != null && hasOwnProperty.call(obj, key);
+  return obj != null && hasOwnProperty2.call(obj, key);
 }
 
 // node_modules/underscore/modules/isArguments.js
@@ -2746,44 +2746,41 @@ var safeApply_default = safeApply;
 // src/Pride/Util/FuncBuffer.js
 var FuncBuffer = function(extension) {
   let buffer = {};
-  const self2 = this;
-  const safeGet = function(name) {
-    if (!index_default_default.has(buffer, name))
+  this.clear = (name) => {
+    delete buffer[name];
+    return this;
+  };
+  this.clearAll = () => {
+    buffer = {};
+    return this;
+  };
+  const safeGet = (name) => {
+    if (!(!!buffer && hasOwnProperty.call(buffer, name))) {
       buffer[name] = [];
+    }
     return buffer[name];
   };
-  this.add = function(func, name) {
+  this.add = (func, name) => {
     safeGet(name).push(func);
-    return self2;
+    return this;
   };
-  this.remove = function(func, name) {
-    buffer[name] = index_default_default.reject(
-      safeGet(name),
-      function(otherFunc) {
-        return func === otherFunc;
-      }
-    );
-    return self2;
+  this.remove = (func, name) => {
+    buffer[name] = safeGet(name).filter((otherFunc) => {
+      return func !== otherFunc;
+    });
+    return this;
   };
-  this.clear = function(name) {
-    delete buffer[name];
-    return self2;
-  };
-  this.clearAll = function() {
-    buffer = {};
-    return self2;
-  };
-  this.call = function(name) {
-    self2.apply(name, sliceCall_default(arguments, 1));
-    return self2;
-  };
-  this.apply = function(name, args) {
-    index_default_default.each(safeGet(name), function(func) {
+  this.apply = (name, args) => {
+    safeGet(name).forEach((func) => {
       safeApply_default(func, args);
     });
-    return self2;
+    return this;
   };
-  if (index_default_default.isFunction(extension))
+  this.call = (name, ...args) => {
+    this.apply(name, args);
+    return this;
+  };
+  if (isFunction_default2(extension))
     extension.call(this);
 };
 var FuncBuffer_default = FuncBuffer;

@@ -1,4 +1,67 @@
+const { expect } = require('chai');
+const Pride = require('../../../pride').Pride;
+
 function testFuncBufferMethods (name) {
+  const anotherName = 'anotherBuffer';
+
+  beforeEach(function () {
+    this.buffer = new Pride.Util.FuncBuffer();
+    this.number = 0;
+    this.anotherNumber = 0;
+    this.fromAnotherName = 0;
+
+    this.exampleFunction = () => {
+      this.number++;
+    };
+
+    this.buffer.add(this.exampleFunction, name)
+      .add(() => {
+        this.anotherNumber++;
+      }, name)
+      .add(() => {
+        this.fromAnotherName++;
+      }, anotherName);
+  });
+
+  describe('clear()', function () {
+    beforeEach(function () {
+      this.buffer.clear(name);
+      this.buffer.call(name);
+    });
+
+    it('removes functions from the named buffer', function () {
+      expect(this.number).to.equal(0);
+      expect(this.anotherNumber).to.equal(0);
+    });
+
+    it('returns the FuncBuffer', function () {
+      expect(this.buffer.clear(name)).to.equal(this.buffer);
+    });
+
+    it("doesn't clear other buffers", function () {
+      this.buffer.call(anotherName);
+      expect(this.fromAnotherName).to.equal(1);
+    });
+  });
+
+  describe('clearAll()', function () {
+    beforeEach(function () {
+      this.buffer.clearAll(name);
+      this.buffer.call(name);
+      this.buffer.call(anotherName);
+    });
+
+    it('removes functions from all buffers', function () {
+      expect(this.number).to.equal(0);
+      expect(this.anotherNumber).to.equal(0);
+      expect(this.fromAnotherName).to.equal(0);
+    });
+
+    it('returns the FuncBuffer', function () {
+      expect(this.buffer.clear(name)).to.equal(this.buffer);
+    });
+  });
+
   describe('add()', function () {
     it('returns self', function () {
       const buffer = new Pride.Util.FuncBuffer();
@@ -6,31 +69,52 @@ function testFuncBufferMethods (name) {
     });
   });
 
-  beforeEach(function () {
-    const self = this;
-    this.name = name;
-    this.anotherName = 'anotherBuffer';
-    this.buffer = new Pride.Util.FuncBuffer();
-    this.number = 0;
-    this.anotherNumber = 0;
-    this.fromAnotherName = 0;
+  describe('remove()', function () {
+    beforeEach(function () {
+      this.buffer.remove(this.exampleFunction, name);
+      this.buffer.call(name);
+    });
 
-    this.exampleFunction = function () {
-      self.number++;
-    };
+    it('only removes the given function', function () {
+      expect(this.number).to.equal(0);
+      expect(this.anotherNumber).to.equal(1);
+    });
 
-    this.buffer.add(this.exampleFunction, name)
-      .add(function () {
-        self.anotherNumber++;
-      }, name)
-      .add(function () {
-        self.fromAnotherName++;
-      }, this.anotherName);
+    it('returns the FuncBuffer', function () {
+      expect(this.buffer.remove(name)).to.equal(this.buffer);
+    });
+  });
+
+  describe('apply()', function () {
+    let touched1 = touched2 = false;
+
+    beforeEach(function () {
+      this.buffer.add(
+        (x, y) => {
+          if (x && y) {
+            touched1 = !touched1;
+            touched2 = !touched2;
+          }
+        },
+        name
+      );
+
+      this.buffer.apply(name, ['arg1', 'arg2']);
+    });
+
+    it('lets you pass in an argument array', function () {
+      expect(touched1).to.be.true;
+      expect(touched2).to.be.true;
+    });
+
+    it('returns the FuncBuffer', function () {
+      expect(this.buffer.apply(name)).to.equal(this.buffer);
+    });
   });
 
   describe('call()', function () {
     beforeEach(function () {
-      this.buffer.call(this.name);
+      this.buffer.call(name);
     });
 
     it('calls functions registered under the given name', function () {
@@ -44,7 +128,7 @@ function testFuncBufferMethods (name) {
 
     describe('after a second call()', function () {
       beforeEach(function () {
-        this.buffer.call(this.name);
+        this.buffer.call(name);
       });
 
       it('can be called multiple times', function () {
@@ -53,7 +137,7 @@ function testFuncBufferMethods (name) {
       });
 
       it('returns the FuncBuffer', function () {
-        expect(this.buffer.call(this.name)).to.equal(this.buffer);
+        expect(this.buffer.call(name)).to.equal(this.buffer);
       });
 
       it("with an undefined name doesn't explode", function () {
@@ -61,103 +145,7 @@ function testFuncBufferMethods (name) {
       });
     });
   });
-
-  describe('apply()', function () {
-    beforeEach(function () {
-      const self = this;
-      this.touched1 = false;
-      this.touched2 = false;
-
-      this.buffer.add(
-        function (x, y) {
-          if (x && y) self.touched1 = true;
-        },
-        this.name
-      );
-
-      this.buffer.add(
-        function (x, y) {
-          if (x && y) self.touched2 = true;
-        },
-        this.name
-      );
-
-      this.buffer.apply(name, [true, true]);
-    });
-
-    it('lets you pass in an argument array', function () {
-      expect(this.touched1).to.be.true;
-      expect(this.touched2).to.be.true;
-    });
-
-    it('returns the FuncBuffer', function () {
-      expect(this.buffer.apply(name)).to.equal(this.buffer);
-    });
-  });
-
-  describe('clear()', function () {
-    beforeEach(function () {
-      this.buffer.clear(this.name);
-      this.buffer.call(this.name);
-    });
-
-    it('removes functions from the named buffer', function () {
-      expect(this.number).to.equal(0);
-      expect(this.anotherNumber).to.equal(0);
-    });
-
-    describe('on other buffers', function () {
-      beforeEach(function () {
-        this.buffer.call(this.anotherName);
-      });
-
-      it("doesn't clear other buffers", function () {
-        expect(this.fromAnotherName).to.equal(1);
-      });
-    });
-
-    it('returns the FuncBuffer', function () {
-      expect(this.buffer.clear(this.name)).to.equal(this.buffer);
-    });
-  });
-
-  describe('clearAll()', function () {
-    beforeEach(function () {
-      this.buffer.clearAll(this.name);
-      this.buffer.call(this.name);
-      this.buffer.call(this.anotherName);
-    });
-
-    it('removes functions from all buffers', function () {
-      expect(this.number).to.equal(0);
-      expect(this.anotherNumber).to.equal(0);
-      expect(this.fromAnotherName).to.equal(0);
-    });
-
-    it('returns the FuncBuffer', function () {
-      expect(this.buffer.clear(this.name)).to.equal(this.buffer);
-    });
-  });
-
-  describe('remove()', function () {
-    beforeEach(function () {
-      this.buffer.remove(this.exampleFunction, this.name);
-      this.buffer.call(this.name);
-    });
-
-    it('only removes the given function', function () {
-      expect(this.number).to.equal(0);
-      expect(this.anotherNumber).to.equal(1);
-    });
-
-    it('returns the FuncBuffer', function () {
-      expect(this.buffer.remove(this.name)).to.equal(this.buffer);
-    });
-  });
 }
-
-const { expect } = require('chai');
-const Pride = require('../../../pride').Pride;
 
 describe('Pride.Util.FuncBuffer', function () {
   it('can be extended', function () {
@@ -165,7 +153,6 @@ describe('Pride.Util.FuncBuffer', function () {
     const example = new Pride.Util.FuncBuffer(function () {
       thisValue = this;
     });
-
     expect(example).to.equal(thisValue);
   });
 

@@ -1,61 +1,51 @@
-import _ from 'underscore';
-import sliceCall from './sliceCall';
 import safeApply from './safeApply';
+import isFunction from './isFunction';
 
 const FuncBuffer = function (extension) {
   let buffer = {};
-  const self = this;
 
-  const safeGet = function (name) {
-    if (!_.has(buffer, name)) buffer[name] = [];
+  this.clear = (name) => {
+    delete buffer[name];
+    return this;
+  };
 
+  this.clearAll = () => {
+    buffer = {};
+    return this;
+  };
+
+  const safeGet = (name) => {
+    if (!(!!buffer && hasOwnProperty.call(buffer, name))) {
+      buffer[name] = [];
+    }
     return buffer[name];
   };
 
-  this.add = function (func, name) {
+  this.add = (func, name) => {
     safeGet(name).push(func);
-
-    return self;
+    return this;
   };
 
-  this.remove = function (func, name) {
-    buffer[name] = _.reject(
-      safeGet(name),
-      function (otherFunc) {
-        return func === otherFunc;
-      }
-    );
-
-    return self;
+  this.remove = (func, name) => {
+    buffer[name] = safeGet(name).filter((otherFunc) => {
+      return func !== otherFunc;
+    });
+    return this;
   };
 
-  this.clear = function (name) {
-    delete buffer[name];
-
-    return self;
-  };
-
-  this.clearAll = function () {
-    buffer = {};
-
-    return self;
-  };
-
-  this.call = function (name) {
-    self.apply(name, sliceCall(arguments, 1));
-
-    return self;
-  };
-
-  this.apply = function (name, args) {
-    _.each(safeGet(name), function (func) {
+  this.apply = (name, args) => {
+    safeGet(name).forEach((func) => {
       safeApply(func, args);
     });
-
-    return self;
+    return this;
   };
 
-  if (_.isFunction(extension)) extension.call(this);
+  this.call = (name, ...args) => {
+    this.apply(name, args);
+    return this;
+  };
+
+  if (isFunction(extension)) extension.call(this);
 };
 
 export default FuncBuffer;
