@@ -3128,11 +3128,7 @@ var Holdings = function(data) {
     const dataField = data2.fields.find((field) => {
       return field.uid === "resource_access";
     });
-    if (dataField && dataField.value) {
-      return dataField.value;
-    } else {
-      return dataField;
-    }
+    return dataField?.value ? dataField.value : dataField;
   };
   const translateData = function(input) {
     return [getResourceAccess(data)].concat(input);

@@ -7,11 +7,8 @@ const Holdings = function (data) {
     const dataField = data.fields.find((field) => {
       return field.uid === 'resource_access';
     });
-    if (dataField && dataField.value) {
-      return dataField.value;
-    } else {
-      return dataField;
-    }
+
+    return dataField?.value ? dataField.value : dataField;
   };
 
   const translateData = function (input) {
