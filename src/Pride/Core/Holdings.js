@@ -1,8 +1,6 @@
 import safeCall from '../Util/safeCall';
 
 const Holdings = function (data) {
-  this.data = data;
-
   const getResourceAccess = function (data) {
     const dataField = data.fields.find((field) => {
       return field.uid === 'resource_access';
@@ -16,7 +14,7 @@ const Holdings = function (data) {
   };
 
   this.getData = function (func) {
-    safeCall(func, translateData(this.data.holdings));
+    safeCall(func, translateData(data.holdings));
   };
 };
 
