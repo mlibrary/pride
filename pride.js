@@ -2377,21 +2377,9 @@ var index_default_default = _2;
 var AllDatastores = {
   array: [],
   get: function(uid) {
-    return index_default_default.find(
-      this.array,
-      function(datastore) {
-        return datastore.get("uid") === uid;
-      }
-    );
-  },
-  newSearch: function(uid) {
-    const datastore = index_default_default.find(
-      this.array,
-      function(datastore2) {
-        return datastore2.get("uid") === uid;
-      }
-    );
-    return datastore ? datastore.baseSearch() : void 0;
+    return this.array.find((datastore) => {
+      return datastore.get("uid") === uid;
+    });
   },
   each: function(func) {
     index_default_default.each(this.array, func);
