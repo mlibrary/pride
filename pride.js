@@ -3123,22 +3123,17 @@ var RequestBuffer_default = RequestBuffer;
 
 // src/Pride/Core/Holdings.js
 var Holdings = function(data) {
-  this.data = data;
   const getResourceAccess = function(data2) {
     const dataField = data2.fields.find((field) => {
       return field.uid === "resource_access";
     });
-    if (dataField && dataField.value) {
-      return dataField.value;
-    } else {
-      return dataField;
-    }
+    return dataField?.value ? dataField.value : dataField;
   };
   const translateData = function(input) {
     return [getResourceAccess(data)].concat(input);
   };
   this.getData = function(func) {
-    safeCall_default(func, translateData(this.data.holdings));
+    safeCall_default(func, translateData(data.holdings));
   };
 };
 var Holdings_default = Holdings;
