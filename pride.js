@@ -514,6 +514,17 @@ __export(src_exports, {
 });
 module.exports = __toCommonJS(src_exports);
 
+// src/Pride/AllDatastores.js
+var AllDatastores = {
+  array: [],
+  get: function(uid) {
+    return this.array.find((datastore) => {
+      return datastore.get("uid") === uid;
+    });
+  }
+};
+var AllDatastores_default = AllDatastores;
+
 // node_modules/underscore/modules/index.js
 var modules_exports = {};
 __export(modules_exports, {
@@ -2372,21 +2383,6 @@ var underscore_array_methods_default = _;
 var _2 = mixin(modules_exports);
 _2._ = _2;
 var index_default_default = _2;
-
-// src/Pride/AllDatastores.js
-var AllDatastores = {
-  array: [],
-  get: function(uid) {
-    return this.array.find((datastore) => {
-      return datastore.get("uid") === uid;
-    });
-  },
-  each: function(func) {
-    index_default_default.each(this.array, func);
-    return this;
-  }
-};
-var AllDatastores_default = AllDatastores;
 
 // src/Pride/Util/sliceCall.js
 var sliceCall = function(array, begin, end) {
