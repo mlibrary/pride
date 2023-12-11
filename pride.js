@@ -4499,16 +4499,16 @@ var requestRecord_default = requestRecord;
 
 // src/Pride/Util/MultiSearch.js
 var MultiSearch = function(uid, muted, searchArray) {
-  const self2 = this;
   this.searches = searchArray;
   this.uid = uid;
-  this.set = function(values2) {
+  this.set = (values2) => {
     searchArray.forEach((search) => {
       search.set(values2);
     });
-    return self2;
+    return this;
   };
-  const funcOnEach = function(funcName, beforeFunc) {
+  const funcOnEach = (funcName, beforeFunc) => {
+    const self2 = this;
     return function() {
       const args = sliceCall_default(arguments);
       safeApply_default(beforeFunc, args);
