@@ -3179,7 +3179,7 @@ var PreferenceEngine = {
       return this;
     }
     this.updateSelectedRecords(this.engine.listRecords());
-    this.engine.addObserver(function(preferenceEngine) {
+    this.engine.addObserver(/* @__PURE__ */ function(preferenceEngine) {
       return function(data) {
         preferenceEngine.updateSelectedRecords(data);
       };
@@ -3207,7 +3207,7 @@ var PreferenceEngine = {
     for (const prop in data) {
       if (Object.prototype.hasOwnProperty.call(data, prop)) {
         this.selectedRecords[prop] = {};
-        data[prop].forEach(function(prop2) {
+        data[prop].forEach(/* @__PURE__ */ function(prop2) {
           return function(record) {
             this.selectedRecords[prop2][record.uid] = true;
           };
@@ -4499,25 +4499,20 @@ var requestRecord_default = requestRecord;
 
 // src/Pride/Util/MultiSearch.js
 var MultiSearch = function(uid, muted, searchArray) {
-  const queryData = {};
   const self2 = this;
   this.searches = searchArray;
   this.uid = uid;
   this.set = function(values2) {
-    index_default_default.extend(queryData, values2);
-    index_default_default.each(
-      searchArray,
-      function(search) {
-        search.set(values2);
-      }
-    );
+    searchArray.forEach((search) => {
+      search.set(values2);
+    });
     return self2;
   };
   const funcOnEach = function(funcName, beforeFunc) {
     return function() {
       const args = sliceCall_default(arguments);
       safeApply_default(beforeFunc, args);
-      index_default_default.each(searchArray, function(search) {
+      searchArray.forEach((search) => {
         search[funcName].apply(search, args);
       });
       return self2;

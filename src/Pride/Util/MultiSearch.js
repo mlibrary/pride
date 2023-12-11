@@ -1,37 +1,26 @@
-import _ from 'underscore';
 import sliceCall from './sliceCall';
 import safeApply from './safeApply';
 
 const MultiSearch = function (uid, muted, searchArray) {
-  const queryData = {};
   const self = this;
 
   this.searches = searchArray;
   this.uid = uid;
 
   this.set = function (values) {
-    _.extend(queryData, values);
-
-    _.each(
-      searchArray,
-      function (search) {
-        search.set(values);
-      }
-    );
-
+    searchArray.forEach((search) => {
+      search.set(values);
+    });
     return self;
   };
 
   const funcOnEach = function (funcName, beforeFunc) {
     return function () {
       const args = sliceCall(arguments);
-
       safeApply(beforeFunc, args);
-
-      _.each(searchArray, function (search) {
+      searchArray.forEach((search) => {
         search[funcName].apply(search, args);
       });
-
       return self;
     };
   };
