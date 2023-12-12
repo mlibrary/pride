@@ -4545,7 +4545,11 @@ var SearchSwitcher = function(currentSearch, cachedSearches) {
   };
   this.set = (settings) => {
     currentSearch.set(settings);
-    searchCache.set(index_default_default.omit(settings, "page", "facets"));
+    const omittedSettings = { ...settings };
+    ["page", "facets"].forEach((property2) => {
+      delete omittedSettings[property2];
+    });
+    searchCache.set(omittedSettings);
     return this;
   };
   this.nextPage = () => {
@@ -4561,19 +4565,15 @@ var SearchSwitcher = function(currentSearch, cachedSearches) {
       currentSearch.setMute(true);
       currentSearch.set({ page: 1 });
       searchCache.searches.push(currentSearch);
-      currentSearch = void 0;
-      searchCache.searches = index_default_default.reject(
-        searchCache.searches,
-        (search) => {
-          if (search.uid === requestedUid) {
-            currentSearch = search;
-            return true;
-          }
-        }
-      );
+      currentSearch = searchCache.searches.find((search) => {
+        return search.uid === requestedUid;
+      });
       if (!currentSearch) {
-        throw new Error("Could not find a search with a UID of: " + requestedUid);
+        throw new Error(`Could not find a search with a UID of: ${requestedUid}`);
       }
+      searchCache.searches = searchCache.searches.filter((search) => {
+        return search.uid !== requestedUid;
+      });
       this.uid = currentSearch.uid;
       currentSearch.setMute(false);
     }

@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import MultiSearch from './MultiSearch';
 
 const SearchSwitcher = function (currentSearch, cachedSearches) {
@@ -12,13 +11,16 @@ const SearchSwitcher = function (currentSearch, cachedSearches) {
   this.run = (cacheSize) => {
     currentSearch.run(cacheSize);
     searchCache.run(0);
-
     return this;
   };
 
   this.set = (settings) => {
     currentSearch.set(settings);
-    searchCache.set(_.omit(settings, 'page', 'facets'));
+    const omittedSettings = { ...settings };
+    ['page', 'facets'].forEach((property) => {
+      delete omittedSettings[property];
+    });
+    searchCache.set(omittedSettings);
     return this;
   };
 
@@ -37,22 +39,15 @@ const SearchSwitcher = function (currentSearch, cachedSearches) {
       currentSearch.setMute(true);
       currentSearch.set({ page: 1 });
       searchCache.searches.push(currentSearch);
-      currentSearch = undefined;
-
-      searchCache.searches = _.reject(
-        searchCache.searches,
-        (search) => {
-          if (search.uid === requestedUid) {
-            currentSearch = search;
-            return true;
-          }
-        }
-      );
-
+      currentSearch = searchCache.searches.find((search) => {
+        return search.uid === requestedUid;
+      });
       if (!currentSearch) {
-        throw new Error('Could not find a search with a UID of: ' + requestedUid);
+        throw new Error(`Could not find a search with a UID of: ${requestedUid}`);
       }
-
+      searchCache.searches = searchCache.searches.filter((search) => {
+        return search.uid !== requestedUid;
+      });
       this.uid = currentSearch.uid;
       currentSearch.setMute(false);
     }
