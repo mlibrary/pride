@@ -2,7 +2,6 @@ import _ from 'underscore';
 import MultiSearch from './MultiSearch';
 
 const SearchSwitcher = function (currentSearch, cachedSearches) {
-  const self = this;
   currentSearch.setMute(false);
   currentSearch.set({ page: 1 });
   const searchCache = new MultiSearch(null, true, cachedSearches);
@@ -10,33 +9,30 @@ const SearchSwitcher = function (currentSearch, cachedSearches) {
 
   this.uid = currentSearch.uid;
 
-  this.run = function (cacheSize) {
+  this.run = (cacheSize) => {
     currentSearch.run(cacheSize);
     searchCache.run(0);
 
-    return self;
+    return this;
   };
 
-  this.set = function (settings) {
+  this.set = (settings) => {
     currentSearch.set(settings);
     searchCache.set(_.omit(settings, 'page', 'facets'));
-
-    return self;
+    return this;
   };
 
-  this.nextPage = function () {
+  this.nextPage = () => {
     currentSearch.nextPage();
-
-    return self;
+    return this;
   };
 
-  this.prevPage = function () {
+  this.prevPage = () => {
     currentSearch.prevPage();
-
-    return self;
+    return this;
   };
 
-  this.switchTo = function (requestedUid) {
+  this.switchTo = (requestedUid) => {
     if (requestedUid !== currentSearch) {
       currentSearch.setMute(true);
       currentSearch.set({ page: 1 });
@@ -45,7 +41,7 @@ const SearchSwitcher = function (currentSearch, cachedSearches) {
 
       searchCache.searches = _.reject(
         searchCache.searches,
-        function (search) {
+        (search) => {
           if (search.uid === requestedUid) {
             currentSearch = search;
             return true;
@@ -57,11 +53,11 @@ const SearchSwitcher = function (currentSearch, cachedSearches) {
         throw new Error('Could not find a search with a UID of: ' + requestedUid);
       }
 
-      self.uid = currentSearch.uid;
+      this.uid = currentSearch.uid;
       currentSearch.setMute(false);
     }
 
-    return self;
+    return this;
   };
 };
 
