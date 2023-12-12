@@ -3,9 +3,9 @@ import MultiSearch from './MultiSearch';
 
 const SearchSwitcher = function (currentSearch, cachedSearches) {
   const self = this;
+  currentSearch.setMute(false);
+  currentSearch.set({ page: 1 });
   const searchCache = new MultiSearch(null, true, cachedSearches);
-
-  currentSearch.set({ page: 1 }).setMute(false);
   searchCache.set({ page: 1 });
 
   this.uid = currentSearch.uid;
@@ -38,7 +38,8 @@ const SearchSwitcher = function (currentSearch, cachedSearches) {
 
   this.switchTo = function (requestedUid) {
     if (requestedUid !== currentSearch) {
-      currentSearch.setMute(true).set({ page: 1 });
+      currentSearch.setMute(true);
+      currentSearch.set({ page: 1 });
       searchCache.searches.push(currentSearch);
       currentSearch = undefined;
 

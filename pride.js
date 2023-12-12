@@ -4534,8 +4534,9 @@ var MultiSearch_default = MultiSearch;
 // src/Pride/Util/SearchSwitcher.js
 var SearchSwitcher = function(currentSearch, cachedSearches) {
   const self2 = this;
+  currentSearch.setMute(false);
+  currentSearch.set({ page: 1 });
   const searchCache = new MultiSearch_default(null, true, cachedSearches);
-  currentSearch.set({ page: 1 }).setMute(false);
   searchCache.set({ page: 1 });
   this.uid = currentSearch.uid;
   this.run = function(cacheSize) {
@@ -4558,7 +4559,8 @@ var SearchSwitcher = function(currentSearch, cachedSearches) {
   };
   this.switchTo = function(requestedUid) {
     if (requestedUid !== currentSearch) {
-      currentSearch.setMute(true).set({ page: 1 });
+      currentSearch.setMute(true);
+      currentSearch.set({ page: 1 });
       searchCache.searches.push(currentSearch);
       currentSearch = void 0;
       searchCache.searches = index_default_default.reject(
