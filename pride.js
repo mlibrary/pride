@@ -4533,50 +4533,51 @@ var MultiSearch_default = MultiSearch;
 
 // src/Pride/Util/SearchSwitcher.js
 var SearchSwitcher = function(currentSearch, cachedSearches) {
-  const self2 = this;
+  currentSearch.setMute(false);
+  currentSearch.set({ page: 1 });
   const searchCache = new MultiSearch_default(null, true, cachedSearches);
-  currentSearch.set({ page: 1 }).setMute(false);
   searchCache.set({ page: 1 });
   this.uid = currentSearch.uid;
-  this.run = function(cacheSize) {
+  this.run = (cacheSize) => {
     currentSearch.run(cacheSize);
     searchCache.run(0);
-    return self2;
+    return this;
   };
-  this.set = function(settings) {
+  this.set = (settings) => {
     currentSearch.set(settings);
-    searchCache.set(index_default_default.omit(settings, "page", "facets"));
-    return self2;
+    const omittedSettings = { ...settings };
+    ["page", "facets"].forEach((property2) => {
+      delete omittedSettings[property2];
+    });
+    searchCache.set(omittedSettings);
+    return this;
   };
-  this.nextPage = function() {
+  this.nextPage = () => {
     currentSearch.nextPage();
-    return self2;
+    return this;
   };
-  this.prevPage = function() {
+  this.prevPage = () => {
     currentSearch.prevPage();
-    return self2;
+    return this;
   };
-  this.switchTo = function(requestedUid) {
+  this.switchTo = (requestedUid) => {
     if (requestedUid !== currentSearch) {
-      currentSearch.setMute(true).set({ page: 1 });
+      currentSearch.setMute(true);
+      currentSearch.set({ page: 1 });
       searchCache.searches.push(currentSearch);
-      currentSearch = void 0;
-      searchCache.searches = index_default_default.reject(
-        searchCache.searches,
-        function(search) {
-          if (search.uid === requestedUid) {
-            currentSearch = search;
-            return true;
-          }
-        }
-      );
+      currentSearch = searchCache.searches.find((search) => {
+        return search.uid === requestedUid;
+      });
       if (!currentSearch) {
-        throw new Error("Could not find a search with a UID of: " + requestedUid);
+        throw new Error(`Could not find a search with a UID of: ${requestedUid}`);
       }
-      self2.uid = currentSearch.uid;
+      searchCache.searches = searchCache.searches.filter((search) => {
+        return search.uid !== requestedUid;
+      });
+      this.uid = currentSearch.uid;
       currentSearch.setMute(false);
     }
-    return self2;
+    return this;
   };
 };
 var SearchSwitcher_default = SearchSwitcher;
