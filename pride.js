@@ -2632,26 +2632,34 @@ var Query = function(queryInfo) {
     count: queryInfo.count
   });
   const paginatorKeys = Paginator_default.getPossibleKeys;
-  queryInfo = index_default_default.omit(deepClone_default(queryInfo), paginatorKeys);
+  queryInfo = deepClone_default(queryInfo);
+  paginatorKeys.forEach((paginatorKey) => {
+    delete queryInfo[paginatorKey];
+  });
   queryInfo.request_id = queryInfo.request_id || 0;
   this.get = function(key) {
     if (Paginator_default.getPossibleKeys.includes(key)) {
       return paginator.get(key);
-    } else {
-      return queryInfo[key];
     }
+    return queryInfo[key];
   };
   this.set = function(newValues) {
-    const newPaginationValues = index_default_default.pick(newValues, paginatorKeys);
-    const newQueryValues = index_default_default.omit(newValues, paginatorKeys);
-    if (!index_default_default.isEmpty(newQueryValues)) {
+    const [newPaginationValues, newQueryValues] = [{ ...newValues }, { ...newValues }];
+    paginatorKeys.forEach((paginatorKey) => {
+      if (Object.keys(newValues).includes(paginatorKey)) {
+        delete newQueryValues[paginatorKey];
+      } else {
+        delete newPaginationValues[paginatorKey];
+      }
+    });
+    if (Object.keys(newQueryValues).length > 0) {
       paginator.set({ total_available: void 0 });
-      if (!index_default_default.isNumber(newQueryValues.request_id)) {
+      if (typeof newQueryValues.request_id !== "number") {
         queryInfo.request_id += 1;
       }
     }
     paginator.set(newPaginationValues);
-    index_default_default.extend(queryInfo, newQueryValues);
+    queryInfo = { ...queryInfo, ...newQueryValues };
     return this;
   };
   this.clone = function() {
