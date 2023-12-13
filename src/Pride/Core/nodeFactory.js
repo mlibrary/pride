@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import sliceCall from '../Util/sliceCall';
 
-const nodeFactory = function (type, childTypes, extention) {
+const nodeFactory = function (type, childTypes, extension) {
   return function (value) {
     this.children = sliceCall(arguments, 1);
     if (this.children.length === 1 && Array.isArray(this.children[0])) {
@@ -10,7 +10,6 @@ const nodeFactory = function (type, childTypes, extention) {
     this.type = type;
     this.value = value.trim();
     this.childTypes = childTypes || [];
-    this.validIfEmpty = true;
 
     // Check to make sure a child is valid for this node.
     // If it is, add it to the array of children.
@@ -94,9 +93,9 @@ const nodeFactory = function (type, childTypes, extention) {
       );
     };
 
-    // If an extention function was given, call it with this.
-    if (_.isFunction(extention)) {
-      extention.call(this);
+    // If an extension function was given, call it with this.
+    if (_.isFunction(extension)) {
+      extension.call(this);
     }
   };
 };

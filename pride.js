@@ -2391,7 +2391,7 @@ var sliceCall = function(array, begin, end) {
 var sliceCall_default = sliceCall;
 
 // src/Pride/Core/nodeFactory.js
-var nodeFactory = function(type2, childTypes, extention) {
+var nodeFactory = function(type2, childTypes, extension) {
   return function(value) {
     this.children = sliceCall_default(arguments, 1);
     if (this.children.length === 1 && Array.isArray(this.children[0])) {
@@ -2400,7 +2400,6 @@ var nodeFactory = function(type2, childTypes, extention) {
     this.type = type2;
     this.value = value.trim();
     this.childTypes = childTypes || [];
-    this.validIfEmpty = true;
     this.addChild = function(newChild) {
       if (index_default_default.find(
         this.childTypes,
@@ -2467,8 +2466,8 @@ var nodeFactory = function(type2, childTypes, extention) {
         }
       );
     };
-    if (index_default_default.isFunction(extention)) {
-      extention.call(this);
+    if (index_default_default.isFunction(extension)) {
+      extension.call(this);
     }
   };
 };
