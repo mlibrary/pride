@@ -1,7 +1,7 @@
-import _ from 'underscore';
 import sliceCall from '../Util/sliceCall';
+import isFunction from '../Util/isFunction';
 
-const nodeFactory = function (type, childTypes, extention) {
+const nodeFactory = function (type, childTypes, extension) {
   return function (value) {
     this.children = sliceCall(arguments, 1);
     if (this.children.length === 1 && Array.isArray(this.children[0])) {
@@ -10,21 +10,17 @@ const nodeFactory = function (type, childTypes, extention) {
     this.type = type;
     this.value = value.trim();
     this.childTypes = childTypes || [];
-    this.validIfEmpty = true;
 
     // Check to make sure a child is valid for this node.
     // If it is, add it to the array of children.
     this.addChild = function (newChild) {
-      if (_.find(
-        this.childTypes,
-        function (aType) {
-          return newChild.type === aType;
-        }
-      )) {
-        this.children.push(newChild);
-      } else {
+      if (!childTypes.find((aType) => {
+        return newChild.type === aType;
+      })) {
         throw new Error('Not a valid child for a ' + this.type);
       }
+
+      this.children.push(newChild);
 
       return this;
     };
@@ -34,36 +30,31 @@ const nodeFactory = function (type, childTypes, extention) {
     this.contains = function (query) {
       if (this.matches(query)) {
         return this;
-      } else if (_.isEmpty(this.children)) {
-        return false;
-      } else {
-        return _.find(this.children, function (possible) {
-          return possible.contains(query);
-        });
       }
+
+      if (this.children.length === 0) {
+        return false;
+      }
+
+      return this.children.find((possible) => {
+        return possible.contains(query);
+      });
     };
 
     this.matches = function (query) {
       const thisNode = this;
       const queryChildren = query.children || [];
 
-      return _.every(
-        _.omit(query, 'children'),
-        function (value, key) {
-          return thisNode[key] === value;
-        }
-      ) &&
-        _.every(
-          queryChildren,
-          function (queryChild) {
-            return _.some(
-              queryChildren,
-              function (realChild) {
-                return queryChild.matches(realChild);
-              }
-            );
-          }
-        );
+      delete query.children;
+
+      return Object.keys(query).every((key) => {
+        return thisNode[key] === query[key];
+      }) &&
+      queryChildren.every((queryChild) => {
+        return queryChildren.some((realChild) => {
+          return queryChild.matches(realChild);
+        });
+      });
     };
 
     this.serialize = function () {
@@ -71,32 +62,34 @@ const nodeFactory = function (type, childTypes, extention) {
     };
 
     this.serializedChildren = function () {
-      return _.chain(this.children)
-        .map(function (child) {
-          return child.serialize();
-        })
-        .compact()
-        .value();
+      const children = [];
+
+      this.children.forEach((child) => {
+        children.push(child.serialize());
+      });
+
+      return children;
     };
 
     this.toJSON = function () {
-      return _.mapObject(
-        _.pick(this, 'value', 'children', 'type'),
-        function (val, key) {
-          if (key === 'children') {
-            return _.map(val, function (item) {
-              return item.toJSON();
-            });
-          } else {
-            return val;
-          }
+      const object = { ...this };
+
+      Object.keys(object).forEach((key) => {
+        if (!['value', 'children', 'type'].includes(key)) {
+          delete object[key];
         }
-      );
+      });
+
+      object.children.forEach((child) => {
+        child.toJSON();
+      });
+
+      return object;
     };
 
-    // If an extention function was given, call it with this.
-    if (_.isFunction(extention)) {
-      extention.call(this);
+    // If an extension function was given, call it with this.
+    if (isFunction(extension)) {
+      extension.call(this);
     }
   };
 };

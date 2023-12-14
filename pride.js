@@ -2390,8 +2390,14 @@ var sliceCall = function(array, begin, end) {
 };
 var sliceCall_default = sliceCall;
 
+// src/Pride/Util/isFunction.js
+var isFunction2 = function(value) {
+  return !!value && (Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function" || value instanceof Function);
+};
+var isFunction_default2 = isFunction2;
+
 // src/Pride/Core/nodeFactory.js
-var nodeFactory = function(type2, childTypes, extention) {
+var nodeFactory = function(type2, childTypes, extension) {
   return function(value) {
     this.children = sliceCall_default(arguments, 1);
     if (this.children.length === 1 && Array.isArray(this.children[0])) {
@@ -2400,75 +2406,62 @@ var nodeFactory = function(type2, childTypes, extention) {
     this.type = type2;
     this.value = value.trim();
     this.childTypes = childTypes || [];
-    this.validIfEmpty = true;
     this.addChild = function(newChild) {
-      if (index_default_default.find(
-        this.childTypes,
-        function(aType) {
-          return newChild.type === aType;
-        }
-      )) {
-        this.children.push(newChild);
-      } else {
+      if (!childTypes.find((aType) => {
+        return newChild.type === aType;
+      })) {
         throw new Error("Not a valid child for a " + this.type);
       }
+      this.children.push(newChild);
       return this;
     };
     this.contains = function(query) {
       if (this.matches(query)) {
         return this;
-      } else if (index_default_default.isEmpty(this.children)) {
-        return false;
-      } else {
-        return index_default_default.find(this.children, function(possible) {
-          return possible.contains(query);
-        });
       }
+      if (this.children.length === 0) {
+        return false;
+      }
+      return this.children.find((possible) => {
+        return possible.contains(query);
+      });
     };
     this.matches = function(query) {
       const thisNode = this;
       const queryChildren = query.children || [];
-      return index_default_default.every(
-        index_default_default.omit(query, "children"),
-        function(value2, key) {
-          return thisNode[key] === value2;
-        }
-      ) && index_default_default.every(
-        queryChildren,
-        function(queryChild) {
-          return index_default_default.some(
-            queryChildren,
-            function(realChild) {
-              return queryChild.matches(realChild);
-            }
-          );
-        }
-      );
+      delete query.children;
+      return Object.keys(query).every((key) => {
+        return thisNode[key] === query[key];
+      }) && queryChildren.every((queryChild) => {
+        return queryChildren.some((realChild) => {
+          return queryChild.matches(realChild);
+        });
+      });
     };
     this.serialize = function() {
       return value;
     };
     this.serializedChildren = function() {
-      return index_default_default.chain(this.children).map(function(child) {
-        return child.serialize();
-      }).compact().value();
+      const children = [];
+      this.children.forEach((child) => {
+        children.push(child.serialize());
+      });
+      return children;
     };
     this.toJSON = function() {
-      return index_default_default.mapObject(
-        index_default_default.pick(this, "value", "children", "type"),
-        function(val, key) {
-          if (key === "children") {
-            return index_default_default.map(val, function(item) {
-              return item.toJSON();
-            });
-          } else {
-            return val;
-          }
+      const object2 = { ...this };
+      Object.keys(object2).forEach((key) => {
+        if (!["value", "children", "type"].includes(key)) {
+          delete object2[key];
         }
-      );
+      });
+      object2.children.forEach((child) => {
+        child.toJSON();
+      });
+      return object2;
     };
-    if (index_default_default.isFunction(extention)) {
-      extention.call(this);
+    if (isFunction_default2(extension)) {
+      extension.call(this);
     }
   };
 };
@@ -2500,12 +2493,6 @@ var boolNodeFactory = function(type2, childTypes) {
   );
 };
 var boolNodeFactory_default = boolNodeFactory;
-
-// src/Pride/Util/isFunction.js
-var isFunction2 = function(value) {
-  return !!value && (Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function" || value instanceof Function);
-};
-var isFunction_default2 = isFunction2;
 
 // src/Pride/Util/deepClone.js
 var deepClone = function(original) {
