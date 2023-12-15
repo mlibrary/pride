@@ -1,15 +1,11 @@
 import nodeFactory from '../Core/nodeFactory';
 
-const insideFieldNodes = ['value_boolean', 'literal', 'tag', 'special'];
-
 const Field = nodeFactory(
   'field',
-  insideFieldNodes,
+  ['value_boolean', 'literal', 'tag', 'special'],
   function () {
     this.serialize = function () {
-      return this.value + ': (' +
-               this.serializedChildren().join(' ') +
-             ')';
+      return `${this.value}: (${this.serializedChildren().join(' ')})`;
     };
   }
 );
