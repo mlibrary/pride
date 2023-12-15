@@ -1,8 +1,9 @@
 import nodeFactory from '../Core/nodeFactory';
+import insideFieldNodes from './insideFieldNodes';
 
 const Field = nodeFactory(
   'field',
-  ['value_boolean', 'literal', 'tag', 'special'],
+  insideFieldNodes,
   function () {
     this.serialize = function () {
       return `${this.value}: (${this.serializedChildren().join(' ')})`;

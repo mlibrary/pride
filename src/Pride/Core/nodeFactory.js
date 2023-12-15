@@ -17,7 +17,7 @@ const nodeFactory = function (type, childTypes, extension) {
       if (!childTypes.find((aType) => {
         return newChild.type === aType;
       })) {
-        throw new Error('Not a valid child for a ' + this.type);
+        throw new Error(`Not a valid child for a ${this.type}`);
       }
 
       this.children.push(newChild);

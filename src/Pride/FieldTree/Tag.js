@@ -1,6 +1,5 @@
 import nodeFactory from '../Core/nodeFactory';
-
-const insideFieldNodes = ['value_boolean', 'literal', 'tag', 'special'];
+import insideFieldNodes from './insideFieldNodes';
 
 const Tag = nodeFactory(
   'tag',
