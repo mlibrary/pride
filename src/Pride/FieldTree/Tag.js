@@ -7,11 +7,7 @@ const Tag = nodeFactory(
   function () {
     this.serialize = function () {
       const serializedChildren = this.serializedChildren();
-      if (serializedChildren.length === 0) {
-        return '';
-      } else {
-        return this.value + '(' + serializedChildren.join(' ') + ')';
-      }
+      return serializedChildren.length === 0 ? '' : `${this.value}(${serializedChildren.join(' ')})`;
     };
   }
 );
