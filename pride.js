@@ -3474,13 +3474,12 @@ var FieldBoolean = boolNodeFactory_default(
 var FieldBoolean_default = FieldBoolean;
 
 // src/Pride/FieldTree/Field.js
-var insideFieldNodes = ["value_boolean", "literal", "tag", "special"];
 var Field = nodeFactory_default(
   "field",
-  insideFieldNodes,
+  ["value_boolean", "literal", "tag", "special"],
   function() {
     this.serialize = function() {
-      return this.value + ": (" + this.serializedChildren().join(" ") + ")";
+      return `${this.value}: (${this.serializedChildren().join(" ")})`;
     };
   }
 );
@@ -4375,10 +4374,10 @@ var Special = nodeFactory_default("special");
 var Special_default = Special;
 
 // src/Pride/FieldTree/Tag.js
-var insideFieldNodes2 = ["value_boolean", "literal", "tag", "special"];
+var insideFieldNodes = ["value_boolean", "literal", "tag", "special"];
 var Tag = nodeFactory_default(
   "tag",
-  insideFieldNodes2,
+  insideFieldNodes,
   function() {
     this.serialize = function() {
       const serializedChildren = this.serializedChildren();
@@ -4427,10 +4426,10 @@ var tokenize = function(string) {
 var tokenize_default = tokenize;
 
 // src/Pride/FieldTree/ValueBoolean.js
-var insideFieldNodes3 = ["value_boolean", "literal", "tag", "special"];
+var insideFieldNodes2 = ["value_boolean", "literal", "tag", "special"];
 var ValueBoolean = boolNodeFactory_default(
   "value_boolean",
-  insideFieldNodes3
+  insideFieldNodes2
 );
 var ValueBoolean_default = ValueBoolean;
 
