@@ -34,19 +34,19 @@ describe('Pride.FieldTree.Tag', function () {
   });
 
   describe('extension', function () {
-    it('returns empty if no children', function () {
+    it('serializes correctly with no children', function () {
       const field = createTag();
-      expect(field.serialize()).to.be.empty;
+      expect(field.serialize()).to.equal(`${testTag}: ()`);
     });
 
     it('serializes correctly with one child', function () {
       const field = createTag(createChildTag);
-      expect(field.serialize()).to.equal(`${testTag}()`);
+      expect(field.serialize()).to.equal(`${testTag}: (${childTag}: ())`);
     });
 
     it('serializes correctly with multiple children', function () {
       const field = createTag(createChildTag, createChildTag);
-      expect(field.serialize()).to.equal(`${testTag}( )`);
+      expect(field.serialize()).to.equal(`${testTag}: (${childTag}: () ${childTag}: ())`);
     });
   });
 });

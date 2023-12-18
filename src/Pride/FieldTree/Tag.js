@@ -6,8 +6,7 @@ const Tag = nodeFactory(
   insideFieldNodes,
   function () {
     this.serialize = function () {
-      const serializedChildren = this.serializedChildren();
-      return serializedChildren.length === 0 ? '' : `${this.value}(${serializedChildren.join(' ')})`;
+      return `${this.value}: (${this.serializedChildren().join(' ')})`;
     };
   }
 );
