@@ -6,7 +6,6 @@ import parseField from './parseField';
 import Raw from './Raw';
 import Special from './Special';
 import Tag from './Tag';
-import tokenize from './tokenize';
 import ValueBoolean from './ValueBoolean';
 
 const FieldTree = {
@@ -18,7 +17,6 @@ const FieldTree = {
   Raw,
   Special,
   Tag,
-  tokenize,
   ValueBoolean
 };
 

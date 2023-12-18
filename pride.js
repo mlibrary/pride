@@ -4394,40 +4394,6 @@ var Tag = nodeFactory_default(
 );
 var Tag_default = Tag;
 
-// src/Pride/FieldTree/tokenize.js
-var tokenize = function(string) {
-  const result2 = [];
-  let index = 0;
-  let type2 = null;
-  while (index < string.length) {
-    const slice2 = string.slice(index);
-    let found = index_default_default.find(
-      [":", "AND", "OR", "+", "-", "(", ")", "*", " ", "\n", "	", "\r"],
-      function(pattern) {
-        return new RegExp("^\\" + pattern).exec(slice2);
-      }
-    );
-    if (found) {
-      if (/\s/.exec(found)) {
-        type2 = "whitespace";
-      }
-      type2 = found;
-      index += found.length;
-    } else {
-      found = string.charAt(index);
-      type2 = "string";
-      index++;
-      const last2 = index_default_default.last(result2);
-      if (last2 && last2.type === "string") {
-        found = result2.pop().content + found;
-      }
-    }
-    result2.push({ type: type2, content: found });
-  }
-  return result2;
-};
-var tokenize_default = tokenize;
-
 // src/Pride/FieldTree/ValueBoolean.js
 var insideFieldNodes2 = ["value_boolean", "literal", "tag", "special"];
 var ValueBoolean = boolNodeFactory_default(
@@ -4446,7 +4412,6 @@ var FieldTree = {
   Raw: Raw_default,
   Special: Special_default,
   Tag: Tag_default,
-  tokenize: tokenize_default,
   ValueBoolean: ValueBoolean_default
 };
 var FieldTree_default = FieldTree;
