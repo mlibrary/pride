@@ -2410,7 +2410,7 @@ var nodeFactory = function(type2, childTypes, extension) {
       if (!childTypes.find((aType) => {
         return newChild.type === aType;
       })) {
-        throw new Error("Not a valid child for a " + this.type);
+        throw new Error(`Not a valid child for a ${this.type}`);
       }
       this.children.push(newChild);
       return this;
@@ -3473,10 +3473,19 @@ var FieldBoolean = boolNodeFactory_default(
 );
 var FieldBoolean_default = FieldBoolean;
 
+// src/Pride/FieldTree/insideFieldNodes.js
+var insideFieldNodes = [
+  "value_boolean",
+  "literal",
+  "tag",
+  "special"
+];
+var insideFieldNodes_default = insideFieldNodes;
+
 // src/Pride/FieldTree/Field.js
 var Field = nodeFactory_default(
   "field",
-  ["value_boolean", "literal", "tag", "special"],
+  insideFieldNodes_default,
   function() {
     this.serialize = function() {
       return `${this.value}: (${this.serializedChildren().join(" ")})`;
@@ -4374,18 +4383,12 @@ var Special = nodeFactory_default("special");
 var Special_default = Special;
 
 // src/Pride/FieldTree/Tag.js
-var insideFieldNodes = ["value_boolean", "literal", "tag", "special"];
 var Tag = nodeFactory_default(
   "tag",
-  insideFieldNodes,
+  insideFieldNodes_default,
   function() {
     this.serialize = function() {
-      const serializedChildren = this.serializedChildren();
-      if (serializedChildren.length === 0) {
-        return "";
-      } else {
-        return this.value + "(" + serializedChildren.join(" ") + ")";
-      }
+      return `${this.value}: (${this.serializedChildren().join(" ")})`;
     };
   }
 );
@@ -4437,6 +4440,7 @@ var ValueBoolean_default = ValueBoolean;
 var FieldTree = {
   Field: Field_default,
   FieldBoolean: FieldBoolean_default,
+  insideFieldNodes: insideFieldNodes_default,
   Literal: Literal_default,
   parseField: parseField_default,
   Raw: Raw_default,
