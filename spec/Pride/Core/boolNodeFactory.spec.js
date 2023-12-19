@@ -51,17 +51,35 @@ describe('Pride.Core.boolNodeFactory()', function () {
     });
 
     describe('serialize', function () {
+      const testMatchingType = new (nodeFactory(testType))(childValue);
       it('serializes correctly with no children', function () {
         expect(testBoolNode.serialize()).to.equal('');
       });
-      it('serializes correctly with one child', function () {
+      it('serializes values correctly with one child', function () {
         testBoolNode.addChild(testBoolNodeChild);
         expect(testBoolNode.serialize()).to.equal(childValue);
       });
-      it('serializes correctly with multiple children', function () {
+      it('serializes values correctly with multiple children', function () {
         testBoolNode.addChild(testBoolNodeChild);
         testBoolNode.addChild(testBoolNodeChild);
         expect(testBoolNode.serialize()).to.equal(`${childValue} ${testValue} ${childValue}`);
+      });
+      it('serializes matched values and wraps in parentheses correctly with one child', function () {
+        const example = new (boolNodeFactory(testType, [testType]))(testValue);
+        example.addChild(testMatchingType);
+        expect(example.serialize()).to.equal(`(${childValue})`);
+      });
+      it('serializes matched values and wraps in parentheses correctly with multiple children', function () {
+        const example = new (boolNodeFactory(testType, [testType]))(testValue);
+        example.addChild(testMatchingType);
+        example.addChild(testMatchingType);
+        expect(example.serialize()).to.equal(`(${childValue}) ${testValue} (${childValue})`);
+      });
+      it('serializes mixed matching values correctly with multiple children', function () {
+        const example = new (boolNodeFactory(testType, [testType, ...childTypes]))(testValue);
+        example.addChild(testBoolNodeChild);
+        example.addChild(testMatchingType);
+        expect(example.serialize()).to.equal(`${childValue} ${testValue} (${childValue})`);
       });
     });
   });

@@ -525,6 +525,114 @@ var AllDatastores = {
 };
 var AllDatastores_default = AllDatastores;
 
+// src/Pride/Util/sliceCall.js
+var sliceCall = function(array, begin, end) {
+  return Array.prototype.slice.call(array, begin, end);
+};
+var sliceCall_default = sliceCall;
+
+// src/Pride/Util/isFunction.js
+var isFunction = function(value) {
+  return !!value && (Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function" || value instanceof Function);
+};
+var isFunction_default = isFunction;
+
+// src/Pride/Core/nodeFactory.js
+var nodeFactory = function(type2, childTypes, extension) {
+  return function(value) {
+    this.children = sliceCall_default(arguments, 1);
+    if (this.children.length === 1 && Array.isArray(this.children[0])) {
+      this.children = this.children[0];
+    }
+    this.type = type2;
+    this.value = value.trim();
+    this.childTypes = childTypes || [];
+    this.addChild = function(newChild) {
+      if (!childTypes.find((aType) => {
+        return newChild.type === aType;
+      })) {
+        throw new Error(`Not a valid child for a ${this.type}`);
+      }
+      this.children.push(newChild);
+      return this;
+    };
+    this.contains = function(query) {
+      if (this.matches(query)) {
+        return this;
+      }
+      if (this.children.length === 0) {
+        return false;
+      }
+      return this.children.find((possible) => {
+        return possible.contains(query);
+      });
+    };
+    this.matches = function(query) {
+      const thisNode = this;
+      const queryChildren = query.children || [];
+      delete query.children;
+      return Object.keys(query).every((key) => {
+        return thisNode[key] === query[key];
+      }) && queryChildren.every((queryChild) => {
+        return queryChildren.some((realChild) => {
+          return queryChild.matches(realChild);
+        });
+      });
+    };
+    this.serialize = function() {
+      return value;
+    };
+    this.serializedChildren = function() {
+      const children = [];
+      this.children.forEach((child) => {
+        children.push(child.serialize());
+      });
+      return children;
+    };
+    this.toJSON = function() {
+      const object2 = { ...this };
+      Object.keys(object2).forEach((key) => {
+        if (!["value", "children", "type"].includes(key)) {
+          delete object2[key];
+        }
+      });
+      object2.children.forEach((child) => {
+        child.toJSON();
+      });
+      return object2;
+    };
+    if (isFunction_default(extension)) {
+      extension.call(this);
+    }
+  };
+};
+var nodeFactory_default = nodeFactory;
+
+// src/Pride/Core/boolNodeFactory.js
+var boolNodeFactory = function(type2, childTypes) {
+  return nodeFactory_default(
+    type2,
+    childTypes,
+    function() {
+      if (!["AND", "OR", "NOT"].includes(this.value)) {
+        throw new Error("Not a valid boolean value");
+      }
+      this.serializedChildren = function() {
+        return this.children.map((child) => {
+          if (child.type === this.type || child.type === "literal" && child.value.match(/\s/)) {
+            return `(${child.serialize()})`;
+          }
+          return child.serialize();
+        });
+      };
+      this.serialize = function() {
+        return this.serializedChildren().join(` ${this.value} `);
+      };
+    }
+  );
+};
+var boolNodeFactory_default = boolNodeFactory;
+
 // node_modules/underscore/modules/index.js
 var modules_exports = {};
 __export(modules_exports, {
@@ -597,7 +705,7 @@ __export(modules_exports, {
   isEqual: () => isEqual,
   isError: () => isError_default,
   isFinite: () => isFinite2,
-  isFunction: () => isFunction_default,
+  isFunction: () => isFunction_default2,
   isMap: () => isMap_default,
   isMatch: () => isMatch,
   isNaN: () => isNaN2,
@@ -786,14 +894,14 @@ var isSymbol_default = tagTester("Symbol");
 var isArrayBuffer_default = tagTester("ArrayBuffer");
 
 // node_modules/underscore/modules/isFunction.js
-var isFunction = tagTester("Function");
+var isFunction2 = tagTester("Function");
 var nodelist = root.document && root.document.childNodes;
 if (typeof /./ != "function" && typeof Int8Array != "object" && typeof nodelist != "function") {
-  isFunction = function(obj) {
+  isFunction2 = function(obj) {
     return typeof obj == "function" || false;
   };
 }
-var isFunction_default = isFunction;
+var isFunction_default2 = isFunction2;
 
 // node_modules/underscore/modules/_hasObjectTag.js
 var hasObjectTag_default = tagTester("Object");
@@ -805,7 +913,7 @@ var isIE11 = typeof Map !== "undefined" && hasObjectTag_default(/* @__PURE__ */ 
 // node_modules/underscore/modules/isDataView.js
 var isDataView = tagTester("DataView");
 function ie10IsDataView(obj) {
-  return obj != null && isFunction_default(obj.getInt8) && isArrayBuffer_default(obj.buffer);
+  return obj != null && isFunction_default2(obj.getInt8) && isArrayBuffer_default(obj.buffer);
 }
 var isDataView_default = hasStringTagBug ? ie10IsDataView : isDataView;
 
@@ -895,7 +1003,7 @@ function collectNonEnumProps(obj, keys2) {
   keys2 = emulatedSet(keys2);
   var nonEnumIdx = nonEnumerableProps.length;
   var constructor = obj.constructor;
-  var proto = isFunction_default(constructor) && constructor.prototype || ObjProto;
+  var proto = isFunction_default2(constructor) && constructor.prototype || ObjProto;
   var prop = "constructor";
   if (has(obj, prop) && !keys2.contains(prop))
     keys2.push(prop);
@@ -1029,7 +1137,7 @@ function deepEq(a, b, aStack, bStack) {
     if (typeof a != "object" || typeof b != "object")
       return false;
     var aCtor = a.constructor, bCtor = b.constructor;
-    if (aCtor !== bCtor && !(isFunction_default(aCtor) && aCtor instanceof aCtor && isFunction_default(bCtor) && bCtor instanceof bCtor) && ("constructor" in a && "constructor" in b)) {
+    if (aCtor !== bCtor && !(isFunction_default2(aCtor) && aCtor instanceof aCtor && isFunction_default2(bCtor) && bCtor instanceof bCtor) && ("constructor" in a && "constructor" in b)) {
       return false;
     }
   }
@@ -1091,10 +1199,10 @@ function ie11fingerprint(methods) {
     if (getLength_default(keys2))
       return false;
     for (var i = 0; i < length; i++) {
-      if (!isFunction_default(obj[methods[i]]))
+      if (!isFunction_default2(obj[methods[i]]))
         return false;
     }
-    return methods !== weakMapMethods || !isFunction_default(obj[forEachName]);
+    return methods !== weakMapMethods || !isFunction_default2(obj[forEachName]);
   };
 }
 var forEachName = "forEach";
@@ -1153,7 +1261,7 @@ function invert(obj) {
 function functions(obj) {
   var names = [];
   for (var key in obj) {
-    if (isFunction_default(obj[key]))
+    if (isFunction_default2(obj[key]))
       names.push(key);
   }
   return names.sort();
@@ -1315,7 +1423,7 @@ function optimizeCb(func, context2, argCount) {
 function baseIteratee(value, context2, argCount) {
   if (value == null)
     return identity;
-  if (isFunction_default(value))
+  if (isFunction_default2(value))
     return optimizeCb(value, context2, argCount);
   if (isObject(value) && !isArray_default(value))
     return matcher(value);
@@ -1491,7 +1599,7 @@ function result(obj, path, fallback) {
   path = toPath2(path);
   var length = path.length;
   if (!length) {
-    return isFunction_default(fallback) ? fallback.call(obj) : fallback;
+    return isFunction_default2(fallback) ? fallback.call(obj) : fallback;
   }
   for (var i = 0; i < length; i++) {
     var prop = obj == null ? void 0 : obj[path[i]];
@@ -1499,7 +1607,7 @@ function result(obj, path, fallback) {
       prop = fallback;
       i = length;
     }
-    obj = isFunction_default(prop) ? prop.call(obj) : prop;
+    obj = isFunction_default2(prop) ? prop.call(obj) : prop;
   }
   return obj;
 }
@@ -1549,7 +1657,7 @@ var partial_default = partial;
 
 // node_modules/underscore/modules/bind.js
 var bind_default = restArguments(function(func, context2, args) {
-  if (!isFunction_default(func))
+  if (!isFunction_default2(func))
     throw new TypeError("Bind must be called on a function");
   var bound = restArguments(function(callArgs) {
     return executeBound(func, bound, context2, this, args.concat(callArgs));
@@ -1945,7 +2053,7 @@ function contains(obj, item, fromIndex, guard) {
 // node_modules/underscore/modules/invoke.js
 var invoke_default = restArguments(function(obj, path, args) {
   var contextPath, func;
-  if (isFunction_default(path)) {
+  if (isFunction_default2(path)) {
     func = path;
   } else {
     path = toPath2(path);
@@ -2143,7 +2251,7 @@ var pick_default = restArguments(function(obj, keys2) {
   var result2 = {}, iteratee2 = keys2[0];
   if (obj == null)
     return result2;
-  if (isFunction_default(iteratee2)) {
+  if (isFunction_default2(iteratee2)) {
     if (keys2.length > 1)
       iteratee2 = optimizeCb(iteratee2, keys2[1]);
     keys2 = allKeys(obj);
@@ -2164,7 +2272,7 @@ var pick_default = restArguments(function(obj, keys2) {
 // node_modules/underscore/modules/omit.js
 var omit_default = restArguments(function(obj, keys2) {
   var iteratee2 = keys2[0], context2;
-  if (isFunction_default(iteratee2)) {
+  if (isFunction_default2(iteratee2)) {
     iteratee2 = negate(iteratee2);
     if (keys2.length > 1)
       context2 = keys2[1];
@@ -2384,119 +2492,9 @@ var _2 = mixin(modules_exports);
 _2._ = _2;
 var index_default_default = _2;
 
-// src/Pride/Util/sliceCall.js
-var sliceCall = function(array, begin, end) {
-  return Array.prototype.slice.call(array, begin, end);
-};
-var sliceCall_default = sliceCall;
-
-// src/Pride/Util/isFunction.js
-var isFunction2 = function(value) {
-  return !!value && (Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function" || value instanceof Function);
-};
-var isFunction_default2 = isFunction2;
-
-// src/Pride/Core/nodeFactory.js
-var nodeFactory = function(type2, childTypes, extension) {
-  return function(value) {
-    this.children = sliceCall_default(arguments, 1);
-    if (this.children.length === 1 && Array.isArray(this.children[0])) {
-      this.children = this.children[0];
-    }
-    this.type = type2;
-    this.value = value.trim();
-    this.childTypes = childTypes || [];
-    this.addChild = function(newChild) {
-      if (!childTypes.find((aType) => {
-        return newChild.type === aType;
-      })) {
-        throw new Error(`Not a valid child for a ${this.type}`);
-      }
-      this.children.push(newChild);
-      return this;
-    };
-    this.contains = function(query) {
-      if (this.matches(query)) {
-        return this;
-      }
-      if (this.children.length === 0) {
-        return false;
-      }
-      return this.children.find((possible) => {
-        return possible.contains(query);
-      });
-    };
-    this.matches = function(query) {
-      const thisNode = this;
-      const queryChildren = query.children || [];
-      delete query.children;
-      return Object.keys(query).every((key) => {
-        return thisNode[key] === query[key];
-      }) && queryChildren.every((queryChild) => {
-        return queryChildren.some((realChild) => {
-          return queryChild.matches(realChild);
-        });
-      });
-    };
-    this.serialize = function() {
-      return value;
-    };
-    this.serializedChildren = function() {
-      const children = [];
-      this.children.forEach((child) => {
-        children.push(child.serialize());
-      });
-      return children;
-    };
-    this.toJSON = function() {
-      const object2 = { ...this };
-      Object.keys(object2).forEach((key) => {
-        if (!["value", "children", "type"].includes(key)) {
-          delete object2[key];
-        }
-      });
-      object2.children.forEach((child) => {
-        child.toJSON();
-      });
-      return object2;
-    };
-    if (isFunction_default2(extension)) {
-      extension.call(this);
-    }
-  };
-};
-var nodeFactory_default = nodeFactory;
-
-// src/Pride/Core/boolNodeFactory.js
-var boolNodeFactory = function(type2, childTypes) {
-  return nodeFactory_default(
-    type2,
-    childTypes,
-    function() {
-      if (!index_default_default.contains(["AND", "OR", "NOT"], this.value)) {
-        throw new Error("Not a valid boolean value");
-      }
-      this.serialize = function() {
-        return this.serializedChildren().join(" " + this.value + " ");
-      };
-      this.serializedChildren = function() {
-        const thisNode = this;
-        return index_default_default.chain(thisNode.children).map(function(child) {
-          if (child.type === thisNode.type || child.type === "literal" && child.value.match(/\s/)) {
-            return "(" + child.serialize() + ")";
-          } else {
-            return child.serialize();
-          }
-        }).compact().value();
-      };
-    }
-  );
-};
-var boolNodeFactory_default = boolNodeFactory;
-
 // src/Pride/Util/deepClone.js
 var deepClone = function(original) {
-  if (!original || isFunction_default2(original)) {
+  if (!original || isFunction_default(original)) {
     return original;
   }
   return JSON.parse(JSON.stringify(original));
@@ -2706,7 +2704,7 @@ var log_default = log;
 
 // src/Pride/Util/safeCall.js
 var safeCall = function(maybeFunc) {
-  if (isFunction_default2(maybeFunc)) {
+  if (isFunction_default(maybeFunc)) {
     return maybeFunc.apply(this, sliceCall_default(arguments, 1));
   }
   return maybeFunc;
@@ -2715,7 +2713,7 @@ var safeCall_default = safeCall;
 
 // src/Pride/Util/safeApply.js
 var safeApply = function(maybeFunc, args) {
-  if (isFunction_default2(maybeFunc)) {
+  if (isFunction_default(maybeFunc)) {
     return maybeFunc.apply(this, args);
   }
   return maybeFunc;
@@ -2759,7 +2757,7 @@ var FuncBuffer = function(extension) {
     this.apply(name, args);
     return this;
   };
-  if (isFunction_default2(extension))
+  if (isFunction_default(extension))
     extension.call(this);
 };
 var FuncBuffer_default = FuncBuffer;
@@ -4550,7 +4548,7 @@ var Util = {
   deepClone: deepClone_default,
   escape: escape_default2,
   FuncBuffer: FuncBuffer_default,
-  isFunction: isFunction_default2,
+  isFunction: isFunction_default,
   MultiSearch: MultiSearch_default,
   Paginator: Paginator_default,
   request: request_default,
