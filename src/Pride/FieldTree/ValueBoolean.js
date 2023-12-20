@@ -1,6 +1,5 @@
 import boolNodeFactory from '../Core/boolNodeFactory';
-
-const insideFieldNodes = ['value_boolean', 'literal', 'tag', 'special'];
+import insideFieldNodes from './insideFieldNodes';
 
 const ValueBoolean = boolNodeFactory(
   'value_boolean',
