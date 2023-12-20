@@ -4392,10 +4392,9 @@ var Tag = nodeFactory_default(
 var Tag_default = Tag;
 
 // src/Pride/FieldTree/ValueBoolean.js
-var insideFieldNodes2 = ["value_boolean", "literal", "tag", "special"];
 var ValueBoolean = boolNodeFactory_default(
   "value_boolean",
-  insideFieldNodes2
+  insideFieldNodes_default
 );
 var ValueBoolean_default = ValueBoolean;
 
