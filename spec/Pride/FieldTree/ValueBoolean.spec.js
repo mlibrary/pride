@@ -5,7 +5,7 @@ const insideFieldNodes = require('../../../pride').Pride.FieldTree.insideFieldNo
 
 describe('Pride.FieldTree.ValueBoolean', function () {
   let testValueBoolean;
-  const [testType, testValue, childType, childValue] = ['value_boolean', 'AND', 'literal', 'childValue'];
+  const [testType, testValue, childType, childValue] = ['value_boolean', 'AND', insideFieldNodes[1], 'childValue'];
   let testValueBooleanChild;
 
   beforeEach(function () {
