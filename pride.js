@@ -4365,12 +4365,11 @@ var Raw_default = Raw;
 var parseField = function(fieldName, content) {
   if (!content) {
     return {};
-  } else {
-    try {
-      return Parser_default.parse(content, { defaultFieldName: fieldName });
-    } catch (e) {
-      return new Raw_default(content);
-    }
+  }
+  try {
+    return Parser_default.parse(content, { defaultFieldName: fieldName });
+  } catch (error2) {
+    return new Raw_default(content);
   }
 };
 var parseField_default = parseField;
