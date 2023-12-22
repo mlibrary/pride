@@ -67,7 +67,7 @@ describe('Pride.PreferenceEngine', function () {
       PreferenceEngine.updateSelectedRecords([{ datastore: 'mirlyn', uid }]);
       expect(PreferenceEngine.selectedRecords.mirlyn[uid]).to.equal(true);
     });
-    it('should update selected records successfully with object input', function () {
+    it('updates selected records successfully with object input', function () {
       PreferenceEngine.updateSelectedRecords({ mirlyn: [{ uid }] });
       expect(PreferenceEngine.selectedRecords.mirlyn[uid]).to.equal(true);
     });
