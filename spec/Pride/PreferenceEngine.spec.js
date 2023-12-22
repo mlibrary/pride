@@ -2,6 +2,13 @@ const { expect } = require('chai');
 const PreferenceEngine = require('../../pride').Pride.PreferenceEngine;
 
 describe('Pride.PreferenceEngine', function () {
+  const blankList = {
+    mirlyn: {},
+    articlesplus: {},
+    databases: {},
+    journals: {},
+    website: {}
+  };
   const fakeEngine = {
     listRecords: () => {
       return [];
@@ -35,7 +42,7 @@ describe('Pride.PreferenceEngine', function () {
     it('returns true if selected', function () {
       PreferenceEngine.registerEngine(fakeEngine);
       PreferenceEngine.updateSelectedRecords([{ mirlyn: [{ uid }] }]);
-      expect(PreferenceEngine.selected(PreferenceEngine.blankList())).to.be.true;
+      expect(PreferenceEngine.selected(blankList)).to.be.true;
     });
   });
 
@@ -50,23 +57,11 @@ describe('Pride.PreferenceEngine', function () {
     });
   });
 
-  describe('blankList', function () {
-    it('should return a blank list structure', function () {
-      expect(PreferenceEngine.blankList()).to.eql({
-        mirlyn: {},
-        articlesplus: {},
-        databases: {},
-        journals: {},
-        website: {}
-      });
-    });
-  });
-
   describe('updateSelectedRecords', function () {
-    it('updates selected records to `blankList` if `null`', function () {
+    it('updates selected records if `null`', function () {
       PreferenceEngine.selectedRecords = null;
       PreferenceEngine.updateSelectedRecords([]);
-      expect(PreferenceEngine.selectedRecords).to.deep.equal(PreferenceEngine.blankList());
+      expect(PreferenceEngine.selectedRecords).to.deep.equal(blankList);
     });
     it('updates selected records successfully with array input, then returns self', function () {
       PreferenceEngine.updateSelectedRecords([{ datastore: 'mirlyn', uid }]);

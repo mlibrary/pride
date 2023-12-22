@@ -3160,36 +3160,14 @@ var escape_default2 = escape;
 var PreferenceEngine = {
   selectedRecords: null,
   engine: null,
-  selected: function(record) {
-    if (!this.engine) {
-      return false;
-    }
-    return (this.selectedRecords[record.datastore] || {})[record.uid];
-  },
-  registerEngine: function(engine) {
-    this.engine = engine;
-    if (!engine) {
-      return this;
-    }
-    this.updateSelectedRecords(this.engine.listRecords());
-    this.engine.addObserver(/* @__PURE__ */ function(preferenceEngine) {
-      return function(data) {
-        preferenceEngine.updateSelectedRecords(data);
-      };
-    }(this));
-    return this;
-  },
-  blankList: function() {
-    return {
+  updateSelectedRecords: function(data) {
+    this.selectedRecords = this.selectedRecords || {
       mirlyn: {},
       articlesplus: {},
       databases: {},
       journals: {},
       website: {}
     };
-  },
-  updateSelectedRecords: function(data) {
-    this.selectedRecords = this.selectedRecords || this.blankList();
     if (data.forEach) {
       data.forEach(function(record) {
         this.selectedRecords[record.datastore] = this.selectedRecords[record.datastore] || {};
@@ -3208,6 +3186,25 @@ var PreferenceEngine = {
       }
     }
     return this;
+  },
+  registerEngine: function(engine) {
+    if (!engine) {
+      return this;
+    }
+    this.engine = engine;
+    this.updateSelectedRecords(this.engine.listRecords());
+    this.engine.addObserver(/* @__PURE__ */ function(preferenceEngine) {
+      return function(data) {
+        preferenceEngine.updateSelectedRecords(data);
+      };
+    }(this));
+    return this;
+  },
+  selected: function(record) {
+    if (!this.engine) {
+      return false;
+    }
+    return (this.selectedRecords[record.datastore] || {})[record.uid];
   }
 };
 var PreferenceEngine_default = PreferenceEngine;
