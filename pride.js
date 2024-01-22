@@ -3339,7 +3339,8 @@ var Record_default = Record;
 
 // src/Pride/Core/FacetSearch.js
 var FacetSearch = function(setup) {
-  let data = setup.data;
+  const self2 = this;
+  const data = setup.data;
   const results = setup.results;
   this.uid = data.uid;
   this.getData = function() {
@@ -3354,32 +3355,17 @@ var FacetSearch = function(setup) {
   };
   this.setMute = function(state) {
     muted = state;
-    return self;
+    return self2;
   };
   const observables = [];
-  this.clearAllObservers = function() {
-    index_default_default.each(observables, function(observable) {
-      observable.clearAll();
-    });
-    return self;
-  };
   const createObservable = function(name, dataFunc) {
     const object2 = new FuncBuffer_default(function() {
       const addObserver = this.add;
-      const callObservers = this.call;
       observables.push(this);
       this.add = function(func) {
-        if (!self.muted)
+        if (!self2.muted)
           func(dataFunc());
         addObserver(func, "observers");
-        return this;
-      };
-      this.notify = function() {
-        if (!self.muted) {
-          data = dataFunc();
-          self.log("NOTIFY (" + name + ")", data);
-          callObservers("observers", data);
-        }
         return this;
       };
     });
@@ -3388,6 +3374,12 @@ var FacetSearch = function(setup) {
   this.resultsObservers = createObservable("results", this.getResults);
   this.setDataObservers = createObservable("setData", this.getData);
   this.runDataObservers = createObservable("runData", this.getData);
+  this.clearAllObservers = function() {
+    index_default_default.each(observables, function(observable) {
+      observable.clearAll();
+    });
+    return self2;
+  };
 };
 var FacetSearch_default = FacetSearch;
 
