@@ -6,9 +6,7 @@ const FacetSearch = function (setup) {
   const data = setup.data;
   const results = setup.results;
 
-  /// ///////////////
-  // Data Getters //
-  /// ///////////////
+  // Data Getters
 
   this.uid = data.uid;
   this.getData = function () {
@@ -18,9 +16,7 @@ const FacetSearch = function (setup) {
     return results;
   };
 
-  /// /////////
-  // Muting //
-  /// /////////
+  // Muting
 
   let muted = false;
 
@@ -34,9 +30,7 @@ const FacetSearch = function (setup) {
     return self;
   };
 
-  /// /////////////
-  // Observables //
-  /// /////////////
+  // Observables
 
   const observables = [];
 
@@ -48,7 +42,6 @@ const FacetSearch = function (setup) {
 
       this.add = function (func) {
         if (!self.muted) func(dataFunc());
-
         addObserver(func, 'observers');
 
         return this;
