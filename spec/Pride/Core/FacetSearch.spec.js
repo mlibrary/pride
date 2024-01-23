@@ -95,4 +95,20 @@ describe('FacetSearch', function () {
   createObservable('resultsObservers');
   createObservable('setDataObservers');
   createObservable('runDataObservers');
+
+  describe('clearAllObservers', function () {
+    it('runs the `clearAll` method for each observable', function () {
+      const spy = sinon.spy();
+      facetSearch.resultsObservers.add(spy);
+      expect(facetSearch.observables).to.be.an('array').and.not.be.empty;
+      facetSearch.observables.forEach((observable) => {
+        const clearAllSpy = sinon.spy(observable, 'clearAll');
+        facetSearch.clearAllObservers();
+        expect(clearAllSpy.calledOnce).to.be.true;
+      });
+    });
+    it('returns self', function () {
+      expect(facetSearch.clearAllObservers()).to.deep.equal(facetSearch);
+    });
+  });
 });

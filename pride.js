@@ -3357,11 +3357,11 @@ var FacetSearch = function(setup) {
     muted = state;
     return self2;
   };
-  const observables = [];
+  this.observables = [];
   const createObservable = function(name, dataFunc) {
     const object2 = new FuncBuffer_default(function() {
       const addObserver = this.add;
-      observables.push(this);
+      self2.observables.push(this);
       this.add = function(func) {
         if (!self2.muted)
           func(dataFunc());
@@ -3375,7 +3375,7 @@ var FacetSearch = function(setup) {
   this.setDataObservers = createObservable("setData", this.getData);
   this.runDataObservers = createObservable("runData", this.getData);
   this.clearAllObservers = function() {
-    index_default_default.each(observables, function(observable) {
+    index_default_default.each(self2.observables, function(observable) {
       observable.clearAll();
     });
     return self2;
