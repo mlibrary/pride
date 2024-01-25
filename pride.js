@@ -3339,55 +3339,44 @@ var Record_default = Record;
 
 // src/Pride/Core/FacetSearch.js
 var FacetSearch = function(setup) {
-  let data = setup.data;
-  const results = setup.results;
-  this.uid = data.uid;
-  this.getData = function() {
-    return data;
+  this.uid = setup.data.uid;
+  this.getData = () => {
+    return setup.data;
   };
-  this.getResults = function() {
-    return results;
+  this.getResults = () => {
+    return setup.results;
   };
   let muted = false;
-  this.getMute = function() {
+  this.getMute = () => {
     return muted;
   };
-  this.setMute = function(state) {
+  this.setMute = (state) => {
     muted = state;
-    return self;
+    return this;
   };
-  const observables = [];
-  this.clearAllObservers = function() {
-    index_default_default.each(observables, function(observable) {
-      observable.clearAll();
-    });
-    return self;
-  };
-  const createObservable = function(name, dataFunc) {
+  this.observables = [];
+  const createObservable = (dataFunc) => {
+    const self2 = this;
     const object2 = new FuncBuffer_default(function() {
+      self2.observables.push(this);
       const addObserver = this.add;
-      const callObservers = this.call;
-      observables.push(this);
       this.add = function(func) {
-        if (!self.muted)
+        if (!self2.muted)
           func(dataFunc());
         addObserver(func, "observers");
-        return this;
-      };
-      this.notify = function() {
-        if (!self.muted) {
-          data = dataFunc();
-          self.log("NOTIFY (" + name + ")", data);
-          callObservers("observers", data);
-        }
         return this;
       };
     });
     return object2;
   };
-  this.resultsObservers = createObservable("results", this.getResults);
-  this.setDataObservers = createObservable("setData", this.getData);
-  this.runDataObservers = createObservable("runData", this.getData);
+  this.resultsObservers = createObservable(this.getResults);
+  this.setDataObservers = this.runDataObservers = createObservable(this.getData);
+  this.clearAllObservers = () => {
+    this.observables.forEach((observable) => {
+      observable.clearAll();
+    });
+    return this;
+  };
 };
 var FacetSearch_default = FacetSearch;
 

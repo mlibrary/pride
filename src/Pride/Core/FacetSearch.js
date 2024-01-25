@@ -1,75 +1,40 @@
-import _ from 'underscore';
 import FuncBuffer from '../Util/FuncBuffer';
 
 const FacetSearch = function (setup) {
-  let data = setup.data;
-  const results = setup.results;
+  // Data Getters
+  this.uid = setup.data.uid;
 
-  /// ///////////////
-  // Data Getters //
-  /// ///////////////
-
-  this.uid = data.uid;
-  this.getData = function () {
-    return data;
-  };
-  this.getResults = function () {
-    return results;
+  this.getData = () => {
+    return setup.data;
   };
 
-  /// /////////
-  // Muting //
-  /// /////////
+  this.getResults = () => {
+    return setup.results;
+  };
 
+  // Muting
   let muted = false;
 
-  this.getMute = function () {
+  this.getMute = () => {
     return muted;
   };
 
-  this.setMute = function (state) {
+  this.setMute = (state) => {
     muted = state;
-
-    return self;
+    return this;
   };
 
-  /// ////////////////
-  // Observerables //
-  /// ////////////////
+  // Observables
+  this.observables = [];
 
-  const observables = [];
-
-  this.clearAllObservers = function () {
-    _.each(observables, function (observable) {
-      observable.clearAll();
-    });
-
-    return self;
-  };
-
-  const createObservable = function (name, dataFunc) {
+  const createObservable = (dataFunc) => {
+    const self = this;
     const object = new FuncBuffer(function () {
+      self.observables.push(this);
       const addObserver = this.add;
-      const callObservers = this.call;
-
-      observables.push(this);
-
       this.add = function (func) {
         if (!self.muted) func(dataFunc());
-
         addObserver(func, 'observers');
-
-        return this;
-      };
-
-      this.notify = function () {
-        if (!self.muted) {
-          data = dataFunc();
-          self.log('NOTIFY (' + name + ')', data);
-
-          callObservers('observers', data);
-        }
-
         return this;
       };
     });
@@ -77,9 +42,16 @@ const FacetSearch = function (setup) {
     return object;
   };
 
-  this.resultsObservers = createObservable('results', this.getResults);
-  this.setDataObservers = createObservable('setData', this.getData);
-  this.runDataObservers = createObservable('runData', this.getData);
+  this.resultsObservers = createObservable(this.getResults);
+  this.setDataObservers = this.runDataObservers = createObservable(this.getData);
+
+  this.clearAllObservers = () => {
+    this.observables.forEach((observable) => {
+      observable.clearAll();
+    });
+
+    return this;
+  };
 };
 
 export default FacetSearch;
