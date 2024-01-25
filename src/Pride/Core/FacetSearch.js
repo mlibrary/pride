@@ -1,50 +1,40 @@
-import _ from 'underscore';
 import FuncBuffer from '../Util/FuncBuffer';
 
 const FacetSearch = function (setup) {
-  const self = this;
-  const data = setup.data;
-  const results = setup.results;
-
   // Data Getters
+  this.uid = setup.data.uid;
 
-  this.uid = data.uid;
-  this.getData = function () {
-    return data;
+  this.getData = () => {
+    return setup.data;
   };
-  this.getResults = function () {
-    return results;
+
+  this.getResults = () => {
+    return setup.results;
   };
 
   // Muting
-
   let muted = false;
 
-  this.getMute = function () {
+  this.getMute = () => {
     return muted;
   };
 
-  this.setMute = function (state) {
+  this.setMute = (state) => {
     muted = state;
-
-    return self;
+    return this;
   };
 
   // Observables
-
   this.observables = [];
 
-  const createObservable = function (name, dataFunc) {
+  const createObservable = (dataFunc) => {
+    const self = this;
     const object = new FuncBuffer(function () {
-      const addObserver = this.add;
-
       self.observables.push(this);
-
+      const addObserver = this.add;
       this.add = function (func) {
         if (!self.muted) func(dataFunc());
-
         addObserver(func, 'observers');
-
         return this;
       };
     });
@@ -52,16 +42,15 @@ const FacetSearch = function (setup) {
     return object;
   };
 
-  this.resultsObservers = createObservable('results', this.getResults);
-  this.setDataObservers = createObservable('setData', this.getData);
-  this.runDataObservers = createObservable('runData', this.getData);
+  this.resultsObservers = createObservable(this.getResults);
+  this.setDataObservers = this.runDataObservers = createObservable(this.getData);
 
-  this.clearAllObservers = function () {
-    _.each(self.observables, function (observable) {
+  this.clearAllObservers = () => {
+    this.observables.forEach((observable) => {
       observable.clearAll();
     });
 
-    return self;
+    return this;
   };
 };
 

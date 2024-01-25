@@ -92,6 +92,12 @@ describe('FacetSearch', function () {
     });
   });
 
+  describe('observables', function () {
+    it('is an array', function () {
+      expect(facetSearch.observables).to.be.an('array');
+    });
+  });
+
   createObservable('resultsObservers');
   createObservable('setDataObservers');
   createObservable('runDataObservers');

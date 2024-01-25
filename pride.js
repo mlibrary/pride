@@ -3339,29 +3339,27 @@ var Record_default = Record;
 
 // src/Pride/Core/FacetSearch.js
 var FacetSearch = function(setup) {
-  const self2 = this;
-  const data = setup.data;
-  const results = setup.results;
-  this.uid = data.uid;
-  this.getData = function() {
-    return data;
+  this.uid = setup.data.uid;
+  this.getData = () => {
+    return setup.data;
   };
-  this.getResults = function() {
-    return results;
+  this.getResults = () => {
+    return setup.results;
   };
   let muted = false;
-  this.getMute = function() {
+  this.getMute = () => {
     return muted;
   };
-  this.setMute = function(state) {
+  this.setMute = (state) => {
     muted = state;
-    return self2;
+    return this;
   };
   this.observables = [];
-  const createObservable = function(name, dataFunc) {
+  const createObservable = (dataFunc) => {
+    const self2 = this;
     const object2 = new FuncBuffer_default(function() {
-      const addObserver = this.add;
       self2.observables.push(this);
+      const addObserver = this.add;
       this.add = function(func) {
         if (!self2.muted)
           func(dataFunc());
@@ -3371,14 +3369,13 @@ var FacetSearch = function(setup) {
     });
     return object2;
   };
-  this.resultsObservers = createObservable("results", this.getResults);
-  this.setDataObservers = createObservable("setData", this.getData);
-  this.runDataObservers = createObservable("runData", this.getData);
-  this.clearAllObservers = function() {
-    index_default_default.each(self2.observables, function(observable) {
+  this.resultsObservers = createObservable(this.getResults);
+  this.setDataObservers = this.runDataObservers = createObservable(this.getData);
+  this.clearAllObservers = () => {
+    this.observables.forEach((observable) => {
       observable.clearAll();
     });
-    return self2;
+    return this;
   };
 };
 var FacetSearch_default = FacetSearch;
