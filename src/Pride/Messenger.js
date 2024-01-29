@@ -1,25 +1,19 @@
-import _ from 'underscore';
 import FuncBuffer from './Util/FuncBuffer';
 import log from './Core/log';
 
 const Messenger = new FuncBuffer(function () {
-  const notifyObservers = this.call;
-
   this.addObserver = this.add;
   this.removeObserver = this.remove;
   this.clearObservers = this.clear;
 
-  this.call = undefined;
-  this.add = undefined;
-  this.remove = undefined;
-  this.clear = undefined;
+  this.add = this.remove = this.clear = undefined;
 
-  this.sendMessage = function (message) {
+  this.sendMessage = (message) => {
     if (message.summary) {
       message.class = message.class || 'info';
       message.details = message.details || '';
 
-      notifyObservers(message.class, message);
+      this.call(message.class, message);
 
       log('Messenger', 'MESSAGE SENT', message);
     }
@@ -27,33 +21,18 @@ const Messenger = new FuncBuffer(function () {
     return this;
   };
 
-  this.sendMessageArray = function (messageArray) {
-    const messenger = this;
-
-    _.each(
-      messageArray,
-      function (message) {
-        messenger.sendMessage(message);
-      }
-    );
+  this.sendMessageArray = (messageArray) => {
+    if (messageArray && messageArray.length > 0) {
+      messageArray.forEach((message) => {
+        this.sendMessage(message);
+      });
+    }
 
     return this;
   };
 
-  // Given a type of preset message and some optional arguments, generate a
-  // message string.
   this.preset = function (type) {
-    // var variables = Pride.Util.slice(arguments);
-
-    // return Pride.Settings
-    //             .message_formats[type]
-    //             .replace(
-    //               /(^|[^\\])\$(\d+)/,
-    //               function(match, previous_char, number) {
-    //                 return previous_char + (variables[Number(number)] || '');
-    //               }
-    //             )
-    //             .replace('\\$', '$');
+    // Given a type of preset message and some optional arguments, generate a message string.
   };
 });
 

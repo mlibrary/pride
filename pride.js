@@ -2764,31 +2764,25 @@ var FuncBuffer_default = FuncBuffer;
 
 // src/Pride/Messenger.js
 var Messenger = new FuncBuffer_default(function() {
-  const notifyObservers = this.call;
   this.addObserver = this.add;
   this.removeObserver = this.remove;
   this.clearObservers = this.clear;
-  this.call = void 0;
-  this.add = void 0;
-  this.remove = void 0;
-  this.clear = void 0;
-  this.sendMessage = function(message) {
+  this.add = this.remove = this.clear = void 0;
+  this.sendMessage = (message) => {
     if (message.summary) {
       message.class = message.class || "info";
       message.details = message.details || "";
-      notifyObservers(message.class, message);
+      this.call(message.class, message);
       log_default("Messenger", "MESSAGE SENT", message);
     }
     return this;
   };
-  this.sendMessageArray = function(messageArray) {
-    const messenger = this;
-    index_default_default.each(
-      messageArray,
-      function(message) {
-        messenger.sendMessage(message);
-      }
-    );
+  this.sendMessageArray = (messageArray) => {
+    if (messageArray && messageArray.length > 0) {
+      messageArray.forEach((message) => {
+        this.sendMessage(message);
+      });
+    }
     return this;
   };
   this.preset = function(type2) {
