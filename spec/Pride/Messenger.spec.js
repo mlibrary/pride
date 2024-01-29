@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const Messenger = require('../../pride').Pride.Messenger;
 const FuncBuffer = require('../../pride').Pride.Util.FuncBuffer;
 
-describe.only('Pride.Messenger', function () {
+describe('Pride.Messenger', function () {
   const methods = {
     addObserver: 'add',
     removeObserver: 'remove',
@@ -12,7 +12,7 @@ describe.only('Pride.Messenger', function () {
   const funcBuffer = new FuncBuffer();
   const message = {
     summary: 'Test message',
-    class: 'warning',
+    class: 'success',
     details: 'This is a test message.'
   };
 
@@ -28,7 +28,7 @@ describe.only('Pride.Messenger', function () {
     });
   });
 
-  ['call', 'add', 'remove', 'clear'].forEach((property) => {
+  ['add', 'remove', 'clear'].forEach((property) => {
     describe(property, function () {
       it('is `undefined` by default', function () {
         expect(Messenger[property]).to.be.undefined;
