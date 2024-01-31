@@ -1,3 +1,7 @@
+var jsdom = require('jsdom');
+var { JSDOM } = jsdom;
+var { window } = new JSDOM();
+var { document } = window;
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
