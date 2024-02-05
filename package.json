@@ -12,19 +12,19 @@
     "test": "npx eslint './spec/**/*.js' && npx mocha --recursive './spec/**/*.spec.js'"
   },
   "dependencies": {
-    "esbuild": "^0.19.11",
+    "esbuild": "^0.20.0",
     "pegjs": "^0.10.0",
     "reqwest": "^2.0.5",
     "underscore": "^1.13.6"
   },
   "devDependencies": {
-    "chai": "^4.4.0",
+    "chai": "^5.0.3",
     "eslint": "^8.56.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-n": "^16.6.1",
+    "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
-    "jsdom": "^23.2.0",
+    "jsdom": "^24.0.0",
     "mocha": "^10.2.0",
     "sinon": "^17.0.1"
   }
