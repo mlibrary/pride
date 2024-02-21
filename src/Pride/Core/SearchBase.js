@@ -183,8 +183,6 @@ const SearchBase = function (setup, parent) {
       observable.clearAll();
     });
 
-    safeCall(self.initialize_observables);
-
     return self;
   };
 

@@ -2913,7 +2913,6 @@ var SearchBase = function(setup, parent) {
     index_default_default.each(observables, function(observable) {
       observable.clearAll();
     });
-    safeCall_default(self2.initialize_observables);
     return self2;
   };
   this.getMute = function() {
