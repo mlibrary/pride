@@ -176,7 +176,7 @@ const SearchBase = function (setup, parent) {
 
   let muted = false;
   const observables = [];
-  const mutableObservables = [];
+  this.mutableObservables = [];
 
   this.getMute = function () {
     return muted;
@@ -187,7 +187,7 @@ const SearchBase = function (setup, parent) {
       muted = state;
 
       if (!muted) {
-        _.each(mutableObservables, function (observable) {
+        _.each(self.mutableObservables, function (observable) {
           observable.notify();
         });
       }
@@ -202,7 +202,7 @@ const SearchBase = function (setup, parent) {
       const callObservers = this.call;
 
       observables.push(this);
-      if (!neverMute) mutableObservables.push(this);
+      if (!neverMute) self.mutableObservables.push(this);
 
       this.add = function (func) {
         if (!self.muted || neverMute) func(dataFunc());

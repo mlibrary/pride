@@ -2908,7 +2908,7 @@ var SearchBase = function(setup, parent) {
   };
   let muted = false;
   const observables = [];
-  const mutableObservables = [];
+  this.mutableObservables = [];
   this.getMute = function() {
     return muted;
   };
@@ -2916,7 +2916,7 @@ var SearchBase = function(setup, parent) {
     if (state !== muted) {
       muted = state;
       if (!muted) {
-        index_default_default.each(mutableObservables, function(observable) {
+        index_default_default.each(self2.mutableObservables, function(observable) {
           observable.notify();
         });
       }
@@ -2929,7 +2929,7 @@ var SearchBase = function(setup, parent) {
       const callObservers = this.call;
       observables.push(this);
       if (!neverMute)
-        mutableObservables.push(this);
+        self2.mutableObservables.push(this);
       this.add = function(func) {
         if (!self2.muted || neverMute)
           func(dataFunc());
