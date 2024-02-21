@@ -178,14 +178,6 @@ const SearchBase = function (setup, parent) {
   const observables = [];
   const mutableObservables = [];
 
-  this.clearAllObservers = function () {
-    _.each(observables, function (observable) {
-      observable.clearAll();
-    });
-
-    return self;
-  };
-
   this.getMute = function () {
     return muted;
   };

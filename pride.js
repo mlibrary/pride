@@ -2909,12 +2909,6 @@ var SearchBase = function(setup, parent) {
   let muted = false;
   const observables = [];
   const mutableObservables = [];
-  this.clearAllObservers = function() {
-    index_default_default.each(observables, function(observable) {
-      observable.clearAll();
-    });
-    return self2;
-  };
   this.getMute = function() {
     return muted;
   };
