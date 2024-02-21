@@ -2915,7 +2915,6 @@ var SearchBase = function(setup, parent) {
   this.setMute = function(state) {
     if (state !== muted) {
       muted = state;
-      safeCall_default(self2.muteChanged());
       if (!muted) {
         index_default_default.each(mutableObservables, function(observable) {
           observable.notify();

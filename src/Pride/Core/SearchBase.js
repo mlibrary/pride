@@ -185,7 +185,6 @@ const SearchBase = function (setup, parent) {
   this.setMute = function (state) {
     if (state !== muted) {
       muted = state;
-      safeCall(self.muteChanged());
 
       if (!muted) {
         _.each(mutableObservables, function (observable) {
