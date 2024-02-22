@@ -3444,10 +3444,7 @@ var DatastoreSearch = function(setup) {
 var DatastoreSearch_default = DatastoreSearch;
 
 // src/Pride/FieldTree/FieldBoolean.js
-var FieldBoolean = boolNodeFactory_default(
-  "field_boolean",
-  ["field_boolean", "field"]
-);
+var FieldBoolean = boolNodeFactory_default("field_boolean", ["field_boolean", "field"]);
 var FieldBoolean_default = FieldBoolean;
 
 // src/Pride/FieldTree/insideFieldNodes.js
