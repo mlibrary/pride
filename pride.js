@@ -532,8 +532,8 @@ var sliceCall = (array, begin, end) => {
 var sliceCall_default = sliceCall;
 
 // src/Pride/Util/isFunction.js
-var isFunction = function(value) {
-  return !!value && (Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function" || value instanceof Function);
+var isFunction = (value) => {
+  return typeof value === "function";
 };
 var isFunction_default = isFunction;
 
