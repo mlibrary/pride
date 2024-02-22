@@ -1,5 +1,5 @@
-const sliceCall = function (array, begin, end) {
-  return Array.prototype.slice.call(array, begin, end);
+const sliceCall = (array, begin, end) => {
+  return [...array].slice(begin, end);
 };
 
 export default sliceCall;

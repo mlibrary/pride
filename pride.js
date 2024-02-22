@@ -517,7 +517,7 @@ module.exports = __toCommonJS(src_exports);
 // src/Pride/AllDatastores.js
 var AllDatastores = {
   array: [],
-  get: function(uid) {
+  get(uid) {
     return this.array.find((datastore) => {
       return datastore.get("uid") === uid;
     });
@@ -526,14 +526,14 @@ var AllDatastores = {
 var AllDatastores_default = AllDatastores;
 
 // src/Pride/Util/sliceCall.js
-var sliceCall = function(array, begin, end) {
-  return Array.prototype.slice.call(array, begin, end);
+var sliceCall = (array, begin, end) => {
+  return [...array].slice(begin, end);
 };
 var sliceCall_default = sliceCall;
 
 // src/Pride/Util/isFunction.js
-var isFunction = function(value) {
-  return !!value && (Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function" || value instanceof Function);
+var isFunction = (value) => {
+  return typeof value === "function";
 };
 var isFunction_default = isFunction;
 
@@ -609,7 +609,7 @@ var nodeFactory = function(type2, childTypes, extension) {
 var nodeFactory_default = nodeFactory;
 
 // src/Pride/Core/boolNodeFactory.js
-var boolNodeFactory = function(type2, childTypes) {
+var boolNodeFactory = (type2, childTypes) => {
   return nodeFactory_default(
     type2,
     childTypes,
@@ -617,7 +617,7 @@ var boolNodeFactory = function(type2, childTypes) {
       if (!["AND", "OR", "NOT"].includes(this.value)) {
         throw new Error("Not a valid boolean value");
       }
-      this.serializedChildren = function() {
+      this.serializedChildren = () => {
         return this.children.map((child) => {
           if (child.type === this.type || child.type === "literal" && child.value.match(/\s/)) {
             return `(${child.serialize()})`;
@@ -625,7 +625,7 @@ var boolNodeFactory = function(type2, childTypes) {
           return child.serialize();
         });
       };
-      this.serialize = function() {
+      this.serialize = () => {
         return this.serializedChildren().join(` ${this.value} `);
       };
     }
@@ -2494,7 +2494,7 @@ var index_default_default = _2;
 
 // src/Pride/Util/deepClone.js
 var deepClone = function(original) {
-  if (!original || isFunction_default(original)) {
+  if (!original || typeof original === "function") {
     return original;
   }
   return JSON.parse(JSON.stringify(original));
@@ -2515,151 +2515,154 @@ var getPossibleKeys = [
 var getPossibleKeys_default = getPossibleKeys;
 
 // src/Pride/Util/Paginator/index.js
-var Paginator = function(initialValues) {
-  this.set = function(newValues) {
+var Paginator = class {
+  constructor(initialValues) {
+    this.values = {
+      count: 0,
+      end: 0,
+      index_limit: Infinity,
+      page: 0,
+      page_limit: Infinity,
+      start: 0,
+      total_available: void 0,
+      total_pages: void 0
+    };
+    this.set(initialValues);
+  }
+  set(newValues) {
     const newValueKeys = Object.keys(newValues);
     ["index_limit", "total_pages"].forEach((property2) => {
       if (newValueKeys.includes(property2)) {
-        throw new Error(`Can not set ${property2} (it is a calculated value)`);
+        throw new Error(`Cannot set ${property2} (it is a calculated value)`);
       }
     });
     if (newValueKeys.includes("start") && newValueKeys.includes("end") && newValueKeys.includes("count")) {
-      throw new Error("Can not set start, end and count all at the same time");
+      throw new Error("Cannot set start, end, and count all at the same time");
     }
     if (newValueKeys.includes("page") && (newValueKeys.includes("start") || newValueKeys.includes("end"))) {
-      throw new Error("Can not set page as well as the start and/or end");
+      throw new Error("Cannot set page as well as the start and/or end");
     }
     newValueKeys.forEach((property2) => {
       if (property2 !== "end") {
-        values2[property2] = newValues[property2];
+        this.values[property2] = newValues[property2];
       }
     });
     if (newValueKeys.includes("page")) {
-      values2.start = values2.count * (values2.page - 1);
+      this.values.start = this.values.count * (this.values.page - 1);
     }
     if (newValueKeys.includes("end")) {
-      if (values2.start >= newValues.end) {
-        throw new Error("The start value can not be greater than the end value");
+      if (this.values.start >= newValues.end) {
+        throw new Error("The start value cannot be greater than the end value");
       }
       if (newValueKeys.includes("count")) {
-        values2.start = Math.max(0, newValues.end - (values2.count - 1));
+        this.values.start = Math.max(0, newValues.end - (this.values.count - 1));
       } else {
-        values2.count = newValues.end - values2.start + 1;
+        this.values.count = newValues.end - this.values.start + 1;
       }
-      values2.end = newValues.end;
+      this.values.end = newValues.end;
     } else {
-      const end = values2.start + values2.count - 1;
-      values2.end = end < values2.start ? values2.end : end;
+      const end = this.values.start + this.values.count - 1;
+      this.values.end = end < this.values.start ? this.values.end : end;
     }
-    if (typeof values2.total_available === "number" && values2.total_available > 0) {
-      values2.index_limit = values2.total_available - 1;
+    if (typeof this.values.total_available === "number" && this.values.total_available > 0) {
+      this.values.index_limit = this.values.total_available - 1;
     }
-    if (values2.count > 0 && values2.start % values2.count === 0) {
-      values2.page = Math.floor(values2.start / values2.count) + 1;
-      if (typeof values2.total_available === "number") {
-        values2.total_pages = Math.ceil(values2.total_available / values2.count);
-        values2.page_limit = values2.total_pages;
+    if (this.values.count > 0 && this.values.start % this.values.count === 0) {
+      this.values.page = Math.floor(this.values.start / this.values.count) + 1;
+      if (typeof this.values.total_available === "number") {
+        this.values.total_pages = Math.ceil(this.values.total_available / this.values.count);
+        this.values.page_limit = this.values.total_pages;
       }
     }
-    const valuesKeys = Object.keys(values2);
-    if (!valuesKeys.includes("start") || !valuesKeys.includes("count")) {
+    if (!("start" in this.values) || !("count" in this.values)) {
       throw new Error("Not enough information given to create Paginator");
     }
     return this;
-  };
-  this.get = function(name) {
-    return values2[name];
-  };
-  const values2 = {
-    count: 0,
-    end: 0,
-    index_limit: Infinity,
-    page: 0,
-    page_limit: Infinity,
-    start: 0,
-    total_available: void 0,
-    total_pages: void 0
-  };
-  this.set(initialValues);
+  }
+  get(name) {
+    return this.values[name];
+  }
 };
 Paginator.getPossibleKeys = getPossibleKeys_default;
 var Paginator_default = Paginator;
 
 // src/Pride/Util/Section.js
-var Section = function(start, end) {
-  this.start = Math.max(Math.min(start, end), 0);
-  this.end = Math.max(Math.max(start, end), 0);
-  this.inSection = function(index) {
+var Section = class _Section {
+  constructor(start, end) {
+    this.start = Math.max(Math.min(start, end), 0);
+    this.end = Math.max(Math.max(start, end), 0);
+  }
+  inSection(index) {
     return index >= this.start && index <= this.end;
-  };
-  this.overlaps = function(section) {
+  }
+  overlaps(section) {
     return this.inSection(section.start) || this.inSection(section.end);
-  };
-  this.calcLength = function() {
+  }
+  calcLength() {
     return this.end - this.start + 1;
-  };
-  this.shifted = function(startAmount, endAmount) {
-    if (typeof endAmount !== "number") {
-      endAmount = startAmount;
-    }
-    return new Section(this.start + startAmount, this.end + endAmount);
-  };
-  this.expanded = function(amount) {
-    return this.shifted(-1 * amount, amount);
-  };
+  }
+  shifted(startAmount, endAmount = startAmount) {
+    return new _Section(this.start + startAmount, this.end + endAmount);
+  }
+  expanded(amount) {
+    return this.shifted(-amount, amount);
+  }
 };
 var Section_default = Section;
 
 // src/Pride/Core/Query.js
-var Query = function(queryInfo) {
-  const paginator = new Paginator_default({
-    start: queryInfo.start,
-    count: queryInfo.count
-  });
-  const paginatorKeys = Paginator_default.getPossibleKeys;
-  queryInfo = deepClone_default(queryInfo);
-  paginatorKeys.forEach((paginatorKey) => {
-    delete queryInfo[paginatorKey];
-  });
-  queryInfo.request_id = queryInfo.request_id || 0;
-  this.get = function(key) {
-    if (Paginator_default.getPossibleKeys.includes(key)) {
-      return paginator.get(key);
+var Query = class _Query {
+  static paginatorKeys = Paginator_default.getPossibleKeys;
+  constructor(queryInfo) {
+    this.paginator = new Paginator_default({
+      start: queryInfo.start,
+      count: queryInfo.count
+    });
+    this.queryInfo = deepClone_default(queryInfo);
+    _Query.paginatorKeys.forEach((paginatorKey) => {
+      delete this.queryInfo[paginatorKey];
+    });
+    this.queryInfo.request_id = this.queryInfo.request_id || 0;
+  }
+  get(key) {
+    if (_Query.paginatorKeys.includes(key)) {
+      return this.paginator.get(key);
     }
-    return queryInfo[key];
-  };
-  this.set = function(newValues) {
-    const [newPaginationValues, newQueryValues] = [{ ...newValues }, { ...newValues }];
-    paginatorKeys.forEach((paginatorKey) => {
-      if (Object.keys(newValues).includes(paginatorKey)) {
+    return this.queryInfo[key];
+  }
+  set(newValues) {
+    const newPaginationValues = { ...newValues };
+    const newQueryValues = { ...newValues };
+    _Query.paginatorKeys.forEach((paginatorKey) => {
+      if (paginatorKey in newValues) {
         delete newQueryValues[paginatorKey];
       } else {
         delete newPaginationValues[paginatorKey];
       }
     });
     if (Object.keys(newQueryValues).length > 0) {
-      paginator.set({ total_available: void 0 });
+      this.paginator.set({ total_available: void 0 });
       if (typeof newQueryValues.request_id !== "number") {
-        queryInfo.request_id += 1;
+        this.queryInfo.request_id += 1;
       }
     }
-    paginator.set(newPaginationValues);
-    queryInfo = { ...queryInfo, ...newQueryValues };
+    this.paginator.set(newPaginationValues);
+    this.queryInfo = { ...this.queryInfo, ...newQueryValues };
     return this;
-  };
-  this.clone = function() {
-    const fullInfo = deepClone_default(queryInfo);
-    fullInfo.start = paginator.get("start");
-    fullInfo.count = paginator.get("count");
-    return new Query(fullInfo);
-  };
-  this.toSection = function() {
+  }
+  clone() {
+    const fullInfo = deepClone_default(this.queryInfo);
+    fullInfo.start = this.paginator.get("start");
+    fullInfo.count = this.paginator.get("count");
+    return new _Query(fullInfo);
+  }
+  toSection() {
     return new Section_default(this.get("start"), this.get("end"));
-  };
-  this.toLimitSection = function() {
+  }
+  toLimitSection() {
     return new Section_default(this.get("start"), this.get("index_limit"));
-  };
-  this.toJSON = function() {
+  }
+  toJSON() {
     return {
       uid: this.get("uid"),
       request_id: this.get("request_id"),
@@ -2671,7 +2674,7 @@ var Query = function(queryInfo) {
       settings: this.get("settings"),
       raw_query: this.get("raw_query")
     };
-  };
+  }
 };
 var Query_default = Query;
 
@@ -2693,19 +2696,17 @@ var Settings = {
 var Settings_default = Settings;
 
 // src/Pride/Core/log.js
-var log = function(source, info) {
+var log = (source, info, ...message) => {
   if (Settings_default.obnoxious) {
-    const message = sliceCall_default(arguments, 2);
-    message.unshift(`[Pride: ${source}] ${info}`);
-    console.log.apply(console, message);
+    console.log(`[Pride: ${source}] ${info}`, ...message);
   }
 };
 var log_default = log;
 
 // src/Pride/Util/safeCall.js
-var safeCall = function(maybeFunc) {
-  if (isFunction_default(maybeFunc)) {
-    return maybeFunc.apply(this, sliceCall_default(arguments, 1));
+var safeCall = function(maybeFunc, ...args) {
+  if (typeof maybeFunc === "function") {
+    return maybeFunc.apply(this, args);
   }
   return maybeFunc;
 };
@@ -2713,7 +2714,7 @@ var safeCall_default = safeCall;
 
 // src/Pride/Util/safeApply.js
 var safeApply = function(maybeFunc, args) {
-  if (isFunction_default(maybeFunc)) {
+  if (typeof maybeFunc === "function") {
     return maybeFunc.apply(this, args);
   }
   return maybeFunc;
@@ -3093,18 +3094,21 @@ var RequestBuffer = function(requestOptions) {
 var RequestBuffer_default = RequestBuffer;
 
 // src/Pride/Core/Holdings.js
-var Holdings = function(data) {
-  const getResourceAccess = function(data2) {
-    const dataField = data2.fields.find((field) => {
+var Holdings = class {
+  constructor(data) {
+    this.data = data;
+  }
+  getResourceAccess = (data) => {
+    const dataField = data.fields.find((field) => {
       return field.uid === "resource_access";
     });
-    return dataField?.value ? dataField.value : dataField;
+    return dataField?.value ?? dataField;
   };
-  const translateData = function(input) {
-    return [getResourceAccess(data)].concat(input);
+  translateData = (input) => {
+    return [this.getResourceAccess(this.data)].concat(input);
   };
-  this.getData = function(func) {
-    safeCall_default(func, translateData(data.holdings));
+  getData = (func) => {
+    safeCall_default(func, this.translateData(this.data.holdings));
   };
 };
 var Holdings_default = Holdings;
@@ -3143,7 +3147,7 @@ var GetThis = function(barcode, data) {
 var GetThis_default = GetThis;
 
 // src/Pride/Util/escape.js
-var escape = function(string) {
+var escape = (string) => {
   const tempElement = document.createElement("div");
   tempElement.appendChild(document.createTextNode(string));
   return tempElement.innerHTML;
@@ -3440,10 +3444,7 @@ var DatastoreSearch = function(setup) {
 var DatastoreSearch_default = DatastoreSearch;
 
 // src/Pride/FieldTree/FieldBoolean.js
-var FieldBoolean = boolNodeFactory_default(
-  "field_boolean",
-  ["field_boolean", "field"]
-);
+var FieldBoolean = boolNodeFactory_default("field_boolean", ["field_boolean", "field"]);
 var FieldBoolean_default = FieldBoolean;
 
 // src/Pride/FieldTree/insideFieldNodes.js
@@ -3456,15 +3457,11 @@ var insideFieldNodes = [
 var insideFieldNodes_default = insideFieldNodes;
 
 // src/Pride/FieldTree/Field.js
-var Field = nodeFactory_default(
-  "field",
-  insideFieldNodes_default,
-  function() {
-    this.serialize = function() {
-      return `${this.value}: (${this.serializedChildren().join(" ")})`;
-    };
-  }
-);
+var Field = nodeFactory_default("field", insideFieldNodes_default, function() {
+  this.serialize = () => {
+    return `${this.value}: (${this.serializedChildren().join(" ")})`;
+  };
+});
 var Field_default = Field;
 
 // src/Pride/FieldTree/Literal.js
@@ -4338,7 +4335,7 @@ var Raw = nodeFactory_default("raw");
 var Raw_default = Raw;
 
 // src/Pride/FieldTree/parseField.js
-var parseField = function(fieldName, content) {
+var parseField = (fieldName, content) => {
   if (!content) {
     return {};
   }
@@ -4355,15 +4352,11 @@ var Special = nodeFactory_default("special");
 var Special_default = Special;
 
 // src/Pride/FieldTree/Tag.js
-var Tag = nodeFactory_default(
-  "tag",
-  insideFieldNodes_default,
-  function() {
-    this.serialize = function() {
-      return `${this.value}: (${this.serializedChildren().join(" ")})`;
-    };
-  }
-);
+var Tag = nodeFactory_default("tag", insideFieldNodes_default, function() {
+  this.serialize = () => {
+    return `${this.value}: (${this.serializedChildren().join(" ")})`;
+  };
+});
 var Tag_default = Tag;
 
 // src/Pride/FieldTree/ValueBoolean.js
@@ -4466,53 +4459,60 @@ var MultiSearch = function(uid, muted, searchArray) {
 var MultiSearch_default = MultiSearch;
 
 // src/Pride/Util/SearchSwitcher.js
-var SearchSwitcher = function(currentSearch, cachedSearches) {
-  currentSearch.setMute(false);
-  currentSearch.set({ page: 1 });
-  const searchCache = new MultiSearch_default(null, true, cachedSearches);
-  searchCache.set({ page: 1 });
-  this.uid = currentSearch.uid;
-  this.run = (cacheSize) => {
-    currentSearch.run(cacheSize);
-    searchCache.run(0);
+var SearchSwitcher = class {
+  constructor(currentSearch, cachedSearches) {
+    this.currentSearch = currentSearch;
+    this.searchCache = new MultiSearch_default(null, true, cachedSearches);
+    this.uid = currentSearch.uid;
+    this._initializeSearches();
+  }
+  _initializeSearches() {
+    this.currentSearch.setMute(false);
+    this.currentSearch.set({ page: 1 });
+    this.searchCache.set({ page: 1 });
+  }
+  run(cacheSize) {
+    this.currentSearch.run(cacheSize);
+    this.searchCache.run(0);
     return this;
-  };
-  this.set = (settings) => {
-    currentSearch.set(settings);
+  }
+  set(settings) {
+    this.currentSearch.set(settings);
     const omittedSettings = { ...settings };
     ["page", "facets"].forEach((property2) => {
       delete omittedSettings[property2];
     });
-    searchCache.set(omittedSettings);
+    this.searchCache.set(omittedSettings);
     return this;
-  };
-  this.nextPage = () => {
-    currentSearch.nextPage();
+  }
+  nextPage() {
+    this.currentSearch.nextPage();
     return this;
-  };
-  this.prevPage = () => {
-    currentSearch.prevPage();
+  }
+  prevPage() {
+    this.currentSearch.prevPage();
     return this;
-  };
-  this.switchTo = (requestedUid) => {
-    if (requestedUid !== currentSearch) {
-      currentSearch.setMute(true);
-      currentSearch.set({ page: 1 });
-      searchCache.searches.push(currentSearch);
-      currentSearch = searchCache.searches.find((search) => {
+  }
+  switchTo(requestedUid) {
+    if (requestedUid !== this.currentSearch.uid) {
+      this.currentSearch.setMute(true);
+      this.currentSearch.set({ page: 1 });
+      this.searchCache.searches.push(this.currentSearch);
+      const newSearch = this.searchCache.searches.find((search) => {
         return search.uid === requestedUid;
       });
-      if (!currentSearch) {
+      if (!newSearch) {
         throw new Error(`Could not find a search with a UID of: ${requestedUid}`);
       }
-      searchCache.searches = searchCache.searches.filter((search) => {
+      this.searchCache.searches = this.searchCache.searches.filter((search) => {
         return search.uid !== requestedUid;
       });
-      this.uid = currentSearch.uid;
-      currentSearch.setMute(false);
+      this.currentSearch = newSearch;
+      this.uid = this.currentSearch.uid;
+      this.currentSearch.setMute(false);
     }
     return this;
-  };
+  }
 };
 var SearchSwitcher_default = SearchSwitcher;
 

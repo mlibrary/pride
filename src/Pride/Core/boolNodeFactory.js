@@ -1,6 +1,6 @@
 import nodeFactory from './nodeFactory';
 
-const boolNodeFactory = function (type, childTypes) {
+const boolNodeFactory = (type, childTypes) => {
   return nodeFactory(
     type,
     childTypes,
@@ -9,7 +9,7 @@ const boolNodeFactory = function (type, childTypes) {
         throw new Error('Not a valid boolean value');
       }
 
-      this.serializedChildren = function () {
+      this.serializedChildren = () => {
         return this.children.map((child) => {
           if (child.type === this.type || (child.type === 'literal' && child.value.match(/\s/))) {
             return `(${child.serialize()})`;
@@ -18,7 +18,7 @@ const boolNodeFactory = function (type, childTypes) {
         });
       };
 
-      this.serialize = function () {
+      this.serialize = () => {
         return this.serializedChildren().join(` ${this.value} `);
       };
     }

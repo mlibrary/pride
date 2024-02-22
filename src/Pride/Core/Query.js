@@ -2,75 +2,72 @@ import Paginator from '../Util/Paginator/index';
 import deepClone from '../Util/deepClone';
 import Section from '../Util/Section';
 
-const Query = function (queryInfo) {
-  // Setup the paginator to do all pagination calculations.
-  const paginator = new Paginator({
-    start: queryInfo.start,
-    count: queryInfo.count
-  });
+class Query {
+  static paginatorKeys = Paginator.getPossibleKeys;
 
-  // Memoize the paginator keys for future use.
-  const paginatorKeys = Paginator.getPossibleKeys;
+  constructor (queryInfo) {
+    this.paginator = new Paginator({
+      start: queryInfo.start,
+      count: queryInfo.count
+    });
 
-  // Remove the pagination info from queryInfo.
-  queryInfo = deepClone(queryInfo);
-  paginatorKeys.forEach((paginatorKey) => {
-    delete queryInfo[paginatorKey];
-  });
+    this.queryInfo = deepClone(queryInfo);
+    Query.paginatorKeys.forEach((paginatorKey) => {
+      delete this.queryInfo[paginatorKey];
+    });
 
-  // Set the default request_id if it isn't already set.
-  queryInfo.request_id = queryInfo.request_id || 0;
+    this.queryInfo.request_id = this.queryInfo.request_id || 0;
+  }
 
-  this.get = function (key) {
-    if (Paginator.getPossibleKeys.includes(key)) {
-      return paginator.get(key);
+  get (key) {
+    if (Query.paginatorKeys.includes(key)) {
+      return this.paginator.get(key);
     }
 
-    return queryInfo[key];
-  };
+    return this.queryInfo[key];
+  }
 
-  this.set = function (newValues) {
-    const [newPaginationValues, newQueryValues] = [{ ...newValues }, { ...newValues }];
-    paginatorKeys.forEach((paginatorKey) => {
-      if (Object.keys(newValues).includes(paginatorKey)) {
+  set (newValues) {
+    const newPaginationValues = { ...newValues };
+    const newQueryValues = { ...newValues };
+    Query.paginatorKeys.forEach((paginatorKey) => {
+      if (paginatorKey in newValues) {
         delete newQueryValues[paginatorKey];
       } else {
         delete newPaginationValues[paginatorKey];
       }
     });
 
-    // If the set of things being searched was altered...
     if (Object.keys(newQueryValues).length > 0) {
-      paginator.set({ total_available: undefined });
-
+      this.paginator.set({ total_available: undefined });
       if (typeof newQueryValues.request_id !== 'number') {
-        queryInfo.request_id += 1;
+        this.queryInfo.request_id += 1;
       }
     }
 
-    paginator.set(newPaginationValues);
-    queryInfo = { ...queryInfo, ...newQueryValues };
+    this.paginator.set(newPaginationValues);
+    this.queryInfo = { ...this.queryInfo, ...newQueryValues };
 
     return this;
-  };
+  }
 
-  this.clone = function () {
-    const fullInfo = deepClone(queryInfo);
-    fullInfo.start = paginator.get('start');
-    fullInfo.count = paginator.get('count');
+  clone () {
+    const fullInfo = deepClone(this.queryInfo);
+    fullInfo.start = this.paginator.get('start');
+    fullInfo.count = this.paginator.get('count');
 
     return new Query(fullInfo);
-  };
+  }
 
-  this.toSection = function () {
+  toSection () {
     return new Section(this.get('start'), this.get('end'));
-  };
+  }
 
-  this.toLimitSection = function () {
+  toLimitSection () {
     return new Section(this.get('start'), this.get('index_limit'));
-  };
+  }
 
-  this.toJSON = function () {
+  toJSON () {
     return {
       uid: this.get('uid'),
       request_id: this.get('request_id'),
@@ -82,7 +79,7 @@ const Query = function (queryInfo) {
       settings: this.get('settings'),
       raw_query: this.get('raw_query')
     };
-  };
-};
+  }
+}
 
 export default Query;

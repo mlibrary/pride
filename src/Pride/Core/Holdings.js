@@ -1,21 +1,24 @@
 import safeCall from '../Util/safeCall';
 
-const Holdings = function (data) {
-  const getResourceAccess = function (data) {
+class Holdings {
+  constructor (data) {
+    this.data = data;
+  }
+
+  getResourceAccess = (data) => {
     const dataField = data.fields.find((field) => {
       return field.uid === 'resource_access';
     });
-
-    return dataField?.value ? dataField.value : dataField;
+    return dataField?.value ?? dataField;
   };
 
-  const translateData = function (input) {
-    return [getResourceAccess(data)].concat(input);
+  translateData = (input) => {
+    return [this.getResourceAccess(this.data)].concat(input);
   };
 
-  this.getData = function (func) {
-    safeCall(func, translateData(data.holdings));
+  getData = (func) => {
+    safeCall(func, this.translateData(this.data.holdings));
   };
-};
+}
 
 export default Holdings;

@@ -1,30 +1,28 @@
-const Section = function (start, end) {
-  this.start = Math.max(Math.min(start, end), 0);
-  this.end = Math.max(Math.max(start, end), 0);
+class Section {
+  constructor (start, end) {
+    this.start = Math.max(Math.min(start, end), 0);
+    this.end = Math.max(Math.max(start, end), 0);
+  }
 
-  this.inSection = function (index) {
+  inSection (index) {
     return index >= this.start && index <= this.end;
-  };
+  }
 
-  this.overlaps = function (section) {
+  overlaps (section) {
     return this.inSection(section.start) || this.inSection(section.end);
-  };
+  }
 
-  this.calcLength = function () {
+  calcLength () {
     return this.end - this.start + 1;
-  };
+  }
 
-  this.shifted = function (startAmount, endAmount) {
-    if (typeof endAmount !== 'number') {
-      endAmount = startAmount;
-    }
-
+  shifted (startAmount, endAmount = startAmount) {
     return new Section(this.start + startAmount, this.end + endAmount);
-  };
+  }
 
-  this.expanded = function (amount) {
-    return this.shifted(-1 * amount, amount);
-  };
-};
+  expanded (amount) {
+    return this.shifted(-amount, amount);
+  }
+}
 
 export default Section;

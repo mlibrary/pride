@@ -1,7 +1,5 @@
-import isFunction from './isFunction';
-
 const safeApply = function (maybeFunc, args) {
-  if (isFunction(maybeFunc)) {
+  if (typeof maybeFunc === 'function') {
     return maybeFunc.apply(this, args);
   }
 
