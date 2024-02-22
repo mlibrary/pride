@@ -525,16 +525,10 @@ var AllDatastores = {
 };
 var AllDatastores_default = AllDatastores;
 
-// src/Pride/Util/sliceCall.js
-var sliceCall = (array, begin, end) => {
-  return [...array].slice(begin, end);
-};
-var sliceCall_default = sliceCall;
-
 // src/Pride/Core/nodeFactory.js
 var nodeFactory = function(type2, childTypes, extension) {
-  return function(value) {
-    this.children = sliceCall_default(arguments, 1);
+  return function(value, ...children) {
+    this.children = children;
     if (this.children.length === 1 && Array.isArray(this.children[0])) {
       this.children = this.children[0];
     }
@@ -577,11 +571,11 @@ var nodeFactory = function(type2, childTypes, extension) {
       return value;
     };
     this.serializedChildren = function() {
-      const children = [];
+      const children2 = [];
       this.children.forEach((child) => {
-        children.push(child.serialize());
+        children2.push(child.serialize());
       });
-      return children;
+      return children2;
     };
     this.toJSON = function() {
       const object2 = { ...this };
@@ -2792,9 +2786,8 @@ var SearchBase = function(setup, parent) {
   const requestFunc = setup.requestFunc || this.datastore.runQuery;
   let results = setup.starting_results || [];
   const defaultCacheSize = setup.cache_size || Settings_default.cache_size[this.datastore.uid] || Settings_default.default_cache_size;
-  this.log = function() {
-    const message = sliceCall_default(arguments);
-    message.unshift("Search (" + self2.datastore.get("uid") + ")");
+  this.log = function(...args) {
+    const message = ["Search (" + self2.datastore.get("uid") + ")", ...args];
     log_default.apply(window, message);
   };
   this.set = function(setHash) {
@@ -4429,8 +4422,7 @@ var MultiSearch = function(uid, muted, searchArray) {
   };
   const funcOnEach = (funcName, beforeFunc) => {
     const self2 = this;
-    return function() {
-      const args = sliceCall_default(arguments);
+    return function(...args) {
       safeApply_default(beforeFunc, args);
       searchArray.forEach((search) => {
         search[funcName].apply(search, args);
@@ -4521,8 +4513,7 @@ var Util = {
   safeApply: safeApply_default,
   safeCall: safeCall_default,
   SearchSwitcher: SearchSwitcher_default,
-  Section: Section_default,
-  sliceCall: sliceCall_default
+  Section: Section_default
 };
 var Util_default = Util;
 

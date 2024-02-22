@@ -1,4 +1,3 @@
-import sliceCall from './sliceCall';
 import safeApply from './safeApply';
 
 const MultiSearch = function (uid, muted, searchArray) {
@@ -14,8 +13,7 @@ const MultiSearch = function (uid, muted, searchArray) {
 
   const funcOnEach = (funcName, beforeFunc) => {
     const self = this;
-    return function () {
-      const args = sliceCall(arguments);
+    return function (...args) {
       safeApply(beforeFunc, args);
       searchArray.forEach((search) => {
         search[funcName].apply(search, args);

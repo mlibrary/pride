@@ -1,6 +1,5 @@
 import _ from 'underscore';
 import Settings from '../Settings';
-import sliceCall from '../Util/sliceCall';
 import log from './log';
 import safeCall from '../Util/safeCall';
 import getPossibleKeys from '../Util/Paginator/getPossibleKeys';
@@ -19,10 +18,8 @@ const SearchBase = function (setup, parent) {
                          Settings.cache_size[this.datastore.uid] ||
                          Settings.default_cache_size;
 
-  this.log = function () {
-    const message = sliceCall(arguments);
-    message.unshift('Search (' + self.datastore.get('uid') + ')');
-
+  this.log = function (...args) {
+    const message = ['Search (' + self.datastore.get('uid') + ')', ...args];
     log.apply(window, message);
   };
 

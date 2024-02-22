@@ -1,8 +1,6 @@
-import sliceCall from '../Util/sliceCall';
-
 const nodeFactory = function (type, childTypes, extension) {
-  return function (value) {
-    this.children = sliceCall(arguments, 1);
+  return function (value, ...children) {
+    this.children = children;
     if (this.children.length === 1 && Array.isArray(this.children[0])) {
       this.children = this.children[0];
     }
