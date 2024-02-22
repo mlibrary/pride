@@ -1,5 +1,4 @@
 import sliceCall from '../Util/sliceCall';
-import isFunction from '../Util/isFunction';
 
 const nodeFactory = function (type, childTypes, extension) {
   return function (value) {
@@ -88,9 +87,7 @@ const nodeFactory = function (type, childTypes, extension) {
     };
 
     // If an extension function was given, call it with this.
-    if (isFunction(extension)) {
-      extension.call(this);
-    }
+    if (typeof extension === 'function') extension.call(this);
   };
 };
 

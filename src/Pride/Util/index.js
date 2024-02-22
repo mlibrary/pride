@@ -1,7 +1,6 @@
 import deepClone from './deepClone';
 import escape from './escape';
 import FuncBuffer from './FuncBuffer';
-import isFunction from './isFunction';
 import MultiSearch from './MultiSearch';
 import Paginator from './Paginator/index';
 import request from './request';
@@ -16,7 +15,6 @@ const Util = {
   deepClone,
   escape,
   FuncBuffer,
-  isFunction,
   MultiSearch,
   Paginator,
   request,
