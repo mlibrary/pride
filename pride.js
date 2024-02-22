@@ -2515,72 +2515,73 @@ var getPossibleKeys = [
 var getPossibleKeys_default = getPossibleKeys;
 
 // src/Pride/Util/Paginator/index.js
-var Paginator = function(initialValues) {
-  this.set = function(newValues) {
+var Paginator = class {
+  constructor(initialValues) {
+    this.values = {
+      count: 0,
+      end: 0,
+      index_limit: Infinity,
+      page: 0,
+      page_limit: Infinity,
+      start: 0,
+      total_available: void 0,
+      total_pages: void 0
+    };
+    this.set(initialValues);
+  }
+  set(newValues) {
     const newValueKeys = Object.keys(newValues);
     ["index_limit", "total_pages"].forEach((property2) => {
       if (newValueKeys.includes(property2)) {
-        throw new Error(`Can not set ${property2} (it is a calculated value)`);
+        throw new Error(`Cannot set ${property2} (it is a calculated value)`);
       }
     });
     if (newValueKeys.includes("start") && newValueKeys.includes("end") && newValueKeys.includes("count")) {
-      throw new Error("Can not set start, end and count all at the same time");
+      throw new Error("Cannot set start, end, and count all at the same time");
     }
     if (newValueKeys.includes("page") && (newValueKeys.includes("start") || newValueKeys.includes("end"))) {
-      throw new Error("Can not set page as well as the start and/or end");
+      throw new Error("Cannot set page as well as the start and/or end");
     }
     newValueKeys.forEach((property2) => {
       if (property2 !== "end") {
-        values2[property2] = newValues[property2];
+        this.values[property2] = newValues[property2];
       }
     });
     if (newValueKeys.includes("page")) {
-      values2.start = values2.count * (values2.page - 1);
+      this.values.start = this.values.count * (this.values.page - 1);
     }
     if (newValueKeys.includes("end")) {
-      if (values2.start >= newValues.end) {
-        throw new Error("The start value can not be greater than the end value");
+      if (this.values.start >= newValues.end) {
+        throw new Error("The start value cannot be greater than the end value");
       }
       if (newValueKeys.includes("count")) {
-        values2.start = Math.max(0, newValues.end - (values2.count - 1));
+        this.values.start = Math.max(0, newValues.end - (this.values.count - 1));
       } else {
-        values2.count = newValues.end - values2.start + 1;
+        this.values.count = newValues.end - this.values.start + 1;
       }
-      values2.end = newValues.end;
+      this.values.end = newValues.end;
     } else {
-      const end = values2.start + values2.count - 1;
-      values2.end = end < values2.start ? values2.end : end;
+      const end = this.values.start + this.values.count - 1;
+      this.values.end = end < this.values.start ? this.values.end : end;
     }
-    if (typeof values2.total_available === "number" && values2.total_available > 0) {
-      values2.index_limit = values2.total_available - 1;
+    if (typeof this.values.total_available === "number" && this.values.total_available > 0) {
+      this.values.index_limit = this.values.total_available - 1;
     }
-    if (values2.count > 0 && values2.start % values2.count === 0) {
-      values2.page = Math.floor(values2.start / values2.count) + 1;
-      if (typeof values2.total_available === "number") {
-        values2.total_pages = Math.ceil(values2.total_available / values2.count);
-        values2.page_limit = values2.total_pages;
+    if (this.values.count > 0 && this.values.start % this.values.count === 0) {
+      this.values.page = Math.floor(this.values.start / this.values.count) + 1;
+      if (typeof this.values.total_available === "number") {
+        this.values.total_pages = Math.ceil(this.values.total_available / this.values.count);
+        this.values.page_limit = this.values.total_pages;
       }
     }
-    const valuesKeys = Object.keys(values2);
-    if (!valuesKeys.includes("start") || !valuesKeys.includes("count")) {
+    if (!("start" in this.values) || !("count" in this.values)) {
       throw new Error("Not enough information given to create Paginator");
     }
     return this;
-  };
-  this.get = function(name) {
-    return values2[name];
-  };
-  const values2 = {
-    count: 0,
-    end: 0,
-    index_limit: Infinity,
-    page: 0,
-    page_limit: Infinity,
-    start: 0,
-    total_available: void 0,
-    total_pages: void 0
-  };
-  this.set(initialValues);
+  }
+  get(name) {
+    return this.values[name];
+  }
 };
 Paginator.getPossibleKeys = getPossibleKeys_default;
 var Paginator_default = Paginator;
