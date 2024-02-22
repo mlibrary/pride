@@ -609,7 +609,7 @@ var nodeFactory = function(type2, childTypes, extension) {
 var nodeFactory_default = nodeFactory;
 
 // src/Pride/Core/boolNodeFactory.js
-var boolNodeFactory = function(type2, childTypes) {
+var boolNodeFactory = (type2, childTypes) => {
   return nodeFactory_default(
     type2,
     childTypes,
@@ -617,7 +617,8 @@ var boolNodeFactory = function(type2, childTypes) {
       if (!["AND", "OR", "NOT"].includes(this.value)) {
         throw new Error("Not a valid boolean value");
       }
-      this.serializedChildren = function() {
+      this.serializedChildren = () => {
+        console.log("CHILDREN??");
         return this.children.map((child) => {
           if (child.type === this.type || child.type === "literal" && child.value.match(/\s/)) {
             return `(${child.serialize()})`;
@@ -625,7 +626,8 @@ var boolNodeFactory = function(type2, childTypes) {
           return child.serialize();
         });
       };
-      this.serialize = function() {
+      this.serialize = () => {
+        console.log("serialize??");
         return this.serializedChildren().join(` ${this.value} `);
       };
     }
