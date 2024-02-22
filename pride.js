@@ -4342,7 +4342,7 @@ var Raw = nodeFactory_default("raw");
 var Raw_default = Raw;
 
 // src/Pride/FieldTree/parseField.js
-var parseField = function(fieldName, content) {
+var parseField = (fieldName, content) => {
   if (!content) {
     return {};
   }
@@ -4359,15 +4359,11 @@ var Special = nodeFactory_default("special");
 var Special_default = Special;
 
 // src/Pride/FieldTree/Tag.js
-var Tag = nodeFactory_default(
-  "tag",
-  insideFieldNodes_default,
-  function() {
-    this.serialize = function() {
-      return `${this.value}: (${this.serializedChildren().join(" ")})`;
-    };
-  }
-);
+var Tag = nodeFactory_default("tag", insideFieldNodes_default, function() {
+  this.serialize = () => {
+    return `${this.value}: (${this.serializedChildren().join(" ")})`;
+  };
+});
 var Tag_default = Tag;
 
 // src/Pride/FieldTree/ValueBoolean.js

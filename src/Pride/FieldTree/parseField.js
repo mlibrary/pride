@@ -1,7 +1,7 @@
 import Parser from '../Parser';
 import Raw from './Raw';
 
-const parseField = function (fieldName, content) {
+const parseField = (fieldName, content) => {
   if (!content) {
     return {};
   }
