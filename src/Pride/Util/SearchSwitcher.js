@@ -1,59 +1,69 @@
 import MultiSearch from './MultiSearch';
 
-const SearchSwitcher = function (currentSearch, cachedSearches) {
-  currentSearch.setMute(false);
-  currentSearch.set({ page: 1 });
-  const searchCache = new MultiSearch(null, true, cachedSearches);
-  searchCache.set({ page: 1 });
+class SearchSwitcher {
+  constructor (currentSearch, cachedSearches) {
+    this.currentSearch = currentSearch;
+    this.searchCache = new MultiSearch(null, true, cachedSearches);
+    this.uid = currentSearch.uid;
 
-  this.uid = currentSearch.uid;
+    this._initializeSearches();
+  }
 
-  this.run = (cacheSize) => {
-    currentSearch.run(cacheSize);
-    searchCache.run(0);
+  _initializeSearches () {
+    this.currentSearch.setMute(false);
+    this.currentSearch.set({ page: 1 });
+    this.searchCache.set({ page: 1 });
+  }
+
+  run (cacheSize) {
+    this.currentSearch.run(cacheSize);
+    this.searchCache.run(0);
     return this;
-  };
+  }
 
-  this.set = (settings) => {
-    currentSearch.set(settings);
+  set (settings) {
+    this.currentSearch.set(settings);
     const omittedSettings = { ...settings };
     ['page', 'facets'].forEach((property) => {
       delete omittedSettings[property];
     });
-    searchCache.set(omittedSettings);
+    this.searchCache.set(omittedSettings);
     return this;
-  };
+  }
 
-  this.nextPage = () => {
-    currentSearch.nextPage();
+  nextPage () {
+    this.currentSearch.nextPage();
     return this;
-  };
+  }
 
-  this.prevPage = () => {
-    currentSearch.prevPage();
+  prevPage () {
+    this.currentSearch.prevPage();
     return this;
-  };
+  }
 
-  this.switchTo = (requestedUid) => {
-    if (requestedUid !== currentSearch) {
-      currentSearch.setMute(true);
-      currentSearch.set({ page: 1 });
-      searchCache.searches.push(currentSearch);
-      currentSearch = searchCache.searches.find((search) => {
+  switchTo (requestedUid) {
+    if (requestedUid !== this.currentSearch.uid) {
+      this.currentSearch.setMute(true);
+      this.currentSearch.set({ page: 1 });
+      this.searchCache.searches.push(this.currentSearch);
+
+      const newSearch = this.searchCache.searches.find((search) => {
         return search.uid === requestedUid;
       });
-      if (!currentSearch) {
+      if (!newSearch) {
         throw new Error(`Could not find a search with a UID of: ${requestedUid}`);
       }
-      searchCache.searches = searchCache.searches.filter((search) => {
+
+      this.searchCache.searches = this.searchCache.searches.filter((search) => {
         return search.uid !== requestedUid;
       });
-      this.uid = currentSearch.uid;
-      currentSearch.setMute(false);
+      this.currentSearch = newSearch;
+      this.uid = this.currentSearch.uid;
+      this.currentSearch.setMute(false);
     }
 
     return this;
-  };
-};
+  }
+}
 
 export default SearchSwitcher;
