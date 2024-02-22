@@ -1,28 +1,35 @@
 const { expect } = require('chai');
+const sinon = require('sinon');
 const log = require('../../../pride').Pride.Core.log;
 const Settings = require('../../../pride').Pride.Settings;
-const sliceCall = require('../../../pride').Pride.Util.sliceCall;
-
-// Copy code from ./src/Pride/Core/log.js to return `message`
-const logMessage = (source = 'Request', info = 'Trying request again...') => {
-  if (Settings.obnoxious) {
-    const message = sliceCall(arguments, 2);
-    message.unshift(`[Pride: ${source}] ${info}`);
-    return message[0];
-  }
-};
 
 describe('Pride.Core.log()', function () {
+  let consoleLogSpy;
+  const logArguments = ['TestSource', 'TestInfo', 'Additional', 'Info', 'Here'];
+
+  beforeEach(() => {
+    consoleLogSpy = sinon.spy(console, 'log');
+  });
+
+  afterEach(() => {
+    consoleLogSpy.restore();
+  });
+
   it('works', function () {
     expect(log()).to.not.be.null;
   });
-  it('returns undefined if Settings.obnoxious is `false`', () => {
+
+  it('does not call console.log when `Settings.obnoxious` is `false`', () => {
     expect(Settings.obnoxious).to.be.false;
-    expect(logMessage()).to.be.undefined;
+    log(...logArguments);
+    expect(consoleLogSpy.called).to.be.false;
   });
-  it('returns a message if Settings.obnoxious is `true`', () => {
-    Settings.obnoxious = !Settings.obnoxious;
+
+  it('calls console.log with correct arguments when `Settings.obnoxious` is `true`', () => {
+    Settings.obnoxious = true;
     expect(Settings.obnoxious).to.be.true;
-    expect(logMessage()).to.equal('[Pride: Request] Trying request again...');
+    log(...logArguments);
+    expect(consoleLogSpy.calledOnce).to.be.true;
+    expect(consoleLogSpy.calledWith(`[Pride: ${logArguments[0]}] ${logArguments[1]}`, ...logArguments.slice(2))).to.be.true;
   });
 });

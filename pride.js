@@ -2694,11 +2694,9 @@ var Settings = {
 var Settings_default = Settings;
 
 // src/Pride/Core/log.js
-var log = function(source, info) {
+var log = (source, info, ...message) => {
   if (Settings_default.obnoxious) {
-    const message = sliceCall_default(arguments, 2);
-    message.unshift(`[Pride: ${source}] ${info}`);
-    console.log.apply(console, message);
+    console.log(`[Pride: ${source}] ${info}`, ...message);
   }
 };
 var log_default = log;
