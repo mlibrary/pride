@@ -618,7 +618,6 @@ var boolNodeFactory = (type2, childTypes) => {
         throw new Error("Not a valid boolean value");
       }
       this.serializedChildren = () => {
-        console.log("CHILDREN??");
         return this.children.map((child) => {
           if (child.type === this.type || child.type === "literal" && child.value.match(/\s/)) {
             return `(${child.serialize()})`;
@@ -627,7 +626,6 @@ var boolNodeFactory = (type2, childTypes) => {
         });
       };
       this.serialize = () => {
-        console.log("serialize??");
         return this.serializedChildren().join(` ${this.value} `);
       };
     }
@@ -3096,18 +3094,21 @@ var RequestBuffer = function(requestOptions) {
 var RequestBuffer_default = RequestBuffer;
 
 // src/Pride/Core/Holdings.js
-var Holdings = function(data) {
-  const getResourceAccess = function(data2) {
-    const dataField = data2.fields.find((field) => {
+var Holdings = class {
+  constructor(data) {
+    this.data = data;
+  }
+  getResourceAccess = (data) => {
+    const dataField = data.fields.find((field) => {
       return field.uid === "resource_access";
     });
-    return dataField?.value ? dataField.value : dataField;
+    return dataField?.value ?? dataField;
   };
-  const translateData = function(input) {
-    return [getResourceAccess(data)].concat(input);
+  translateData = (input) => {
+    return [this.getResourceAccess(this.data)].concat(input);
   };
-  this.getData = function(func) {
-    safeCall_default(func, translateData(data.holdings));
+  getData = (func) => {
+    safeCall_default(func, this.translateData(this.data.holdings));
   };
 };
 var Holdings_default = Holdings;
