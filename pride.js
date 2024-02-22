@@ -517,7 +517,7 @@ module.exports = __toCommonJS(src_exports);
 // src/Pride/AllDatastores.js
 var AllDatastores = {
   array: [],
-  get: function(uid) {
+  get(uid) {
     return this.array.find((datastore) => {
       return datastore.get("uid") === uid;
     });
