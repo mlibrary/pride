@@ -526,8 +526,8 @@ var AllDatastores = {
 var AllDatastores_default = AllDatastores;
 
 // src/Pride/Util/sliceCall.js
-var sliceCall = function(array, begin, end) {
-  return Array.prototype.slice.call(array, begin, end);
+var sliceCall = (array, begin, end) => {
+  return [...array].slice(begin, end);
 };
 var sliceCall_default = sliceCall;
 
