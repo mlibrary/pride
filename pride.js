@@ -2494,7 +2494,7 @@ var index_default_default = _2;
 
 // src/Pride/Util/deepClone.js
 var deepClone = function(original) {
-  if (!original || isFunction_default(original)) {
+  if (!original || typeof original === "function") {
     return original;
   }
   return JSON.parse(JSON.stringify(original));
