@@ -3145,7 +3145,7 @@ var GetThis = function(barcode, data) {
 var GetThis_default = GetThis;
 
 // src/Pride/Util/escape.js
-var escape = function(string) {
+var escape = (string) => {
   const tempElement = document.createElement("div");
   tempElement.appendChild(document.createTextNode(string));
   return tempElement.innerHTML;
