@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import FuncBuffer from './FuncBuffer';
 import request from './request';
 import safeCall from './safeCall';
@@ -62,7 +61,7 @@ const RequestBuffer = function (requestOptions) {
 
         safeCall(requestOptions.before_success, response);
 
-        if (_.isFunction(requestOptions.edit_response)) {
+        if (typeof requestOptions.edit_response === 'function') {
           response = requestOptions.edit_response(response);
         }
 

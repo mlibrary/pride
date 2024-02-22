@@ -1,5 +1,4 @@
 import safeApply from './safeApply';
-import isFunction from './isFunction';
 
 const FuncBuffer = function (extension) {
   let buffer = {};
@@ -45,7 +44,7 @@ const FuncBuffer = function (extension) {
     return this;
   };
 
-  if (isFunction(extension)) extension.call(this);
+  if (typeof extension === 'function') extension.call(this);
 };
 
 export default FuncBuffer;

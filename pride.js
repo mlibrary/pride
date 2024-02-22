@@ -525,22 +525,10 @@ var AllDatastores = {
 };
 var AllDatastores_default = AllDatastores;
 
-// src/Pride/Util/sliceCall.js
-var sliceCall = (array, begin, end) => {
-  return [...array].slice(begin, end);
-};
-var sliceCall_default = sliceCall;
-
-// src/Pride/Util/isFunction.js
-var isFunction = (value) => {
-  return typeof value === "function";
-};
-var isFunction_default = isFunction;
-
 // src/Pride/Core/nodeFactory.js
 var nodeFactory = function(type2, childTypes, extension) {
-  return function(value) {
-    this.children = sliceCall_default(arguments, 1);
+  return function(value, ...children) {
+    this.children = children;
     if (this.children.length === 1 && Array.isArray(this.children[0])) {
       this.children = this.children[0];
     }
@@ -583,11 +571,11 @@ var nodeFactory = function(type2, childTypes, extension) {
       return value;
     };
     this.serializedChildren = function() {
-      const children = [];
+      const children2 = [];
       this.children.forEach((child) => {
-        children.push(child.serialize());
+        children2.push(child.serialize());
       });
-      return children;
+      return children2;
     };
     this.toJSON = function() {
       const object2 = { ...this };
@@ -601,9 +589,8 @@ var nodeFactory = function(type2, childTypes, extension) {
       });
       return object2;
     };
-    if (isFunction_default(extension)) {
+    if (typeof extension === "function")
       extension.call(this);
-    }
   };
 };
 var nodeFactory_default = nodeFactory;
@@ -705,7 +692,7 @@ __export(modules_exports, {
   isEqual: () => isEqual,
   isError: () => isError_default,
   isFinite: () => isFinite2,
-  isFunction: () => isFunction_default2,
+  isFunction: () => isFunction_default,
   isMap: () => isMap_default,
   isMatch: () => isMatch,
   isNaN: () => isNaN2,
@@ -894,14 +881,14 @@ var isSymbol_default = tagTester("Symbol");
 var isArrayBuffer_default = tagTester("ArrayBuffer");
 
 // node_modules/underscore/modules/isFunction.js
-var isFunction2 = tagTester("Function");
+var isFunction = tagTester("Function");
 var nodelist = root.document && root.document.childNodes;
 if (typeof /./ != "function" && typeof Int8Array != "object" && typeof nodelist != "function") {
-  isFunction2 = function(obj) {
+  isFunction = function(obj) {
     return typeof obj == "function" || false;
   };
 }
-var isFunction_default2 = isFunction2;
+var isFunction_default = isFunction;
 
 // node_modules/underscore/modules/_hasObjectTag.js
 var hasObjectTag_default = tagTester("Object");
@@ -913,7 +900,7 @@ var isIE11 = typeof Map !== "undefined" && hasObjectTag_default(/* @__PURE__ */ 
 // node_modules/underscore/modules/isDataView.js
 var isDataView = tagTester("DataView");
 function ie10IsDataView(obj) {
-  return obj != null && isFunction_default2(obj.getInt8) && isArrayBuffer_default(obj.buffer);
+  return obj != null && isFunction_default(obj.getInt8) && isArrayBuffer_default(obj.buffer);
 }
 var isDataView_default = hasStringTagBug ? ie10IsDataView : isDataView;
 
@@ -1003,7 +990,7 @@ function collectNonEnumProps(obj, keys2) {
   keys2 = emulatedSet(keys2);
   var nonEnumIdx = nonEnumerableProps.length;
   var constructor = obj.constructor;
-  var proto = isFunction_default2(constructor) && constructor.prototype || ObjProto;
+  var proto = isFunction_default(constructor) && constructor.prototype || ObjProto;
   var prop = "constructor";
   if (has(obj, prop) && !keys2.contains(prop))
     keys2.push(prop);
@@ -1137,7 +1124,7 @@ function deepEq(a, b, aStack, bStack) {
     if (typeof a != "object" || typeof b != "object")
       return false;
     var aCtor = a.constructor, bCtor = b.constructor;
-    if (aCtor !== bCtor && !(isFunction_default2(aCtor) && aCtor instanceof aCtor && isFunction_default2(bCtor) && bCtor instanceof bCtor) && ("constructor" in a && "constructor" in b)) {
+    if (aCtor !== bCtor && !(isFunction_default(aCtor) && aCtor instanceof aCtor && isFunction_default(bCtor) && bCtor instanceof bCtor) && ("constructor" in a && "constructor" in b)) {
       return false;
     }
   }
@@ -1199,10 +1186,10 @@ function ie11fingerprint(methods) {
     if (getLength_default(keys2))
       return false;
     for (var i = 0; i < length; i++) {
-      if (!isFunction_default2(obj[methods[i]]))
+      if (!isFunction_default(obj[methods[i]]))
         return false;
     }
-    return methods !== weakMapMethods || !isFunction_default2(obj[forEachName]);
+    return methods !== weakMapMethods || !isFunction_default(obj[forEachName]);
   };
 }
 var forEachName = "forEach";
@@ -1261,7 +1248,7 @@ function invert(obj) {
 function functions(obj) {
   var names = [];
   for (var key in obj) {
-    if (isFunction_default2(obj[key]))
+    if (isFunction_default(obj[key]))
       names.push(key);
   }
   return names.sort();
@@ -1423,7 +1410,7 @@ function optimizeCb(func, context2, argCount) {
 function baseIteratee(value, context2, argCount) {
   if (value == null)
     return identity;
-  if (isFunction_default2(value))
+  if (isFunction_default(value))
     return optimizeCb(value, context2, argCount);
   if (isObject(value) && !isArray_default(value))
     return matcher(value);
@@ -1599,7 +1586,7 @@ function result(obj, path, fallback) {
   path = toPath2(path);
   var length = path.length;
   if (!length) {
-    return isFunction_default2(fallback) ? fallback.call(obj) : fallback;
+    return isFunction_default(fallback) ? fallback.call(obj) : fallback;
   }
   for (var i = 0; i < length; i++) {
     var prop = obj == null ? void 0 : obj[path[i]];
@@ -1607,7 +1594,7 @@ function result(obj, path, fallback) {
       prop = fallback;
       i = length;
     }
-    obj = isFunction_default2(prop) ? prop.call(obj) : prop;
+    obj = isFunction_default(prop) ? prop.call(obj) : prop;
   }
   return obj;
 }
@@ -1657,7 +1644,7 @@ var partial_default = partial;
 
 // node_modules/underscore/modules/bind.js
 var bind_default = restArguments(function(func, context2, args) {
-  if (!isFunction_default2(func))
+  if (!isFunction_default(func))
     throw new TypeError("Bind must be called on a function");
   var bound = restArguments(function(callArgs) {
     return executeBound(func, bound, context2, this, args.concat(callArgs));
@@ -2053,7 +2040,7 @@ function contains(obj, item, fromIndex, guard) {
 // node_modules/underscore/modules/invoke.js
 var invoke_default = restArguments(function(obj, path, args) {
   var contextPath, func;
-  if (isFunction_default2(path)) {
+  if (isFunction_default(path)) {
     func = path;
   } else {
     path = toPath2(path);
@@ -2251,7 +2238,7 @@ var pick_default = restArguments(function(obj, keys2) {
   var result2 = {}, iteratee2 = keys2[0];
   if (obj == null)
     return result2;
-  if (isFunction_default2(iteratee2)) {
+  if (isFunction_default(iteratee2)) {
     if (keys2.length > 1)
       iteratee2 = optimizeCb(iteratee2, keys2[1]);
     keys2 = allKeys(obj);
@@ -2272,7 +2259,7 @@ var pick_default = restArguments(function(obj, keys2) {
 // node_modules/underscore/modules/omit.js
 var omit_default = restArguments(function(obj, keys2) {
   var iteratee2 = keys2[0], context2;
-  if (isFunction_default2(iteratee2)) {
+  if (isFunction_default(iteratee2)) {
     iteratee2 = negate(iteratee2);
     if (keys2.length > 1)
       context2 = keys2[1];
@@ -2758,7 +2745,7 @@ var FuncBuffer = function(extension) {
     this.apply(name, args);
     return this;
   };
-  if (isFunction_default(extension))
+  if (typeof extension === "function")
     extension.call(this);
 };
 var FuncBuffer_default = FuncBuffer;
@@ -2799,9 +2786,8 @@ var SearchBase = function(setup, parent) {
   const requestFunc = setup.requestFunc || this.datastore.runQuery;
   let results = setup.starting_results || [];
   const defaultCacheSize = setup.cache_size || Settings_default.cache_size[this.datastore.uid] || Settings_default.default_cache_size;
-  this.log = function() {
-    const message = sliceCall_default(arguments);
-    message.unshift("Search (" + self2.datastore.get("uid") + ")");
+  this.log = function(...args) {
+    const message = ["Search (" + self2.datastore.get("uid") + ")", ...args];
     log_default.apply(window, message);
   };
   this.set = function(setHash) {
@@ -3079,7 +3065,7 @@ var RequestBuffer = function(requestOptions) {
       success: function(response) {
         requestSuccessful = true;
         safeCall_default(requestOptions.before_success, response);
-        if (index_default_default.isFunction(requestOptions.edit_response)) {
+        if (typeof requestOptions.edit_response === "function") {
           response = requestOptions.edit_response(response);
         }
         callWithResponse(response);
@@ -4436,8 +4422,7 @@ var MultiSearch = function(uid, muted, searchArray) {
   };
   const funcOnEach = (funcName, beforeFunc) => {
     const self2 = this;
-    return function() {
-      const args = sliceCall_default(arguments);
+    return function(...args) {
       safeApply_default(beforeFunc, args);
       searchArray.forEach((search) => {
         search[funcName].apply(search, args);
@@ -4521,7 +4506,6 @@ var Util = {
   deepClone: deepClone_default,
   escape: escape_default2,
   FuncBuffer: FuncBuffer_default,
-  isFunction: isFunction_default,
   MultiSearch: MultiSearch_default,
   Paginator: Paginator_default,
   request: request_default,
@@ -4529,8 +4513,7 @@ var Util = {
   safeApply: safeApply_default,
   safeCall: safeCall_default,
   SearchSwitcher: SearchSwitcher_default,
-  Section: Section_default,
-  sliceCall: sliceCall_default
+  Section: Section_default
 };
 var Util_default = Util;
 
