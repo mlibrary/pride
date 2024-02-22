@@ -3457,15 +3457,11 @@ var insideFieldNodes = [
 var insideFieldNodes_default = insideFieldNodes;
 
 // src/Pride/FieldTree/Field.js
-var Field = nodeFactory_default(
-  "field",
-  insideFieldNodes_default,
-  function() {
-    this.serialize = function() {
-      return `${this.value}: (${this.serializedChildren().join(" ")})`;
-    };
-  }
-);
+var Field = nodeFactory_default("field", insideFieldNodes_default, function() {
+  this.serialize = () => {
+    return `${this.value}: (${this.serializedChildren().join(" ")})`;
+  };
+});
 var Field_default = Field;
 
 // src/Pride/FieldTree/Literal.js
