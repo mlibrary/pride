@@ -2712,7 +2712,7 @@ var safeCall_default = safeCall;
 
 // src/Pride/Util/safeApply.js
 var safeApply = function(maybeFunc, args) {
-  if (isFunction_default(maybeFunc)) {
+  if (typeof maybeFunc === "function") {
     return maybeFunc.apply(this, args);
   }
   return maybeFunc;
