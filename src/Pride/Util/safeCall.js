@@ -1,9 +1,6 @@
-import sliceCall from './sliceCall';
-import isFunction from './isFunction';
-
-const safeCall = function (maybeFunc) {
-  if (isFunction(maybeFunc)) {
-    return maybeFunc.apply(this, sliceCall(arguments, 1));
+const safeCall = function (maybeFunc, ...args) {
+  if (typeof maybeFunc === 'function') {
+    return maybeFunc.apply(this, args);
   }
 
   return maybeFunc;

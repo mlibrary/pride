@@ -2702,9 +2702,9 @@ var log = (source, info, ...message) => {
 var log_default = log;
 
 // src/Pride/Util/safeCall.js
-var safeCall = function(maybeFunc) {
-  if (isFunction_default(maybeFunc)) {
-    return maybeFunc.apply(this, sliceCall_default(arguments, 1));
+var safeCall = function(maybeFunc, ...args) {
+  if (typeof maybeFunc === "function") {
+    return maybeFunc.apply(this, args);
   }
   return maybeFunc;
 };
