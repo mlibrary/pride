@@ -2,7 +2,6 @@ import _ from 'underscore';
 import reqwest from 'reqwest';
 import log from '../Core/log';
 import Settings from '../Settings';
-import safeCall from './safeCall';
 import Messenger from '../Messenger';
 
 const request = function (requestInfo) {
@@ -33,7 +32,7 @@ const request = function (requestInfo) {
       if (requestInfo.attempts <= 0) {
         log('Request', 'ERROR', error);
 
-        safeCall(requestInfo.failure, error);
+        requestInfo.failure(...[error]);
 
         Messenger.sendMessage({
           summary: requestInfo.failure_message,
@@ -53,7 +52,7 @@ const request = function (requestInfo) {
     success: function (response) {
       log('Request', 'SUCCESS', response);
 
-      safeCall(requestInfo.success, response);
+      requestInfo.success(...[response]);
 
       Messenger.sendMessage({
         summary: requestInfo.success_message,

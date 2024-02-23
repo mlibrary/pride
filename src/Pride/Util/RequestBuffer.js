@@ -1,6 +1,5 @@
 import FuncBuffer from './FuncBuffer';
 import request from './request';
-import safeCall from './safeCall';
 import Settings from '../Settings';
 
 const RequestBuffer = function (requestOptions) {
@@ -29,7 +28,6 @@ const RequestBuffer = function (requestOptions) {
 
   const callWithResponse = function (data) {
     cachedResponseData = data || cachedResponseData;
-
     if (requestSuccessful) {
       callThenClear('success');
     } else if (requestFailed) {
@@ -41,33 +39,23 @@ const RequestBuffer = function (requestOptions) {
     requestIssued = true;
 
     request({
-      url: safeCall(requestOptions.url),
-      attempts: safeCall(requestOptions.attempts) ||
-                       Settings.connection_attempts,
-      failure_message: safeCall(requestOptions.failure_message),
-
+      url: typeof requestOptions.url === 'function' ? requestOptions.url.apply(this) : requestOptions.url,
+      attempts: requestOptions.attempts?.apply(this) || Settings.connection_attempts,
+      failure_message: requestOptions.failure_message?.apply(this),
       failure: function (error) {
         requestFailed = true;
-
-        safeCall(requestOptions.before_failure, error);
-
+        requestOptions.before_failure?.apply(this, [error]);
         callWithResponse(error);
-
-        safeCall(requestOptions.after_failure, error);
+        requestOptions.after_failure?.apply(this, [error]);
       },
-
       success: function (response) {
         requestSuccessful = true;
-
-        safeCall(requestOptions.before_success, response);
-
+        requestOptions.before_success?.apply(this, [response]);
         if (typeof requestOptions.edit_response === 'function') {
           response = requestOptions.edit_response(response);
         }
-
         callWithResponse(response);
-
-        safeCall(requestOptions.after_success, response);
+        requestOptions.after_success?.apply(this, [response]);
       }
     });
   };

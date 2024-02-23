@@ -1,5 +1,3 @@
-import safeApply from './safeApply';
-
 const FuncBuffer = function (extension) {
   let buffer = {};
 
@@ -34,7 +32,7 @@ const FuncBuffer = function (extension) {
 
   this.apply = (name, args) => {
     safeGet(name).forEach((func) => {
-      safeApply(func, args);
+      func.apply(this, args);
     });
     return this;
   };

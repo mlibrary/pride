@@ -1,7 +1,6 @@
 import _ from 'underscore';
 import Settings from '../Settings';
 import log from './log';
-import safeCall from '../Util/safeCall';
 import getPossibleKeys from '../Util/Paginator/getPossibleKeys';
 import Section from '../Util/Section';
 import Messenger from '../Messenger';
@@ -29,7 +28,7 @@ const SearchBase = function (setup, parent) {
 
   this.set = function (setHash) {
     self.query.set(setHash);
-    safeCall(self.setDataChanged);
+    self.setDataChanged?.apply(this);
 
     if (!_.isEmpty(_.omit(setHash, getPossibleKeys))) {
       results = [];
@@ -39,7 +38,7 @@ const SearchBase = function (setup, parent) {
   };
 
   this.run = function (cacheSize) {
-    safeCall(self.resultsChanged);
+    self.resultsChanged?.apply(this);
 
     if (_.isUndefined(cacheSize)) {
       cacheSize = defaultCacheSize;
@@ -102,7 +101,7 @@ const SearchBase = function (setup, parent) {
     } else {
       // We don't need to run a search, but should update run observers in case
       // set() was called since the last run().
-      safeCall(self.runDataChanged);
+      self.runDataChanged?.apply(this);
     }
   };
 
@@ -116,7 +115,7 @@ const SearchBase = function (setup, parent) {
 
       // Update the results that are not already filled.
       if (_.isUndefined(results[itemIndex])) {
-        results[itemIndex] = safeCall(self.createItem, itemData);
+        results[itemIndex] = self.createItem?.apply(this, [itemData]);
 
         if (self.query.toSection().inSection(itemIndex)) {
           queryResultsAdded = true;
@@ -127,7 +126,7 @@ const SearchBase = function (setup, parent) {
     self.log('CACHE LENGTH', results.length);
 
     if (queryResultsAdded || _.isEmpty(newItemsArray)) {
-      safeCall(self.resultsChanged);
+      self.resultsChanged?.apply(this);
     }
   };
 
@@ -139,7 +138,7 @@ const SearchBase = function (setup, parent) {
     newQueryData.total_available = responseData.total_available;
     self.query.set(newQueryData);
 
-    safeCall(self.runDataChanged);
+    self.runDataChanged?.apply(this);
   };
 
   const getMissingSection = function (section) {
@@ -180,7 +179,7 @@ const SearchBase = function (setup, parent) {
       observable.clearAll();
     });
 
-    safeCall(self.initialize_observables);
+    self.initialize_observables?.apply(this);
 
     return self;
   };
@@ -192,7 +191,7 @@ const SearchBase = function (setup, parent) {
   this.setMute = function (state) {
     if (state !== muted) {
       muted = state;
-      safeCall(self.muteChanged());
+      self.muteChanged?.apply(this);
 
       if (!muted) {
         _.each(mutableObservables, function (observable) {
