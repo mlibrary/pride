@@ -3082,35 +3082,30 @@ var Holdings = class {
 var Holdings_default = Holdings;
 
 // src/Pride/Core/GetThis.js
-var GetThis = function(barcode, data) {
-  this.barcode = barcode;
-  this.data = data;
-  const getGetThisUrl = function(data2) {
-    let ret;
-    index_default_default.each(data2.fields, function(field) {
-      if (field.uid === "get_this_url") {
-        ret = field.value;
+var GetThis = class {
+  constructor(barcode, data) {
+    this.barcode = barcode;
+    this.data = data;
+    this.requestBuffer = new RequestBuffer_default({
+      url: `${this.getGetThisUrl(data)}/${this.barcode}`,
+      failure_message: Messenger_default.preset("failed_get_this_load", data.names[0]),
+      edit_response: (response) => {
+        this.data = this.translateData(response);
+        return this.data;
       }
     });
-    return ret;
-  };
-  const requestBuffer = new RequestBuffer_default({
-    url: getGetThisUrl(data) + "/" + this.barcode,
-    failure_message: Messenger_default.preset(
-      "failed_get_this_load",
-      data.names[0]
-    ),
-    edit_response: function(response) {
-      data = translateData(response);
-      return data;
-    }
-  });
-  const translateData = function(input) {
+  }
+  getGetThisUrl(data) {
+    return data.fields.find((field) => {
+      return field.uid === "get_this_url";
+    });
+  }
+  translateData(input) {
     return input;
-  };
-  this.getData = function(func) {
-    requestBuffer.request({ success: func });
-  };
+  }
+  getData(func) {
+    this.requestBuffer.request({ success: func });
+  }
 };
 var GetThis_default = GetThis;
 
