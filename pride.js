@@ -2719,7 +2719,7 @@ var FuncBuffer = function(extension) {
   };
   this.apply = (name, args) => {
     safeGet(name).forEach((func) => {
-      func.apply(this, args);
+      func?.apply(this, args);
     });
     return this;
   };
@@ -2965,7 +2965,7 @@ var request = function(requestInfo) {
   let requestMethod = "get";
   if (requestInfo.query)
     requestMethod = "post";
-  if (!index_default_default.isNumber(requestInfo.attempts)) {
+  if (typeof requestInfo.attempts !== "number") {
     requestInfo.attempts = Settings_default.connection_attempts;
   }
   requestInfo.attempts -= 1;
@@ -2979,24 +2979,21 @@ var request = function(requestInfo) {
     error: function(error2) {
       if (requestInfo.attempts <= 0) {
         log_default("Request", "ERROR", error2);
-        requestInfo.failure(...[error2]);
+        requestInfo.failure?.(error2);
         Messenger_default.sendMessage({
           summary: requestInfo.failure_message,
           class: "error"
         });
       } else {
         log_default("Request", "Trying request again...");
-        window.setTimeout(
-          function() {
-            request(requestInfo);
-          },
-          Settings_default.ms_between_attempts
-        );
+        window.setTimeout(() => {
+          return request(requestInfo);
+        }, Settings_default.ms_between_attempts);
       }
     },
     success: function(response) {
       log_default("Request", "SUCCESS", response);
-      requestInfo.success(...[response]);
+      requestInfo.success?.(response);
       Messenger_default.sendMessage({
         summary: requestInfo.success_message,
         class: "success"
@@ -3082,35 +3079,31 @@ var Holdings = class {
 var Holdings_default = Holdings;
 
 // src/Pride/Core/GetThis.js
-var GetThis = function(barcode, data) {
-  this.barcode = barcode;
-  this.data = data;
-  const getGetThisUrl = function(data2) {
-    let ret;
-    index_default_default.each(data2.fields, function(field) {
-      if (field.uid === "get_this_url") {
-        ret = field.value;
+var GetThis = class {
+  constructor(barcode, data) {
+    this.barcode = barcode;
+    this.data = data;
+    this.requestBuffer = new RequestBuffer_default({
+      url: `${this.getGetThisUrl(data)}/${this.barcode}`,
+      failure_message: Messenger_default.preset("failed_get_this_load", data.names[0]),
+      edit_response: (response) => {
+        this.data = this.translateData(response);
+        return this.data;
       }
     });
-    return ret;
-  };
-  const requestBuffer = new RequestBuffer_default({
-    url: getGetThisUrl(data) + "/" + this.barcode,
-    failure_message: Messenger_default.preset(
-      "failed_get_this_load",
-      data.names[0]
-    ),
-    edit_response: function(response) {
-      data = translateData(response);
-      return data;
-    }
-  });
-  const translateData = function(input) {
+  }
+  getGetThisUrl(data) {
+    const ret = data.fields.find((field) => {
+      return field.uid === "get_this_url";
+    });
+    return ret?.value;
+  }
+  translateData(input) {
     return input;
-  };
-  this.getData = function(func) {
-    requestBuffer.request({ success: func });
-  };
+  }
+  getData(func) {
+    this.requestBuffer.request({ success: func });
+  }
 };
 var GetThis_default = GetThis;
 
@@ -3126,8 +3119,8 @@ var escape_default2 = escape;
 var PreferenceEngine = {
   selectedRecords: null,
   engine: null,
-  updateSelectedRecords: function(data) {
-    this.selectedRecords = this.selectedRecords || {
+  updateSelectedRecords(data) {
+    this.selectedRecords ||= {
       mirlyn: {},
       articlesplus: {},
       databases: {},
@@ -3136,37 +3129,32 @@ var PreferenceEngine = {
     };
     if (Array.isArray(data)) {
       data.forEach((record) => {
-        this.selectedRecords[record.datastore] = {};
+        this.selectedRecords[record.datastore] ||= {};
         this.selectedRecords[record.datastore][record.uid] = true;
       });
-      return this;
-    }
-    Object.keys(data).forEach((datastore) => {
-      this.selectedRecords[datastore] = {};
-      data[datastore].forEach((record) => {
-        this.selectedRecords[datastore][record.uid] = true;
+    } else {
+      Object.keys(data).forEach((datastore) => {
+        this.selectedRecords[datastore] = {};
+        data[datastore].forEach((record) => {
+          this.selectedRecords[datastore][record.uid] = true;
+        });
       });
-    });
+    }
     return this;
   },
-  registerEngine: function(engine) {
+  registerEngine(engine) {
     if (!engine) {
       return this;
     }
     this.engine = engine;
     this.updateSelectedRecords(this.engine.listRecords());
-    this.engine.addObserver(() => {
-      return (data) => {
-        this.updateSelectedRecords(data);
-      };
+    this.engine.addObserver((data) => {
+      this.updateSelectedRecords(data);
     });
     return this;
   },
-  selected: function(record) {
-    if (!this.engine) {
-      return false;
-    }
-    return (this.selectedRecords[record.datastore] || {})[record.uid];
+  selected(record) {
+    return !!this.selectedRecords?.[record.datastore]?.[record.uid];
   }
 };
 var PreferenceEngine_default = PreferenceEngine;
@@ -4350,27 +4338,24 @@ var FieldTree_default = FieldTree;
 
 // src/Pride/init.js
 var init2 = new RequestBuffer_default({
-  url: function() {
+  url: () => {
     return Settings_default.datastores_url;
   },
-  attempts: function() {
+  attempts: () => {
     return Settings_default.init_attempts;
   },
-  failure_message: function() {
+  failure_message: () => {
     return Messenger_default.preset("failed_init");
   },
-  edit_response: function() {
+  edit_response: () => {
     return void 0;
   },
-  before_success: function(data) {
+  before_success: (data) => {
     Settings_default.default_institution = data.default_institution;
     Settings_default.affiliation = data.affiliation;
-    AllDatastores_default.array = index_default_default.map(
-      data.response,
-      function(datastoreData) {
-        return new Datastore_default(datastoreData);
-      }
-    );
+    AllDatastores_default.array = data.response.map((datastoreData) => {
+      return new Datastore_default(datastoreData);
+    });
   }
 }).request;
 var init_default = init2;

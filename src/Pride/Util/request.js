@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import reqwest from 'reqwest';
 import log from '../Core/log';
 import Settings from '../Settings';
@@ -14,7 +13,7 @@ const request = function (requestInfo) {
   let requestMethod = 'get';
   if (requestInfo.query) requestMethod = 'post';
 
-  if (!_.isNumber(requestInfo.attempts)) {
+  if (typeof requestInfo.attempts !== 'number') {
     requestInfo.attempts = Settings.connection_attempts;
   }
 
@@ -32,7 +31,7 @@ const request = function (requestInfo) {
       if (requestInfo.attempts <= 0) {
         log('Request', 'ERROR', error);
 
-        requestInfo.failure(...[error]);
+        requestInfo.failure?.(error);
 
         Messenger.sendMessage({
           summary: requestInfo.failure_message,
@@ -40,19 +39,16 @@ const request = function (requestInfo) {
         });
       } else {
         log('Request', 'Trying request again...');
-        window.setTimeout(
-          function () {
-            request(requestInfo);
-          },
-          Settings.ms_between_attempts
-        );
+        window.setTimeout(() => {
+          return request(requestInfo);
+        }, Settings.ms_between_attempts);
       }
     },
 
     success: function (response) {
       log('Request', 'SUCCESS', response);
 
-      requestInfo.success(...[response]);
+      requestInfo.success?.(response);
 
       Messenger.sendMessage({
         summary: requestInfo.success_message,

@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import RequestBuffer from './Util/RequestBuffer';
 import Settings from './Settings';
 import Messenger from './Messenger';
@@ -6,29 +5,25 @@ import AllDatastores from './AllDatastores';
 import Datastore from './Core/Datastore';
 
 const init = new RequestBuffer({
-  url: function () {
+  url: () => {
     return Settings.datastores_url;
   },
-  attempts: function () {
+  attempts: () => {
     return Settings.init_attempts;
   },
-  failure_message: function () {
+  failure_message: () => {
     return Messenger.preset('failed_init');
   },
 
-  edit_response: function () {
+  edit_response: () => {
     return undefined;
   },
-  before_success: function (data) {
-    // TODO: Look for a better place for this later.
+  before_success: (data) => {
     Settings.default_institution = data.default_institution;
     Settings.affiliation = data.affiliation;
-    AllDatastores.array = _.map(
-      data.response,
-      function (datastoreData) {
-        return new Datastore(datastoreData);
-      }
-    );
+    AllDatastores.array = data.response.map((datastoreData) => {
+      return new Datastore(datastoreData);
+    });
   }
 }).request;
 

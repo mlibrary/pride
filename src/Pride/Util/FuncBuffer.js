@@ -32,7 +32,7 @@ const FuncBuffer = function (extension) {
 
   this.apply = (name, args) => {
     safeGet(name).forEach((func) => {
-      func.apply(this, args);
+      func?.apply(this, args);
     });
     return this;
   };
