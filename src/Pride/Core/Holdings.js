@@ -1,4 +1,4 @@
-import safeCall from '../Util/safeCall';
+import safeApply from '../Util/safeApply';
 
 class Holdings {
   constructor (data) {
@@ -17,7 +17,7 @@ class Holdings {
   };
 
   getData = (func) => {
-    safeCall(func, this.translateData(this.data.holdings));
+    safeApply(func, [this.translateData(this.data.holdings)]);
   };
 }
 

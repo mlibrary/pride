@@ -40,14 +40,14 @@ function testRequest (requestMethod, requestInfo) {
 function mockRequestSuccess (requestMethod, result) {
   reqwest = function (requestInfo) {
     testRequest(requestMethod, requestInfo);
-    requestInfo.success(Pride.Util.safeCall(result) || {});
+    requestInfo.success(Pride.Util.safeApply(result) || {});
   };
 }
 
 function mockRequestFailure (requestMethod, result) {
   reqwest = function (requestInfo) {
     testRequest(requestMethod, requestInfo);
-    requestInfo.error(Pride.Util.safeCall(result) || {});
+    requestInfo.error(Pride.Util.safeApply(result) || {});
   };
 }
 

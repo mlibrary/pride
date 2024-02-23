@@ -1,44 +1,45 @@
 const { expect } = require('chai');
 const safeApply = require('../../../pride').Pride.Util.safeApply;
 
-// Given a safeApply/safeCall like function, check that it has the correct basic behavior
-const testSafeFuncCaller = (caller) => {
-  describe("given something that isn't a function", function () {
-    it('returns the given object', function () {
-      const object = {};
-      expect(caller(object)).to.equal(object);
-    });
-  });
-
-  describe('given a function, calls the function', function () {
-    it('returns the result of calling the function', function () {
-      const returned = 8435;
-      expect(caller(() => {
-        return returned;
-      })).to.equal(returned);
-    });
-  });
-};
-
 describe('Pride.Util.safeApply()', function () {
-  testSafeFuncCaller(safeApply);
-  describe('given additional arguments', function () {
-    let returnedFirst, returnedSecond;
-    const args = ['first!', 'not first!'];
-    safeApply(
-      (first, second) => {
-        returnedFirst = first;
-        returnedSecond = second;
-      },
-      args
-    );
-    it('passes given argument into the function', function () {
-      expect(returnedFirst).to.equal(args[0]);
-    });
-    it('can pass multiple arguments', function () {
-      expect(returnedSecond).to.equal(args[1]);
-    });
+  let returnedFirst, returnedSecond;
+
+  it('works', function () {
+    expect(safeApply()).to.not.be.null;
+  });
+
+  it('does not apply given arguments, if function is not provided', function () {
+    const object = { returnedFirst, returnedSecond };
+    safeApply(object, ['value for object.returnedFirst', 'value for object.returnedSecond']);
+    expect(object.returnedFirst).to.be.undefined;
+    expect(object.returnedSecond).to.be.undefined;
+  });
+
+  it('applies given arguments, if an array', function () {
+    const args = ['one', 'two'];
+    safeApply((first, second) => {
+      returnedFirst = first;
+      returnedSecond = second;
+    }, args);
+    expect(returnedFirst).to.equal(args[0]);
+    expect(returnedSecond).to.equal(args[1]);
+  });
+
+  it('applies given arguments, if supplying individual arguments', function () {
+    const args = ['first', 'second'];
+    safeApply((first, second) => {
+      returnedFirst = first;
+      returnedSecond = second;
+    }, ...args);
+    expect(returnedFirst).to.equal(args[0]);
+    expect(returnedSecond).to.equal(args[1]);
+  });
+
+  it('applies given argument, if supplying an individual argument', function () {
+    const arg = 'single argument';
+    safeApply((first) => {
+      returnedFirst = first;
+    }, arg);
+    expect(returnedFirst).to.equal(arg);
   });
 });
-
-exports.testSafeFuncCaller = testSafeFuncCaller;

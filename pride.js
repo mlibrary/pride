@@ -2690,19 +2690,10 @@ var log = (source, info, ...message) => {
 };
 var log_default = log;
 
-// src/Pride/Util/safeCall.js
-var safeCall = function(maybeFunc, ...args) {
-  if (typeof maybeFunc === "function") {
-    return maybeFunc.apply(this, args);
-  }
-  return maybeFunc;
-};
-var safeCall_default = safeCall;
-
 // src/Pride/Util/safeApply.js
-var safeApply = function(maybeFunc, args) {
+var safeApply = function(maybeFunc, ...args) {
   if (typeof maybeFunc === "function") {
-    return maybeFunc.apply(this, args);
+    return maybeFunc.apply(this, Array.isArray(args[0]) ? args[0] : args);
   }
   return maybeFunc;
 };
@@ -2792,14 +2783,14 @@ var SearchBase = function(setup, parent) {
   };
   this.set = function(setHash) {
     self2.query.set(setHash);
-    safeCall_default(self2.setDataChanged);
+    safeApply_default(self2.setDataChanged);
     if (!index_default_default.isEmpty(index_default_default.omit(setHash, getPossibleKeys_default))) {
       results = [];
     }
     return self2;
   };
   this.run = function(cacheSize) {
-    safeCall_default(self2.resultsChanged);
+    safeApply_default(self2.resultsChanged);
     if (index_default_default.isUndefined(cacheSize)) {
       cacheSize = defaultCacheSize;
     }
@@ -2845,7 +2836,7 @@ var SearchBase = function(setup, parent) {
         }
       });
     } else {
-      safeCall_default(self2.runDataChanged);
+      safeApply_default(self2.runDataChanged);
     }
   };
   const addResults = function(newItemsArray, offset) {
@@ -2854,7 +2845,7 @@ var SearchBase = function(setup, parent) {
     index_default_default.each(newItemsArray, function(itemData, arrayIndex) {
       const itemIndex = arrayIndex + offset;
       if (index_default_default.isUndefined(results[itemIndex])) {
-        results[itemIndex] = safeCall_default(self2.createItem, itemData);
+        results[itemIndex] = safeApply_default(self2.createItem, [itemData]);
         if (self2.query.toSection().inSection(itemIndex)) {
           queryResultsAdded = true;
         }
@@ -2862,7 +2853,7 @@ var SearchBase = function(setup, parent) {
     });
     self2.log("CACHE LENGTH", results.length);
     if (queryResultsAdded || index_default_default.isEmpty(newItemsArray)) {
-      safeCall_default(self2.resultsChanged);
+      safeApply_default(self2.resultsChanged);
     }
   };
   const updateData = function(responseData) {
@@ -2871,7 +2862,7 @@ var SearchBase = function(setup, parent) {
     newQueryData.specialists = responseData.specialists;
     newQueryData.total_available = responseData.total_available;
     self2.query.set(newQueryData);
-    safeCall_default(self2.runDataChanged);
+    safeApply_default(self2.runDataChanged);
   };
   const getMissingSection = function(section) {
     const list = resultsPiece(section);
@@ -2896,7 +2887,7 @@ var SearchBase = function(setup, parent) {
     index_default_default.each(observables, function(observable) {
       observable.clearAll();
     });
-    safeCall_default(self2.initialize_observables);
+    safeApply_default(self2.initialize_observables);
     return self2;
   };
   this.getMute = function() {
@@ -2905,7 +2896,7 @@ var SearchBase = function(setup, parent) {
   this.setMute = function(state) {
     if (state !== muted) {
       muted = state;
-      safeCall_default(self2.muteChanged());
+      safeApply_default(self2.muteChanged());
       if (!muted) {
         index_default_default.each(mutableObservables, function(observable) {
           observable.notify();
@@ -2997,7 +2988,7 @@ var request = function(requestInfo) {
     error: function(error2) {
       if (requestInfo.attempts <= 0) {
         log_default("Request", "ERROR", error2);
-        safeCall_default(requestInfo.failure, error2);
+        safeApply_default(requestInfo.failure, [error2]);
         Messenger_default.sendMessage({
           summary: requestInfo.failure_message,
           class: "error"
@@ -3014,7 +3005,7 @@ var request = function(requestInfo) {
     },
     success: function(response) {
       log_default("Request", "SUCCESS", response);
-      safeCall_default(requestInfo.success, response);
+      safeApply_default(requestInfo.success, [response]);
       Messenger_default.sendMessage({
         summary: requestInfo.success_message,
         class: "success"
@@ -3053,23 +3044,23 @@ var RequestBuffer = function(requestOptions) {
   const sendRequest = function() {
     requestIssued = true;
     request_default({
-      url: safeCall_default(requestOptions.url),
-      attempts: safeCall_default(requestOptions.attempts) || Settings_default.connection_attempts,
-      failure_message: safeCall_default(requestOptions.failure_message),
+      url: safeApply_default(requestOptions.url),
+      attempts: safeApply_default(requestOptions.attempts) || Settings_default.connection_attempts,
+      failure_message: safeApply_default(requestOptions.failure_message),
       failure: function(error2) {
         requestFailed = true;
-        safeCall_default(requestOptions.before_failure, error2);
+        safeApply_default(requestOptions.before_failure, [error2]);
         callWithResponse(error2);
-        safeCall_default(requestOptions.after_failure, error2);
+        safeApply_default(requestOptions.after_failure, [error2]);
       },
       success: function(response) {
         requestSuccessful = true;
-        safeCall_default(requestOptions.before_success, response);
+        safeApply_default(requestOptions.before_success, [response]);
         if (typeof requestOptions.edit_response === "function") {
           response = requestOptions.edit_response(response);
         }
         callWithResponse(response);
-        safeCall_default(requestOptions.after_success, response);
+        safeApply_default(requestOptions.after_success, [response]);
       }
     });
   };
@@ -3094,7 +3085,7 @@ var Holdings = class {
     return [this.getResourceAccess(this.data)].concat(input);
   };
   getData = (func) => {
-    safeCall_default(func, this.translateData(this.data.holdings));
+    safeApply_default(func, [this.translateData(this.data.holdings)]);
   };
 };
 var Holdings_default = Holdings;
@@ -4511,7 +4502,6 @@ var Util = {
   request: request_default,
   RequestBuffer: RequestBuffer_default,
   safeApply: safeApply_default,
-  safeCall: safeCall_default,
   SearchSwitcher: SearchSwitcher_default,
   Section: Section_default
 };

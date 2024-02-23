@@ -1,6 +1,6 @@
 import FuncBuffer from './FuncBuffer';
 import request from './request';
-import safeCall from './safeCall';
+import safeApply from './safeApply';
 import Settings from '../Settings';
 
 const RequestBuffer = function (requestOptions) {
@@ -41,25 +41,25 @@ const RequestBuffer = function (requestOptions) {
     requestIssued = true;
 
     request({
-      url: safeCall(requestOptions.url),
-      attempts: safeCall(requestOptions.attempts) ||
+      url: safeApply(requestOptions.url),
+      attempts: safeApply(requestOptions.attempts) ||
                        Settings.connection_attempts,
-      failure_message: safeCall(requestOptions.failure_message),
+      failure_message: safeApply(requestOptions.failure_message),
 
       failure: function (error) {
         requestFailed = true;
 
-        safeCall(requestOptions.before_failure, error);
+        safeApply(requestOptions.before_failure, [error]);
 
         callWithResponse(error);
 
-        safeCall(requestOptions.after_failure, error);
+        safeApply(requestOptions.after_failure, [error]);
       },
 
       success: function (response) {
         requestSuccessful = true;
 
-        safeCall(requestOptions.before_success, response);
+        safeApply(requestOptions.before_success, [response]);
 
         if (typeof requestOptions.edit_response === 'function') {
           response = requestOptions.edit_response(response);
@@ -67,7 +67,7 @@ const RequestBuffer = function (requestOptions) {
 
         callWithResponse(response);
 
-        safeCall(requestOptions.after_success, response);
+        safeApply(requestOptions.after_success, [response]);
       }
     });
   };
