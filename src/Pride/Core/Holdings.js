@@ -15,7 +15,7 @@ class Holdings {
   };
 
   getData = (func) => {
-    func.apply(this, [this.translateData(this.data.holdings)]);
+    func(...[this.translateData(this.data.holdings)]);
   };
 }
 

@@ -2979,7 +2979,7 @@ var request = function(requestInfo) {
     error: function(error2) {
       if (requestInfo.attempts <= 0) {
         log_default("Request", "ERROR", error2);
-        requestInfo.failure?.apply(this, [error2]);
+        requestInfo.failure(...[error2]);
         Messenger_default.sendMessage({
           summary: requestInfo.failure_message,
           class: "error"
@@ -2996,7 +2996,7 @@ var request = function(requestInfo) {
     },
     success: function(response) {
       log_default("Request", "SUCCESS", response);
-      requestInfo.success?.apply(this, [response]);
+      requestInfo.success(...[response]);
       Messenger_default.sendMessage({
         summary: requestInfo.success_message,
         class: "success"
@@ -3035,7 +3035,7 @@ var RequestBuffer = function(requestOptions) {
   const sendRequest = function() {
     requestIssued = true;
     request_default({
-      url: requestOptions.url?.apply(this),
+      url: typeof requestOptions.url === "function" ? requestOptions.url.apply(this) : requestOptions.url,
       attempts: requestOptions.attempts?.apply(this) || Settings_default.connection_attempts,
       failure_message: requestOptions.failure_message?.apply(this),
       failure: function(error2) {
@@ -3076,7 +3076,7 @@ var Holdings = class {
     return [this.getResourceAccess(this.data)].concat(input);
   };
   getData = (func) => {
-    func.apply(this, [this.translateData(this.data.holdings)]);
+    func(...[this.translateData(this.data.holdings)]);
   };
 };
 var Holdings_default = Holdings;
@@ -4407,7 +4407,7 @@ var MultiSearch = function(uid, muted, searchArray) {
     return function(...args) {
       beforeFunc?.apply(this, args);
       searchArray.forEach((search) => {
-        search[funcName].apply(search, args);
+        search[funcName](...args);
       });
       return self2;
     };

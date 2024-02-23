@@ -32,7 +32,7 @@ const request = function (requestInfo) {
       if (requestInfo.attempts <= 0) {
         log('Request', 'ERROR', error);
 
-        requestInfo.failure?.apply(this, [error]);
+        requestInfo.failure(...[error]);
 
         Messenger.sendMessage({
           summary: requestInfo.failure_message,
@@ -52,7 +52,7 @@ const request = function (requestInfo) {
     success: function (response) {
       log('Request', 'SUCCESS', response);
 
-      requestInfo.success?.apply(this, [response]);
+      requestInfo.success(...[response]);
 
       Messenger.sendMessage({
         summary: requestInfo.success_message,

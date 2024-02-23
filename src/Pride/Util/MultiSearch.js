@@ -14,7 +14,7 @@ const MultiSearch = function (uid, muted, searchArray) {
     return function (...args) {
       beforeFunc?.apply(this, args);
       searchArray.forEach((search) => {
-        search[funcName].apply(search, args);
+        search[funcName](...args);
       });
       return self;
     };

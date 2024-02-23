@@ -39,7 +39,7 @@ const RequestBuffer = function (requestOptions) {
     requestIssued = true;
 
     request({
-      url: requestOptions.url?.apply(this),
+      url: typeof requestOptions.url === 'function' ? requestOptions.url.apply(this) : requestOptions.url,
       attempts: requestOptions.attempts?.apply(this) || Settings.connection_attempts,
       failure_message: requestOptions.failure_message?.apply(this),
       failure: function (error) {
