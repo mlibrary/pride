@@ -1,5 +1,3 @@
-import safeApply from '../Util/safeApply';
-
 class Holdings {
   constructor (data) {
     this.data = data;
@@ -17,7 +15,7 @@ class Holdings {
   };
 
   getData = (func) => {
-    safeApply(func, [this.translateData(this.data.holdings)]);
+    func.apply(this, [this.translateData(this.data.holdings)]);
   };
 }
 

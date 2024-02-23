@@ -1,5 +1,3 @@
-import safeApply from './safeApply';
-
 const MultiSearch = function (uid, muted, searchArray) {
   this.searches = searchArray;
   this.uid = uid;
@@ -14,7 +12,7 @@ const MultiSearch = function (uid, muted, searchArray) {
   const funcOnEach = (funcName, beforeFunc) => {
     const self = this;
     return function (...args) {
-      safeApply(beforeFunc, args);
+      beforeFunc?.apply(this, args);
       searchArray.forEach((search) => {
         search[funcName].apply(search, args);
       });
