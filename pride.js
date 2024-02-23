@@ -2965,7 +2965,7 @@ var request = function(requestInfo) {
   let requestMethod = "get";
   if (requestInfo.query)
     requestMethod = "post";
-  if (!index_default_default.isNumber(requestInfo.attempts)) {
+  if (typeof requestInfo.attempts !== "number") {
     requestInfo.attempts = Settings_default.connection_attempts;
   }
   requestInfo.attempts -= 1;
@@ -2979,24 +2979,21 @@ var request = function(requestInfo) {
     error: function(error2) {
       if (requestInfo.attempts <= 0) {
         log_default("Request", "ERROR", error2);
-        requestInfo.failure(...[error2]);
+        requestInfo.failure?.(error2);
         Messenger_default.sendMessage({
           summary: requestInfo.failure_message,
           class: "error"
         });
       } else {
         log_default("Request", "Trying request again...");
-        window.setTimeout(
-          function() {
-            request(requestInfo);
-          },
-          Settings_default.ms_between_attempts
-        );
+        window.setTimeout(() => {
+          return request(requestInfo);
+        }, Settings_default.ms_between_attempts);
       }
     },
     success: function(response) {
       log_default("Request", "SUCCESS", response);
-      requestInfo.success(...[response]);
+      requestInfo.success?.(response);
       Messenger_default.sendMessage({
         summary: requestInfo.success_message,
         class: "success"
