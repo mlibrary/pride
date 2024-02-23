@@ -16,9 +16,11 @@ class GetThis {
   }
 
   getGetThisUrl (data) {
-    return data.fields.find((field) => {
+    const ret = data.fields.find((field) => {
       return field.uid === 'get_this_url';
     });
+
+    return ret?.value;
   }
 
   translateData (input) {

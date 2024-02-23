@@ -2719,7 +2719,7 @@ var FuncBuffer = function(extension) {
   };
   this.apply = (name, args) => {
     safeGet(name).forEach((func) => {
-      func.apply(this, args);
+      func?.apply(this, args);
     });
     return this;
   };
@@ -3096,9 +3096,10 @@ var GetThis = class {
     });
   }
   getGetThisUrl(data) {
-    return data.fields.find((field) => {
+    const ret = data.fields.find((field) => {
       return field.uid === "get_this_url";
     });
+    return ret?.value;
   }
   translateData(input) {
     return input;
