@@ -4350,27 +4350,24 @@ var FieldTree_default = FieldTree;
 
 // src/Pride/init.js
 var init2 = new RequestBuffer_default({
-  url: function() {
+  url: () => {
     return Settings_default.datastores_url;
   },
-  attempts: function() {
+  attempts: () => {
     return Settings_default.init_attempts;
   },
-  failure_message: function() {
+  failure_message: () => {
     return Messenger_default.preset("failed_init");
   },
-  edit_response: function() {
+  edit_response: () => {
     return void 0;
   },
-  before_success: function(data) {
+  before_success: (data) => {
     Settings_default.default_institution = data.default_institution;
     Settings_default.affiliation = data.affiliation;
-    AllDatastores_default.array = index_default_default.map(
-      data.response,
-      function(datastoreData) {
-        return new Datastore_default(datastoreData);
-      }
-    );
+    AllDatastores_default.array = data.response.map((datastoreData) => {
+      return new Datastore_default(datastoreData);
+    });
   }
 }).request;
 var init_default = init2;
