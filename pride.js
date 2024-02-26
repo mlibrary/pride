@@ -526,68 +526,57 @@ var AllDatastores = {
 var AllDatastores_default = AllDatastores;
 
 // src/Pride/Core/nodeFactory.js
-var nodeFactory = function(type2, childTypes, extension) {
+var nodeFactory = (type2, childTypes = [], extension) => {
   return function(value, ...children) {
-    this.children = children;
-    if (this.children.length === 1 && Array.isArray(this.children[0])) {
-      this.children = this.children[0];
-    }
     this.type = type2;
+    this.childTypes = childTypes;
     this.value = value.trim();
-    this.childTypes = childTypes || [];
-    this.addChild = function(newChild) {
-      if (!childTypes.find((aType) => {
-        return newChild.type === aType;
-      })) {
+    this.children = children.length === 1 && Array.isArray(children[0]) ? children[0] : children;
+    this.addChild = (newChild) => {
+      if (!this.childTypes.includes(newChild.type)) {
         throw new Error(`Not a valid child for a ${this.type}`);
       }
       this.children.push(newChild);
       return this;
     };
-    this.contains = function(query) {
+    this.contains = (query) => {
       if (this.matches(query)) {
         return this;
       }
-      if (this.children.length === 0) {
-        return false;
-      }
-      return this.children.find((possible) => {
-        return possible.contains(query);
-      });
+      return this.children.find((child) => {
+        return child.contains(query);
+      }) ?? false;
     };
-    this.matches = function(query) {
-      const thisNode = this;
-      const queryChildren = query.children || [];
-      delete query.children;
-      return Object.keys(query).every((key) => {
-        return thisNode[key] === query[key];
+    this.matches = (query) => {
+      const queryKeys = Object.keys(query).filter((key) => {
+        return key !== "children";
+      });
+      const { children: queryChildren = [] } = query;
+      return queryKeys.every((key) => {
+        return this[key] === query[key];
       }) && queryChildren.every((queryChild) => {
-        return queryChildren.some((realChild) => {
-          return queryChild.matches(realChild);
+        return this.children.some((child) => {
+          return child.matches(queryChild);
         });
       });
     };
-    this.serialize = function() {
+    this.serialize = () => {
       return value;
     };
-    this.serializedChildren = function() {
-      const children2 = [];
-      this.children.forEach((child) => {
-        children2.push(child.serialize());
+    this.serializedChildren = () => {
+      return this.children.map((child) => {
+        return child.serialize();
       });
-      return children2;
     };
-    this.toJSON = function() {
-      const object2 = { ...this };
-      Object.keys(object2).forEach((key) => {
-        if (!["value", "children", "type"].includes(key)) {
-          delete object2[key];
-        }
-      });
-      object2.children.forEach((child) => {
-        child.toJSON();
-      });
-      return object2;
+    this.toJSON = () => {
+      const json = {
+        type: this.type,
+        value: this.value,
+        children: this.children.map((child) => {
+          return child.toJSON();
+        })
+      };
+      return json;
     };
     if (typeof extension === "function")
       extension.call(this);
@@ -780,7 +769,7 @@ var SymbolProto = typeof Symbol !== "undefined" ? Symbol.prototype : null;
 var push = ArrayProto.push;
 var slice = ArrayProto.slice;
 var toString = ObjProto.toString;
-var hasOwnProperty2 = ObjProto.hasOwnProperty;
+var hasOwnProperty = ObjProto.hasOwnProperty;
 var supportsArrayBuffer = typeof ArrayBuffer !== "undefined";
 var supportsDataView = typeof DataView !== "undefined";
 var nativeIsArray = Array.isArray;
@@ -909,7 +898,7 @@ var isArray_default = nativeIsArray || tagTester("Array");
 
 // node_modules/underscore/modules/_has.js
 function has(obj, key) {
-  return obj != null && hasOwnProperty2.call(obj, key);
+  return obj != null && hasOwnProperty.call(obj, key);
 }
 
 // node_modules/underscore/modules/isArguments.js
@@ -2702,9 +2691,7 @@ var FuncBuffer = function(extension) {
     return this;
   };
   const safeGet = (name) => {
-    if (!(!!buffer && hasOwnProperty.call(buffer, name))) {
-      buffer[name] = [];
-    }
+    buffer[name] ??= [];
     return buffer[name];
   };
   this.add = (func, name) => {
@@ -2717,9 +2704,9 @@ var FuncBuffer = function(extension) {
     });
     return this;
   };
-  this.apply = (name, args) => {
+  this.apply = (name, args = []) => {
     safeGet(name).forEach((func) => {
-      func?.apply(this, args);
+      func?.(...args);
     });
     return this;
   };
@@ -3005,55 +2992,58 @@ var request = function(requestInfo) {
 var request_default = request;
 
 // src/Pride/Util/RequestBuffer.js
-var RequestBuffer = function(requestOptions) {
-  requestOptions = requestOptions || {};
-  const funcBuffer = new FuncBuffer_default();
-  let requestIssued = false;
-  let requestSuccessful = false;
-  let requestFailed = false;
-  let cachedResponseData;
-  this.request = function(funcHash) {
-    funcBuffer.add(funcHash.success, "success").add(funcHash.failure, "failure");
-    if (requestIssued) {
-      callWithResponse();
+var RequestBuffer = class {
+  #funcBuffer;
+  #requestIssued = false;
+  #requestSuccessful = false;
+  #requestFailed = false;
+  #cachedResponseData;
+  requestOptions;
+  constructor(requestOptions = {}) {
+    this.#funcBuffer = new FuncBuffer_default();
+    this.requestOptions = requestOptions;
+  }
+  request = (funcHash) => {
+    this.#funcBuffer.add(funcHash.success, "success").add(funcHash.failure, "failure");
+    if (this.#requestIssued) {
+      this.#callWithResponse();
     } else {
-      sendRequest();
+      this.#sendRequest();
     }
     return this;
   };
-  const callWithResponse = function(data) {
-    cachedResponseData = data || cachedResponseData;
-    if (requestSuccessful) {
-      callThenClear("success");
-    } else if (requestFailed) {
-      callThenClear("failure");
+  #callWithResponse = (data) => {
+    this.#cachedResponseData = data ?? this.#cachedResponseData;
+    if (this.#requestSuccessful) {
+      this.#callThenClear("success");
+    } else if (this.#requestFailed) {
+      this.#callThenClear("failure");
     }
   };
-  const sendRequest = function() {
-    requestIssued = true;
+  #sendRequest = () => {
+    this.#requestIssued = true;
+    const requestOptions = this.requestOptions;
     request_default({
-      url: typeof requestOptions.url === "function" ? requestOptions.url.apply(this) : requestOptions.url,
-      attempts: requestOptions.attempts?.apply(this) || Settings_default.connection_attempts,
-      failure_message: requestOptions.failure_message?.apply(this),
-      failure: function(error2) {
-        requestFailed = true;
-        requestOptions.before_failure?.apply(this, [error2]);
-        callWithResponse(error2);
-        requestOptions.after_failure?.apply(this, [error2]);
+      url: typeof requestOptions.url === "function" ? requestOptions.url() : requestOptions.url,
+      attempts: requestOptions.attempts?.() || Settings_default.connection_attempts,
+      failure_message: requestOptions.failure_message?.(),
+      failure: (error2) => {
+        this.#requestFailed = true;
+        requestOptions.before_failure?.(error2);
+        this.#callWithResponse(error2);
+        requestOptions.after_failure?.(error2);
       },
-      success: function(response) {
-        requestSuccessful = true;
-        requestOptions.before_success?.apply(this, [response]);
-        if (typeof requestOptions.edit_response === "function") {
-          response = requestOptions.edit_response(response);
-        }
-        callWithResponse(response);
-        requestOptions.after_success?.apply(this, [response]);
+      success: (response) => {
+        this.#requestSuccessful = true;
+        requestOptions.before_success?.(response);
+        response = typeof requestOptions.edit_response === "function" ? requestOptions.edit_response(response) : response;
+        this.#callWithResponse(response);
+        requestOptions.after_success?.(response);
       }
     });
   };
-  const callThenClear = function(name) {
-    funcBuffer.call(name, cachedResponseData).clearAll();
+  #callThenClear = (name) => {
+    this.#funcBuffer.call(name, this.#cachedResponseData).clearAll();
   };
 };
 var RequestBuffer_default = RequestBuffer;
@@ -4361,52 +4351,59 @@ var init2 = new RequestBuffer_default({
 var init_default = init2;
 
 // src/Pride/requestRecord.js
-var requestRecord = function(source, id, func) {
-  if (func === void 0) {
-    func = function(data2) {
-    };
-  }
-  const data = {
+var requestRecord = (source, id, func = () => {
+}) => {
+  const record = new Record_default({
     complete: false,
-    source: AllDatastores_default.get(source).get("url") + "/record/" + id,
+    source: `${AllDatastores_default.get(source)?.get("url") ?? ""}/record/${id}`,
     names: [void 0]
-  };
-  const record = new Record_default(data);
+  });
   record.renderFull(func);
   return record;
 };
 var requestRecord_default = requestRecord;
 
 // src/Pride/Util/MultiSearch.js
-var MultiSearch = function(uid, muted, searchArray) {
-  this.searches = searchArray;
-  this.uid = uid;
-  this.set = (values2) => {
-    searchArray.forEach((search) => {
-      search.set(values2);
+var MultiSearch = class {
+  constructor(uid, muted, searchArray) {
+    this.searches = searchArray;
+    this.uid = uid;
+    this.muted = muted;
+    this.setMute(muted);
+  }
+  setMute = (state) => {
+    this.muted = state;
+    this.searches.forEach((search) => {
+      if (typeof search.setMute === "function") {
+        search.setMute(state);
+      }
+    });
+  };
+  getMute = () => {
+    return this.muted;
+  };
+  set = (values2) => {
+    this.searches.forEach((search) => {
+      if (typeof search.set === "function") {
+        search.set(values2);
+      }
     });
     return this;
   };
-  const funcOnEach = (funcName, beforeFunc) => {
-    const self2 = this;
-    return function(...args) {
-      beforeFunc?.apply(this, args);
-      searchArray.forEach((search) => {
-        search[funcName](...args);
+  funcOnEach = (funcName, beforeFunc) => {
+    return (...args) => {
+      beforeFunc?.call(this, ...args);
+      this.searches.forEach((search) => {
+        if (typeof search[funcName] === "function") {
+          search[funcName](...args);
+        }
       });
-      return self2;
+      return this;
     };
   };
-  this.run = funcOnEach("run");
-  this.nextPage = funcOnEach("nextPage");
-  this.prevPage = funcOnEach("prevPage");
-  this.setMute = funcOnEach("setMute", function(state) {
-    muted = state;
-  });
-  this.getMute = function() {
-    return muted;
-  };
-  this.setMute(muted);
+  run = this.funcOnEach("run");
+  nextPage = this.funcOnEach("nextPage");
+  prevPage = this.funcOnEach("prevPage");
 };
 var MultiSearch_default = MultiSearch;
 

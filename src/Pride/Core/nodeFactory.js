@@ -1,90 +1,64 @@
-const nodeFactory = function (type, childTypes, extension) {
+const nodeFactory = (type, childTypes = [], extension) => {
   return function (value, ...children) {
-    this.children = children;
-    if (this.children.length === 1 && Array.isArray(this.children[0])) {
-      this.children = this.children[0];
-    }
     this.type = type;
+    this.childTypes = childTypes;
     this.value = value.trim();
-    this.childTypes = childTypes || [];
+    this.children = children.length === 1 && Array.isArray(children[0]) ? children[0] : children;
 
-    // Check to make sure a child is valid for this node.
-    // If it is, add it to the array of children.
-    this.addChild = function (newChild) {
-      if (!childTypes.find((aType) => {
-        return newChild.type === aType;
-      })) {
+    this.addChild = (newChild) => {
+      if (!this.childTypes.includes(newChild.type)) {
         throw new Error(`Not a valid child for a ${this.type}`);
       }
-
       this.children.push(newChild);
-
       return this;
     };
 
-    // Check to see if this object is, or contains, an object which
-    // which matches the query object.
-    this.contains = function (query) {
+    this.contains = (query) => {
       if (this.matches(query)) {
         return this;
       }
-
-      if (this.children.length === 0) {
-        return false;
-      }
-
-      return this.children.find((possible) => {
-        return possible.contains(query);
-      });
+      return this.children.find((child) => {
+        return child.contains(query);
+      }) ?? false;
     };
 
-    this.matches = function (query) {
-      const thisNode = this;
-      const queryChildren = query.children || [];
+    this.matches = (query) => {
+      const queryKeys = Object.keys(query).filter((key) => {
+        return key !== 'children';
+      });
+      const { children: queryChildren = [] } = query;
 
-      delete query.children;
-
-      return Object.keys(query).every((key) => {
-        return thisNode[key] === query[key];
+      return queryKeys.every((key) => {
+        return this[key] === query[key];
       }) &&
-      queryChildren.every((queryChild) => {
-        return queryChildren.some((realChild) => {
-          return queryChild.matches(realChild);
+        queryChildren.every((queryChild) => {
+          return this.children.some((child) => {
+            return child.matches(queryChild);
+          });
         });
-      });
     };
 
-    this.serialize = function () {
+    this.serialize = () => {
       return value;
     };
 
-    this.serializedChildren = function () {
-      const children = [];
-
-      this.children.forEach((child) => {
-        children.push(child.serialize());
+    this.serializedChildren = () => {
+      return this.children.map((child) => {
+        return child.serialize();
       });
-
-      return children;
     };
 
-    this.toJSON = function () {
-      const object = { ...this };
-
-      Object.keys(object).forEach((key) => {
-        if (!['value', 'children', 'type'].includes(key)) {
-          delete object[key];
-        }
-      });
-
-      object.children.forEach((child) => {
-        child.toJSON();
-      });
-
-      return object;
+    this.toJSON = () => {
+      const json = {
+        type: this.type,
+        value: this.value,
+        children: this.children.map((child) => {
+          return child.toJSON();
+        })
+      };
+      return json;
     };
 
-    // If an extension function was given, call it with this.
     if (typeof extension === 'function') extension.call(this);
   };
 };

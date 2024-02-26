@@ -2,68 +2,74 @@ import FuncBuffer from './FuncBuffer';
 import request from './request';
 import Settings from '../Settings';
 
-const RequestBuffer = function (requestOptions) {
-  requestOptions = requestOptions || {};
+class RequestBuffer {
+  #funcBuffer;
+  #requestIssued = false;
+  #requestSuccessful = false;
+  #requestFailed = false;
+  #cachedResponseData;
+  requestOptions;
 
-  const funcBuffer = new FuncBuffer();
+  constructor (requestOptions = {}) {
+    this.#funcBuffer = new FuncBuffer();
+    this.requestOptions = requestOptions;
+  }
 
-  let requestIssued = false;
-  let requestSuccessful = false;
-  let requestFailed = false;
-
-  let cachedResponseData;
-
-  this.request = function (funcHash) {
-    funcBuffer.add(funcHash.success, 'success')
+  request = (funcHash) => {
+    this.#funcBuffer.add(funcHash.success, 'success')
       .add(funcHash.failure, 'failure');
 
-    if (requestIssued) {
-      callWithResponse();
+    if (this.#requestIssued) {
+      this.#callWithResponse();
     } else {
-      sendRequest();
+      this.#sendRequest();
     }
 
     return this;
   };
 
-  const callWithResponse = function (data) {
-    cachedResponseData = data || cachedResponseData;
-    if (requestSuccessful) {
-      callThenClear('success');
-    } else if (requestFailed) {
-      callThenClear('failure');
+  #callWithResponse = (data) => {
+    this.#cachedResponseData = data ?? this.#cachedResponseData;
+    if (this.#requestSuccessful) {
+      this.#callThenClear('success');
+    } else if (this.#requestFailed) {
+      this.#callThenClear('failure');
     }
   };
 
-  const sendRequest = function () {
-    requestIssued = true;
+  #sendRequest = () => {
+    this.#requestIssued = true;
+
+    const requestOptions = this.requestOptions;
 
     request({
-      url: typeof requestOptions.url === 'function' ? requestOptions.url.apply(this) : requestOptions.url,
-      attempts: requestOptions.attempts?.apply(this) || Settings.connection_attempts,
-      failure_message: requestOptions.failure_message?.apply(this),
-      failure: function (error) {
-        requestFailed = true;
-        requestOptions.before_failure?.apply(this, [error]);
-        callWithResponse(error);
-        requestOptions.after_failure?.apply(this, [error]);
+      url: typeof requestOptions.url === 'function'
+        ? requestOptions.url()
+        : requestOptions.url,
+      attempts: requestOptions.attempts?.() || Settings.connection_attempts,
+      failure_message: requestOptions.failure_message?.(),
+      failure: (error) => {
+        this.#requestFailed = true;
+        requestOptions.before_failure?.(error);
+        this.#callWithResponse(error);
+        requestOptions.after_failure?.(error);
       },
-      success: function (response) {
-        requestSuccessful = true;
-        requestOptions.before_success?.apply(this, [response]);
-        if (typeof requestOptions.edit_response === 'function') {
-          response = requestOptions.edit_response(response);
-        }
-        callWithResponse(response);
-        requestOptions.after_success?.apply(this, [response]);
+      success: (response) => {
+        this.#requestSuccessful = true;
+        requestOptions.before_success?.(response);
+        response = typeof requestOptions.edit_response === 'function'
+          ? requestOptions.edit_response(response)
+          : response;
+        this.#callWithResponse(response);
+        requestOptions.after_success?.(response);
       }
     });
   };
 
-  const callThenClear = function (name) {
-    funcBuffer.call(name, cachedResponseData)
+  #callThenClear = (name) => {
+    this.#funcBuffer.call(name, this.#cachedResponseData)
       .clearAll();
   };
-};
+}
 
 export default RequestBuffer;
