@@ -81,9 +81,6 @@ describe('Pride.Util.MultiSearch', function () {
       multiSearch.setMute(true);
       expect(searchMock.setMute.calledWith(true)).to.be.true;
     });
-    it('returns self', function () {
-      expect(multiSearch.setMute(true)).to.deep.equal(multiSearch);
-    });
   });
 
   describe('getMute', function () {

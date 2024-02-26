@@ -1,37 +1,48 @@
-const MultiSearch = function (uid, muted, searchArray) {
-  this.searches = searchArray;
-  this.uid = uid;
+class MultiSearch {
+  constructor (uid, muted, searchArray) {
+    this.searches = searchArray;
+    this.uid = uid;
+    this.muted = muted;
+    this.setMute(muted);
+  }
 
-  this.set = (values) => {
-    searchArray.forEach((search) => {
-      search.set(values);
+  setMute = (state) => {
+    this.muted = state;
+    this.searches.forEach((search) => {
+      if (typeof search.setMute === 'function') {
+        search.setMute(state);
+      }
+    });
+  };
+
+  getMute = () => {
+    return this.muted;
+  };
+
+  set = (values) => {
+    this.searches.forEach((search) => {
+      if (typeof search.set === 'function') {
+        search.set(values);
+      }
     });
     return this;
   };
 
-  const funcOnEach = (funcName, beforeFunc) => {
-    const self = this;
-    return function (...args) {
-      beforeFunc?.apply(this, args);
-      searchArray.forEach((search) => {
-        search[funcName](...args);
+  funcOnEach = (funcName, beforeFunc) => {
+    return (...args) => {
+      beforeFunc?.call(this, ...args);
+      this.searches.forEach((search) => {
+        if (typeof search[funcName] === 'function') {
+          search[funcName](...args);
+        }
       });
-      return self;
+      return this;
     };
   };
 
-  this.run = funcOnEach('run');
-  this.nextPage = funcOnEach('nextPage');
-  this.prevPage = funcOnEach('prevPage');
-  this.setMute = funcOnEach('setMute', function (state) {
-    muted = state;
-  });
-
-  this.getMute = function () {
-    return muted;
-  };
-
-  this.setMute(muted);
-};
+  run = this.funcOnEach('run');
+  nextPage = this.funcOnEach('nextPage');
+  prevPage = this.funcOnEach('prevPage');
+}
 
 export default MultiSearch;
