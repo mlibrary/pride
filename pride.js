@@ -526,68 +526,57 @@ var AllDatastores = {
 var AllDatastores_default = AllDatastores;
 
 // src/Pride/Core/nodeFactory.js
-var nodeFactory = function(type2, childTypes, extension) {
+var nodeFactory = (type2, childTypes = [], extension) => {
   return function(value, ...children) {
-    this.children = children;
-    if (this.children.length === 1 && Array.isArray(this.children[0])) {
-      this.children = this.children[0];
-    }
     this.type = type2;
+    this.childTypes = childTypes;
     this.value = value.trim();
-    this.childTypes = childTypes || [];
-    this.addChild = function(newChild) {
-      if (!childTypes.find((aType) => {
-        return newChild.type === aType;
-      })) {
+    this.children = children.length === 1 && Array.isArray(children[0]) ? children[0] : children;
+    this.addChild = (newChild) => {
+      if (!this.childTypes.includes(newChild.type)) {
         throw new Error(`Not a valid child for a ${this.type}`);
       }
       this.children.push(newChild);
       return this;
     };
-    this.contains = function(query) {
+    this.contains = (query) => {
       if (this.matches(query)) {
         return this;
       }
-      if (this.children.length === 0) {
-        return false;
-      }
-      return this.children.find((possible) => {
-        return possible.contains(query);
-      });
+      return this.children.find((child) => {
+        return child.contains(query);
+      }) ?? false;
     };
-    this.matches = function(query) {
-      const thisNode = this;
-      const queryChildren = query.children || [];
-      delete query.children;
-      return Object.keys(query).every((key) => {
-        return thisNode[key] === query[key];
+    this.matches = (query) => {
+      const queryKeys = Object.keys(query).filter((key) => {
+        return key !== "children";
+      });
+      const { children: queryChildren = [] } = query;
+      return queryKeys.every((key) => {
+        return this[key] === query[key];
       }) && queryChildren.every((queryChild) => {
-        return queryChildren.some((realChild) => {
-          return queryChild.matches(realChild);
+        return this.children.some((child) => {
+          return child.matches(queryChild);
         });
       });
     };
-    this.serialize = function() {
+    this.serialize = () => {
       return value;
     };
-    this.serializedChildren = function() {
-      const children2 = [];
-      this.children.forEach((child) => {
-        children2.push(child.serialize());
+    this.serializedChildren = () => {
+      return this.children.map((child) => {
+        return child.serialize();
       });
-      return children2;
     };
-    this.toJSON = function() {
-      const object2 = { ...this };
-      Object.keys(object2).forEach((key) => {
-        if (!["value", "children", "type"].includes(key)) {
-          delete object2[key];
-        }
-      });
-      object2.children.forEach((child) => {
-        child.toJSON();
-      });
-      return object2;
+    this.toJSON = () => {
+      const json = {
+        type: this.type,
+        value: this.value,
+        children: this.children.map((child) => {
+          return child.toJSON();
+        })
+      };
+      return json;
     };
     if (typeof extension === "function")
       extension.call(this);
