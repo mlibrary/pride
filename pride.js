@@ -4348,17 +4348,13 @@ var init2 = new RequestBuffer_default({
 var init_default = init2;
 
 // src/Pride/requestRecord.js
-var requestRecord = function(source, id, func) {
-  if (func === void 0) {
-    func = function(data2) {
-    };
-  }
-  const data = {
+var requestRecord = (source, id, func = () => {
+}) => {
+  const record = new Record_default({
     complete: false,
-    source: AllDatastores_default.get(source).get("url") + "/record/" + id,
+    source: `${AllDatastores_default.get(source)?.get("url") ?? ""}/record/${id}`,
     names: [void 0]
-  };
-  const record = new Record_default(data);
+  });
   record.renderFull(func);
   return record;
 };
