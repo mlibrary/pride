@@ -780,7 +780,7 @@ var SymbolProto = typeof Symbol !== "undefined" ? Symbol.prototype : null;
 var push = ArrayProto.push;
 var slice = ArrayProto.slice;
 var toString = ObjProto.toString;
-var hasOwnProperty2 = ObjProto.hasOwnProperty;
+var hasOwnProperty = ObjProto.hasOwnProperty;
 var supportsArrayBuffer = typeof ArrayBuffer !== "undefined";
 var supportsDataView = typeof DataView !== "undefined";
 var nativeIsArray = Array.isArray;
@@ -909,7 +909,7 @@ var isArray_default = nativeIsArray || tagTester("Array");
 
 // node_modules/underscore/modules/_has.js
 function has(obj, key) {
-  return obj != null && hasOwnProperty2.call(obj, key);
+  return obj != null && hasOwnProperty.call(obj, key);
 }
 
 // node_modules/underscore/modules/isArguments.js
@@ -2702,9 +2702,7 @@ var FuncBuffer = function(extension) {
     return this;
   };
   const safeGet = (name) => {
-    if (!(!!buffer && hasOwnProperty.call(buffer, name))) {
-      buffer[name] = [];
-    }
+    buffer[name] ??= [];
     return buffer[name];
   };
   this.add = (func, name) => {
@@ -2717,9 +2715,9 @@ var FuncBuffer = function(extension) {
     });
     return this;
   };
-  this.apply = (name, args) => {
+  this.apply = (name, args = []) => {
     safeGet(name).forEach((func) => {
-      func?.apply(this, args);
+      func?.(...args);
     });
     return this;
   };

@@ -12,9 +12,7 @@ const FuncBuffer = function (extension) {
   };
 
   const safeGet = (name) => {
-    if (!(!!buffer && hasOwnProperty.call(buffer, name))) {
-      buffer[name] = [];
-    }
+    buffer[name] ??= [];
     return buffer[name];
   };
 
@@ -30,9 +28,9 @@ const FuncBuffer = function (extension) {
     return this;
   };
 
-  this.apply = (name, args) => {
+  this.apply = (name, args = []) => {
     safeGet(name).forEach((func) => {
-      func?.apply(this, args);
+      func?.(...args);
     });
     return this;
   };
