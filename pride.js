@@ -3496,18 +3496,6 @@ var Core_default = Core;
 var Raw = nodeFactory_default("raw");
 var Raw_default = Raw;
 
-// src/Pride/FieldTree/Special.js
-var Special = nodeFactory_default("special");
-var Special_default = Special;
-
-// src/Pride/FieldTree/Tag.js
-var Tag = nodeFactory_default("tag", insideFieldNodes_default, function() {
-  this.serialize = () => {
-    return `${this.value}: (${this.serializedChildren().join(" ")})`;
-  };
-});
-var Tag_default = Tag;
-
 // src/Pride/FieldTree/ValueBoolean.js
 var ValueBoolean = boolNodeFactory_default(
   "value_boolean",
@@ -3522,8 +3510,6 @@ var FieldTree = {
   insideFieldNodes: insideFieldNodes_default,
   Literal: Literal_default,
   Raw: Raw_default,
-  Special: Special_default,
-  Tag: Tag_default,
   ValueBoolean: ValueBoolean_default
 };
 var FieldTree_default = FieldTree;
