@@ -3492,6 +3492,66 @@ var Core = {
 };
 var Core_default = Core;
 
+// src/Pride/FieldTree/Raw.js
+var Raw = nodeFactory_default("raw");
+var Raw_default = Raw;
+
+// src/Pride/FieldTree/Special.js
+var Special = nodeFactory_default("special");
+var Special_default = Special;
+
+// src/Pride/FieldTree/Tag.js
+var Tag = nodeFactory_default("tag", insideFieldNodes_default, function() {
+  this.serialize = () => {
+    return `${this.value}: (${this.serializedChildren().join(" ")})`;
+  };
+});
+var Tag_default = Tag;
+
+// src/Pride/FieldTree/ValueBoolean.js
+var ValueBoolean = boolNodeFactory_default(
+  "value_boolean",
+  insideFieldNodes_default
+);
+var ValueBoolean_default = ValueBoolean;
+
+// src/Pride/FieldTree/index.js
+var FieldTree = {
+  Field: Field_default,
+  FieldBoolean: FieldBoolean_default,
+  insideFieldNodes: insideFieldNodes_default,
+  Literal: Literal_default,
+  Raw: Raw_default,
+  Special: Special_default,
+  Tag: Tag_default,
+  ValueBoolean: ValueBoolean_default
+};
+var FieldTree_default = FieldTree;
+
+// src/Pride/init.js
+var init2 = new RequestBuffer_default({
+  url: () => {
+    return Settings_default.datastores_url;
+  },
+  attempts: () => {
+    return Settings_default.init_attempts;
+  },
+  failure_message: () => {
+    return Messenger_default.preset("failed_init");
+  },
+  edit_response: () => {
+    return void 0;
+  },
+  before_success: (data) => {
+    Settings_default.default_institution = data.default_institution;
+    Settings_default.affiliation = data.affiliation;
+    AllDatastores_default.array = data.response.map((datastoreData) => {
+      return new Datastore_default(datastoreData);
+    });
+  }
+}).request;
+var init_default = init2;
+
 // src/Pride/Parser.js
 var Parser = function() {
   "use strict";
@@ -4275,80 +4335,6 @@ var Parser = function() {
   };
 }();
 var Parser_default = Parser;
-
-// src/Pride/FieldTree/Raw.js
-var Raw = nodeFactory_default("raw");
-var Raw_default = Raw;
-
-// src/Pride/FieldTree/parseField.js
-var parseField = (fieldName, content) => {
-  if (!content) {
-    return {};
-  }
-  try {
-    return Parser_default.parse(content, { defaultFieldName: fieldName });
-  } catch (error2) {
-    return new Raw_default(content);
-  }
-};
-var parseField_default = parseField;
-
-// src/Pride/FieldTree/Special.js
-var Special = nodeFactory_default("special");
-var Special_default = Special;
-
-// src/Pride/FieldTree/Tag.js
-var Tag = nodeFactory_default("tag", insideFieldNodes_default, function() {
-  this.serialize = () => {
-    return `${this.value}: (${this.serializedChildren().join(" ")})`;
-  };
-});
-var Tag_default = Tag;
-
-// src/Pride/FieldTree/ValueBoolean.js
-var ValueBoolean = boolNodeFactory_default(
-  "value_boolean",
-  insideFieldNodes_default
-);
-var ValueBoolean_default = ValueBoolean;
-
-// src/Pride/FieldTree/index.js
-var FieldTree = {
-  Field: Field_default,
-  FieldBoolean: FieldBoolean_default,
-  insideFieldNodes: insideFieldNodes_default,
-  Literal: Literal_default,
-  parseField: parseField_default,
-  Raw: Raw_default,
-  Special: Special_default,
-  Tag: Tag_default,
-  ValueBoolean: ValueBoolean_default
-};
-var FieldTree_default = FieldTree;
-
-// src/Pride/init.js
-var init2 = new RequestBuffer_default({
-  url: () => {
-    return Settings_default.datastores_url;
-  },
-  attempts: () => {
-    return Settings_default.init_attempts;
-  },
-  failure_message: () => {
-    return Messenger_default.preset("failed_init");
-  },
-  edit_response: () => {
-    return void 0;
-  },
-  before_success: (data) => {
-    Settings_default.default_institution = data.default_institution;
-    Settings_default.affiliation = data.affiliation;
-    AllDatastores_default.array = data.response.map((datastoreData) => {
-      return new Datastore_default(datastoreData);
-    });
-  }
-}).request;
-var init_default = init2;
 
 // src/Pride/requestRecord.js
 var requestRecord = (source, id, func = () => {
