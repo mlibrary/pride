@@ -3393,17 +3393,8 @@ var DatastoreSearch_default = DatastoreSearch;
 var FieldBoolean = boolNodeFactory_default("field_boolean", ["field_boolean", "field"]);
 var FieldBoolean_default = FieldBoolean;
 
-// src/Pride/FieldTree/insideFieldNodes.js
-var insideFieldNodes = [
-  "value_boolean",
-  "literal",
-  "tag",
-  "special"
-];
-var insideFieldNodes_default = insideFieldNodes;
-
 // src/Pride/FieldTree/Field.js
-var Field = nodeFactory_default("field", insideFieldNodes_default, function() {
+var Field = nodeFactory_default("field", ["value_boolean", "literal", "tag", "special"], function() {
   this.serialize = () => {
     return `${this.value}: (${this.serializedChildren().join(" ")})`;
   };
@@ -3496,7 +3487,6 @@ var Core_default = Core;
 var FieldTree = {
   Field: Field_default,
   FieldBoolean: FieldBoolean_default,
-  insideFieldNodes: insideFieldNodes_default,
   Literal: Literal_default
 };
 var FieldTree_default = FieldTree;

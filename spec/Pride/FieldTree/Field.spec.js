@@ -1,6 +1,5 @@
 const { expect } = require('chai');
 const Field = require('../../../pride').Pride.FieldTree.Field;
-const insideFieldNodes = require('../../../pride').Pride.FieldTree.insideFieldNodes;
 
 describe('Pride.FieldTree.Field', function () {
   const testField = 'testField';
@@ -29,7 +28,7 @@ describe('Pride.FieldTree.Field', function () {
   describe('childTypes', function () {
     it('contains an array of specific values', function () {
       expect(createField().childTypes).to.be.an('array');
-      expect(createField().childTypes).deep.equal(insideFieldNodes);
+      expect(createField().childTypes).deep.equal(['value_boolean', 'literal', 'tag', 'special']);
     });
   });
 
