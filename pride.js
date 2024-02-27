@@ -4336,19 +4336,6 @@ var Parser = function() {
 }();
 var Parser_default = Parser;
 
-// src/Pride/requestRecord.js
-var requestRecord = (source, id, func = () => {
-}) => {
-  const record = new Record_default({
-    complete: false,
-    source: `${AllDatastores_default.get(source)?.get("url") ?? ""}/record/${id}`,
-    names: [void 0]
-  });
-  record.renderFull(func);
-  return record;
-};
-var requestRecord_default = requestRecord;
-
 // src/Pride/Util/MultiSearch.js
 var MultiSearch = class {
   constructor(uid, muted, searchArray) {
@@ -4475,7 +4462,6 @@ var Pride = {
   Messenger: Messenger_default,
   Parser: Parser_default,
   PreferenceEngine: PreferenceEngine_default,
-  requestRecord: requestRecord_default,
   Settings: Settings_default,
   Util: Util_default
 };

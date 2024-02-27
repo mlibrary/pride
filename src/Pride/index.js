@@ -5,7 +5,6 @@ import init from './init';
 import Messenger from './Messenger';
 import Parser from './Parser';
 import PreferenceEngine from './PreferenceEngine';
-import requestRecord from './requestRecord';
 import Settings from './Settings';
 import Util from './Util/index';
 
@@ -17,7 +16,6 @@ const Pride = {
   Messenger,
   Parser,
   PreferenceEngine,
-  requestRecord,
   Settings,
   Util
 };
