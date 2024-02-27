@@ -3492,10 +3492,6 @@ var Core = {
 };
 var Core_default = Core;
 
-// src/Pride/FieldTree/Raw.js
-var Raw = nodeFactory_default("raw");
-var Raw_default = Raw;
-
 // src/Pride/FieldTree/ValueBoolean.js
 var ValueBoolean = boolNodeFactory_default(
   "value_boolean",
@@ -3509,7 +3505,6 @@ var FieldTree = {
   FieldBoolean: FieldBoolean_default,
   insideFieldNodes: insideFieldNodes_default,
   Literal: Literal_default,
-  Raw: Raw_default,
   ValueBoolean: ValueBoolean_default
 };
 var FieldTree_default = FieldTree;
