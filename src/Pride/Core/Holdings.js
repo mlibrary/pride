@@ -3,20 +3,13 @@ class Holdings {
     this.data = data;
   }
 
-  getResourceAccess = (data) => {
-    const dataField = data.fields.find((field) => {
+  getData (func) {
+    const dataField = this.data.fields.find((field) => {
       return field.uid === 'resource_access';
     });
-    return dataField?.value ?? dataField;
-  };
-
-  translateData = (input) => {
-    return [this.getResourceAccess(this.data)].concat(input);
-  };
-
-  getData = (func) => {
-    func(...[this.translateData(this.data.holdings)]);
-  };
+    const resourceAccessValue = dataField?.value ?? dataField;
+    func([resourceAccessValue].concat(this.data.holdings || []));
+  }
 }
 
 export default Holdings;
