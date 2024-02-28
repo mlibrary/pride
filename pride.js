@@ -4312,118 +4312,14 @@ var requestRecord = (source, id, func = () => {
 };
 var requestRecord_default = requestRecord;
 
-// src/Pride/Util/MultiSearch.js
-var MultiSearch = class {
-  constructor(uid, muted, searchArray) {
-    this.searches = searchArray;
-    this.uid = uid;
-    this.muted = muted;
-    this.setMute(muted);
-  }
-  setMute = (state) => {
-    this.muted = state;
-    this.searches.forEach((search) => {
-      if (typeof search.setMute === "function") {
-        search.setMute(state);
-      }
-    });
-  };
-  getMute = () => {
-    return this.muted;
-  };
-  set = (values2) => {
-    this.searches.forEach((search) => {
-      if (typeof search.set === "function") {
-        search.set(values2);
-      }
-    });
-    return this;
-  };
-  funcOnEach = (funcName, beforeFunc) => {
-    return (...args) => {
-      beforeFunc?.call(this, ...args);
-      this.searches.forEach((search) => {
-        if (typeof search[funcName] === "function") {
-          search[funcName](...args);
-        }
-      });
-      return this;
-    };
-  };
-  run = this.funcOnEach("run");
-  nextPage = this.funcOnEach("nextPage");
-  prevPage = this.funcOnEach("prevPage");
-};
-var MultiSearch_default = MultiSearch;
-
-// src/Pride/Util/SearchSwitcher.js
-var SearchSwitcher = class {
-  constructor(currentSearch, cachedSearches) {
-    this.currentSearch = currentSearch;
-    this.searchCache = new MultiSearch_default(null, true, cachedSearches);
-    this.uid = currentSearch.uid;
-    this._initializeSearches();
-  }
-  _initializeSearches() {
-    this.currentSearch.setMute(false);
-    this.currentSearch.set({ page: 1 });
-    this.searchCache.set({ page: 1 });
-  }
-  run(cacheSize) {
-    this.currentSearch.run(cacheSize);
-    this.searchCache.run(0);
-    return this;
-  }
-  set(settings) {
-    this.currentSearch.set(settings);
-    const omittedSettings = { ...settings };
-    ["page", "facets"].forEach((property2) => {
-      delete omittedSettings[property2];
-    });
-    this.searchCache.set(omittedSettings);
-    return this;
-  }
-  nextPage() {
-    this.currentSearch.nextPage();
-    return this;
-  }
-  prevPage() {
-    this.currentSearch.prevPage();
-    return this;
-  }
-  switchTo(requestedUid) {
-    if (requestedUid !== this.currentSearch.uid) {
-      this.currentSearch.setMute(true);
-      this.currentSearch.set({ page: 1 });
-      this.searchCache.searches.push(this.currentSearch);
-      const newSearch = this.searchCache.searches.find((search) => {
-        return search.uid === requestedUid;
-      });
-      if (!newSearch) {
-        throw new Error(`Could not find a search with a UID of: ${requestedUid}`);
-      }
-      this.searchCache.searches = this.searchCache.searches.filter((search) => {
-        return search.uid !== requestedUid;
-      });
-      this.currentSearch = newSearch;
-      this.uid = this.currentSearch.uid;
-      this.currentSearch.setMute(false);
-    }
-    return this;
-  }
-};
-var SearchSwitcher_default = SearchSwitcher;
-
 // src/Pride/Util/index.js
 var Util = {
   deepClone: deepClone_default,
   escape: escape_default2,
   FuncBuffer: FuncBuffer_default,
-  MultiSearch: MultiSearch_default,
   Paginator: Paginator_default,
   request: request_default,
   RequestBuffer: RequestBuffer_default,
-  SearchSwitcher: SearchSwitcher_default,
   Section: Section_default
 };
 var Util_default = Util;
