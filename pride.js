@@ -2970,7 +2970,6 @@ var Holdings = class {
     this.data = data;
   }
   getData(func) {
-    console.log("asdfasdfsdfdsf");
     const dataField = this.data.fields.find((field) => {
       return field.uid === "resource_access";
     });
