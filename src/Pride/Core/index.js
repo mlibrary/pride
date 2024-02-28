@@ -1,4 +1,3 @@
-import boolNodeFactory from './boolNodeFactory';
 import Datastore from './Datastore';
 import DatastoreSearch from './DatastoreSearch';
 import FacetSearch from './FacetSearch';
@@ -11,7 +10,6 @@ import Record from './Record';
 import SearchBase from './SearchBase';
 
 const Core = {
-  boolNodeFactory,
   Datastore,
   DatastoreSearch,
   FacetSearch,

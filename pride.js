@@ -525,90 +525,6 @@ var AllDatastores = {
 };
 var AllDatastores_default = AllDatastores;
 
-// src/Pride/Core/nodeFactory.js
-var nodeFactory = (type2, childTypes = [], extension) => {
-  return function(value, ...children) {
-    this.type = type2;
-    this.childTypes = childTypes;
-    this.value = value.trim();
-    this.children = children.length === 1 && Array.isArray(children[0]) ? children[0] : children;
-    this.addChild = (newChild) => {
-      if (!this.childTypes.includes(newChild.type)) {
-        throw new Error(`Not a valid child for a ${this.type}`);
-      }
-      this.children.push(newChild);
-      return this;
-    };
-    this.contains = (query) => {
-      if (this.matches(query)) {
-        return this;
-      }
-      return this.children.find((child) => {
-        return child.contains(query);
-      }) ?? false;
-    };
-    this.matches = (query) => {
-      const queryKeys = Object.keys(query).filter((key) => {
-        return key !== "children";
-      });
-      const { children: queryChildren = [] } = query;
-      return queryKeys.every((key) => {
-        return this[key] === query[key];
-      }) && queryChildren.every((queryChild) => {
-        return this.children.some((child) => {
-          return child.matches(queryChild);
-        });
-      });
-    };
-    this.serialize = () => {
-      return value;
-    };
-    this.serializedChildren = () => {
-      return this.children.map((child) => {
-        return child.serialize();
-      });
-    };
-    this.toJSON = () => {
-      const json = {
-        type: this.type,
-        value: this.value,
-        children: this.children.map((child) => {
-          return child.toJSON();
-        })
-      };
-      return json;
-    };
-    if (typeof extension === "function")
-      extension.call(this);
-  };
-};
-var nodeFactory_default = nodeFactory;
-
-// src/Pride/Core/boolNodeFactory.js
-var boolNodeFactory = (type2, childTypes) => {
-  return nodeFactory_default(
-    type2,
-    childTypes,
-    function() {
-      if (!["AND", "OR", "NOT"].includes(this.value)) {
-        throw new Error("Not a valid boolean value");
-      }
-      this.serializedChildren = () => {
-        return this.children.map((child) => {
-          if (child.type === this.type || child.type === "literal" && child.value.match(/\s/)) {
-            return `(${child.serialize()})`;
-          }
-          return child.serialize();
-        });
-      };
-      this.serialize = () => {
-        return this.serializedChildren().join(` ${this.value} `);
-      };
-    }
-  );
-};
-var boolNodeFactory_default = boolNodeFactory;
-
 // node_modules/underscore/modules/index.js
 var modules_exports = {};
 __export(modules_exports, {
@@ -3389,8 +3305,86 @@ var DatastoreSearch = function(setup) {
 };
 var DatastoreSearch_default = DatastoreSearch;
 
+// src/Pride/Core/nodeFactory.js
+var nodeFactory = (type2, childTypes = [], extension) => {
+  return function(value, ...children) {
+    this.type = type2;
+    this.childTypes = childTypes;
+    this.value = value.trim();
+    this.children = children.length === 1 && Array.isArray(children[0]) ? children[0] : children;
+    this.addChild = (newChild) => {
+      if (!this.childTypes.includes(newChild.type)) {
+        throw new Error(`Not a valid child for a ${this.type}`);
+      }
+      this.children.push(newChild);
+      return this;
+    };
+    this.contains = (query) => {
+      if (this.matches(query)) {
+        return this;
+      }
+      return this.children.find((child) => {
+        return child.contains(query);
+      }) ?? false;
+    };
+    this.matches = (query) => {
+      const queryKeys = Object.keys(query).filter((key) => {
+        return key !== "children";
+      });
+      const { children: queryChildren = [] } = query;
+      return queryKeys.every((key) => {
+        return this[key] === query[key];
+      }) && queryChildren.every((queryChild) => {
+        return this.children.some((child) => {
+          return child.matches(queryChild);
+        });
+      });
+    };
+    this.serialize = () => {
+      return value;
+    };
+    this.serializedChildren = () => {
+      return this.children.map((child) => {
+        return child.serialize();
+      });
+    };
+    this.toJSON = () => {
+      const json = {
+        type: this.type,
+        value: this.value,
+        children: this.children.map((child) => {
+          return child.toJSON();
+        })
+      };
+      return json;
+    };
+    if (typeof extension === "function")
+      extension.call(this);
+  };
+};
+var nodeFactory_default = nodeFactory;
+
 // src/Pride/FieldTree/FieldBoolean.js
-var FieldBoolean = boolNodeFactory_default("field_boolean", ["field_boolean", "field"]);
+var FieldBoolean = nodeFactory_default(
+  "field_boolean",
+  ["field_boolean", "field"],
+  function() {
+    if (!["AND", "OR", "NOT"].includes(this.value)) {
+      throw new Error("Not a valid boolean value");
+    }
+    this.serializedChildren = () => {
+      return this.children.map((child) => {
+        if (child.type === this.type || child.type === "literal" && child.value.match(/\s/)) {
+          return `(${child.serialize()})`;
+        }
+        return child.serialize();
+      });
+    };
+    this.serialize = () => {
+      return this.serializedChildren().join(` ${this.value} `);
+    };
+  }
+);
 var FieldBoolean_default = FieldBoolean;
 
 // src/Pride/FieldTree/Field.js
@@ -3469,7 +3463,6 @@ var Datastore_default = Datastore;
 
 // src/Pride/Core/index.js
 var Core = {
-  boolNodeFactory: boolNodeFactory_default,
   Datastore: Datastore_default,
   DatastoreSearch: DatastoreSearch_default,
   FacetSearch: FacetSearch_default,
