@@ -2984,23 +2984,17 @@ var GetThis = class {
   constructor(barcode, data) {
     this.barcode = barcode;
     this.data = data;
+    const getThisUrlField = data.fields.find((field) => {
+      return field.uid === "get_this_url";
+    });
     this.requestBuffer = new RequestBuffer_default({
-      url: `${this.getGetThisUrl(data)}/${this.barcode}`,
+      url: `${getThisUrlField?.value ?? ""}/${this.barcode}`,
       failure_message: Messenger_default.preset("failed_get_this_load", data.names[0]),
       edit_response: (response) => {
-        this.data = this.translateData(response);
+        this.data = response;
         return this.data;
       }
     });
-  }
-  getGetThisUrl(data) {
-    const ret = data.fields.find((field) => {
-      return field.uid === "get_this_url";
-    });
-    return ret?.value;
-  }
-  translateData(input) {
-    return input;
   }
   getData(func) {
     this.requestBuffer.request({ success: func });
