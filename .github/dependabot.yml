@@ -8,7 +8,7 @@ updates:
     schedule:
       interval: monthly
       timezone: America/Detroit
-      time: 06:00
+      time: "06:00"
     # Exclude `chai` as it is a breaking change
     ignore:
       - dependency-name: chai
@@ -27,7 +27,7 @@ updates:
     schedule:
       interval: monthly
       timezone: America/Detroit
-      time: 06:00
+      time: "06:00"
     assignees:
       - erinesullivan
     labels:
