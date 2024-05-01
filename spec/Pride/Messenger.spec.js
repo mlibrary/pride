@@ -40,6 +40,7 @@ describe('Pride.Messenger', function () {
     it('returns self', function () {
       expect(Messenger.sendMessage(message)).to.deep.equal(Messenger);
     });
+
     it('calls `message`', function () {
       const spy = sinon.spy(Messenger, 'sendMessage');
       Messenger.sendMessage(message);
@@ -50,15 +51,18 @@ describe('Pride.Messenger', function () {
 
   describe('sendMessageArray', function () {
     const messageArray = [message, message];
+
     it('returns self', function () {
       expect(Messenger.sendMessageArray(messageArray)).to.deep.equal(Messenger);
     });
+
     it('calls `messageArray`', function () {
       const spy = sinon.spy(Messenger, 'sendMessageArray');
       Messenger.sendMessageArray(messageArray);
       expect(spy.calledWith(messageArray)).to.be.true;
       spy.restore();
     });
+
     it('runs `sendMessage` for every message', function () {
       const spy = sinon.spy(Messenger, 'sendMessage');
       Messenger.sendMessageArray(messageArray);
@@ -75,6 +79,7 @@ describe('Pride.Messenger', function () {
       expect(spy.calledWith(type)).to.be.true;
       spy.restore();
     });
+
     it('returns undefined', function () {
       expect(Messenger.preset('type')).to.be.undefined;
     });

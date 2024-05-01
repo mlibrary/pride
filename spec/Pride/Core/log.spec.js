@@ -7,11 +7,11 @@ describe('Pride.Core.log()', function () {
   let consoleLogSpy;
   const logArguments = ['TestSource', 'TestInfo', 'Additional', 'Info', 'Here'];
 
-  beforeEach(() => {
+  beforeEach(function() {
     consoleLogSpy = sinon.spy(console, 'log');
   });
 
-  afterEach(() => {
+  afterEach(function() {
     consoleLogSpy.restore();
   });
 
@@ -19,13 +19,13 @@ describe('Pride.Core.log()', function () {
     expect(log()).to.not.be.null;
   });
 
-  it('does not call console.log when `Settings.obnoxious` is `false`', () => {
+  it('does not call console.log when `Settings.obnoxious` is `false`', function() {
     expect(Settings.obnoxious).to.be.false;
     log(...logArguments);
     expect(consoleLogSpy.called).to.be.false;
   });
 
-  it('calls console.log with correct arguments when `Settings.obnoxious` is `true`', () => {
+  it('calls console.log with correct arguments when `Settings.obnoxious` is `true`', function() {
     Settings.obnoxious = true;
     expect(Settings.obnoxious).to.be.true;
     log(...logArguments);

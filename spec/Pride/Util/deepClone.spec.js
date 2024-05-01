@@ -68,11 +68,4 @@ describe('Pride.Util.deepClone()', function () {
 
     expect(cloned).to.deep.equal(string);
   });
-
-  it('clones strings', function () {
-    const string = 'string';
-    const cloned = deepClone(string);
-
-    expect(cloned).to.equal(string);
-  });
 });

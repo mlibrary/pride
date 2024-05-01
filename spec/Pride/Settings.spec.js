@@ -5,10 +5,12 @@ describe('Pride.Settings', function () {
   it('works', function () {
     expect(Settings).to.not.be.null;
   });
+
   it('is a non-empty object', function () {
     expect(Settings).to.be.an('object');
     expect(Settings).to.not.be.empty;
   });
+
   describe('properties', function () {
     it('Settings.cache_size returns an object', function () {
       expect(Settings.cache_size).to.be.an('object');
@@ -24,6 +26,7 @@ describe('Pride.Settings', function () {
         expect(property.includes('message_formats') ? Settings.message_formats[property.pop()] : Settings[property.pop()]).to.be.a('string');
       });
     });
+
     it('Settings.obnoxious returns a boolean', function () {
       expect(Settings.obnoxious).to.be.a('boolean');
     });

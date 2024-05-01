@@ -22,16 +22,19 @@ describe('FacetSearch', function () {
       it('returns an object', function () {
         expect(facetSearch[property]).to.be.an('object');
       });
+
       describe('add', function () {
         it('is a function', function () {
           expect(facetSearch[property].add).is.a('function');
         });
+
         it('executes added function when not muted', function () {
           const spy = sinon.spy();
           facetSearch[property].add(spy);
           expect(facetSearch.getMute()).to.be.false;
           expect(spy.calledOnce).to.be.true;
         });
+
         it('adds function when muted', function () {
           const spy = sinon.spy();
           facetSearch.setMute(true);
@@ -39,6 +42,7 @@ describe('FacetSearch', function () {
           expect(facetSearch.getMute()).to.be.true;
           expect(spy.calledOnce).to.be.true;
         });
+
         it('returns a new FuncBuffer', function () {
           const spy = sinon.spy();
           facetSearch[property].add(spy);
@@ -113,6 +117,7 @@ describe('FacetSearch', function () {
         expect(clearAllSpy.calledOnce).to.be.true;
       });
     });
+
     it('returns self', function () {
       expect(facetSearch.clearAllObservers()).to.deep.equal(facetSearch);
     });

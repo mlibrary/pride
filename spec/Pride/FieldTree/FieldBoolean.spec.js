@@ -22,6 +22,7 @@ describe('Pride.FieldTree.FieldBoolean', function () {
         return new FieldBoolean('notValid');
       }).to.throw('Not a valid boolean value');
     });
+
     it('defines the type via a string', function () {
       expect(testFieldBoolean.type).to.be.a('string');
       expect(testFieldBoolean.type).deep.equal(testType);
@@ -46,6 +47,7 @@ describe('Pride.FieldTree.FieldBoolean', function () {
       it('returns an array', function () {
         expect(testFieldBoolean.serializedChildren()).to.be.an('array');
       });
+
       it('returns an array of child values', function () {
         testFieldBoolean.addChild(testFieldBooleanChild);
         expect(testFieldBoolean.serializedChildren()).to.deep.equal([childValue]);
@@ -56,27 +58,33 @@ describe('Pride.FieldTree.FieldBoolean', function () {
 
     describe('serialize', function () {
       const testMatchingType = new (nodeFactory(testType))(childValue);
+
       it('serializes correctly with no children', function () {
         expect(testFieldBoolean.serialize()).to.equal('');
       });
+
       it('serializes values correctly with one child', function () {
         testFieldBoolean.addChild(testFieldBooleanChild);
         expect(testFieldBoolean.serialize()).to.equal(childValue);
       });
+
       it('serializes values correctly with multiple children', function () {
         testFieldBoolean.addChild(testFieldBooleanChild);
         testFieldBoolean.addChild(testFieldBooleanChild);
         expect(testFieldBoolean.serialize()).to.equal(`${childValue} ${testValue} ${childValue}`);
       });
+
       it('serializes matched values and wraps in parentheses correctly with one child', function () {
         testFieldBoolean.addChild(testMatchingType);
         expect(testFieldBoolean.serialize()).to.equal(`(${childValue})`);
       });
+
       it('serializes matched values and wraps in parentheses correctly with multiple children', function () {
         testFieldBoolean.addChild(testMatchingType);
         testFieldBoolean.addChild(testMatchingType);
         expect(testFieldBoolean.serialize()).to.equal(`(${childValue}) ${testValue} (${childValue})`);
       });
+
       it('serializes mixed matching values correctly with multiple children', function () {
         testFieldBoolean.addChild(testFieldBooleanChild);
         testFieldBoolean.addChild(testMatchingType);

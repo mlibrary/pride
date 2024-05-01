@@ -39,7 +39,7 @@ const Record = function (data) {
       const response = request({
         url: [getHoldingsUrl(), item, pickupLocation, notNeededAfter].join('/'),
         query: true,
-        failure: function (data) {
+        failure: function () {
           Messenger.sendMessage({
             summary: 'Failed to place hold',
             class: 'error'

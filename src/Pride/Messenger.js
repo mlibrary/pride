@@ -31,7 +31,7 @@ const Messenger = new FuncBuffer(function () {
     return this;
   };
 
-  this.preset = function (type) {
+  this.preset = function () {
     // Given a type of preset message and some optional arguments, generate a message string.
   };
 });

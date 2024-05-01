@@ -75,7 +75,7 @@ describe('Pride.Util.Paginator', function () {
     });
   });
 
-  describe('sibling files are defined as properties', () => {
+  describe('sibling files are defined as properties', function() {
     siblingFileIsProperty('Pride.Util.Paginator', Paginator);
   });
 });
