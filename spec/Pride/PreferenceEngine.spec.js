@@ -39,6 +39,7 @@ describe('Pride.PreferenceEngine', function () {
     it('returns false when no engine is registered', function () {
       expect(PreferenceEngine.selected()).to.be.false;
     });
+
     it('returns true if selected', function () {
       PreferenceEngine.registerEngine(fakeEngine);
       PreferenceEngine.updateSelectedRecords([{ mirlyn: [{ uid }] }]);
@@ -50,6 +51,7 @@ describe('Pride.PreferenceEngine', function () {
     it('returns self when no engine is registered', function () {
       expect(PreferenceEngine.registerEngine()).to.equal(PreferenceEngine);
     });
+
     it('registers an engine successfully, then returns self', function () {
       PreferenceEngine.registerEngine(fakeEngine);
       expect(PreferenceEngine.engine).to.equal(fakeEngine);
@@ -63,14 +65,17 @@ describe('Pride.PreferenceEngine', function () {
       PreferenceEngine.updateSelectedRecords([]);
       expect(PreferenceEngine.selectedRecords).to.deep.equal(blankList);
     });
+
     it('updates selected records successfully with array input, then returns self', function () {
       PreferenceEngine.updateSelectedRecords([{ datastore: 'mirlyn', uid }]);
       expect(PreferenceEngine.selectedRecords.mirlyn[uid]).to.equal(true);
     });
+
     it('updates selected records successfully with object input', function () {
       PreferenceEngine.updateSelectedRecords({ mirlyn: [{ uid }] });
       expect(PreferenceEngine.selectedRecords.mirlyn[uid]).to.equal(true);
     });
+
     it('returns self', function () {
       expect(PreferenceEngine.updateSelectedRecords([])).to.deep.equal(PreferenceEngine);
     });

@@ -112,7 +112,7 @@ describe('Pride.Core.Holdings', function () {
     });
 
     describe('getData', function () {
-      it('pulls in just `holdings` if `resource_access` does not exist', () => {
+      it('pulls in just `holdings` if `resource_access` does not exist', function() {
         const holdings = new Pride.Core.Holdings(data);
         let example;
         const func = (args) => {
@@ -121,7 +121,8 @@ describe('Pride.Core.Holdings', function () {
         holdings.getData(func);
         expect(example).to.deep.equal([undefined, ...data.holdings]);
       });
-      it('pulls in data from `resource_access` and `holdings`', () => {
+
+      it('pulls in data from `resource_access` and `holdings`', function() {
         const resourceAccess = {
           uid: 'resource_access',
           name: 'Resource Access',

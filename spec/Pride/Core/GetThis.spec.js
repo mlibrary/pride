@@ -3,7 +3,7 @@ const sinon = require('sinon');
 const Messenger = require('../../../pride').Pride.Messenger;
 const GetThis = require('../../../pride').Pride.Core.GetThis;
 
-describe('Pride.Core.GetThis', () => {
+describe('Pride.Core.GetThis', function() {
   const data = {
     fields: [
       {
@@ -18,7 +18,7 @@ describe('Pride.Core.GetThis', () => {
   let sandbox;
   let getThis;
 
-  beforeEach(() => {
+  beforeEach(function() {
     sandbox = sinon.createSandbox();
     sandbox.stub(Messenger, 'preset').returns('default failure message');
     getThis = new GetThis(barcode, data);
@@ -30,7 +30,7 @@ describe('Pride.Core.GetThis', () => {
     });
   });
 
-  afterEach(() => {
+  afterEach(function() {
     sandbox.restore();
   });
 
@@ -39,13 +39,15 @@ describe('Pride.Core.GetThis', () => {
   });
 
   describe('getData', function () {
-    it('generates the URL', () => {
+    it('generates the URL', function() {
       expect(getThis.requestBuffer.requestOptions).to.have.property('url').that.includes(getThis.barcode);
       expect(getThis.requestBuffer.requestOptions.url).to.equal(`${data.fields[0].value}/${barcode}`);
     });
+
     it('defines the failure message', function () {
       expect(getThis.requestBuffer.requestOptions.failure_message).to.equal('default failure message');
     });
+
     it('edits the response', function (done) {
       expect(getThis.requestBuffer.requestOptions).to.have.property('edit_response');
       getThis.getData((data) => {
@@ -54,6 +56,7 @@ describe('Pride.Core.GetThis', () => {
         done();
       });
     });
+
     it('handles success response', function () {
       const spy = sinon.spy();
       getThis.getData(spy);

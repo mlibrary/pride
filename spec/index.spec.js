@@ -15,13 +15,13 @@ const deepSearch = (path = 'src') => {
       specPath[0] = 'spec';
       specPath = `${specPath.join('/')}/${listing.slice(0, -3)}.spec.js`;
       // Return test to see if the spec exists
-      it(`'./${listingPath}' has a spec file ('./${specPath}')`, () => {
+      it(`'./${listingPath}' has a spec file ('./${specPath}')`, function() {
         expect(fs.existsSync(`${specPath}`)).to.be.true;
       });
     }
   });
 };
 
-describe('check if each `.js` file under `./src` has a `.spec.js` file under `./spec`', () => {
+describe('check if each `.js` file under `./src` has a `.spec.js` file under `./spec`', function() {
   deepSearch();
 });
