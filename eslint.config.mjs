@@ -3,9 +3,6 @@ import pluginJs from "@eslint/js";
 import mochaPlugin from "eslint-plugin-mocha";
 
 export default [
-  {
-    ignores: ["pride*.js"]
-  },
   pluginJs.configs.recommended,
   mochaPlugin.configs.flat.recommended,
   {
@@ -17,7 +14,6 @@ export default [
     }
   },
   {
-    files: ["src/**/*.js", "spec/**/*.js"],
     rules: {
       "arrow-body-style": ["error", "always"], // Requires {} in arrow function body
       "arrow-parens": ["error", "always"], // Requires () around arrow function arguments
