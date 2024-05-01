@@ -37,11 +37,14 @@ function testRequest (requestMethod, requestInfo) {
   });
 }
 
+let reqwest;
+
 function mockRequestSuccess (requestMethod, result) {
   reqwest = function (requestInfo) {
     testRequest(requestMethod, requestInfo);
     requestInfo.success(Pride.Util.safeApply(result) || {});
   };
+  console.log(reqwest);
 }
 
 function mockRequestFailure (requestMethod, result) {
@@ -49,6 +52,7 @@ function mockRequestFailure (requestMethod, result) {
     testRequest(requestMethod, requestInfo);
     requestInfo.error(Pride.Util.safeApply(result) || {});
   };
+  console.log(reqwest);
 }
 
 describe.skip('Pride.Util.RequestBuffer', function () {

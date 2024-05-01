@@ -45,11 +45,11 @@ const Parser = (function () {
         return '[' + (expectation.inverted ? '^' : '') + escapedParts + ']';
       },
 
-      any: function (expectation) {
+      any: function () {
         return 'any character';
       },
 
-      end: function (expectation) {
+      end: function () {
         return 'end of input';
       },
 

@@ -15,8 +15,7 @@ describe('Pride.Core.GetThis', function() {
     names: ['Test Item']
   };
   const barcode = '123';
-  let sandbox;
-  let getThis;
+  let sandbox, getThis, requestBufferStub;
 
   beforeEach(function() {
     sandbox = sinon.createSandbox();
