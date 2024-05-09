@@ -7,14 +7,13 @@
     "esbuild": "npx esbuild src/index.js --bundle --format=cjs $*",
     "esbuild:minify": "npm run esbuild -- --outfile=pride.min.js --minify",
     "esbuild:regular": "npm run esbuild -- --outfile=pride.js",
-    "eslint": "npx eslint $* './src/**/*.js' './spec/**/*.js'",
+    "eslint": "npx eslint src spec $*",
     "eslint:fix": "npm run eslint -- --fix",
     "test": "npx eslint './spec/**/*.js' && npx mocha --recursive './spec/**/*.spec.js'"
   },
   "dependencies": {
     "esbuild": "^0.20.2",
     "pegjs": "^0.10.0",
-    "reqwest": "^2.0.5",
     "underscore": "^1.13.6"
   },
   "devDependencies": {

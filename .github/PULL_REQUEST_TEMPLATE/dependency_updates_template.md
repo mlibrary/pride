@@ -13,7 +13,6 @@ These dependencies have been updated to their latest versions:
 - `jsdom`
 - `mocha`
 - `pegjs`
-- `reqwest`
 - `underscore`
 
 ## Testing

@@ -1,12 +1,7 @@
-var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __commonJS = (cb2, mod) => function __require() {
-  return mod || (0, cb2[__getOwnPropNames(cb2)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
-};
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
@@ -19,493 +14,7 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
-// (disabled):xhr2
-var require_xhr2 = __commonJS({
-  "(disabled):xhr2"() {
-  }
-});
-
-// node_modules/reqwest/reqwest.js
-var require_reqwest = __commonJS({
-  "node_modules/reqwest/reqwest.js"(exports, module) {
-    !function(name, context2, definition) {
-      if (typeof module != "undefined" && module.exports)
-        module.exports = definition();
-      else if (typeof define == "function" && define.amd)
-        define(definition);
-      else
-        context2[name] = definition();
-    }("reqwest", exports, function() {
-      var context = this;
-      if ("window" in context) {
-        var doc = document, byTag = "getElementsByTagName", head = doc[byTag]("head")[0];
-      } else {
-        var XHR2;
-        try {
-          XHR2 = require_xhr2();
-        } catch (ex) {
-          throw new Error("Peer dependency `xhr2` required! Please npm install xhr2");
-        }
-      }
-      var httpsRe = /^http/, protocolRe = /(^\w+):\/\//, twoHundo = /^(20\d|1223)$/, readyState = "readyState", contentType = "Content-Type", requestedWith = "X-Requested-With", uniqid = 0, callbackPrefix = "reqwest_" + +/* @__PURE__ */ new Date(), lastValue, xmlHttpRequest = "XMLHttpRequest", xDomainRequest = "XDomainRequest", noop = function() {
-      }, isArray = typeof Array.isArray == "function" ? Array.isArray : function(a) {
-        return a instanceof Array;
-      }, defaultHeaders = {
-        "contentType": "application/x-www-form-urlencoded",
-        "requestedWith": xmlHttpRequest,
-        "accept": {
-          "*": "text/javascript, text/html, application/xml, text/xml, */*",
-          "xml": "application/xml, text/xml",
-          "html": "text/html",
-          "text": "text/plain",
-          "json": "application/json, text/javascript",
-          "js": "application/javascript, text/javascript"
-        }
-      }, xhr = function(o2) {
-        if (o2["crossOrigin"] === true) {
-          var xhr2 = context[xmlHttpRequest] ? new XMLHttpRequest() : null;
-          if (xhr2 && "withCredentials" in xhr2) {
-            return xhr2;
-          } else if (context[xDomainRequest]) {
-            return new XDomainRequest();
-          } else {
-            throw new Error("Browser does not support cross-origin requests");
-          }
-        } else if (context[xmlHttpRequest]) {
-          return new XMLHttpRequest();
-        } else if (XHR2) {
-          return new XHR2();
-        } else {
-          return new ActiveXObject("Microsoft.XMLHTTP");
-        }
-      }, globalSetupOptions = {
-        dataFilter: function(data) {
-          return data;
-        }
-      };
-      function succeed(r2) {
-        var protocol = protocolRe.exec(r2.url);
-        protocol = protocol && protocol[1] || context.location.protocol;
-        return httpsRe.test(protocol) ? twoHundo.test(r2.request.status) : !!r2.request.response;
-      }
-      function handleReadyState(r2, success2, error2) {
-        return function() {
-          if (r2._aborted)
-            return error2(r2.request);
-          if (r2._timedOut)
-            return error2(r2.request, "Request is aborted: timeout");
-          if (r2.request && r2.request[readyState] == 4) {
-            r2.request.onreadystatechange = noop;
-            if (succeed(r2))
-              success2(r2.request);
-            else
-              error2(r2.request);
-          }
-        };
-      }
-      function setHeaders(http, o2) {
-        var headers = o2["headers"] || {}, h;
-        headers["Accept"] = headers["Accept"] || defaultHeaders["accept"][o2["type"]] || defaultHeaders["accept"]["*"];
-        var isAFormData = typeof FormData !== "undefined" && o2["data"] instanceof FormData;
-        if (!o2["crossOrigin"] && !headers[requestedWith])
-          headers[requestedWith] = defaultHeaders["requestedWith"];
-        if (!headers[contentType] && !isAFormData)
-          headers[contentType] = o2["contentType"] || defaultHeaders["contentType"];
-        for (h in headers)
-          headers.hasOwnProperty(h) && "setRequestHeader" in http && http.setRequestHeader(h, headers[h]);
-      }
-      function setCredentials(http, o2) {
-        if (typeof o2["withCredentials"] !== "undefined" && typeof http.withCredentials !== "undefined") {
-          http.withCredentials = !!o2["withCredentials"];
-        }
-      }
-      function generalCallback(data) {
-        lastValue = data;
-      }
-      function urlappend(url, s) {
-        return url + (/\?/.test(url) ? "&" : "?") + s;
-      }
-      function handleJsonp(o2, fn2, err, url) {
-        var reqId = uniqid++, cbkey = o2["jsonpCallback"] || "callback", cbval = o2["jsonpCallbackName"] || reqwest.getcallbackPrefix(reqId), cbreg = new RegExp("((^|\\?|&)" + cbkey + ")=([^&]+)"), match = url.match(cbreg), script = doc.createElement("script"), loaded = 0, isIE10 = navigator.userAgent.indexOf("MSIE 10.0") !== -1;
-        if (match) {
-          if (match[3] === "?") {
-            url = url.replace(cbreg, "$1=" + cbval);
-          } else {
-            cbval = match[3];
-          }
-        } else {
-          url = urlappend(url, cbkey + "=" + cbval);
-        }
-        context[cbval] = generalCallback;
-        script.type = "text/javascript";
-        script.src = url;
-        script.async = true;
-        if (typeof script.onreadystatechange !== "undefined" && !isIE10) {
-          script.htmlFor = script.id = "_reqwest_" + reqId;
-        }
-        script.onload = script.onreadystatechange = function() {
-          if (script[readyState] && script[readyState] !== "complete" && script[readyState] !== "loaded" || loaded) {
-            return false;
-          }
-          script.onload = script.onreadystatechange = null;
-          script.onclick && script.onclick();
-          fn2(lastValue);
-          lastValue = void 0;
-          head.removeChild(script);
-          loaded = 1;
-        };
-        head.appendChild(script);
-        return {
-          abort: function() {
-            script.onload = script.onreadystatechange = null;
-            err({}, "Request is aborted: timeout", {});
-            lastValue = void 0;
-            head.removeChild(script);
-            loaded = 1;
-          }
-        };
-      }
-      function getRequest(fn2, err) {
-        var o2 = this.o, method = (o2["method"] || "GET").toUpperCase(), url = typeof o2 === "string" ? o2 : o2["url"], data = o2["processData"] !== false && o2["data"] && typeof o2["data"] !== "string" ? reqwest.toQueryString(o2["data"]) : o2["data"] || null, http, sendWait = false;
-        if ((o2["type"] == "jsonp" || method == "GET") && data) {
-          url = urlappend(url, data);
-          data = null;
-        }
-        if (o2["type"] == "jsonp")
-          return handleJsonp(o2, fn2, err, url);
-        http = o2.xhr && o2.xhr(o2) || xhr(o2);
-        http.open(method, url, o2["async"] === false ? false : true);
-        setHeaders(http, o2);
-        setCredentials(http, o2);
-        if (context[xDomainRequest] && http instanceof context[xDomainRequest]) {
-          http.onload = fn2;
-          http.onerror = err;
-          http.onprogress = function() {
-          };
-          sendWait = true;
-        } else {
-          http.onreadystatechange = handleReadyState(this, fn2, err);
-        }
-        o2["before"] && o2["before"](http);
-        if (sendWait) {
-          setTimeout(function() {
-            http.send(data);
-          }, 200);
-        } else {
-          http.send(data);
-        }
-        return http;
-      }
-      function Reqwest(o2, fn2) {
-        this.o = o2;
-        this.fn = fn2;
-        init.apply(this, arguments);
-      }
-      function setType(header) {
-        if (header === null)
-          return void 0;
-        if (header.match("json"))
-          return "json";
-        if (header.match("javascript"))
-          return "js";
-        if (header.match("text"))
-          return "html";
-        if (header.match("xml"))
-          return "xml";
-      }
-      function init(o, fn) {
-        this.url = typeof o == "string" ? o : o["url"];
-        this.timeout = null;
-        this._fulfilled = false;
-        this._successHandler = function() {
-        };
-        this._fulfillmentHandlers = [];
-        this._errorHandlers = [];
-        this._completeHandlers = [];
-        this._erred = false;
-        this._responseArgs = {};
-        var self = this;
-        fn = fn || function() {
-        };
-        if (o["timeout"]) {
-          this.timeout = setTimeout(function() {
-            timedOut();
-          }, o["timeout"]);
-        }
-        if (o["success"]) {
-          this._successHandler = function() {
-            o["success"].apply(o, arguments);
-          };
-        }
-        if (o["error"]) {
-          this._errorHandlers.push(function() {
-            o["error"].apply(o, arguments);
-          });
-        }
-        if (o["complete"]) {
-          this._completeHandlers.push(function() {
-            o["complete"].apply(o, arguments);
-          });
-        }
-        function complete(resp2) {
-          o["timeout"] && clearTimeout(self.timeout);
-          self.timeout = null;
-          while (self._completeHandlers.length > 0) {
-            self._completeHandlers.shift()(resp2);
-          }
-        }
-        function success(resp) {
-          var type = o["type"] || resp && setType(resp.getResponseHeader("Content-Type"));
-          resp = type !== "jsonp" ? self.request : resp;
-          var filteredResponse = globalSetupOptions.dataFilter(resp.responseText, type), r = filteredResponse;
-          try {
-            resp.responseText = r;
-          } catch (e) {
-          }
-          if (r) {
-            switch (type) {
-              case "json":
-                try {
-                  resp = context.JSON ? context.JSON.parse(r) : eval("(" + r + ")");
-                } catch (err) {
-                  return error(resp, "Could not parse JSON in response", err);
-                }
-                break;
-              case "js":
-                resp = eval(r);
-                break;
-              case "html":
-                resp = r;
-                break;
-              case "xml":
-                resp = resp.responseXML && resp.responseXML.parseError && resp.responseXML.parseError.errorCode && resp.responseXML.parseError.reason ? null : resp.responseXML;
-                break;
-            }
-          }
-          self._responseArgs.resp = resp;
-          self._fulfilled = true;
-          fn(resp);
-          self._successHandler(resp);
-          while (self._fulfillmentHandlers.length > 0) {
-            resp = self._fulfillmentHandlers.shift()(resp);
-          }
-          complete(resp);
-        }
-        function timedOut() {
-          self._timedOut = true;
-          self.request.abort();
-        }
-        function error(resp2, msg, t) {
-          resp2 = self.request;
-          self._responseArgs.resp = resp2;
-          self._responseArgs.msg = msg;
-          self._responseArgs.t = t;
-          self._erred = true;
-          while (self._errorHandlers.length > 0) {
-            self._errorHandlers.shift()(resp2, msg, t);
-          }
-          complete(resp2);
-        }
-        this.request = getRequest.call(this, success, error);
-      }
-      Reqwest.prototype = {
-        abort: function() {
-          this._aborted = true;
-          this.request.abort();
-        },
-        retry: function() {
-          init.call(this, this.o, this.fn);
-        },
-        then: function(success2, fail) {
-          success2 = success2 || function() {
-          };
-          fail = fail || function() {
-          };
-          if (this._fulfilled) {
-            this._responseArgs.resp = success2(this._responseArgs.resp);
-          } else if (this._erred) {
-            fail(this._responseArgs.resp, this._responseArgs.msg, this._responseArgs.t);
-          } else {
-            this._fulfillmentHandlers.push(success2);
-            this._errorHandlers.push(fail);
-          }
-          return this;
-        },
-        always: function(fn2) {
-          if (this._fulfilled || this._erred) {
-            fn2(this._responseArgs.resp);
-          } else {
-            this._completeHandlers.push(fn2);
-          }
-          return this;
-        },
-        fail: function(fn2) {
-          if (this._erred) {
-            fn2(this._responseArgs.resp, this._responseArgs.msg, this._responseArgs.t);
-          } else {
-            this._errorHandlers.push(fn2);
-          }
-          return this;
-        },
-        "catch": function(fn2) {
-          return this.fail(fn2);
-        }
-      };
-      function reqwest(o2, fn2) {
-        return new Reqwest(o2, fn2);
-      }
-      function normalize(s) {
-        return s ? s.replace(/\r?\n/g, "\r\n") : "";
-      }
-      function serial(el, cb2) {
-        var n = el.name, t = el.tagName.toLowerCase(), optCb = function(o2) {
-          if (o2 && !o2["disabled"])
-            cb2(n, normalize(o2["attributes"]["value"] && o2["attributes"]["value"]["specified"] ? o2["value"] : o2["text"]));
-        }, ch, ra, val, i;
-        if (el.disabled || !n)
-          return;
-        switch (t) {
-          case "input":
-            if (!/reset|button|image|file/i.test(el.type)) {
-              ch = /checkbox/i.test(el.type);
-              ra = /radio/i.test(el.type);
-              val = el.value;
-              (!(ch || ra) || el.checked) && cb2(n, normalize(ch && val === "" ? "on" : val));
-            }
-            break;
-          case "textarea":
-            cb2(n, normalize(el.value));
-            break;
-          case "select":
-            if (el.type.toLowerCase() === "select-one") {
-              optCb(el.selectedIndex >= 0 ? el.options[el.selectedIndex] : null);
-            } else {
-              for (i = 0; el.length && i < el.length; i++) {
-                el.options[i].selected && optCb(el.options[i]);
-              }
-            }
-            break;
-        }
-      }
-      function eachFormElement() {
-        var cb2 = this, e, i, serializeSubtags = function(e2, tags) {
-          var i2, j, fa;
-          for (i2 = 0; i2 < tags.length; i2++) {
-            fa = e2[byTag](tags[i2]);
-            for (j = 0; j < fa.length; j++)
-              serial(fa[j], cb2);
-          }
-        };
-        for (i = 0; i < arguments.length; i++) {
-          e = arguments[i];
-          if (/input|select|textarea/i.test(e.tagName))
-            serial(e, cb2);
-          serializeSubtags(e, ["input", "select", "textarea"]);
-        }
-      }
-      function serializeQueryString() {
-        return reqwest.toQueryString(reqwest.serializeArray.apply(null, arguments));
-      }
-      function serializeHash() {
-        var hash = {};
-        eachFormElement.apply(function(name, value) {
-          if (name in hash) {
-            hash[name] && !isArray(hash[name]) && (hash[name] = [hash[name]]);
-            hash[name].push(value);
-          } else
-            hash[name] = value;
-        }, arguments);
-        return hash;
-      }
-      reqwest.serializeArray = function() {
-        var arr = [];
-        eachFormElement.apply(function(name, value) {
-          arr.push({ name, value });
-        }, arguments);
-        return arr;
-      };
-      reqwest.serialize = function() {
-        if (arguments.length === 0)
-          return "";
-        var opt, fn2, args = Array.prototype.slice.call(arguments, 0);
-        opt = args.pop();
-        opt && opt.nodeType && args.push(opt) && (opt = null);
-        opt && (opt = opt.type);
-        if (opt == "map")
-          fn2 = serializeHash;
-        else if (opt == "array")
-          fn2 = reqwest.serializeArray;
-        else
-          fn2 = serializeQueryString;
-        return fn2.apply(null, args);
-      };
-      reqwest.toQueryString = function(o2, trad) {
-        var prefix, i, traditional = trad || false, s = [], enc = encodeURIComponent, add = function(key, value) {
-          value = "function" === typeof value ? value() : value == null ? "" : value;
-          s[s.length] = enc(key) + "=" + enc(value);
-        };
-        if (isArray(o2)) {
-          for (i = 0; o2 && i < o2.length; i++)
-            add(o2[i]["name"], o2[i]["value"]);
-        } else {
-          for (prefix in o2) {
-            if (o2.hasOwnProperty(prefix))
-              buildParams(prefix, o2[prefix], traditional, add);
-          }
-        }
-        return s.join("&").replace(/%20/g, "+");
-      };
-      function buildParams(prefix, obj, traditional, add) {
-        var name, i, v, rbracket = /\[\]$/;
-        if (isArray(obj)) {
-          for (i = 0; obj && i < obj.length; i++) {
-            v = obj[i];
-            if (traditional || rbracket.test(prefix)) {
-              add(prefix, v);
-            } else {
-              buildParams(prefix + "[" + (typeof v === "object" ? i : "") + "]", v, traditional, add);
-            }
-          }
-        } else if (obj && obj.toString() === "[object Object]") {
-          for (name in obj) {
-            buildParams(prefix + "[" + name + "]", obj[name], traditional, add);
-          }
-        } else {
-          add(prefix, obj);
-        }
-      }
-      reqwest.getcallbackPrefix = function() {
-        return callbackPrefix;
-      };
-      reqwest.compat = function(o2, fn2) {
-        if (o2) {
-          o2["type"] && (o2["method"] = o2["type"]) && delete o2["type"];
-          o2["dataType"] && (o2["type"] = o2["dataType"]);
-          o2["jsonpCallback"] && (o2["jsonpCallbackName"] = o2["jsonpCallback"]) && delete o2["jsonpCallback"];
-          o2["jsonp"] && (o2["jsonpCallback"] = o2["jsonp"]);
-        }
-        return new Reqwest(o2, fn2);
-      };
-      reqwest.ajaxSetup = function(options) {
-        options = options || {};
-        for (var k in options) {
-          globalSetupOptions[k] = options[k];
-        }
-      };
-      return reqwest;
-    });
-  }
-});
 
 // src/index.js
 var src_exports = {};
@@ -626,7 +135,7 @@ __export(modules_exports, {
   min: () => min,
   mixin: () => mixin,
   negate: () => negate,
-  noop: () => noop2,
+  noop: () => noop,
   now: () => now_default,
   object: () => object,
   omit: () => omit_default,
@@ -732,8 +241,8 @@ function restArguments(func, startIndex) {
 
 // node_modules/underscore/modules/isObject.js
 function isObject(obj) {
-  var type2 = typeof obj;
-  return type2 === "function" || type2 === "object" && !!obj;
+  var type = typeof obj;
+  return type === "function" || type === "object" && !!obj;
 }
 
 // node_modules/underscore/modules/isNull.js
@@ -981,8 +490,8 @@ function eq(a, b, aStack, bStack) {
     return false;
   if (a !== a)
     return b !== b;
-  var type2 = typeof a;
-  if (type2 !== "function" && type2 !== "object" && typeof b != "object")
+  var type = typeof a;
+  if (type !== "function" && type !== "object" && typeof b != "object")
     return false;
   return deepEq(a, b, aStack, bStack);
 }
@@ -1289,55 +798,55 @@ function property(path) {
 }
 
 // node_modules/underscore/modules/_optimizeCb.js
-function optimizeCb(func, context2, argCount) {
-  if (context2 === void 0)
+function optimizeCb(func, context, argCount) {
+  if (context === void 0)
     return func;
   switch (argCount == null ? 3 : argCount) {
     case 1:
       return function(value) {
-        return func.call(context2, value);
+        return func.call(context, value);
       };
     case 3:
       return function(value, index, collection) {
-        return func.call(context2, value, index, collection);
+        return func.call(context, value, index, collection);
       };
     case 4:
       return function(accumulator, value, index, collection) {
-        return func.call(context2, accumulator, value, index, collection);
+        return func.call(context, accumulator, value, index, collection);
       };
   }
   return function() {
-    return func.apply(context2, arguments);
+    return func.apply(context, arguments);
   };
 }
 
 // node_modules/underscore/modules/_baseIteratee.js
-function baseIteratee(value, context2, argCount) {
+function baseIteratee(value, context, argCount) {
   if (value == null)
     return identity;
   if (isFunction_default(value))
-    return optimizeCb(value, context2, argCount);
+    return optimizeCb(value, context, argCount);
   if (isObject(value) && !isArray_default(value))
     return matcher(value);
   return property(value);
 }
 
 // node_modules/underscore/modules/iteratee.js
-function iteratee(value, context2) {
-  return baseIteratee(value, context2, Infinity);
+function iteratee(value, context) {
+  return baseIteratee(value, context, Infinity);
 }
 _.iteratee = iteratee;
 
 // node_modules/underscore/modules/_cb.js
-function cb(value, context2, argCount) {
+function cb(value, context, argCount) {
   if (_.iteratee !== iteratee)
-    return _.iteratee(value, context2);
-  return baseIteratee(value, context2, argCount);
+    return _.iteratee(value, context);
+  return baseIteratee(value, context, argCount);
 }
 
 // node_modules/underscore/modules/mapObject.js
-function mapObject(obj, iteratee2, context2) {
-  iteratee2 = cb(iteratee2, context2);
+function mapObject(obj, iteratee2, context) {
+  iteratee2 = cb(iteratee2, context);
   var _keys = keys(obj), length = _keys.length, results = {};
   for (var index = 0; index < length; index++) {
     var currentKey = _keys[index];
@@ -1347,22 +856,22 @@ function mapObject(obj, iteratee2, context2) {
 }
 
 // node_modules/underscore/modules/noop.js
-function noop2() {
+function noop() {
 }
 
 // node_modules/underscore/modules/propertyOf.js
 function propertyOf(obj) {
   if (obj == null)
-    return noop2;
+    return noop;
   return function(path) {
     return get(obj, path);
   };
 }
 
 // node_modules/underscore/modules/times.js
-function times(n, iteratee2, context2) {
+function times(n, iteratee2, context) {
   var accum = Array(Math.max(0, n));
-  iteratee2 = optimizeCb(iteratee2, context2, 1);
+  iteratee2 = optimizeCb(iteratee2, context, 1);
   for (var i = 0; i < n; i++)
     accum[i] = iteratee2(i);
   return accum;
@@ -1519,9 +1028,9 @@ function chain(obj) {
 }
 
 // node_modules/underscore/modules/_executeBound.js
-function executeBound(sourceFunc, boundFunc, context2, callingContext, args) {
+function executeBound(sourceFunc, boundFunc, context, callingContext, args) {
   if (!(callingContext instanceof boundFunc))
-    return sourceFunc.apply(context2, args);
+    return sourceFunc.apply(context, args);
   var self2 = baseCreate(sourceFunc.prototype);
   var result2 = sourceFunc.apply(self2, args);
   if (isObject(result2))
@@ -1548,11 +1057,11 @@ partial.placeholder = _;
 var partial_default = partial;
 
 // node_modules/underscore/modules/bind.js
-var bind_default = restArguments(function(func, context2, args) {
+var bind_default = restArguments(function(func, context, args) {
   if (!isFunction_default(func))
     throw new TypeError("Bind must be called on a function");
   var bound = restArguments(function(callArgs) {
-    return executeBound(func, bound, context2, this, args.concat(callArgs));
+    return executeBound(func, bound, context, this, args.concat(callArgs));
   });
   return bound;
 });
@@ -1625,23 +1134,23 @@ var defer_default = partial_default(delay_default, _, 1);
 
 // node_modules/underscore/modules/throttle.js
 function throttle(func, wait, options) {
-  var timeout, context2, args, result2;
+  var timeout, context, args, result2;
   var previous = 0;
   if (!options)
     options = {};
   var later = function() {
     previous = options.leading === false ? 0 : now_default();
     timeout = null;
-    result2 = func.apply(context2, args);
+    result2 = func.apply(context, args);
     if (!timeout)
-      context2 = args = null;
+      context = args = null;
   };
   var throttled = function() {
     var _now = now_default();
     if (!previous && options.leading === false)
       previous = _now;
     var remaining = wait - (_now - previous);
-    context2 = this;
+    context = this;
     args = arguments;
     if (remaining <= 0 || remaining > wait) {
       if (timeout) {
@@ -1649,9 +1158,9 @@ function throttle(func, wait, options) {
         timeout = null;
       }
       previous = _now;
-      result2 = func.apply(context2, args);
+      result2 = func.apply(context, args);
       if (!timeout)
-        context2 = args = null;
+        context = args = null;
     } else if (!timeout && options.trailing !== false) {
       timeout = setTimeout(later, remaining);
     }
@@ -1660,14 +1169,14 @@ function throttle(func, wait, options) {
   throttled.cancel = function() {
     clearTimeout(timeout);
     previous = 0;
-    timeout = context2 = args = null;
+    timeout = context = args = null;
   };
   return throttled;
 }
 
 // node_modules/underscore/modules/debounce.js
 function debounce(func, wait, immediate) {
-  var timeout, previous, args, result2, context2;
+  var timeout, previous, args, result2, context;
   var later = function() {
     var passed = now_default() - previous;
     if (wait > passed) {
@@ -1675,25 +1184,25 @@ function debounce(func, wait, immediate) {
     } else {
       timeout = null;
       if (!immediate)
-        result2 = func.apply(context2, args);
+        result2 = func.apply(context, args);
       if (!timeout)
-        args = context2 = null;
+        args = context = null;
     }
   };
   var debounced = restArguments(function(_args) {
-    context2 = this;
+    context = this;
     args = _args;
     previous = now_default();
     if (!timeout) {
       timeout = setTimeout(later, wait);
       if (immediate)
-        result2 = func.apply(context2, args);
+        result2 = func.apply(context, args);
     }
     return result2;
   });
   debounced.cancel = function() {
     clearTimeout(timeout);
-    timeout = args = context2 = null;
+    timeout = args = context = null;
   };
   return debounced;
 }
@@ -1749,8 +1258,8 @@ function before(times2, func) {
 var once_default = partial_default(before, 2);
 
 // node_modules/underscore/modules/findKey.js
-function findKey(obj, predicate, context2) {
-  predicate = cb(predicate, context2);
+function findKey(obj, predicate, context) {
+  predicate = cb(predicate, context);
   var _keys = keys(obj), key;
   for (var i = 0, length = _keys.length; i < length; i++) {
     key = _keys[i];
@@ -1761,8 +1270,8 @@ function findKey(obj, predicate, context2) {
 
 // node_modules/underscore/modules/_createPredicateIndexFinder.js
 function createPredicateIndexFinder(dir) {
-  return function(array, predicate, context2) {
-    predicate = cb(predicate, context2);
+  return function(array, predicate, context) {
+    predicate = cb(predicate, context);
     var length = getLength_default(array);
     var index = dir > 0 ? 0 : length - 1;
     for (; index >= 0 && index < length; index += dir) {
@@ -1780,8 +1289,8 @@ var findIndex_default = createPredicateIndexFinder(1);
 var findLastIndex_default = createPredicateIndexFinder(-1);
 
 // node_modules/underscore/modules/sortedIndex.js
-function sortedIndex(array, obj, iteratee2, context2) {
-  iteratee2 = cb(iteratee2, context2, 1);
+function sortedIndex(array, obj, iteratee2, context) {
+  iteratee2 = cb(iteratee2, context, 1);
   var value = iteratee2(obj);
   var low = 0, high = getLength_default(array);
   while (low < high) {
@@ -1827,9 +1336,9 @@ var indexOf_default = createIndexFinder(1, findIndex_default, sortedIndex);
 var lastIndexOf_default = createIndexFinder(-1, findLastIndex_default);
 
 // node_modules/underscore/modules/find.js
-function find(obj, predicate, context2) {
+function find(obj, predicate, context) {
   var keyFinder = isArrayLike_default(obj) ? findIndex_default : findKey;
-  var key = keyFinder(obj, predicate, context2);
+  var key = keyFinder(obj, predicate, context);
   if (key !== void 0 && key !== -1)
     return obj[key];
 }
@@ -1840,8 +1349,8 @@ function findWhere(obj, attrs) {
 }
 
 // node_modules/underscore/modules/each.js
-function each(obj, iteratee2, context2) {
-  iteratee2 = optimizeCb(iteratee2, context2);
+function each(obj, iteratee2, context) {
+  iteratee2 = optimizeCb(iteratee2, context);
   var i, length;
   if (isArrayLike_default(obj)) {
     for (i = 0, length = obj.length; i < length; i++) {
@@ -1857,8 +1366,8 @@ function each(obj, iteratee2, context2) {
 }
 
 // node_modules/underscore/modules/map.js
-function map(obj, iteratee2, context2) {
-  iteratee2 = cb(iteratee2, context2);
+function map(obj, iteratee2, context) {
+  iteratee2 = cb(iteratee2, context);
   var _keys = !isArrayLike_default(obj) && keys(obj), length = (_keys || obj).length, results = Array(length);
   for (var index = 0; index < length; index++) {
     var currentKey = _keys ? _keys[index] : index;
@@ -1881,9 +1390,9 @@ function createReduce(dir) {
     }
     return memo;
   };
-  return function(obj, iteratee2, memo, context2) {
+  return function(obj, iteratee2, memo, context) {
     var initial2 = arguments.length >= 3;
-    return reducer(obj, optimizeCb(iteratee2, context2, 4), memo, initial2);
+    return reducer(obj, optimizeCb(iteratee2, context, 4), memo, initial2);
   };
 }
 
@@ -1894,9 +1403,9 @@ var reduce_default = createReduce(1);
 var reduceRight_default = createReduce(-1);
 
 // node_modules/underscore/modules/filter.js
-function filter(obj, predicate, context2) {
+function filter(obj, predicate, context) {
   var results = [];
-  predicate = cb(predicate, context2);
+  predicate = cb(predicate, context);
   each(obj, function(value, index, list) {
     if (predicate(value, index, list))
       results.push(value);
@@ -1905,13 +1414,13 @@ function filter(obj, predicate, context2) {
 }
 
 // node_modules/underscore/modules/reject.js
-function reject(obj, predicate, context2) {
-  return filter(obj, negate(cb(predicate)), context2);
+function reject(obj, predicate, context) {
+  return filter(obj, negate(cb(predicate)), context);
 }
 
 // node_modules/underscore/modules/every.js
-function every(obj, predicate, context2) {
-  predicate = cb(predicate, context2);
+function every(obj, predicate, context) {
+  predicate = cb(predicate, context);
   var _keys = !isArrayLike_default(obj) && keys(obj), length = (_keys || obj).length;
   for (var index = 0; index < length; index++) {
     var currentKey = _keys ? _keys[index] : index;
@@ -1922,8 +1431,8 @@ function every(obj, predicate, context2) {
 }
 
 // node_modules/underscore/modules/some.js
-function some(obj, predicate, context2) {
-  predicate = cb(predicate, context2);
+function some(obj, predicate, context) {
+  predicate = cb(predicate, context);
   var _keys = !isArrayLike_default(obj) && keys(obj), length = (_keys || obj).length;
   for (var index = 0; index < length; index++) {
     var currentKey = _keys ? _keys[index] : index;
@@ -1952,17 +1461,17 @@ var invoke_default = restArguments(function(obj, path, args) {
     contextPath = path.slice(0, -1);
     path = path[path.length - 1];
   }
-  return map(obj, function(context2) {
+  return map(obj, function(context) {
     var method = func;
     if (!method) {
       if (contextPath && contextPath.length) {
-        context2 = deepGet(context2, contextPath);
+        context = deepGet(context, contextPath);
       }
-      if (context2 == null)
+      if (context == null)
         return void 0;
-      method = context2[path];
+      method = context[path];
     }
-    return method == null ? method : method.apply(context2, args);
+    return method == null ? method : method.apply(context, args);
   });
 });
 
@@ -1977,7 +1486,7 @@ function where(obj, attrs) {
 }
 
 // node_modules/underscore/modules/max.js
-function max(obj, iteratee2, context2) {
+function max(obj, iteratee2, context) {
   var result2 = -Infinity, lastComputed = -Infinity, value, computed;
   if (iteratee2 == null || typeof iteratee2 == "number" && typeof obj[0] != "object" && obj != null) {
     obj = isArrayLike_default(obj) ? obj : values(obj);
@@ -1988,7 +1497,7 @@ function max(obj, iteratee2, context2) {
       }
     }
   } else {
-    iteratee2 = cb(iteratee2, context2);
+    iteratee2 = cb(iteratee2, context);
     each(obj, function(v, index, list) {
       computed = iteratee2(v, index, list);
       if (computed > lastComputed || computed === -Infinity && result2 === -Infinity) {
@@ -2001,7 +1510,7 @@ function max(obj, iteratee2, context2) {
 }
 
 // node_modules/underscore/modules/min.js
-function min(obj, iteratee2, context2) {
+function min(obj, iteratee2, context) {
   var result2 = Infinity, lastComputed = Infinity, value, computed;
   if (iteratee2 == null || typeof iteratee2 == "number" && typeof obj[0] != "object" && obj != null) {
     obj = isArrayLike_default(obj) ? obj : values(obj);
@@ -2012,7 +1521,7 @@ function min(obj, iteratee2, context2) {
       }
     }
   } else {
-    iteratee2 = cb(iteratee2, context2);
+    iteratee2 = cb(iteratee2, context);
     each(obj, function(v, index, list) {
       computed = iteratee2(v, index, list);
       if (computed < lastComputed || computed === Infinity && result2 === Infinity) {
@@ -2065,9 +1574,9 @@ function shuffle(obj) {
 }
 
 // node_modules/underscore/modules/sortBy.js
-function sortBy(obj, iteratee2, context2) {
+function sortBy(obj, iteratee2, context) {
   var index = 0;
-  iteratee2 = cb(iteratee2, context2);
+  iteratee2 = cb(iteratee2, context);
   return pluck(map(obj, function(value, key, list) {
     return {
       value,
@@ -2089,9 +1598,9 @@ function sortBy(obj, iteratee2, context2) {
 
 // node_modules/underscore/modules/_group.js
 function group(behavior, partition) {
-  return function(obj, iteratee2, context2) {
+  return function(obj, iteratee2, context) {
     var result2 = partition ? [[], []] : {};
-    iteratee2 = cb(iteratee2, context2);
+    iteratee2 = cb(iteratee2, context);
     each(obj, function(value, index) {
       var key = iteratee2(value, index, obj);
       behavior(result2, value, key);
@@ -2163,18 +1672,18 @@ var pick_default = restArguments(function(obj, keys2) {
 
 // node_modules/underscore/modules/omit.js
 var omit_default = restArguments(function(obj, keys2) {
-  var iteratee2 = keys2[0], context2;
+  var iteratee2 = keys2[0], context;
   if (isFunction_default(iteratee2)) {
     iteratee2 = negate(iteratee2);
     if (keys2.length > 1)
-      context2 = keys2[1];
+      context = keys2[1];
   } else {
     keys2 = map(flatten(keys2, false, false), String);
     iteratee2 = function(value, key) {
       return !contains(keys2, key);
     };
   }
-  return pick_default(obj, iteratee2, context2);
+  return pick_default(obj, iteratee2, context);
 });
 
 // node_modules/underscore/modules/initial.js
@@ -2229,14 +1738,14 @@ var without_default = restArguments(function(array, otherArrays) {
 });
 
 // node_modules/underscore/modules/uniq.js
-function uniq(array, isSorted, iteratee2, context2) {
+function uniq(array, isSorted, iteratee2, context) {
   if (!isBoolean(isSorted)) {
-    context2 = iteratee2;
+    context = iteratee2;
     iteratee2 = isSorted;
     isSorted = false;
   }
   if (iteratee2 != null)
-    iteratee2 = cb(iteratee2, context2);
+    iteratee2 = cb(iteratee2, context);
   var result2 = [];
   var seen = [];
   for (var i = 0, length = getLength_default(array); i < length; i++) {
@@ -2658,7 +2167,7 @@ var Messenger = new FuncBuffer_default(function() {
     }
     return this;
   };
-  this.preset = function(type2) {
+  this.preset = function(type) {
   };
 });
 var Messenger_default = Messenger;
@@ -2858,52 +2367,54 @@ var SearchBase = function(setup, parent) {
 var SearchBase_default = SearchBase;
 
 // src/Pride/Util/request.js
-var import_reqwest = __toESM(require_reqwest());
+async function makeRequest(requestInfo) {
+  try {
+    const response = await fetch(requestInfo.url, {
+      method: requestInfo.query ? "post" : "get",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestInfo.query),
+      credentials: "include"
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    const responseData = await response.json();
+    log_default("Request", "SUCCESS", responseData);
+    requestInfo.success?.(responseData);
+    Messenger_default.sendMessage({
+      summary: requestInfo.success_message,
+      class: "success"
+    });
+    if (responseData.messages) {
+      Messenger_default.sendMessageArray(responseData.messages);
+    }
+  } catch (error) {
+    if (requestInfo.attempts <= 0) {
+      log_default("Request", "ERROR", error);
+      requestInfo.failure?.(error);
+      Messenger_default.sendMessage({
+        summary: requestInfo.failure_message,
+        class: "error"
+      });
+    } else {
+      log_default("Request", "Trying request again...");
+      setTimeout(() => {
+        return makeRequest(requestInfo);
+      }, Settings_default.ms_between_attempts);
+    }
+  }
+}
 var request = function(requestInfo) {
+  if (!requestInfo.url)
+    throw new Error("No URL given to Pride.Util.request()");
   log_default("Request", "Sending HTTP request...");
   log_default("Request", "URL", requestInfo.url);
   log_default("Request", "CONTENT", JSON.stringify(requestInfo.query));
-  if (!requestInfo.url)
-    throw new Error("No URL given to Pride.Util.request()");
-  let requestMethod = "get";
-  if (requestInfo.query)
-    requestMethod = "post";
   if (typeof requestInfo.attempts !== "number") {
     requestInfo.attempts = Settings_default.connection_attempts;
   }
   requestInfo.attempts -= 1;
-  (0, import_reqwest.default)({
-    url: requestInfo.url,
-    data: JSON.stringify(requestInfo.query),
-    type: "json",
-    method: requestMethod,
-    contentType: "application/json",
-    withCredentials: true,
-    error: function(error2) {
-      if (requestInfo.attempts <= 0) {
-        log_default("Request", "ERROR", error2);
-        requestInfo.failure?.(error2);
-        Messenger_default.sendMessage({
-          summary: requestInfo.failure_message,
-          class: "error"
-        });
-      } else {
-        log_default("Request", "Trying request again...");
-        window.setTimeout(() => {
-          return request(requestInfo);
-        }, Settings_default.ms_between_attempts);
-      }
-    },
-    success: function(response) {
-      log_default("Request", "SUCCESS", response);
-      requestInfo.success?.(response);
-      Messenger_default.sendMessage({
-        summary: requestInfo.success_message,
-        class: "success"
-      });
-      Messenger_default.sendMessageArray(response.messages);
-    }
-  });
+  makeRequest(requestInfo);
 };
 var request_default = request;
 
@@ -2943,11 +2454,11 @@ var RequestBuffer = class {
       url: typeof requestOptions.url === "function" ? requestOptions.url() : requestOptions.url,
       attempts: requestOptions.attempts?.() || Settings_default.connection_attempts,
       failure_message: requestOptions.failure_message?.(),
-      failure: (error2) => {
+      failure: (error) => {
         this.#requestFailed = true;
-        requestOptions.before_failure?.(error2);
-        this.#callWithResponse(error2);
-        requestOptions.after_failure?.(error2);
+        requestOptions.before_failure?.(error);
+        this.#callWithResponse(error);
+        requestOptions.after_failure?.(error);
       },
       success: (response) => {
         this.#requestSuccessful = true;
@@ -3295,9 +2806,9 @@ var DatastoreSearch = function(setup) {
 var DatastoreSearch_default = DatastoreSearch;
 
 // src/Pride/Core/nodeFactory.js
-var nodeFactory = (type2, childTypes = [], extension) => {
+var nodeFactory = (type, childTypes = [], extension) => {
   return function(value, ...children) {
-    this.type = type2;
+    this.type = type;
     this.childTypes = childTypes;
     this.value = value.trim();
     this.children = children.length === 1 && Array.isArray(children[0]) ? children[0] : children;
@@ -3474,7 +2985,7 @@ var FieldTree = {
 var FieldTree_default = FieldTree;
 
 // src/Pride/init.js
-var init2 = new RequestBuffer_default({
+var init = new RequestBuffer_default({
   url: () => {
     return Settings_default.datastores_url;
   },
@@ -3495,7 +3006,7 @@ var init2 = new RequestBuffer_default({
     });
   }
 }).request;
-var init_default = init2;
+var init_default = init;
 
 // src/Pride/Parser.js
 var Parser = function() {
@@ -4321,12 +3832,3 @@ var Pride = {
   Util: Util_default
 };
 var Pride_default = Pride;
-/*! Bundled license information:
-
-reqwest/reqwest.js:
-  (*!
-    * Reqwest! A general purpose XHR connection manager
-    * license MIT (c) Dustin Diaz 2015
-    * https://github.com/ded/reqwest
-    *)
-*/
