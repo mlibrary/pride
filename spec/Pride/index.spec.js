@@ -12,7 +12,7 @@ const siblingFileIsProperty = (callProperty, property) => {
       // Remove the file extension
       const propertyName = listing.replace('.js', '');
       // Return test to see if the file exists as a property
-      it(`'${propertyName}' is a property of '${propertyPath.slice(-1)}'`, () => {
+      it(`'${propertyName}' is a property of '${propertyPath.slice(-1)}'`, function() {
         expect(property).to.have.property(propertyName);
       });
     }
@@ -23,11 +23,13 @@ describe('Pride', function () {
   it('works', function () {
     expect(Pride).to.not.be.null;
   });
+
   it('is a non-empty object', function () {
     expect(Pride).to.be.an('object');
     expect(Pride).to.not.be.empty;
   });
-  describe('sibling files are defined as properties', () => {
+
+  describe('sibling files are defined as properties', function() {
     siblingFileIsProperty('Pride', Pride);
   });
 });

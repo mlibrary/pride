@@ -2167,7 +2167,7 @@ var Messenger = new FuncBuffer_default(function() {
     }
     return this;
   };
-  this.preset = function(type) {
+  this.preset = function() {
   };
 });
 var Messenger_default = Messenger;
@@ -2591,7 +2591,7 @@ var Record = function(data) {
       const response = request_default({
         url: [getHoldingsUrl(), item, pickupLocation, notNeededAfter].join("/"),
         query: true,
-        failure: function(data3) {
+        failure: function() {
           Messenger_default.sendMessage({
             summary: "Failed to place hold",
             class: "error"
@@ -3039,10 +3039,10 @@ var Parser = function() {
         }
         return "[" + (expectation.inverted ? "^" : "") + escapedParts + "]";
       },
-      any: function(expectation) {
+      any: function() {
         return "any character";
       },
-      end: function(expectation) {
+      end: function() {
         return "end of input";
       },
       other: function(expectation) {

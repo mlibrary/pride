@@ -86,7 +86,7 @@ function testFuncBufferMethods (name) {
   });
 
   describe('apply()', function () {
-    let touched1 = touched2 = false;
+    let [touched1, touched2] = Array(2).fill(false);
 
     beforeEach(function () {
       this.buffer.add(

@@ -29,6 +29,7 @@ describe('Pride.Core.Query', function () {
     it('returns memoized paginator value', function () {
       expect(query.get('index_limit')).to.equal(Infinity);
     });
+
     it('returns query info if paginator lacks key', function () {
       query.set({ sort: 'new_sort' });
       expect(query.get('sort')).to.equal('new_sort');
@@ -37,10 +38,12 @@ describe('Pride.Core.Query', function () {
 
   describe('set', function () {
     const values = { count: 123 };
+
     it('sets and gets a value', function () {
       query.set(values);
       expect(query.get('count')).to.equal(values.count);
     });
+
     it('returns self', function () {
       expect(query.set(values)).to.deep.equal(query);
     });
