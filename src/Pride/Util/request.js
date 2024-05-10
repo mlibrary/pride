@@ -2,7 +2,19 @@ import log from '../Core/log';
 import Settings from '../Settings';
 import Messenger from '../Messenger';
 
-async function makeRequest (requestInfo) {
+const request = async (requestInfo) => {
+  if (!requestInfo.url) throw new Error('No URL given to Pride.Util.request()');
+
+  log('Request', 'Sending HTTP request...');
+  log('Request', 'URL', requestInfo.url);
+  log('Request', 'CONTENT', JSON.stringify(requestInfo.query));
+
+  if (typeof requestInfo.attempts !== 'number') {
+    requestInfo.attempts = Settings.connection_attempts;
+  }
+
+  requestInfo.attempts -= 1;
+
   try {
     const response = await fetch(requestInfo.url, {
       method: requestInfo.query ? 'post' : 'get',
@@ -41,26 +53,10 @@ async function makeRequest (requestInfo) {
     } else {
       log('Request', 'Trying request again...');
       setTimeout(() => {
-        return makeRequest(requestInfo);
+        return request(requestInfo);
       }, Settings.ms_between_attempts);
     }
   }
-}
-
-const request = function (requestInfo) {
-  if (!requestInfo.url) throw new Error('No URL given to Pride.Util.request()');
-
-  log('Request', 'Sending HTTP request...');
-  log('Request', 'URL', requestInfo.url);
-  log('Request', 'CONTENT', JSON.stringify(requestInfo.query));
-
-  if (typeof requestInfo.attempts !== 'number') {
-    requestInfo.attempts = Settings.connection_attempts;
-  }
-
-  requestInfo.attempts -= 1;
-
-  makeRequest(requestInfo);
 };
 
 export default request;

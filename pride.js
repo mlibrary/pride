@@ -2367,7 +2367,16 @@ var SearchBase = function(setup, parent) {
 var SearchBase_default = SearchBase;
 
 // src/Pride/Util/request.js
-async function makeRequest(requestInfo) {
+var request = async (requestInfo) => {
+  if (!requestInfo.url)
+    throw new Error("No URL given to Pride.Util.request()");
+  log_default("Request", "Sending HTTP request...");
+  log_default("Request", "URL", requestInfo.url);
+  log_default("Request", "CONTENT", JSON.stringify(requestInfo.query));
+  if (typeof requestInfo.attempts !== "number") {
+    requestInfo.attempts = Settings_default.connection_attempts;
+  }
+  requestInfo.attempts -= 1;
   try {
     const response = await fetch(requestInfo.url, {
       method: requestInfo.query ? "post" : "get",
@@ -2399,22 +2408,10 @@ async function makeRequest(requestInfo) {
     } else {
       log_default("Request", "Trying request again...");
       setTimeout(() => {
-        return makeRequest(requestInfo);
+        return request(requestInfo);
       }, Settings_default.ms_between_attempts);
     }
   }
-}
-var request = function(requestInfo) {
-  if (!requestInfo.url)
-    throw new Error("No URL given to Pride.Util.request()");
-  log_default("Request", "Sending HTTP request...");
-  log_default("Request", "URL", requestInfo.url);
-  log_default("Request", "CONTENT", JSON.stringify(requestInfo.query));
-  if (typeof requestInfo.attempts !== "number") {
-    requestInfo.attempts = Settings_default.connection_attempts;
-  }
-  requestInfo.attempts -= 1;
-  makeRequest(requestInfo);
 };
 var request_default = request;
 
