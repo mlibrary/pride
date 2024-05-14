@@ -2384,9 +2384,6 @@ var request = async (requestInfo) => {
       body: JSON.stringify(requestInfo.query),
       credentials: "include"
     });
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
     const responseData = await response.json();
     log_default("Request", "SUCCESS", responseData);
     requestInfo.success?.(responseData);
@@ -2398,18 +2395,18 @@ var request = async (requestInfo) => {
       Messenger_default.sendMessageArray(responseData.messages);
     }
   } catch (error) {
-    if (requestInfo.attempts <= 0) {
+    if (requestInfo.attempts > 0) {
+      log_default("Request", "Trying request again...");
+      setTimeout(() => {
+        return request(requestInfo);
+      }, Settings_default.ms_between_attempts);
+    } else {
       log_default("Request", "ERROR", error);
       requestInfo.failure?.(error);
       Messenger_default.sendMessage({
         summary: requestInfo.failure_message,
         class: "error"
       });
-    } else {
-      log_default("Request", "Trying request again...");
-      setTimeout(() => {
-        return request(requestInfo);
-      }, Settings_default.ms_between_attempts);
     }
   }
 };

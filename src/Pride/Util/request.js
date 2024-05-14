@@ -23,11 +23,8 @@ const request = async (requestInfo) => {
       credentials: 'include'
     });
 
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-
     const responseData = await response.json();
+
     log('Request', 'SUCCESS', responseData);
 
     requestInfo.success?.(responseData);
@@ -41,7 +38,13 @@ const request = async (requestInfo) => {
       Messenger.sendMessageArray(responseData.messages);
     }
   } catch (error) {
-    if (requestInfo.attempts <= 0) {
+    if (requestInfo.attempts > 0) {
+      log('Request', 'Trying request again...');
+
+      setTimeout(() => {
+        return request(requestInfo);
+      }, Settings.ms_between_attempts);
+    } else {
       log('Request', 'ERROR', error);
 
       requestInfo.failure?.(error);
@@ -50,11 +53,6 @@ const request = async (requestInfo) => {
         summary: requestInfo.failure_message,
         class: 'error'
       });
-    } else {
-      log('Request', 'Trying request again...');
-      setTimeout(() => {
-        return request(requestInfo);
-      }, Settings.ms_between_attempts);
     }
   }
 };
