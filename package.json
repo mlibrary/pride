@@ -12,7 +12,7 @@
     "test": "npm run eslint && npx mocha --recursive './spec/**/*.spec.js'"
   },
   "dependencies": {
-    "esbuild": "^0.20.2",
+    "esbuild": "^0.21.4",
     "pegjs": "^0.10.0",
     "reqwest": "^2.0.5",
     "underscore": "^1.13.6"
