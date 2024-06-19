@@ -4,11 +4,10 @@ Monthly dependency update to help maintain Pride.
 ## NPM
 These dependencies have been updated to their latest versions:
 - `@eslint/js`
+- `@stylistic/eslint-plugin`
 - `chai`
 - `esbuild`
 - `eslint`
-- `eslint-plugin-import`
-- `eslint-plugin-n`
 - `eslint-plugin-mocha`
 - `globals`
 - `jsdom`
