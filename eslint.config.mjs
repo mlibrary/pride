@@ -29,6 +29,7 @@ export default [
       ...pluginJs.configs.all.rules,
 
       'arrow-body-style': ['error', 'always'],
+      'camelcase': 'off',
       'complexity': 'off',
       'default-param-last': 'off',
       'max-lines': 'off',

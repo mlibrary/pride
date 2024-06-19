@@ -1,4 +1,5 @@
 /*
+  Settings properties...
   cache_size:          Key-value pairs where each key is the UID of a
                        datastore, and the value gives the cache size for that
                        particular datastore.
