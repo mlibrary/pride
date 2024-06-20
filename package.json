@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "main": "pride.min.js",
   "scripts": {
-    "build": "npm run eslint && npm run esbuild:minify && npm run esbuild:regular",
+    "build": "npm run esbuild:minify && npm run esbuild:regular",
+    "build:original": "npm run eslint && npm run esbuild:minify && npm run esbuild:regular",
     "esbuild": "npx esbuild src/index.js --bundle --format=cjs $*",
     "esbuild:minify": "npm run esbuild -- --outfile=pride.min.js --minify",
     "esbuild:regular": "npm run esbuild -- --outfile=pride.js",
     "eslint": "npx eslint src spec $*",
     "eslint:fix": "npm run lint -- --fix",
-    "test": "npm run eslint && npx mocha --recursive './spec/**/*.spec.js'"
+    "test": "npx mocha --recursive './spec/**/*.spec.js'",
+    "test:original": "npm run eslint && npx mocha --recursive './spec/**/*.spec.js'"
   },
   "dependencies": {
     "esbuild": "^0.21.5",
