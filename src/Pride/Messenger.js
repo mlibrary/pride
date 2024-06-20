@@ -1,39 +1,46 @@
 import FuncBuffer from './Util/FuncBuffer';
 import log from './Core/log';
 
-const Messenger = new FuncBuffer(function () {
-  this.addObserver = this.add;
-  this.removeObserver = this.remove;
-  this.clearObservers = this.clear;
+const createMessenger = () => {
+  const funcBuffer = new FuncBuffer();
 
-  this.add = this.remove = this.clear = undefined;
+  const messenger = {
+    addObserver: funcBuffer.add,
+    clearObservers: funcBuffer.clear,
 
-  this.sendMessage = (message) => {
-    if (message.summary) {
-      message.class = message.class || 'info';
-      message.details = message.details || '';
+    preset: () => {
+      // Given a type of preset message and some optional arguments, generate a message string.
+    },
 
-      this.call(message.class, message);
+    removeObserver: funcBuffer.remove,
 
-      log('Messenger', 'MESSAGE SENT', message);
+    sendMessage: (message) => {
+      if (message.summary) {
+        message.class ||= 'info';
+        message.details ||= '';
+
+        funcBuffer.call(message.class, message);
+
+        log('Messenger', 'MESSAGE SENT', message);
+      }
+
+      return messenger;
+    },
+
+    sendMessageArray: (messageArray) => {
+      if (messageArray?.length > 0) {
+        messageArray.forEach((message) => {
+          messenger.sendMessage(message);
+        });
+      }
+
+      return messenger;
     }
-
-    return this;
   };
 
-  this.sendMessageArray = (messageArray) => {
-    if (messageArray && messageArray.length > 0) {
-      messageArray.forEach((message) => {
-        this.sendMessage(message);
-      });
-    }
+  return messenger;
+};
 
-    return this;
-  };
-
-  this.preset = function () {
-    // Given a type of preset message and some optional arguments, generate a message string.
-  };
-});
+const Messenger = createMessenger();
 
 export default Messenger;

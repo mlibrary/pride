@@ -1,26 +1,54 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import mochaPlugin from "eslint-plugin-mocha";
+import globals from 'globals';
+import pluginJs from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
+import mochaPlugin from 'eslint-plugin-mocha';
 
 export default [
-  pluginJs.configs.recommended,
   mochaPlugin.configs.flat.recommended,
   {
     languageOptions: {
+      ecmaVersion: 2021,
       globals: {
         ...globals.browser,
-        ...globals.node
+        ...globals.es2021,
+        ...globals.node,
+        document: 'readonly',
+        navigator: 'readonly',
+        window: 'readonly'
       }
     }
   },
   {
+    plugins: {
+      '@stylistic': stylistic
+    }
+  },
+  stylistic.configs['recommended-flat'],
+  {
     rules: {
-      "arrow-body-style": ["error", "always"], // Requires {} in arrow function body
-      "arrow-parens": ["error", "always"], // Requires () around arrow function arguments
-      "brace-style": ["error", "1tbs"], // Requires one true brace style
-      "no-empty-function": "error", // Require an empty function to at least have a comment explaining why
-      "no-var": "error", // Discourages using `var` and recommends using `let` or `const` instead
-      "semi": ["error", "always"] // Requires a semicolon wherever necessary
+      ...pluginJs.configs.all.rules,
+
+      'arrow-body-style': ['error', 'always'],
+      'camelcase': 'off',
+      'complexity': 'off',
+      'default-param-last': 'off',
+      'max-lines': 'off',
+      'max-lines-per-function': 'off',
+      'max-statements': 'off',
+      'no-ternary': 'off',
+      'no-magic-numbers': 'off',
+      'one-var': ['error', { initialized: 'never' }],
+      'sort-imports': ['error', { 'ignoreCase': true }], 
+
+      '@stylistic/brace-style': ['error', '1tbs'],
+      '@stylistic/comma-dangle': ['error', 'never'],
+      '@stylistic/spaced-comment': ['error', 'always', { 'block': { 'balanced': true } }],
+      '@stylistic/jsx-quotes': ['error', 'prefer-single'],
+      '@stylistic/jsx-one-expression-per-line': ['error', { allow: 'single-line' }],
+      '@stylistic/operator-linebreak': ['error', 'before'],
+      '@stylistic/quote-props': ['error', 'as-needed'],
+      '@stylistic/semi': ['error', 'always'],
+      '@stylistic/space-before-function-paren': ['error', 'always']
     }
   },
   {

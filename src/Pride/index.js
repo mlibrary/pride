@@ -12,14 +12,14 @@ import Util from './Util/index';
 const Pride = {
   AllDatastores,
   Core,
-  FieldTree, // Pride.FieldTree = Pride.FieldTree || {};
-  init,
+  FieldTree,
   Messenger,
   Parser,
   PreferenceEngine,
-  requestRecord,
   Settings,
-  Util
+  Util,
+  init,
+  requestRecord
 };
 
 export default Pride;
