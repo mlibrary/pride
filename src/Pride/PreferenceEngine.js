@@ -1,13 +1,33 @@
 const PreferenceEngine = {
-  selectedRecords: null,
   engine: null,
+
+  registerEngine (engine) {
+    if (!engine) {
+      return this;
+    }
+
+    this.engine = engine;
+    this.updateSelectedRecords(this.engine.listRecords());
+
+    this.engine.addObserver((data) => {
+      this.updateSelectedRecords(data);
+    });
+
+    return this;
+  },
+
+  selected (record) {
+    return Boolean(this.selectedRecords?.[record.datastore]?.[record.uid]);
+  },
+
+  selectedRecords: null,
 
   updateSelectedRecords (data) {
     this.selectedRecords ||= {
-      mirlyn: {},
       articlesplus: {},
       databases: {},
       journals: {},
+      mirlyn: {},
       website: {}
     };
 
@@ -26,25 +46,6 @@ const PreferenceEngine = {
     }
 
     return this;
-  },
-
-  registerEngine (engine) {
-    if (!engine) {
-      return this;
-    }
-
-    this.engine = engine;
-    this.updateSelectedRecords(this.engine.listRecords());
-
-    this.engine.addObserver((data) => {
-      this.updateSelectedRecords(data);
-    });
-
-    return this;
-  },
-
-  selected (record) {
-    return !!this.selectedRecords?.[record.datastore]?.[record.uid];
   }
 };
 

@@ -388,8 +388,7 @@ var getLength_default = shallowProperty("length");
 // node_modules/underscore/modules/_collectNonEnumProps.js
 function emulatedSet(keys2) {
   var hash = {};
-  for (var l = keys2.length, i = 0; i < l; ++i)
-    hash[keys2[i]] = true;
+  for (var l = keys2.length, i = 0; i < l; ++i) hash[keys2[i]] = true;
   return {
     contains: function(key) {
       return hash[key] === true;
@@ -406,8 +405,7 @@ function collectNonEnumProps(obj, keys2) {
   var constructor = obj.constructor;
   var proto = isFunction_default(constructor) && constructor.prototype || ObjProto;
   var prop = "constructor";
-  if (has(obj, prop) && !keys2.contains(prop))
-    keys2.push(prop);
+  if (has(obj, prop) && !keys2.contains(prop)) keys2.push(prop);
   while (nonEnumIdx--) {
     prop = nonEnumerableProps[nonEnumIdx];
     if (prop in obj && obj[prop] !== proto[prop] && !keys2.contains(prop)) {
@@ -418,49 +416,38 @@ function collectNonEnumProps(obj, keys2) {
 
 // node_modules/underscore/modules/keys.js
 function keys(obj) {
-  if (!isObject(obj))
-    return [];
-  if (nativeKeys)
-    return nativeKeys(obj);
+  if (!isObject(obj)) return [];
+  if (nativeKeys) return nativeKeys(obj);
   var keys2 = [];
-  for (var key in obj)
-    if (has(obj, key))
-      keys2.push(key);
-  if (hasEnumBug)
-    collectNonEnumProps(obj, keys2);
+  for (var key in obj) if (has(obj, key)) keys2.push(key);
+  if (hasEnumBug) collectNonEnumProps(obj, keys2);
   return keys2;
 }
 
 // node_modules/underscore/modules/isEmpty.js
 function isEmpty(obj) {
-  if (obj == null)
-    return true;
+  if (obj == null) return true;
   var length = getLength_default(obj);
-  if (typeof length == "number" && (isArray_default(obj) || isString_default(obj) || isArguments_default(obj)))
-    return length === 0;
+  if (typeof length == "number" && (isArray_default(obj) || isString_default(obj) || isArguments_default(obj))) return length === 0;
   return getLength_default(keys(obj)) === 0;
 }
 
 // node_modules/underscore/modules/isMatch.js
 function isMatch(object2, attrs) {
   var _keys = keys(attrs), length = _keys.length;
-  if (object2 == null)
-    return !length;
+  if (object2 == null) return !length;
   var obj = Object(object2);
   for (var i = 0; i < length; i++) {
     var key = _keys[i];
-    if (attrs[key] !== obj[key] || !(key in obj))
-      return false;
+    if (attrs[key] !== obj[key] || !(key in obj)) return false;
   }
   return true;
 }
 
 // node_modules/underscore/modules/underscore.js
 function _(obj) {
-  if (obj instanceof _)
-    return obj;
-  if (!(this instanceof _))
-    return new _(obj);
+  if (obj instanceof _) return obj;
+  if (!(this instanceof _)) return new _(obj);
   this._wrapped = obj;
 }
 _.VERSION = VERSION;
@@ -484,28 +471,20 @@ function toBufferView(bufferSource) {
 // node_modules/underscore/modules/isEqual.js
 var tagDataView = "[object DataView]";
 function eq(a, b, aStack, bStack) {
-  if (a === b)
-    return a !== 0 || 1 / a === 1 / b;
-  if (a == null || b == null)
-    return false;
-  if (a !== a)
-    return b !== b;
+  if (a === b) return a !== 0 || 1 / a === 1 / b;
+  if (a == null || b == null) return false;
+  if (a !== a) return b !== b;
   var type = typeof a;
-  if (type !== "function" && type !== "object" && typeof b != "object")
-    return false;
+  if (type !== "function" && type !== "object" && typeof b != "object") return false;
   return deepEq(a, b, aStack, bStack);
 }
 function deepEq(a, b, aStack, bStack) {
-  if (a instanceof _)
-    a = a._wrapped;
-  if (b instanceof _)
-    b = b._wrapped;
+  if (a instanceof _) a = a._wrapped;
+  if (b instanceof _) b = b._wrapped;
   var className = toString.call(a);
-  if (className !== toString.call(b))
-    return false;
+  if (className !== toString.call(b)) return false;
   if (hasStringTagBug && className == "[object Object]" && isDataView_default(a)) {
-    if (!isDataView_default(b))
-      return false;
+    if (!isDataView_default(b)) return false;
     className = tagDataView;
   }
   switch (className) {
@@ -513,8 +492,7 @@ function deepEq(a, b, aStack, bStack) {
     case "[object String]":
       return "" + a === "" + b;
     case "[object Number]":
-      if (+a !== +a)
-        return +b !== +b;
+      if (+a !== +a) return +b !== +b;
       return +a === 0 ? 1 / +a === 1 / b : +a === +b;
     case "[object Date]":
     case "[object Boolean]":
@@ -528,15 +506,12 @@ function deepEq(a, b, aStack, bStack) {
   var areArrays = className === "[object Array]";
   if (!areArrays && isTypedArray_default(a)) {
     var byteLength = getByteLength_default(a);
-    if (byteLength !== getByteLength_default(b))
-      return false;
-    if (a.buffer === b.buffer && a.byteOffset === b.byteOffset)
-      return true;
+    if (byteLength !== getByteLength_default(b)) return false;
+    if (a.buffer === b.buffer && a.byteOffset === b.byteOffset) return true;
     areArrays = true;
   }
   if (!areArrays) {
-    if (typeof a != "object" || typeof b != "object")
-      return false;
+    if (typeof a != "object" || typeof b != "object") return false;
     var aCtor = a.constructor, bCtor = b.constructor;
     if (aCtor !== bCtor && !(isFunction_default(aCtor) && aCtor instanceof aCtor && isFunction_default(bCtor) && bCtor instanceof bCtor) && ("constructor" in a && "constructor" in b)) {
       return false;
@@ -546,28 +521,23 @@ function deepEq(a, b, aStack, bStack) {
   bStack = bStack || [];
   var length = aStack.length;
   while (length--) {
-    if (aStack[length] === a)
-      return bStack[length] === b;
+    if (aStack[length] === a) return bStack[length] === b;
   }
   aStack.push(a);
   bStack.push(b);
   if (areArrays) {
     length = a.length;
-    if (length !== b.length)
-      return false;
+    if (length !== b.length) return false;
     while (length--) {
-      if (!eq(a[length], b[length], aStack, bStack))
-        return false;
+      if (!eq(a[length], b[length], aStack, bStack)) return false;
     }
   } else {
     var _keys = keys(a), key;
     length = _keys.length;
-    if (keys(b).length !== length)
-      return false;
+    if (keys(b).length !== length) return false;
     while (length--) {
       key = _keys[length];
-      if (!(has(b, key) && eq(a[key], b[key], aStack, bStack)))
-        return false;
+      if (!(has(b, key) && eq(a[key], b[key], aStack, bStack))) return false;
     }
   }
   aStack.pop();
@@ -580,13 +550,10 @@ function isEqual(a, b) {
 
 // node_modules/underscore/modules/allKeys.js
 function allKeys(obj) {
-  if (!isObject(obj))
-    return [];
+  if (!isObject(obj)) return [];
   var keys2 = [];
-  for (var key in obj)
-    keys2.push(key);
-  if (hasEnumBug)
-    collectNonEnumProps(obj, keys2);
+  for (var key in obj) keys2.push(key);
+  if (hasEnumBug) collectNonEnumProps(obj, keys2);
   return keys2;
 }
 
@@ -594,14 +561,11 @@ function allKeys(obj) {
 function ie11fingerprint(methods) {
   var length = getLength_default(methods);
   return function(obj) {
-    if (obj == null)
-      return false;
+    if (obj == null) return false;
     var keys2 = allKeys(obj);
-    if (getLength_default(keys2))
-      return false;
+    if (getLength_default(keys2)) return false;
     for (var i = 0; i < length; i++) {
-      if (!isFunction_default(obj[methods[i]]))
-        return false;
+      if (!isFunction_default(obj[methods[i]])) return false;
     }
     return methods !== weakMapMethods || !isFunction_default(obj[forEachName]);
   };
@@ -662,8 +626,7 @@ function invert(obj) {
 function functions(obj) {
   var names = [];
   for (var key in obj) {
-    if (isFunction_default(obj[key]))
-      names.push(key);
+    if (isFunction_default(obj[key])) names.push(key);
   }
   return names.sort();
 }
@@ -672,16 +635,13 @@ function functions(obj) {
 function createAssigner(keysFunc, defaults) {
   return function(obj) {
     var length = arguments.length;
-    if (defaults)
-      obj = Object(obj);
-    if (length < 2 || obj == null)
-      return obj;
+    if (defaults) obj = Object(obj);
+    if (length < 2 || obj == null) return obj;
     for (var index = 1; index < length; index++) {
       var source = arguments[index], keys2 = keysFunc(source), l = keys2.length;
       for (var i = 0; i < l; i++) {
         var key = keys2[i];
-        if (!defaults || obj[key] === void 0)
-          obj[key] = source[key];
+        if (!defaults || obj[key] === void 0) obj[key] = source[key];
       }
     }
     return obj;
@@ -703,10 +663,8 @@ function ctor() {
   };
 }
 function baseCreate(prototype) {
-  if (!isObject(prototype))
-    return {};
-  if (nativeCreate)
-    return nativeCreate(prototype);
+  if (!isObject(prototype)) return {};
+  if (nativeCreate) return nativeCreate(prototype);
   var Ctor = ctor();
   Ctor.prototype = prototype;
   var result2 = new Ctor();
@@ -717,15 +675,13 @@ function baseCreate(prototype) {
 // node_modules/underscore/modules/create.js
 function create(prototype, props) {
   var result2 = baseCreate(prototype);
-  if (props)
-    extendOwn_default(result2, props);
+  if (props) extendOwn_default(result2, props);
   return result2;
 }
 
 // node_modules/underscore/modules/clone.js
 function clone(obj) {
-  if (!isObject(obj))
-    return obj;
+  if (!isObject(obj)) return obj;
   return isArray_default(obj) ? obj.slice() : extend_default({}, obj);
 }
 
@@ -750,8 +706,7 @@ function toPath2(path) {
 function deepGet(obj, path) {
   var length = path.length;
   for (var i = 0; i < length; i++) {
-    if (obj == null)
-      return void 0;
+    if (obj == null) return void 0;
     obj = obj[path[i]];
   }
   return length ? obj : void 0;
@@ -769,8 +724,7 @@ function has2(obj, path) {
   var length = path.length;
   for (var i = 0; i < length; i++) {
     var key = path[i];
-    if (!has(obj, key))
-      return false;
+    if (!has(obj, key)) return false;
     obj = obj[key];
   }
   return !!length;
@@ -799,8 +753,7 @@ function property(path) {
 
 // node_modules/underscore/modules/_optimizeCb.js
 function optimizeCb(func, context, argCount) {
-  if (context === void 0)
-    return func;
+  if (context === void 0) return func;
   switch (argCount == null ? 3 : argCount) {
     case 1:
       return function(value) {
@@ -822,12 +775,9 @@ function optimizeCb(func, context, argCount) {
 
 // node_modules/underscore/modules/_baseIteratee.js
 function baseIteratee(value, context, argCount) {
-  if (value == null)
-    return identity;
-  if (isFunction_default(value))
-    return optimizeCb(value, context, argCount);
-  if (isObject(value) && !isArray_default(value))
-    return matcher(value);
+  if (value == null) return identity;
+  if (isFunction_default(value)) return optimizeCb(value, context, argCount);
+  if (isObject(value) && !isArray_default(value)) return matcher(value);
   return property(value);
 }
 
@@ -839,8 +789,7 @@ _.iteratee = iteratee;
 
 // node_modules/underscore/modules/_cb.js
 function cb(value, context, argCount) {
-  if (_.iteratee !== iteratee)
-    return _.iteratee(value, context);
+  if (_.iteratee !== iteratee) return _.iteratee(value, context);
   return baseIteratee(value, context, argCount);
 }
 
@@ -861,8 +810,7 @@ function noop() {
 
 // node_modules/underscore/modules/propertyOf.js
 function propertyOf(obj) {
-  if (obj == null)
-    return noop;
+  if (obj == null) return noop;
   return function(path) {
     return get(obj, path);
   };
@@ -872,8 +820,7 @@ function propertyOf(obj) {
 function times(n, iteratee2, context) {
   var accum = Array(Math.max(0, n));
   iteratee2 = optimizeCb(iteratee2, context, 1);
-  for (var i = 0; i < n; i++)
-    accum[i] = iteratee2(i);
+  for (var i = 0; i < n; i++) accum[i] = iteratee2(i);
   return accum;
 }
 
@@ -947,8 +894,7 @@ function escapeChar(match) {
 }
 var bareIdentifier = /^\s*(\w|\$)+\s*$/;
 function template(text, settings, oldSettings) {
-  if (!settings && oldSettings)
-    settings = oldSettings;
+  if (!settings && oldSettings) settings = oldSettings;
   settings = defaults_default({}, settings, _.templateSettings);
   var matcher2 = RegExp([
     (settings.escape || noMatch).source,
@@ -972,10 +918,9 @@ function template(text, settings, oldSettings) {
   source += "';\n";
   var argument = settings.variable;
   if (argument) {
-    if (!bareIdentifier.test(argument))
-      throw new Error(
-        "variable is not a bare identifier: " + argument
-      );
+    if (!bareIdentifier.test(argument)) throw new Error(
+      "variable is not a bare identifier: " + argument
+    );
   } else {
     source = "with(obj||{}){\n" + source + "}\n";
     argument = "obj";
@@ -1029,12 +974,10 @@ function chain(obj) {
 
 // node_modules/underscore/modules/_executeBound.js
 function executeBound(sourceFunc, boundFunc, context, callingContext, args) {
-  if (!(callingContext instanceof boundFunc))
-    return sourceFunc.apply(context, args);
+  if (!(callingContext instanceof boundFunc)) return sourceFunc.apply(context, args);
   var self2 = baseCreate(sourceFunc.prototype);
   var result2 = sourceFunc.apply(self2, args);
-  if (isObject(result2))
-    return result2;
+  if (isObject(result2)) return result2;
   return self2;
 }
 
@@ -1047,8 +990,7 @@ var partial = restArguments(function(func, boundArgs) {
     for (var i = 0; i < length; i++) {
       args[i] = boundArgs[i] === placeholder ? arguments[position++] : boundArgs[i];
     }
-    while (position < arguments.length)
-      args.push(arguments[position++]);
+    while (position < arguments.length) args.push(arguments[position++]);
     return executeBound(func, bound, this, this, args);
   };
   return bound;
@@ -1058,8 +1000,7 @@ var partial_default = partial;
 
 // node_modules/underscore/modules/bind.js
 var bind_default = restArguments(function(func, context, args) {
-  if (!isFunction_default(func))
-    throw new TypeError("Bind must be called on a function");
+  if (!isFunction_default(func)) throw new TypeError("Bind must be called on a function");
   var bound = restArguments(function(callArgs) {
     return executeBound(func, bound, context, this, args.concat(callArgs));
   });
@@ -1086,8 +1027,7 @@ function flatten(input, depth, strict, output) {
         idx = output.length;
       } else {
         var j = 0, len = value.length;
-        while (j < len)
-          output[idx++] = value[j++];
+        while (j < len) output[idx++] = value[j++];
       }
     } else if (!strict) {
       output[idx++] = value;
@@ -1100,8 +1040,7 @@ function flatten(input, depth, strict, output) {
 var bindAll_default = restArguments(function(obj, keys2) {
   keys2 = flatten(keys2, false, false);
   var index = keys2.length;
-  if (index < 1)
-    throw new Error("bindAll must be passed function names");
+  if (index < 1) throw new Error("bindAll must be passed function names");
   while (index--) {
     var key = keys2[index];
     obj[key] = bind_default(obj[key], obj);
@@ -1114,8 +1053,7 @@ function memoize(func, hasher) {
   var memoize2 = function(key) {
     var cache = memoize2.cache;
     var address = "" + (hasher ? hasher.apply(this, arguments) : key);
-    if (!has(cache, address))
-      cache[address] = func.apply(this, arguments);
+    if (!has(cache, address)) cache[address] = func.apply(this, arguments);
     return cache[address];
   };
   memoize2.cache = {};
@@ -1136,19 +1074,16 @@ var defer_default = partial_default(delay_default, _, 1);
 function throttle(func, wait, options) {
   var timeout, context, args, result2;
   var previous = 0;
-  if (!options)
-    options = {};
+  if (!options) options = {};
   var later = function() {
     previous = options.leading === false ? 0 : now_default();
     timeout = null;
     result2 = func.apply(context, args);
-    if (!timeout)
-      context = args = null;
+    if (!timeout) context = args = null;
   };
   var throttled = function() {
     var _now = now_default();
-    if (!previous && options.leading === false)
-      previous = _now;
+    if (!previous && options.leading === false) previous = _now;
     var remaining = wait - (_now - previous);
     context = this;
     args = arguments;
@@ -1159,8 +1094,7 @@ function throttle(func, wait, options) {
       }
       previous = _now;
       result2 = func.apply(context, args);
-      if (!timeout)
-        context = args = null;
+      if (!timeout) context = args = null;
     } else if (!timeout && options.trailing !== false) {
       timeout = setTimeout(later, remaining);
     }
@@ -1183,10 +1117,8 @@ function debounce(func, wait, immediate) {
       timeout = setTimeout(later, wait - passed);
     } else {
       timeout = null;
-      if (!immediate)
-        result2 = func.apply(context, args);
-      if (!timeout)
-        args = context = null;
+      if (!immediate) result2 = func.apply(context, args);
+      if (!timeout) args = context = null;
     }
   };
   var debounced = restArguments(function(_args) {
@@ -1195,8 +1127,7 @@ function debounce(func, wait, immediate) {
     previous = now_default();
     if (!timeout) {
       timeout = setTimeout(later, wait);
-      if (immediate)
-        result2 = func.apply(context, args);
+      if (immediate) result2 = func.apply(context, args);
     }
     return result2;
   });
@@ -1226,8 +1157,7 @@ function compose() {
   return function() {
     var i = start;
     var result2 = args[start].apply(this, arguments);
-    while (i--)
-      result2 = args[i].call(this, result2);
+    while (i--) result2 = args[i].call(this, result2);
     return result2;
   };
 }
@@ -1248,8 +1178,7 @@ function before(times2, func) {
     if (--times2 > 0) {
       memo = func.apply(this, arguments);
     }
-    if (times2 <= 1)
-      func = null;
+    if (times2 <= 1) func = null;
     return memo;
   };
 }
@@ -1263,8 +1192,7 @@ function findKey(obj, predicate, context) {
   var _keys = keys(obj), key;
   for (var i = 0, length = _keys.length; i < length; i++) {
     key = _keys[i];
-    if (predicate(obj[key], key, obj))
-      return key;
+    if (predicate(obj[key], key, obj)) return key;
   }
 }
 
@@ -1275,8 +1203,7 @@ function createPredicateIndexFinder(dir) {
     var length = getLength_default(array);
     var index = dir > 0 ? 0 : length - 1;
     for (; index >= 0 && index < length; index += dir) {
-      if (predicate(array[index], index, array))
-        return index;
+      if (predicate(array[index], index, array)) return index;
     }
     return -1;
   };
@@ -1295,10 +1222,8 @@ function sortedIndex(array, obj, iteratee2, context) {
   var low = 0, high = getLength_default(array);
   while (low < high) {
     var mid = Math.floor((low + high) / 2);
-    if (iteratee2(array[mid]) < value)
-      low = mid + 1;
-    else
-      high = mid;
+    if (iteratee2(array[mid]) < value) low = mid + 1;
+    else high = mid;
   }
   return low;
 }
@@ -1322,8 +1247,7 @@ function createIndexFinder(dir, predicateFind, sortedIndex2) {
       return idx >= 0 ? idx + i : -1;
     }
     for (idx = dir > 0 ? i : length - 1; idx >= 0 && idx < length; idx += dir) {
-      if (array[idx] === item)
-        return idx;
+      if (array[idx] === item) return idx;
     }
     return -1;
   };
@@ -1339,8 +1263,7 @@ var lastIndexOf_default = createIndexFinder(-1, findLastIndex_default);
 function find(obj, predicate, context) {
   var keyFinder = isArrayLike_default(obj) ? findIndex_default : findKey;
   var key = keyFinder(obj, predicate, context);
-  if (key !== void 0 && key !== -1)
-    return obj[key];
+  if (key !== void 0 && key !== -1) return obj[key];
 }
 
 // node_modules/underscore/modules/findWhere.js
@@ -1407,8 +1330,7 @@ function filter(obj, predicate, context) {
   var results = [];
   predicate = cb(predicate, context);
   each(obj, function(value, index, list) {
-    if (predicate(value, index, list))
-      results.push(value);
+    if (predicate(value, index, list)) results.push(value);
   });
   return results;
 }
@@ -1424,8 +1346,7 @@ function every(obj, predicate, context) {
   var _keys = !isArrayLike_default(obj) && keys(obj), length = (_keys || obj).length;
   for (var index = 0; index < length; index++) {
     var currentKey = _keys ? _keys[index] : index;
-    if (!predicate(obj[currentKey], currentKey, obj))
-      return false;
+    if (!predicate(obj[currentKey], currentKey, obj)) return false;
   }
   return true;
 }
@@ -1436,18 +1357,15 @@ function some(obj, predicate, context) {
   var _keys = !isArrayLike_default(obj) && keys(obj), length = (_keys || obj).length;
   for (var index = 0; index < length; index++) {
     var currentKey = _keys ? _keys[index] : index;
-    if (predicate(obj[currentKey], currentKey, obj))
-      return true;
+    if (predicate(obj[currentKey], currentKey, obj)) return true;
   }
   return false;
 }
 
 // node_modules/underscore/modules/contains.js
 function contains(obj, item, fromIndex, guard) {
-  if (!isArrayLike_default(obj))
-    obj = values(obj);
-  if (typeof fromIndex != "number" || guard)
-    fromIndex = 0;
+  if (!isArrayLike_default(obj)) obj = values(obj);
+  if (typeof fromIndex != "number" || guard) fromIndex = 0;
   return indexOf_default(obj, item, fromIndex) >= 0;
 }
 
@@ -1467,8 +1385,7 @@ var invoke_default = restArguments(function(obj, path, args) {
       if (contextPath && contextPath.length) {
         context = deepGet(context, contextPath);
       }
-      if (context == null)
-        return void 0;
+      if (context == null) return void 0;
       method = context[path];
     }
     return method == null ? method : method.apply(context, args);
@@ -1536,23 +1453,19 @@ function min(obj, iteratee2, context) {
 // node_modules/underscore/modules/toArray.js
 var reStrSymbol = /[^\ud800-\udfff]|[\ud800-\udbff][\udc00-\udfff]|[\ud800-\udfff]/g;
 function toArray(obj) {
-  if (!obj)
-    return [];
-  if (isArray_default(obj))
-    return slice.call(obj);
+  if (!obj) return [];
+  if (isArray_default(obj)) return slice.call(obj);
   if (isString_default(obj)) {
     return obj.match(reStrSymbol);
   }
-  if (isArrayLike_default(obj))
-    return map(obj, identity);
+  if (isArrayLike_default(obj)) return map(obj, identity);
   return values(obj);
 }
 
 // node_modules/underscore/modules/sample.js
 function sample(obj, n, guard) {
   if (n == null || guard) {
-    if (!isArrayLike_default(obj))
-      obj = values(obj);
+    if (!isArrayLike_default(obj)) obj = values(obj);
     return obj[random(obj.length - 1)];
   }
   var sample2 = toArray(obj);
@@ -1587,10 +1500,8 @@ function sortBy(obj, iteratee2, context) {
     var a = left.criteria;
     var b = right.criteria;
     if (a !== b) {
-      if (a > b || a === void 0)
-        return 1;
-      if (a < b || b === void 0)
-        return -1;
+      if (a > b || a === void 0) return 1;
+      if (a < b || b === void 0) return -1;
     }
     return left.index - right.index;
   }), "value");
@@ -1611,10 +1522,8 @@ function group(behavior, partition) {
 
 // node_modules/underscore/modules/groupBy.js
 var groupBy_default = group(function(result2, value, key) {
-  if (has(result2, key))
-    result2[key].push(value);
-  else
-    result2[key] = [value];
+  if (has(result2, key)) result2[key].push(value);
+  else result2[key] = [value];
 });
 
 // node_modules/underscore/modules/indexBy.js
@@ -1624,10 +1533,8 @@ var indexBy_default = group(function(result2, value, key) {
 
 // node_modules/underscore/modules/countBy.js
 var countBy_default = group(function(result2, value, key) {
-  if (has(result2, key))
-    result2[key]++;
-  else
-    result2[key] = 1;
+  if (has(result2, key)) result2[key]++;
+  else result2[key] = 1;
 });
 
 // node_modules/underscore/modules/partition.js
@@ -1637,8 +1544,7 @@ var partition_default = group(function(result2, value, pass) {
 
 // node_modules/underscore/modules/size.js
 function size(obj) {
-  if (obj == null)
-    return 0;
+  if (obj == null) return 0;
   return isArrayLike_default(obj) ? obj.length : keys(obj).length;
 }
 
@@ -1650,11 +1556,9 @@ function keyInObj(value, key, obj) {
 // node_modules/underscore/modules/pick.js
 var pick_default = restArguments(function(obj, keys2) {
   var result2 = {}, iteratee2 = keys2[0];
-  if (obj == null)
-    return result2;
+  if (obj == null) return result2;
   if (isFunction_default(iteratee2)) {
-    if (keys2.length > 1)
-      iteratee2 = optimizeCb(iteratee2, keys2[1]);
+    if (keys2.length > 1) iteratee2 = optimizeCb(iteratee2, keys2[1]);
     keys2 = allKeys(obj);
   } else {
     iteratee2 = keyInObj;
@@ -1664,8 +1568,7 @@ var pick_default = restArguments(function(obj, keys2) {
   for (var i = 0, length = keys2.length; i < length; i++) {
     var key = keys2[i];
     var value = obj[key];
-    if (iteratee2(value, key, obj))
-      result2[key] = value;
+    if (iteratee2(value, key, obj)) result2[key] = value;
   }
   return result2;
 });
@@ -1675,8 +1578,7 @@ var omit_default = restArguments(function(obj, keys2) {
   var iteratee2 = keys2[0], context;
   if (isFunction_default(iteratee2)) {
     iteratee2 = negate(iteratee2);
-    if (keys2.length > 1)
-      context = keys2[1];
+    if (keys2.length > 1) context = keys2[1];
   } else {
     keys2 = map(flatten(keys2, false, false), String);
     iteratee2 = function(value, key) {
@@ -1693,10 +1595,8 @@ function initial(array, n, guard) {
 
 // node_modules/underscore/modules/first.js
 function first(array, n, guard) {
-  if (array == null || array.length < 1)
-    return n == null || guard ? void 0 : [];
-  if (n == null || guard)
-    return array[0];
+  if (array == null || array.length < 1) return n == null || guard ? void 0 : [];
+  if (n == null || guard) return array[0];
   return initial(array, array.length - n);
 }
 
@@ -1707,10 +1607,8 @@ function rest(array, n, guard) {
 
 // node_modules/underscore/modules/last.js
 function last(array, n, guard) {
-  if (array == null || array.length < 1)
-    return n == null || guard ? void 0 : [];
-  if (n == null || guard)
-    return array[array.length - 1];
+  if (array == null || array.length < 1) return n == null || guard ? void 0 : [];
+  if (n == null || guard) return array[array.length - 1];
   return rest(array, Math.max(0, array.length - n));
 }
 
@@ -1744,15 +1642,13 @@ function uniq(array, isSorted, iteratee2, context) {
     iteratee2 = isSorted;
     isSorted = false;
   }
-  if (iteratee2 != null)
-    iteratee2 = cb(iteratee2, context);
+  if (iteratee2 != null) iteratee2 = cb(iteratee2, context);
   var result2 = [];
   var seen = [];
   for (var i = 0, length = getLength_default(array); i < length; i++) {
     var value = array[i], computed = iteratee2 ? iteratee2(value, i, array) : value;
     if (isSorted && !iteratee2) {
-      if (!i || seen !== computed)
-        result2.push(value);
+      if (!i || seen !== computed) result2.push(value);
       seen = computed;
     } else if (iteratee2) {
       if (!contains(seen, computed)) {
@@ -1777,15 +1673,12 @@ function intersection(array) {
   var argsLength = arguments.length;
   for (var i = 0, length = getLength_default(array); i < length; i++) {
     var item = array[i];
-    if (contains(result2, item))
-      continue;
+    if (contains(result2, item)) continue;
     var j;
     for (j = 1; j < argsLength; j++) {
-      if (!contains(arguments[j], item))
-        break;
+      if (!contains(arguments[j], item)) break;
     }
-    if (j === argsLength)
-      result2.push(item);
+    if (j === argsLength) result2.push(item);
   }
   return result2;
 }
@@ -1835,8 +1728,7 @@ function range(start, stop, step) {
 
 // node_modules/underscore/modules/chunk.js
 function chunk(array, count) {
-  if (count == null || count < 1)
-    return [];
+  if (count == null || count < 1) return [];
   var result2 = [];
   var i = 0, length = array.length;
   while (i < length) {
@@ -1881,8 +1773,7 @@ each(["concat", "join", "slice"], function(name) {
   var method = ArrayProto[name];
   _.prototype[name] = function() {
     var obj = this._wrapped;
-    if (obj != null)
-      obj = method.apply(obj, arguments);
+    if (obj != null) obj = method.apply(obj, arguments);
     return chainResult(this, obj);
   };
 });
@@ -2139,37 +2030,40 @@ var FuncBuffer = function(extension) {
     this.apply(name, args);
     return this;
   };
-  if (typeof extension === "function")
-    extension.call(this);
+  if (typeof extension === "function") extension.call(this);
 };
 var FuncBuffer_default = FuncBuffer;
 
 // src/Pride/Messenger.js
-var Messenger = new FuncBuffer_default(function() {
-  this.addObserver = this.add;
-  this.removeObserver = this.remove;
-  this.clearObservers = this.clear;
-  this.add = this.remove = this.clear = void 0;
-  this.sendMessage = (message) => {
-    if (message.summary) {
-      message.class = message.class || "info";
-      message.details = message.details || "";
-      this.call(message.class, message);
-      log_default("Messenger", "MESSAGE SENT", message);
+var createMessenger = () => {
+  const funcBuffer = new FuncBuffer_default();
+  const messenger = {
+    addObserver: funcBuffer.add,
+    clearObservers: funcBuffer.clear,
+    preset: () => {
+    },
+    removeObserver: funcBuffer.remove,
+    sendMessage: (message) => {
+      if (message.summary) {
+        message.class ||= "info";
+        message.details ||= "";
+        funcBuffer.call(message.class, message);
+        log_default("Messenger", "MESSAGE SENT", message);
+      }
+      return messenger;
+    },
+    sendMessageArray: (messageArray) => {
+      if (messageArray?.length > 0) {
+        messageArray.forEach((message) => {
+          messenger.sendMessage(message);
+        });
+      }
+      return messenger;
     }
-    return this;
   };
-  this.sendMessageArray = (messageArray) => {
-    if (messageArray && messageArray.length > 0) {
-      messageArray.forEach((message) => {
-        this.sendMessage(message);
-      });
-    }
-    return this;
-  };
-  this.preset = function() {
-  };
-});
+  return messenger;
+};
+var Messenger = createMessenger();
 var Messenger_default = Messenger;
 
 // src/Pride/Core/SearchBase.js
@@ -2313,11 +2207,9 @@ var SearchBase = function(setup, parent) {
       const addObserver = this.add;
       const callObservers = this.call;
       observables.push(this);
-      if (!neverMute)
-        mutableObservables.push(this);
+      if (!neverMute) mutableObservables.push(this);
       this.add = function(func) {
-        if (!self2.muted || neverMute)
-          func(dataFunc());
+        if (!self2.muted || neverMute) func(dataFunc());
         addObserver(func, "observers");
         return this;
       };
@@ -2368,8 +2260,7 @@ var SearchBase_default = SearchBase;
 
 // src/Pride/Util/request.js
 var request = async (requestInfo) => {
-  if (!requestInfo.url)
-    throw new Error("No URL given to Pride.Util.request()");
+  if (!requestInfo.url) throw new Error("No URL given to Pride.Util.request()");
   log_default("Request", "Sending HTTP request...");
   log_default("Request", "URL", requestInfo.url);
   log_default("Request", "CONTENT", JSON.stringify(requestInfo.query));
@@ -2517,14 +2408,28 @@ var escape_default2 = escape;
 
 // src/Pride/PreferenceEngine.js
 var PreferenceEngine = {
-  selectedRecords: null,
   engine: null,
+  registerEngine(engine) {
+    if (!engine) {
+      return this;
+    }
+    this.engine = engine;
+    this.updateSelectedRecords(this.engine.listRecords());
+    this.engine.addObserver((data) => {
+      this.updateSelectedRecords(data);
+    });
+    return this;
+  },
+  selected(record) {
+    return Boolean(this.selectedRecords?.[record.datastore]?.[record.uid]);
+  },
+  selectedRecords: null,
   updateSelectedRecords(data) {
     this.selectedRecords ||= {
-      mirlyn: {},
       articlesplus: {},
       databases: {},
       journals: {},
+      mirlyn: {},
       website: {}
     };
     if (Array.isArray(data)) {
@@ -2541,20 +2446,6 @@ var PreferenceEngine = {
       });
     }
     return this;
-  },
-  registerEngine(engine) {
-    if (!engine) {
-      return this;
-    }
-    this.engine = engine;
-    this.updateSelectedRecords(this.engine.listRecords());
-    this.engine.addObserver((data) => {
-      this.updateSelectedRecords(data);
-    });
-    return this;
-  },
-  selected(record) {
-    return !!this.selectedRecords?.[record.datastore]?.[record.uid];
   }
 };
 var PreferenceEngine_default = PreferenceEngine;
@@ -2715,8 +2606,7 @@ var FacetSearch = function(setup) {
       self2.observables.push(this);
       const addObserver = this.add;
       this.add = function(func) {
-        if (!self2.muted)
-          func(dataFunc());
+        if (!self2.muted) func(dataFunc());
         addObserver(func, "observers");
         return this;
       };
@@ -2852,8 +2742,7 @@ var nodeFactory = (type, childTypes = [], extension) => {
       };
       return json;
     };
-    if (typeof extension === "function")
-      extension.call(this);
+    if (typeof extension === "function") extension.call(this);
   };
 };
 var nodeFactory_default = nodeFactory;
@@ -2980,17 +2869,8 @@ var FieldTree_default = FieldTree;
 
 // src/Pride/init.js
 var init = new RequestBuffer_default({
-  url: () => {
-    return Settings_default.datastores_url;
-  },
   attempts: () => {
     return Settings_default.init_attempts;
-  },
-  failure_message: () => {
-    return Messenger_default.preset("failed_init");
-  },
-  edit_response: () => {
-    return void 0;
   },
   before_success: (data) => {
     Settings_default.default_institution = data.default_institution;
@@ -2998,6 +2878,15 @@ var init = new RequestBuffer_default({
     AllDatastores_default.array = data.response.map((datastoreData) => {
       return new Datastore_default(datastoreData);
     });
+  },
+  edit_response: () => {
+    return null;
+  },
+  failure_message: () => {
+    return Messenger_default.preset("failed_init");
+  },
+  url: () => {
+    return Settings_default.datastores_url;
   }
 }).request;
 var init_default = init;
@@ -3791,8 +3680,8 @@ var requestRecord = (source, id, func = () => {
 }) => {
   const record = new Record_default({
     complete: false,
-    source: `${AllDatastores_default.get(source)?.get("url") ?? ""}/record/${id}`,
-    names: [void 0]
+    names: [],
+    source: `${AllDatastores_default.get(source)?.get("url") ?? ""}/record/${id}`
   });
   record.renderFull(func);
   return record;
@@ -3816,13 +3705,12 @@ var Pride = {
   AllDatastores: AllDatastores_default,
   Core: Core_default,
   FieldTree: FieldTree_default,
-  // Pride.FieldTree = Pride.FieldTree || {};
-  init: init_default,
   Messenger: Messenger_default,
   Parser: Parser_default,
   PreferenceEngine: PreferenceEngine_default,
-  requestRecord: requestRecord_default,
   Settings: Settings_default,
-  Util: Util_default
+  Util: Util_default,
+  init: init_default,
+  requestRecord: requestRecord_default
 };
 var Pride_default = Pride;

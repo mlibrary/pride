@@ -1,22 +1,12 @@
-import RequestBuffer from './Util/RequestBuffer';
-import Settings from './Settings';
-import Messenger from './Messenger';
 import AllDatastores from './AllDatastores';
 import Datastore from './Core/Datastore';
+import Messenger from './Messenger';
+import RequestBuffer from './Util/RequestBuffer';
+import Settings from './Settings';
 
 const init = new RequestBuffer({
-  url: () => {
-    return Settings.datastores_url;
-  },
   attempts: () => {
     return Settings.init_attempts;
-  },
-  failure_message: () => {
-    return Messenger.preset('failed_init');
-  },
-
-  edit_response: () => {
-    return undefined;
   },
   before_success: (data) => {
     Settings.default_institution = data.default_institution;
@@ -24,6 +14,15 @@ const init = new RequestBuffer({
     AllDatastores.array = data.response.map((datastoreData) => {
       return new Datastore(datastoreData);
     });
+  },
+  edit_response: () => {
+    return null;
+  },
+  failure_message: () => {
+    return Messenger.preset('failed_init');
+  },
+  url: () => {
+    return Settings.datastores_url;
   }
 }).request;
 

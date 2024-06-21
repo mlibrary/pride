@@ -1,11 +1,17 @@
 import AllDatastores from './AllDatastores';
 import Record from './Core/Record';
 
-const requestRecord = (source, id, func = () => { /** */ }) => {
+const requestRecord = (
+  source,
+  id,
+  func = () => {
+    /** */
+  }
+) => {
   const record = new Record({
     complete: false,
-    source: `${AllDatastores.get(source)?.get('url') ?? ''}/record/${id}`,
-    names: [undefined]
+    names: [],
+    source: `${AllDatastores.get(source)?.get('url') ?? ''}/record/${id}`
   });
   record.renderFull(func);
   return record;
