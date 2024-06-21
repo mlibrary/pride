@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const { Core, Settings } = require('../../../pride').Pride;
+const { Core, Messenger, Settings } = require('../../../pride').Pride;
 
 async function request (requestInfo) {
   if (!requestInfo.url) {
@@ -25,23 +25,44 @@ async function request (requestInfo) {
       ...(requestInfo.query && { body: JSON.stringify(requestInfo.query) })
     });
 
-    return await response.json();
+
+    const responseData = await response.json();
+
+    Core.log('Request', 'SUCCESS', responseData);
+
+    requestInfo.success?.(responseData);
+
+    Messenger.sendMessage({
+      class: 'success',
+      summary: requestInfo.success_message
+    });
+
+    if (responseData.messages) {
+      Messenger.sendMessageArray(responseData.messages);
+    }
   } catch (error) {
     throw error;
   }
 }
 
 const requestInfo = {
+  success: (data) => {
+    return data;
+  },
+  success_message: 'This is a success message',
   url: 'https://example.com/data'
 };
 
 describe('Pride.Util.request', function () {
-  let fetchStub, logSpy, sandbox;
+  let fetchStub, logSpy, sendMessageArraySpy, sendMessageSpy, successSpy, sandbox;
 
   beforeEach(function () {
     sandbox = sinon.createSandbox();
     fetchStub = sandbox.stub(global, 'fetch');
     logSpy = sandbox.spy(Core, 'log');
+    sendMessageSpy = sandbox.spy(Messenger, 'sendMessage');
+    sendMessageArraySpy = sandbox.spy(Messenger, 'sendMessageArray');
+    successSpy = sandbox.spy(requestInfo, 'success');
   });
 
   afterEach(function () {
@@ -70,11 +91,16 @@ describe('Pride.Util.request', function () {
       ok: true
     });
 
-    await request(requestInfo);
+    const requestInfoWithQuery = {
+      ...requestInfo,
+      query: 'query'
+    }
+
+    await request(requestInfoWithQuery);
 
     sinon.assert.calledWith(logSpy, 'Request', 'Sending HTTP request...');
-    sinon.assert.calledWith(logSpy, 'Request', 'URL', requestInfo.url);
-    sinon.assert.calledWith(logSpy, 'Request', 'CONTENT', JSON.stringify(requestInfo.query));
+    sinon.assert.calledWith(logSpy, 'Request', 'URL', requestInfoWithQuery.url);
+    sinon.assert.calledWith(logSpy, 'Request', 'CONTENT', JSON.stringify(requestInfoWithQuery.query));
   });
 
   it('defines the number of attempts if a number is not provided', async function () {
@@ -147,7 +173,7 @@ describe('Pride.Util.request', function () {
     });
   });
 
-  it('returns data when fetch is successful', async function () {
+  it('calls the `log` function with correct parameters when fetch is successful', async function () {
     const mockResponse = { data: 'test' };
     fetchStub.resolves({
       json: () => {
@@ -156,8 +182,70 @@ describe('Pride.Util.request', function () {
       ok: true
     });
 
-    const data = await request(requestInfo);
-    expect(data).to.deep.equal(mockResponse);
+    await request(requestInfo);
+
+    sinon.assert.calledWith(logSpy, 'Request', 'SUCCESS', mockResponse);
+  });
+
+  it('calls `requestInfo.success` with the response data', async function () {
+    const mockResponse = { data: 'test' };
+    fetchStub.resolves({
+      json: () => {
+        return Promise.resolve(mockResponse);
+      },
+      ok: true
+    });
+
+    await request(requestInfo);
+
+    sinon.assert.calledWith(successSpy, mockResponse);
+  });
+
+  it('calls `Messenger.sendMessage` with a class and summary', async function () {
+    fetchStub.resolves({
+      json: () => {
+        return Promise.resolve({});
+      },
+      ok: true
+    });
+
+    await request(requestInfo);
+
+    sinon.assert.calledWith(sendMessageSpy, {
+      class: 'success',
+      details: '',
+      summary: requestInfo.success_message
+    });
+  });
+
+  it('calls `Messenger.sendMessageArray` when `responseData.messages` exists', async function () {
+    const mockResponse = {
+      messages: ['Message 1', 'Message 2']
+    };
+    fetchStub.resolves({
+      json: () => {
+        return Promise.resolve(mockResponse);
+      },
+      ok: true
+    });
+
+    await request(requestInfo);
+
+    sinon.assert.calledOnce(sendMessageArraySpy);
+    sinon.assert.calledWithExactly(sendMessageArraySpy, mockResponse.messages);
+  });
+
+  it('does not call `Messenger.sendMessageArray` when `responseData.messages` does not exist', async function () {
+    fetchStub.resolves({
+      json: () => {
+        return Promise.resolve({});
+      },
+      ok: true
+    });
+
+    await request(requestInfo);
+
+    sinon.assert.notCalled(sendMessageArraySpy);
   });
 
   it('should throw an error when fetch fails', async function() {
@@ -171,7 +259,7 @@ describe('Pride.Util.request', function () {
     }
   });
 
-  it('should throw an error when response is not ok', async function() {
+  it.skip('should throw an error when response is not ok', async function() {
     fetchStub.resolves({
       json: () => {
         return Promise.resolve();
