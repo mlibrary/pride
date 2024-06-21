@@ -1,9 +1,11 @@
 import log from '../Core/log';
-import Settings from '../Settings';
 import Messenger from '../Messenger';
+import Settings from '../Settings';
 
 const request = async (requestInfo) => {
-  if (!requestInfo.url) throw new Error('No URL given to Pride.Util.request()');
+  if (!requestInfo.url) {
+    throw new Error('No URL given to Pride.Util.request()');
+  }
 
   log('Request', 'Sending HTTP request...');
   log('Request', 'URL', requestInfo.url);
@@ -17,10 +19,10 @@ const request = async (requestInfo) => {
 
   try {
     const response = await fetch(requestInfo.url, {
-      method: requestInfo.query ? 'post' : 'get',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestInfo.query),
-      credentials: 'include'
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      method: requestInfo.query ? 'post' : 'get'
     });
 
     const responseData = await response.json();
@@ -30,8 +32,8 @@ const request = async (requestInfo) => {
     requestInfo.success?.(responseData);
 
     Messenger.sendMessage({
-      summary: requestInfo.success_message,
-      class: 'success'
+      class: 'success',
+      summary: requestInfo.success_message
     });
 
     if (responseData.messages) {
@@ -50,8 +52,8 @@ const request = async (requestInfo) => {
       requestInfo.failure?.(error);
 
       Messenger.sendMessage({
-        summary: requestInfo.failure_message,
-        class: 'error'
+        class: 'error',
+        summary: requestInfo.failure_message
       });
     }
   }

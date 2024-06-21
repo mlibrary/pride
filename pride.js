@@ -2260,7 +2260,9 @@ var SearchBase_default = SearchBase;
 
 // src/Pride/Util/request.js
 var request = async (requestInfo) => {
-  if (!requestInfo.url) throw new Error("No URL given to Pride.Util.request()");
+  if (!requestInfo.url) {
+    throw new Error("No URL given to Pride.Util.request()");
+  }
   log_default("Request", "Sending HTTP request...");
   log_default("Request", "URL", requestInfo.url);
   log_default("Request", "CONTENT", JSON.stringify(requestInfo.query));
@@ -2270,17 +2272,17 @@ var request = async (requestInfo) => {
   requestInfo.attempts -= 1;
   try {
     const response = await fetch(requestInfo.url, {
-      method: requestInfo.query ? "post" : "get",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestInfo.query),
-      credentials: "include"
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      method: requestInfo.query ? "post" : "get"
     });
     const responseData = await response.json();
     log_default("Request", "SUCCESS", responseData);
     requestInfo.success?.(responseData);
     Messenger_default.sendMessage({
-      summary: requestInfo.success_message,
-      class: "success"
+      class: "success",
+      summary: requestInfo.success_message
     });
     if (responseData.messages) {
       Messenger_default.sendMessageArray(responseData.messages);
@@ -2295,8 +2297,8 @@ var request = async (requestInfo) => {
       log_default("Request", "ERROR", error);
       requestInfo.failure?.(error);
       Messenger_default.sendMessage({
-        summary: requestInfo.failure_message,
-        class: "error"
+        class: "error",
+        summary: requestInfo.failure_message
       });
     }
   }
