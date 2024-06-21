@@ -52,13 +52,13 @@ export default [
     }
   },
   {
-    files: ["spec/**/*.spec.js"],
+    files: ['spec/**/*.spec.js'],
     rules: {
-      "mocha/no-exclusive-tests": "off", // Alow use of `.only` to run specific tests
-      "mocha/no-exports": "off", // Allow exports, such as `siblingFileIsProperty` to reduce repeated code
-      "mocha/no-setup-in-describe": "off", // Allows functions to be called inside `describe` blocks to reduce repeated code
-      "mocha/no-skipped-tests": "off", // Remove this rule when `./spec/Pride/Util/RequestBuffer.spec.js` is rebuilt and passing
-      "mocha/no-top-level-hooks": "off" // Allows functions to use 'before'/'after' hooks to reduce repeated code
+      'mocha/no-exclusive-tests': 'off', // Alow use of `.only` to run specific tests
+      'mocha/no-exports': 'off', // Allow exports, such as `siblingFileIsProperty` to reduce repeated code
+      'mocha/no-setup-in-describe': 'off', // Allows functions to be called inside `describe` blocks to reduce repeated code
+      'mocha/no-skipped-tests': 'off', // Remove this rule when `./spec/Pride/Util/RequestBuffer.spec.js` is rebuilt and passing
+      'mocha/no-top-level-hooks': 'off' // Allows functions to use 'before'/'after' hooks to reduce repeated code
     }
   }
 ];

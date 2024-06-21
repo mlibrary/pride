@@ -19,10 +19,10 @@ const request = async (requestInfo) => {
 
   try {
     const response = await fetch(requestInfo.url, {
-      body: JSON.stringify(requestInfo.query),
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      method: requestInfo.query ? 'post' : 'get'
+      method: requestInfo.query ? 'post' : 'get',
+      ...(requestInfo.query && { body: JSON.stringify(requestInfo.query) })
     });
 
     const responseData = await response.json();
