@@ -1,17 +1,15 @@
-import reqwest from 'reqwest';
 import log from '../Core/log';
-import Settings from '../Settings';
 import Messenger from '../Messenger';
+import Settings from '../Settings';
 
-const request = function (requestInfo) {
+const request = async (requestInfo) => {
+  if (!requestInfo.url) {
+    throw new Error('No URL given to Pride.Util.request()');
+  }
+
   log('Request', 'Sending HTTP request...');
   log('Request', 'URL', requestInfo.url);
   log('Request', 'CONTENT', JSON.stringify(requestInfo.query));
-
-  if (!requestInfo.url) throw new Error('No URL given to Pride.Util.request()');
-
-  let requestMethod = 'get';
-  if (requestInfo.query) requestMethod = 'post';
 
   if (typeof requestInfo.attempts !== 'number') {
     requestInfo.attempts = Settings.connection_attempts;
@@ -19,45 +17,46 @@ const request = function (requestInfo) {
 
   requestInfo.attempts -= 1;
 
-  reqwest({
-    url: requestInfo.url,
-    data: JSON.stringify(requestInfo.query),
-    type: 'json',
-    method: requestMethod,
-    contentType: 'application/json',
-    withCredentials: true,
+  try {
+    const response = await fetch(requestInfo.url, {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      method: requestInfo.query ? 'post' : 'get',
+      ...(requestInfo.query && { body: JSON.stringify(requestInfo.query) })
+    });
 
-    error: function (error) {
-      if (requestInfo.attempts <= 0) {
-        log('Request', 'ERROR', error);
+    const responseData = await response.json();
 
-        requestInfo.failure?.(error);
+    log('Request', 'SUCCESS', responseData);
 
-        Messenger.sendMessage({
-          summary: requestInfo.failure_message,
-          class: 'error'
-        });
-      } else {
-        log('Request', 'Trying request again...');
-        window.setTimeout(() => {
-          return request(requestInfo);
-        }, Settings.ms_between_attempts);
-      }
-    },
+    requestInfo.success?.(responseData);
 
-    success: function (response) {
-      log('Request', 'SUCCESS', response);
+    Messenger.sendMessage({
+      class: 'success',
+      summary: requestInfo.success_message
+    });
 
-      requestInfo.success?.(response);
+    if (responseData.messages) {
+      Messenger.sendMessageArray(responseData.messages);
+    }
+  } catch (error) {
+    if (requestInfo.attempts > 0) {
+      log('Request', 'Trying request again...');
+
+      setTimeout(() => {
+        return request(requestInfo);
+      }, Settings.ms_between_attempts);
+    } else {
+      log('Request', 'ERROR', error);
+
+      requestInfo.failure?.(error);
 
       Messenger.sendMessage({
-        summary: requestInfo.success_message,
-        class: 'success'
+        class: 'error',
+        summary: requestInfo.failure_message
       });
-
-      Messenger.sendMessageArray(response.messages);
     }
-  });
+  }
 };
 
 export default request;
