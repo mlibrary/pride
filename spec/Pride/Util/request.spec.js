@@ -41,11 +41,30 @@ async function request (requestInfo) {
       Messenger.sendMessageArray(responseData.messages);
     }
   } catch (error) {
-    throw error;
+    if (requestInfo.attempts > 0) {
+      Core.log('Request', 'Trying request again...');
+
+      setTimeout(() => {
+        return request(requestInfo);
+      }, Settings.ms_between_attempts);
+    } else {
+      Core.log('Request', 'ERROR', error);
+
+      requestInfo.failure?.(error);
+
+      Messenger.sendMessage({
+        class: 'error',
+        summary: requestInfo.failure_message
+      });
+    }
   }
 }
 
 const requestInfo = {
+  failure: (data) => {
+    return data;
+  },
+  failure_message: 'This is a failure message',
   success: (data) => {
     return data;
   },
@@ -54,19 +73,22 @@ const requestInfo = {
 };
 
 describe('Pride.Util.request', function () {
-  let fetchStub, logSpy, sendMessageArraySpy, sendMessageSpy, successSpy, sandbox;
+  let clock, failureSpy, fetchStub, logSpy, sendMessageArraySpy, sendMessageSpy, successSpy, sandbox;
 
   beforeEach(function () {
     sandbox = sinon.createSandbox();
+    clock = sinon.useFakeTimers();
     fetchStub = sandbox.stub(global, 'fetch');
     logSpy = sandbox.spy(Core, 'log');
     sendMessageSpy = sandbox.spy(Messenger, 'sendMessage');
     sendMessageArraySpy = sandbox.spy(Messenger, 'sendMessageArray');
     successSpy = sandbox.spy(requestInfo, 'success');
+    failureSpy = sandbox.spy(requestInfo, 'failure');
   });
 
   afterEach(function () {
     sandbox.restore();
+    clock.restore();
   });
 
   it('works', function () {
@@ -136,6 +158,10 @@ describe('Pride.Util.request', function () {
     await request(requestInfo);
 
     expect(requestInfo.attempts).to.equal(numberOfAttempts - 1);
+
+    await request(requestInfo);
+
+    expect(requestInfo.attempts).to.equal(numberOfAttempts - 2);
   });
 
   ['get', 'post'].forEach((methodType) => {
@@ -248,30 +274,76 @@ describe('Pride.Util.request', function () {
     sinon.assert.notCalled(sendMessageArraySpy);
   });
 
-  it('should throw an error when fetch fails', async function() {
-    const errorMessage = 'Network error!';
-    fetchStub.rejects(new Error(errorMessage));
-
-    try {
-      await request(requestInfo);
-    } catch (error) {
-      expect(error.message).to.equal(errorMessage);
-    }
-  });
-
-  it.skip('should throw an error when response is not ok', async function() {
+  it('on error, the `log` function is called with correct parameters', async function() {
+    const errorMessage = 'Promise rejected.';
     fetchStub.resolves({
       json: () => {
-        return Promise.resolve();
-      },
-      ok: false,
-      status: 404
+        return Promise.reject(errorMessage);
+      }
     });
 
-    try {
-      await request(requestInfo);
-    } catch (error) {
-      expect(error.message).to.equal('HTTP error! status: 404');
-    }
+    await request(requestInfo);
+
+    sinon.assert.calledWith(logSpy.getCall(3), 'Request', 'ERROR', errorMessage);
+  });
+
+  it('on error, with attempts remaining, the `log` function is called with correct parameters', async function() {
+    const errorMessage = 'Promise rejected.';
+    fetchStub.resolves({
+      json: () => {
+        return Promise.reject(errorMessage);
+      }
+    });
+
+    requestInfo.attempts = 2;
+
+    await request(requestInfo);
+
+    sinon.assert.calledWith(logSpy.getCall(3), 'Request', 'Trying request again...');
+  });
+
+  it('on error, with attempts remaining, will rerun request', async function () {
+    fetchStub.onFirstCall().rejects(new Error('Network Error'));
+    fetchStub.onSecondCall().resolves({
+      json: () => {
+        return Promise.resolve({});
+      }
+    });
+
+    requestInfo.attempts = 2;
+    await request(requestInfo);
+
+    clock.tick(Settings.ms_between_attempts);
+
+    expect(fetchStub.calledTwice).to.be.true;
+  });
+
+  it('on error, `requestInfo.failure` is called with the error message', async function () {
+    const mockResponse = { data: 'test' };
+    fetchStub.resolves({
+      json: () => {
+        return Promise.reject(mockResponse);
+      }
+    });
+
+    await request(requestInfo);
+
+    sinon.assert.calledWith(failureSpy, mockResponse);
+  });
+
+  it('on error, `Messenger.sendMessage` is called with a class and summary', async function () {
+    fetchStub.resolves({
+      json: () => {
+        return Promise.reject({});
+      }
+    });
+
+    await request(requestInfo);
+
+    sinon.assert.calledWith(sendMessageSpy, {
+      class: 'error',
+      details: '',
+      summary: requestInfo.failure_message
+    });
   });
 });
