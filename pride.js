@@ -2309,56 +2309,32 @@ var request_default = request;
 var requestBuffer = (requestOptions = {}) => {
   const funcBuffer = new FuncBuffer_default();
   let requestIssued = false;
-  let requestSuccessful = false;
-  let requestFailed = false;
-  let cachedResponseData = null;
-  const callThenClear = (name) => {
-    funcBuffer.call(name, cachedResponseData).clearAll();
-  };
-  const callWithResponse = (data) => {
-    cachedResponseData = data || cachedResponseData;
-    if (requestSuccessful) {
-      callThenClear("success");
-    } else if (requestFailed) {
-      callThenClear("failure");
-    }
-  };
-  const sendRequest = () => {
-    requestIssued = true;
-    request_default({
-      attempts: requestOptions.attempts?.() || Settings_default.connection_attempts,
-      failure(error) {
-        requestFailed = true;
-        requestOptions.before_failure?.(error);
-        callWithResponse(error);
-        requestOptions.after_failure?.(error);
-      },
-      failure_message: requestOptions.failure_message?.(),
-      success(res) {
-        let response = res;
-        requestSuccessful = true;
-        requestOptions.before_success?.(response);
-        if (typeof requestOptions.edit_response === "function") {
-          response = requestOptions.edit_response(response);
-        }
-        callWithResponse(response);
-        requestOptions.after_success?.(response);
-      },
-      url: typeof requestOptions.url === "function" ? requestOptions.url() : requestOptions.url
-    });
-  };
-  const requestInterface = {
-    request: (funcHash) => {
-      funcBuffer.add(funcHash.success, "success").add(funcHash.failure, "failure");
-      if (requestIssued) {
-        callWithResponse();
-      } else {
-        sendRequest();
+  const requestBufferInterface = {
+    request: ({ failure, success }) => {
+      funcBuffer.add(success, "success").add(failure, "failure");
+      if (!requestIssued) {
+        requestIssued = true;
+        request_default({
+          attempts: requestOptions.attempts?.() || Settings_default.connection_attempts,
+          failure(error) {
+            requestOptions.before_failure?.(error);
+            funcBuffer.call("failure", error).clearAll();
+            requestOptions.after_failure?.(error);
+          },
+          failure_message: requestOptions.failure_message?.(),
+          success(res) {
+            const response = requestOptions.edit_response instanceof Function ? requestOptions.edit_response(res) : res;
+            requestOptions.before_success?.(response);
+            funcBuffer.call("success", response).clearAll();
+            requestOptions.after_success?.(response);
+          },
+          url: requestOptions.url instanceof Function ? requestOptions.url() : requestOptions.url
+        });
       }
-      return requestInterface;
+      return requestBufferInterface;
     }
   };
-  return requestInterface;
+  return requestBufferInterface;
 };
 var requestBuffer_default = requestBuffer;
 
