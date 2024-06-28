@@ -3,7 +3,7 @@ import escape from './escape';
 import FuncBuffer from './FuncBuffer';
 import Paginator from './Paginator/index';
 import request from './request';
-import RequestBuffer from './RequestBuffer';
+import requestBuffer from './requestBuffer';
 import Section from './Section';
 
 const Util = {
@@ -12,7 +12,7 @@ const Util = {
   FuncBuffer,
   Paginator,
   request,
-  RequestBuffer,
+  requestBuffer,
   Section
 };
 

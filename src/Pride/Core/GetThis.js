@@ -1,4 +1,4 @@
-import RequestBuffer from '../Util/RequestBuffer';
+import requestBuffer from '../Util/requestBuffer';
 import Messenger from '../Messenger';
 
 class GetThis {
@@ -8,7 +8,7 @@ class GetThis {
     const getThisUrlField = data.fields.find((field) => {
       return field.uid === 'get_this_url';
     });
-    this.requestBuffer = new RequestBuffer({
+    this.requestBuffer = requestBuffer({
       url: `${getThisUrlField?.value ?? ''}/${this.barcode}`,
       failure_message: Messenger.preset('failed_get_this_load', data.names[0]),
       edit_response: (response) => {

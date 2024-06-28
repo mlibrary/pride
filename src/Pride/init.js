@@ -1,10 +1,10 @@
 import AllDatastores from './AllDatastores';
 import Datastore from './Core/Datastore';
 import Messenger from './Messenger';
-import RequestBuffer from './Util/RequestBuffer';
+import requestBuffer from './Util/requestBuffer';
 import Settings from './Settings';
 
-const init = new RequestBuffer({
+const init = requestBuffer({
   attempts: () => {
     return Settings.init_attempts;
   },

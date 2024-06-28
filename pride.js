@@ -2305,62 +2305,62 @@ var request = async (requestInfo) => {
 };
 var request_default = request;
 
-// src/Pride/Util/RequestBuffer.js
-var RequestBuffer = class {
-  #funcBuffer;
-  #requestIssued = false;
-  #requestSuccessful = false;
-  #requestFailed = false;
-  #cachedResponseData;
-  requestOptions;
-  constructor(requestOptions = {}) {
-    this.#funcBuffer = new FuncBuffer_default();
-    this.requestOptions = requestOptions;
-  }
-  request = (funcHash) => {
-    this.#funcBuffer.add(funcHash.success, "success").add(funcHash.failure, "failure");
-    if (this.#requestIssued) {
-      this.#callWithResponse();
-    } else {
-      this.#sendRequest();
-    }
-    return this;
+// src/Pride/Util/requestBuffer.js
+var requestBuffer = (requestOptions = {}) => {
+  const funcBuffer = new FuncBuffer_default();
+  let requestIssued = false;
+  let requestSuccessful = false;
+  let requestFailed = false;
+  let cachedResponseData = null;
+  const callThenClear = (name) => {
+    funcBuffer.call(name, cachedResponseData).clearAll();
   };
-  #callWithResponse = (data) => {
-    this.#cachedResponseData = data ?? this.#cachedResponseData;
-    if (this.#requestSuccessful) {
-      this.#callThenClear("success");
-    } else if (this.#requestFailed) {
-      this.#callThenClear("failure");
+  const callWithResponse = (data) => {
+    cachedResponseData = data || cachedResponseData;
+    if (requestSuccessful) {
+      callThenClear("success");
+    } else if (requestFailed) {
+      callThenClear("failure");
     }
   };
-  #sendRequest = () => {
-    this.#requestIssued = true;
-    const requestOptions = this.requestOptions;
+  const sendRequest = () => {
+    requestIssued = true;
     request_default({
-      url: typeof requestOptions.url === "function" ? requestOptions.url() : requestOptions.url,
       attempts: requestOptions.attempts?.() || Settings_default.connection_attempts,
-      failure_message: requestOptions.failure_message?.(),
-      failure: (error) => {
-        this.#requestFailed = true;
+      failure(error) {
+        requestFailed = true;
         requestOptions.before_failure?.(error);
-        this.#callWithResponse(error);
+        callWithResponse(error);
         requestOptions.after_failure?.(error);
       },
-      success: (response) => {
-        this.#requestSuccessful = true;
+      failure_message: requestOptions.failure_message?.(),
+      success(res) {
+        let response = res;
+        requestSuccessful = true;
         requestOptions.before_success?.(response);
-        response = typeof requestOptions.edit_response === "function" ? requestOptions.edit_response(response) : response;
-        this.#callWithResponse(response);
+        if (typeof requestOptions.edit_response === "function") {
+          response = requestOptions.edit_response(response);
+        }
+        callWithResponse(response);
         requestOptions.after_success?.(response);
-      }
+      },
+      url: typeof requestOptions.url === "function" ? requestOptions.url() : requestOptions.url
     });
   };
-  #callThenClear = (name) => {
-    this.#funcBuffer.call(name, this.#cachedResponseData).clearAll();
+  const requestInterface = {
+    request: (funcHash) => {
+      funcBuffer.add(funcHash.success, "success").add(funcHash.failure, "failure");
+      if (requestIssued) {
+        callWithResponse();
+      } else {
+        sendRequest();
+      }
+      return requestInterface;
+    }
   };
+  return requestInterface;
 };
-var RequestBuffer_default = RequestBuffer;
+var requestBuffer_default = requestBuffer;
 
 // src/Pride/Core/Holdings.js
 var Holdings = class {
@@ -2385,7 +2385,7 @@ var GetThis = class {
     const getThisUrlField = data.fields.find((field) => {
       return field.uid === "get_this_url";
     });
-    this.requestBuffer = new RequestBuffer_default({
+    this.requestBuffer = requestBuffer_default({
       url: `${getThisUrlField?.value ?? ""}/${this.barcode}`,
       failure_message: Messenger_default.preset("failed_get_this_load", data.names[0]),
       edit_response: (response) => {
@@ -2454,7 +2454,7 @@ var PreferenceEngine_default = PreferenceEngine;
 
 // src/Pride/Core/Record.js
 var Record = function(data) {
-  const requestBuffer = new RequestBuffer_default({
+  const requestBuff = requestBuffer_default({
     url: data.source,
     failure_message: Messenger_default.preset(
       "failed_record_load",
@@ -2501,7 +2501,7 @@ var Record = function(data) {
       holdings = new Holdings_default(data);
       holdings.getData(func);
     } else {
-      requestBuffer.request({
+      requestBuff.request({
         success: function(data2) {
           holdings = new Holdings_default(data2);
           holdings.getData(func);
@@ -2516,7 +2516,7 @@ var Record = function(data) {
       getThis[barcode] = new GetThis_default(barcode, data);
       getThis[barcode].getData(func);
     } else {
-      requestBuffer.request({
+      requestBuff.request({
         success: function(data2) {
           getThis[barcode] = new GetThis_default(barcode, data2);
           getThis[barcode].getData(func);
@@ -2529,13 +2529,13 @@ var Record = function(data) {
   };
   this.renderPartThenCache = function(func) {
     callWithData(func);
-    requestBuffer.request();
+    requestBuff.request();
   };
   this.renderFull = function(func) {
     if (data.complete) {
       callWithData(func);
     } else {
-      requestBuffer.request({ success: func });
+      requestBuff.request({ success: func });
     }
   };
   this.renderCSL = function(func) {
@@ -2870,7 +2870,7 @@ var FieldTree = {
 var FieldTree_default = FieldTree;
 
 // src/Pride/init.js
-var init = new RequestBuffer_default({
+var init = requestBuffer_default({
   attempts: () => {
     return Settings_default.init_attempts;
   },
@@ -3697,7 +3697,7 @@ var Util = {
   FuncBuffer: FuncBuffer_default,
   Paginator: Paginator_default,
   request: request_default,
-  RequestBuffer: RequestBuffer_default,
+  requestBuffer: requestBuffer_default,
   Section: Section_default
 };
 var Util_default = Util;

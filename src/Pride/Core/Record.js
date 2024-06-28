@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import RequestBuffer from '../Util/RequestBuffer';
+import requestBuffer from '../Util/requestBuffer';
 import Messenger from '../Messenger';
 import request from '../Util/request';
 import Holdings from './Holdings';
@@ -8,7 +8,7 @@ import escape from '../Util/escape';
 import PreferenceEngine from '../PreferenceEngine';
 
 const Record = function (data) {
-  const requestBuffer = new RequestBuffer({
+  const requestBuff = requestBuffer({
     url: data.source,
     failure_message: Messenger.preset(
       'failed_record_load',
@@ -61,7 +61,7 @@ const Record = function (data) {
       holdings = new Holdings(data);
       holdings.getData(func);
     } else {
-      requestBuffer.request({
+      requestBuff.request({
         success: function (data) {
           holdings = new Holdings(data);
           holdings.getData(func);
@@ -77,7 +77,7 @@ const Record = function (data) {
       getThis[barcode] = new GetThis(barcode, data);
       getThis[barcode].getData(func);
     } else {
-      requestBuffer.request({
+      requestBuff.request({
         success: function (data) {
           getThis[barcode] = new GetThis(barcode, data);
           getThis[barcode].getData(func);
@@ -92,14 +92,14 @@ const Record = function (data) {
 
   this.renderPartThenCache = function (func) {
     callWithData(func);
-    requestBuffer.request();
+    requestBuff.request();
   };
 
   this.renderFull = function (func) {
     if (data.complete) {
       callWithData(func);
     } else {
-      requestBuffer.request({ success: func });
+      requestBuff.request({ success: func });
     }
   };
 
