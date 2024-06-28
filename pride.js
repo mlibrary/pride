@@ -2323,8 +2323,8 @@ var requestBuffer = (requestOptions = {}) => {
           },
           failure_message: requestOptions.failure_message?.(),
           success(res) {
+            requestOptions.before_success?.(res);
             const response = requestOptions.edit_response instanceof Function ? requestOptions.edit_response(res) : res;
-            requestOptions.before_success?.(response);
             funcBuffer.call("success", response).clearAll();
             requestOptions.after_success?.(response);
           },
