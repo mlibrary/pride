@@ -24,7 +24,7 @@
     "chai": "^4.4.0",
     "eslint": "^9.5.0",
     "eslint-plugin-mocha": "^10.4.3",
-    "globals": "^15.6.0",
+    "globals": "^15.7.0",
     "jsdom": "^24.1.0",
     "mocha": "^10.4.0",
     "sinon": "^18.0.0"
