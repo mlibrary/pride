@@ -16,7 +16,7 @@
   "dependencies": {
     "esbuild": "^0.23.0",
     "pegjs": "^0.10.0",
-    "underscore": "^1.13.6"
+    "underscore": "^1.13.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
