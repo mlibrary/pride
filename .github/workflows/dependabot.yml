@@ -1,31 +1,49 @@
-name: Update PR Title
+name: Update PR Title by Specific User and Label
 
 on:
   pull_request:
-    types: [opened, synchronize, labeled, unlabeled]
+    types: [opened, edited, labeled, unlabeled]
 
 jobs:
-  update-pr-title:
+  update-title:
     runs-on: ubuntu-latest
-    if: github.actor == 'erinesullivan'
-    steps:
-      - name: Check PR label
-        id: check_label
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prLabels = context.payload.pull_request.labels;
-            const hasDependenciesLabel = prLabels.some(label => label.name === 'invalid');
-            return hasDependenciesLabel;
 
-      - name: Update PR title
-        if: steps.check_label.outputs.result == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gh
-          CURRENT_DATE=$(date +"%B %Y")
-          NEW_TITLE="${CURRENT_DATE} dependency updates"
-          PR_NUMBER="${{ github.event.pull_request.number }}"
-          gh pr edit $PR_NUMBER --title "$NEW_TITLE"
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Determine if conditions are met
+      id: conditions
+      run: |
+        if [[ "${{ github.event.pull_request.user.login }}" == "erinesullivan" ]]; then
+          echo "Author matches."
+        else
+          echo "Author does not match."
+          exit 0
+        fi
+        
+        labels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels | jq -r '.[].name')
+        
+        echo "Labels: $labels"
+        
+        if [[ $labels == *"invalid"* ]]; then
+          echo "Label matches."
+          echo "::set-output name=conditions_met::true"
+        else
+          echo "Label does not match."
+          echo "::set-output name=conditions_met::false"
+          exit 0
+        fi
+
+    - name: Update PR title using GitHub API
+      if: steps.conditions.outputs.conditions_met == 'true'
+      run: |
+        new_title="Updated Title for PR #${{ github.event.pull_request.number }}"
+        curl -X PATCH \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} \
+          -d "{\"title\":\"${new_title}\"}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
