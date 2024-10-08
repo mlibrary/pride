@@ -10,7 +10,6 @@ updates:
       timezone: "America/Detroit"
     commit-message:
       prefix: "deps"
-      include: "scope"
     open-pull-requests-limit: 5
     assignees:
       - "erinesullivan"
@@ -33,7 +32,6 @@ updates:
       timezone: "America/Detroit"
     commit-message:
       prefix: "deps"
-      include: "scope"
     open-pull-requests-limit: 5
     assignees:
       - "erinesullivan"
