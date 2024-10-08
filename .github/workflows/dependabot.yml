@@ -1,4 +1,4 @@
-name: Update PR Title by Specific User and Label
+name: Update dependabot pull request title
 
 on:
   pull_request:
@@ -9,41 +9,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-    - name: Determine if conditions are met
-      id: conditions
+    - name: Check conditions
+      id: check_conditions
       run: |
-        if [[ "${{ github.event.pull_request.user.login }}" == "erinesullivan" ]]; then
-          echo "Author matches."
-        else
+        if [[ "${{ github.event.pull_request.user.login }}" != "erinesullivan" ]]; then
           echo "Author does not match."
           exit 0
         fi
         
         labels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels | jq -r '.[].name')
-        
-        echo "Labels: $labels"
-        
-        if [[ $labels == *"invalid"* ]]; then
-          echo "Label matches."
-          echo "::set-output name=conditions_met::true"
-        else
+
+        if [[ $labels != *"invalid"* ]]; then
           echo "Label does not match."
-          echo "::set-output name=conditions_met::false"
           exit 0
         fi
 
-    - name: Update PR title using GitHub API
-      if: steps.conditions.outputs.conditions_met == 'true'
+        echo "conditions_met=true" >> $GITHUB_ENV
+
+    - name: Update PR title
+      if: env.conditions_met == 'true'
       run: |
-        new_title="Updated Title for PR #${{ github.event.pull_request.number }}"
+        NEW_TITLE="$(date +'%B %Y') dependency updates"
         curl -X PATCH \
-          -H "Accept: application/vnd.github.v3+json" \
+          -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} \
-          -d "{\"title\":\"${new_title}\"}"
+          -d "{\"title\":\"${NEW_TITLE}\"}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
