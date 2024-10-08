@@ -23,6 +23,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
           CURRENT_DATE=$(date +"%B %Y")
           NEW_TITLE="${CURRENT_DATE} dependency updates"
           PR_NUMBER="${{ github.event.pull_request.number }}"
