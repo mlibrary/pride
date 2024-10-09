@@ -2,7 +2,7 @@ name: Update dependabot pull request
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, labeled, unlabeled, synchronize]
 
 jobs:
   update-title:
@@ -12,7 +12,7 @@ jobs:
     - name: Check conditions
       id: check_conditions
       run: |
-        if [[ "${{ github.event.pull_request.user.login }}" != "dependabot[bot]" ]]; then
+        if [[ "${{ github.event.pull_request.user.login }}" != "erinesullivan" ]]; then
           echo "Author does not match."
           echo "conditions_met=false" >> $GITHUB_ENV
           exit 0
@@ -39,18 +39,16 @@ jobs:
     - name: Generate comment on how to test
       if: env.conditions_met == 'true'
       run: |
-        COMMENT=$(cat <<EOF
-        To test on [`search`](https://github.com/mlibrary/search), update the `pride` dependency in the `package.json` file:
-        ```json
-        "pride": "git+https://github.com/${{ github.repository }}.git#${{ github.event.pull_request.head.ref }}"
-        ```
+        COMMENT="To test on [`search`](https://github.com/mlibrary/search), update the \`pride\` dependency in the \`package.json\` file:
+        \`\`\`json
+        \"pride\": \"git+https://github.com/${REPO}.git#${BRANCH}\"
+        \`\`\`
         
         After updating the dependency, do a clear install before starting:
-        ```bash
+        \`\`\`bash
         rm -rf node_modules && rm package-lock.json && npm install && npm start
-        ```
-        EOF
-        )
+        \`\`\`
+        "
         curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
           -H "Content-Type: application/json" \
           -d "{\"body\": \"${COMMENT}\"}" \
