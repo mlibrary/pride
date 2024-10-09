@@ -1,4 +1,4 @@
-name: Update dependabot pull request title
+name: Update dependabot pull request
 
 on:
   pull_request:
@@ -22,9 +22,7 @@ jobs:
           echo "Label does not match."
           exit 0
         fi
-        echo "conditions_met=true" >> $GITHUB_ENV
     - name: Update PR title
-      if: env.conditions_met == 'true'
       run: |
         NEW_TITLE="$(date +'%B %Y') dependency updates."
         curl -X PATCH \
@@ -32,5 +30,25 @@ jobs:
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} \
           -d "{\"title\":\"${NEW_TITLE}\"}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Generate comment on how to test
+      run: |
+        COMMENT=$(cat <<EOF
+        To test on [`search`](https://github.com/mlibrary/search), update the `pride` dependency in the `package.json` file:
+        ```json
+        "pride": "git+https://github.com/${{ github.repository }}.git#${{ github.event.pull_request.head.ref }}"
+        ```
+        
+        After updating the dependency, do a clear install before starting:
+        ```bash
+        rm -rf node_modules && rm package-lock.json && npm install && npm start
+        ```
+        EOF
+        )
+        curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+          -H "Content-Type: application/json" \
+          -d "{\"body\": \"${COMMENT}\"}" \
+          "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
