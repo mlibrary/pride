@@ -48,9 +48,10 @@ jobs:
         rm -rf node_modules && rm package-lock.json && npm install && npm start\n
         \`\`\`\n
         "
-        curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+        curl -s \
+          -H "Authorization: token ${GITHUB_TOKEN}" \
           -H "Content-Type: application/json" \
-          -d "{\"body\": \"${COMMENT}\"}" \
+          -X POST -d "{\"body\": \"${COMMENT}\"}" \
           "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
