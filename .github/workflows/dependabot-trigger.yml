@@ -1,0 +1,46 @@
+name: Manually Trigger Dependabot npm Update
+
+on:
+  workflow_dispatch:
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate dependabot-npm-update.json
+        id: generate_dependabot_update
+        run: |
+          echo '{
+            "package-ecosystem": "npm",
+            "directory": "/",
+            "schedule": {
+              "interval": "daily"
+            },
+            "assignees": [
+              "erinesullivan"
+            ],
+            "labels": [
+              "dependencies"
+            ],
+            "ignore": [
+              {
+                "dependency-name": "chai"
+              }
+            ],
+            "groups": {
+              "group-all-npm-updates": {
+                "patterns": [
+                  "*"
+                ]
+              }
+            }
+          }' > dependabot-npm-update.json
+
+      - name: Trigger Dependabot npm updates
+        run: |
+          gh auth login --with-token ${{ secrets.GITHUB_TOKEN }}
+          gh api -X POST /repos/${{ github.repository }}/dependabot/updates --input dependabot-npm-update.json
