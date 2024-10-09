@@ -44,3 +44,5 @@ jobs:
         run: |
           gh auth login --with-token ${{ secrets.GITHUB_TOKEN }}
           gh api -X POST /repos/${{ github.repository }}/dependabot/updates --input dependabot-npm-update.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
