@@ -11,7 +11,7 @@ updates:
     commit-message:
       prefix: "deps"
     open-pull-requests-limit: 5
-    assignees:
+    reviewers:
       - "erinesullivan"
     labels:
       - "dependencies"
@@ -33,7 +33,7 @@ updates:
     commit-message:
       prefix: "deps"
     open-pull-requests-limit: 5
-    assignees:
+    reviewers:
       - "erinesullivan"
     labels:
       - "dependencies"
