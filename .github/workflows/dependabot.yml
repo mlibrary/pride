@@ -39,15 +39,14 @@ jobs:
     - name: Generate comment on how to test
       if: env.conditions_met == 'true'
       run: |
-        COMMENT="To test on [`search`](https://github.com/mlibrary/search), update the \`pride\` dependency in the \`package.json\` file:
-        \`\`\`json
-        \"pride\": \"git+https://github.com/${REPO}.git#${BRANCH}\"
-        \`\`\`
-        
-        After updating the dependency, do a clear install before starting:
-        \`\`\`bash
-        rm -rf node_modules && rm package-lock.json && npm install && npm start
-        \`\`\`
+        COMMENT="To test on [\`search\`](https://github.com/mlibrary/search), update the \`pride\` dependency in the \`package.json\` file:\n
+        \`\`\`json\n
+        \"pride\": \"git+https://github.com/${REPO}.git#${BRANCH}\"\n
+        \`\`\`\n
+        After updating the dependency, do a clear install before starting:\n
+        \`\`\`bash\n
+        rm -rf node_modules && rm package-lock.json && npm install && npm start\n
+        \`\`\`\n
         "
         curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
           -H "Content-Type: application/json" \
