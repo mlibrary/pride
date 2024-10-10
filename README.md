@@ -1,16 +1,12 @@
 # Pride
 Pride is a JavaScript library that handles all communication between the [University of Michigan Library Search](https://search.lib.umich.edu/everything)'s [front-end application](https://github.com/mlibrary/search) and the [backend](https://github.com/mlibrary/spectrum).
 
-## Setup
+## To Start
+
+Run the `init.sh` script.
 
 ```bash
-npm install
-```
-
-## Build
-
-```bash
-npm run build
+./init.sh
 ```
 
 All files that are included in the build are found under `src/`. The directory is organized by object property. Examples:

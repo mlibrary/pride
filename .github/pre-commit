@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# Get the list of staged .js files
+STAGED_JS_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '.*\.js$')
+
+# Exit if no .js files are staged
+if [ "$STAGED_JS_FILES" = "" ]; then
+  exit 0
+fi
+
+# Run ESLint on the staged .js files
+echo "Running ESLint..."
+npx eslint $STAGED_JS_FILES
+
+# Capture ESLint exit code
+ESLINT_RESULT=$?
+
+# Exit with ESLint's result code
+if [ $ESLINT_RESULT -ne 0 ]; then
+  echo "ESLint failed. Commit aborted."
+  exit 1
+fi
+
+# Get the list of staged .spec.js files
+STAGED_SPEC_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '.*\.spec\.js$')
+
+# Run tests on staged .spec.js files
+if [ "$STAGED_SPEC_FILES" != "" ]; then
+  # Run Mocha tests
+  echo "Running Mocha tests..."
+  npx mocha $STAGED_SPEC_FILES
+  MOCHA_RESULT=$?
+
+  if [ $MOCHA_RESULT -ne 0 ]; then
+    echo "Mocha tests failed. Commit aborted."
+    exit 1
+  fi
+fi
+
+echo "All checks passed. Proceeding with commit."
+exit 0
