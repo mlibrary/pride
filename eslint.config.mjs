@@ -4,7 +4,7 @@ import stylistic from '@stylistic/eslint-plugin';
 import mochaPlugin from 'eslint-plugin-mocha';
 
 export default [
-  mochaPlugin.configs.flat.recommended,
+  mochaPlugin.configs.recommended,
   {
     languageOptions: {
       ecmaVersion: 2021,
@@ -23,7 +23,7 @@ export default [
       '@stylistic': stylistic
     }
   },
-  stylistic.configs['recommended-flat'],
+  stylistic.configs.recommended,
   {
     rules: {
       ...pluginJs.configs.all.rules,
