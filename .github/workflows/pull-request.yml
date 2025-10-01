@@ -8,9 +8,13 @@ on:
       - master
   pull_request:
 
+# GitHub Actions permissions
+permissions:
+  contents: read
+
 # Jobs to carry out
 jobs:
-  build:
+  build-and-test:
     # Operating system to run job on
     runs-on: ubuntu-latest
     # Steps in job
@@ -22,7 +26,7 @@ jobs:
           fetch-depth: 0
       # Install NodeJS
       - name: Install latest LTS version of Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: lts/*
           check-latest: true
@@ -32,3 +36,29 @@ jobs:
       - run: npm run build
       # Run tests
       - run: npm run test
+
+  dependabot:
+    # Require the above job
+    needs: [build-and-test] # <-- important!
+    # Operating system to run job on
+    runs-on: ubuntu-latest
+    # GitHub Actions permissions
+    permissions:
+      pull-requests: write
+      contents: write
+    # Only continue if a pull request was created by dependabot
+    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'}}
+    # Steps in job
+    steps:
+      # Get the metadata
+      - id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      # Approve the PR and merge it
+      - run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --squash --auto "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
