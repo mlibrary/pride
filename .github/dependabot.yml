@@ -1,39 +1,27 @@
 version: 2
+
+multi-ecosystem-groups:
+  maintenance:
+    schedule:
+      interval: "cron"
+      cronjob: "0 6 1-7 * 1"
+      timezone: "America/Detroit"
+    commit-message:
+      prefix: "Monthly dependency updates: "
+    assignees: ["@erinesullivan"]
+
+
 updates:
   # For npm dependencies
   - package-ecosystem: "npm"
     directory: "/"
-    schedule:
-      interval: "monthly"
-      time: "06:00"
-      day: "monday"
-      timezone: "America/Detroit"
-    commit-message:
-      prefix: "deps"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
+    multi-ecosystem-group: "maintenance"
+    patterns: ["*"]
     ignore:
       - dependency-name: "chai"
-    groups:
-      group-all-npm-updates:
-        patterns:
-          - "*"
 
   # For GitHub Actions updates
   - package-ecosystem: "github-actions"
     directory: "/"
-    schedule:
-      interval: "monthly"
-      time: "06:00"
-      day: "monday"
-      timezone: "America/Detroit"
-    commit-message:
-      prefix: "deps"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-    groups:
-      group-all-github-actions-updates:
-        patterns:
-          - "*"
+    multi-ecosystem-group: "maintenance"
+    patterns: ["*"]
