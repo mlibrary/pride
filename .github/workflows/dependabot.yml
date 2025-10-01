@@ -1,6 +1,5 @@
 name: Dependabot auto-merge
 on:
-  pull_request:
   workflow_run:
     # Trigger after the build workflow is complete
     workflows: ["Build workflow"]
