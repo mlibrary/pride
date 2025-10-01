@@ -8,7 +8,7 @@ multi-ecosystem-groups:
       timezone: "America/Detroit"
     commit-message:
       prefix: "Monthly dependency updates: "
-    assignees: ["@erinesullivan"]
+    assignees: ["erinesullivan"]
 
 
 updates:
