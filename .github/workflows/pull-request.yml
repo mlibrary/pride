@@ -7,6 +7,6 @@ on:
 
 # Jobs to carry out
 jobs:
-  build-and-test:
+  call-workflow:
     # Use reusable workflow
     uses: ./.github/workflows/build-and-test.yml
