@@ -47,7 +47,7 @@ jobs:
       pull-requests: write
       contents: write
     # Only continue if a pull request was created by dependabot
-    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'}}
+    if: ${{github.event.pull_request.user.login == 'dependabot[bot]' && github.event_name == 'pull_request'}}
     # Steps in job
     steps:
       # Get the metadata
