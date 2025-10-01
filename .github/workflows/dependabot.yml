@@ -5,6 +5,7 @@ on:
     workflows: ["Build workflow"]
     types:
       - completed
+  pull_request:
 
 permissions:
   contents: write
