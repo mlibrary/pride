@@ -3,7 +3,9 @@ name: Build workflow
 
 # When workflow is triggered
 on:
-  pull_request:
+  push:
+    branches:
+      - master
 
 # Jobs to carry out
 jobs:
