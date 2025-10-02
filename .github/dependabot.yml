@@ -4,7 +4,7 @@ multi-ecosystem-groups:
   maintenance:
     schedule:
       interval: "cron"
-      cronjob: "*/15 * * * *" # 0 6 1-7 * 1
+      cronjob: "0 6 1-7 * 1" # Every first Monday of the month at 6:00am
       timezone: "America/Detroit"
     commit-message:
       prefix: "Monthly dependency updates: "
