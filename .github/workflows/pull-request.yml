@@ -1,5 +1,5 @@
 #  Name of workflow
-name: Build workflow
+name: build
 
 # When workflow is triggered
 on:
@@ -14,7 +14,7 @@ permissions:
 
 # Jobs to carry out
 jobs:
-  build-and-test:
+  build:
     # Operating system to run job on
     runs-on: ubuntu-latest
     # Steps in job
@@ -38,8 +38,8 @@ jobs:
       - run: npm run test
 
   dependabot:
-    # Require the above job
-    needs: [build-and-test] # <-- important!
+    # Require the above job to successfully finish before moving forward
+    needs: [build]
     # Operating system to run job on
     runs-on: ubuntu-latest
     # GitHub Actions permissions
