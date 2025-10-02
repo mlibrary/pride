@@ -1,5 +1,5 @@
 #  Name of workflow
-name: build
+name: Build workflow
 
 # When workflow is triggered
 on:
