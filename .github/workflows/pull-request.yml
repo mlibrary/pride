@@ -1,64 +1,51 @@
-#  Name of workflow
 name: Build workflow
 
-# When workflow is triggered
 on:
   push:
-    branches:
-      - master
   pull_request:
 
-# GitHub Actions permissions
 permissions:
   contents: read
 
-# Jobs to carry out
 jobs:
-  build:
-    # Operating system to run job on
+  build-and-test:
+    name: Build and test
     runs-on: ubuntu-latest
-    # Steps in job
     steps:
-      # Get code from repo
       - name: Checkout code
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      # Install NodeJS
       - name: Install latest LTS version of Node.js
         uses: actions/setup-node@v5
         with:
           node-version: lts/*
           check-latest: true
-      # Clean install
-      - run: npm ci
-      # Check for linting errors and build code
-      - run: npm run build
-      # Run tests
-      - run: npm run test
+      - name: Clean install
+        run: npm ci
+      - name: Build scripts
+        run: npm run build
+      - name: Run tests
+        run: npm run test
 
   dependabot:
-    # Require the above job to successfully finish before moving forward
-    needs: [build]
-    # Operating system to run job on
+    name: Dependabot pull requests
+    needs: build-and-test
     runs-on: ubuntu-latest
-    # GitHub Actions permissions
+    # Only continue if a pull request was created by dependabot
+    if: ${{github.event.pull_request.user.login == 'dependabot[bot]' && github.event_name == 'pull_request'}}
     permissions:
       pull-requests: write
       contents: write
-    # Only continue if a pull request was created by dependabot
-    if: ${{github.event.pull_request.user.login == 'dependabot[bot]' && github.event_name == 'pull_request'}}
-    # Steps in job
+    env:
+      PR_URL: ${{github.event.pull_request.html_url}}
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
-      # Get the metadata
-      - id: metadata
+      - name: Fetch Dependabot Metadata
         uses: dependabot/fetch-metadata@v2
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      # Approve the PR and merge it
-      - run: |
-          gh pr review --approve "$PR_URL"
-          gh pr merge --squash --auto "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Approve the PR
+        run: gh pr review --approve "$PR_URL"
+      - name: Merge the PR
+        run: gh pr merge --squash --auto "$PR_URL"
