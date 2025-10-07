@@ -1,0 +1,20 @@
+name: Dependabot pull requests
+
+on: pull_request
+
+jobs:
+  dependabot:
+    name: Auto-merge Dependabot PRs
+    runs-on: ubuntu-latest
+    if:  ${{github.event.pull_request.user.login == 'dependabot[bot]'}}
+    permissions:
+      pull-requests: write
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR_URL: ${{ github.event.pull_request.html_url }}
+    steps:
+      - name: Approve the PR
+        run: gh pr review --approve "$PR_URL"
+      - name: Merge the PR
+        run: gh pr merge --squash --auto "$PR_URL"
