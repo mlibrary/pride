@@ -14,18 +14,18 @@
     "test:original": "npm run eslint && npx mocha --recursive './spec/**/*.spec.js'"
   },
   "dependencies": {
-    "esbuild": "^0.27.2",
+    "esbuild": "^0.27.3",
     "pegjs": "^0.10.0",
-    "underscore": "^1.13.7"
+    "underscore": "^1.13.8"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@stylistic/eslint-plugin": "^5.7.1",
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.9.0",
     "chai": "^4.4.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.2",
     "eslint-plugin-mocha": "^11.2.0",
-    "globals": "^17.3.0",
-    "jsdom": "^27.4.0",
+    "globals": "^17.4.0",
+    "jsdom": "^28.1.0",
     "mocha": "^11.7.5",
     "sinon": "^21.0.1"
   }
